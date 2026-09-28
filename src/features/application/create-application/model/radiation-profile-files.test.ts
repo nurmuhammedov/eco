@@ -1,7 +1,13 @@
 import { describe, expect, it, vi } from 'vitest'
 import { z } from 'zod'
 import type { FileDto } from '@/shared/types'
-import { fillFromProfile, hasIncompleteFiles, requireProfileFiles, withProfileFiles } from './radiation-profile-files'
+import {
+  fillFromProfile,
+  hasIncompleteFiles,
+  requireProfileFiles,
+  withDatesAsDays,
+  withProfileFiles,
+} from './radiation-profile-files'
 
 const file = (path: string | null, expiryDate: string | null): FileDto => ({
   path,
@@ -66,6 +72,16 @@ describe('fillFromProfile', () => {
       ['file1ExpiryDate', new Date('2027-01-01'), { shouldValidate: true }],
       ['file3Path', 'b.pdf', { shouldValidate: true }],
     ])
+  })
+})
+
+describe('withDatesAsDays', () => {
+  it('turns the dates into days and leaves the rest', () => {
+    expect(withDatesAsDays({ file3ExpiryDate: new Date(2027, 4, 17), file3Path: 'b.pdf', address: '' })).toEqual({
+      file3ExpiryDate: '2027-05-17',
+      file3Path: 'b.pdf',
+      address: '',
+    })
   })
 })
 

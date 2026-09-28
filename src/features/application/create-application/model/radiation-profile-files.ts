@@ -1,3 +1,4 @@
+import { format } from 'date-fns'
 import type { FieldValues, SetValueConfig, UseFormSetValue } from 'react-hook-form'
 import { z } from 'zod'
 import type { FileDto } from '@/shared/types'
@@ -35,6 +36,16 @@ export const fillFromProfile = <T extends FieldValues>(
     if (file?.expiryDate) set(key.replace('Path', 'ExpiryDate'), new Date(file.expiryDate), { shouldValidate: true })
   }
 }
+
+/** The profile's expiry dates sit on the form as dates; an application sends each as its day */
+export const withDatesAsDays = <T extends object>(values: T): T => ({
+  ...values,
+  ...Object.fromEntries(
+    Object.entries(values).flatMap(([key, value]) =>
+      value instanceof Date && !isNaN(value.getTime()) ? [[key, format(value, 'yyyy-MM-dd')]] : []
+    )
+  ),
+})
 
 /** The schema drops the profile files it has no field for, so they are laid back under what it validated */
 export const withProfileFiles = <T extends object>(formValues: object, validated: T): T => ({

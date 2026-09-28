@@ -11,11 +11,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Alert, AlertDescription } from '@/shared/components/ui/alert'
 import { FileLink } from '@/shared/components/common/file-link'
 import { getDate } from '@/shared/utils/date'
-import { parseISO, format, addYears } from 'date-fns'
+import { parseISO, addYears } from 'date-fns'
 import { TriangleAlert } from 'lucide-react'
 import { Skeleton } from '@/shared/components/ui/skeleton'
 import { useCreateXrayApplication } from '../../model/use-create-xray-application'
 import { EmptyValue } from '@/shared/components/common/empty-value'
+import { withDatesAsDays, withProfileFiles } from '../../model/radiation-profile-files'
 
 interface RegisterXrayFormProps {
   onSubmit: (data: CreateXrayApplicationDTO) => void
@@ -55,17 +56,9 @@ const RegisterXrayForm = ({ onSubmit }: RegisterXrayFormProps) => {
     <Form {...form}>
       <form
         autoComplete="off"
-        onSubmit={form.handleSubmit((d) => {
-          const rawData = { ...form.getValues(), ...d }
-          const cleanedData = Object.fromEntries(
-            Object.entries(rawData).map(([key, value]) => {
-              if (value instanceof Date && !isNaN((value as any).getTime()))
-                return [key, format(value as any, 'yyyy-MM-dd')]
-              return [key, value]
-            })
-          )
-          onSubmit(cleanedData as any)
-        })}
+        onSubmit={form.handleSubmit((validated) =>
+          onSubmit(withDatesAsDays(withProfileFiles(form.getValues(), validated)))
+        )}
       >
         <GoBack title="Rentgen uskunasini ro‘yxatga olish" />
         <CardForm className="my-2">
@@ -148,7 +141,7 @@ const RegisterXrayForm = ({ onSubmit }: RegisterXrayFormProps) => {
                           const expiryDate = addYears(date, 3)
                           form.setValue('file14ExpiryDate', expiryDate, { shouldValidate: true })
                         } else {
-                          form.setValue('file14ExpiryDate', undefined as any, { shouldValidate: true })
+                          form.setValue('file14ExpiryDate', undefined, { shouldValidate: true })
                         }
                       }}
                       placeholder="Sanani tanlang"
@@ -291,7 +284,7 @@ const RegisterXrayForm = ({ onSubmit }: RegisterXrayFormProps) => {
                         form={form}
                         name={field.name}
                         accept={[FileTypes.PDF]}
-                        onRemove={() => form.setValue('file14ExpiryDate', undefined as any, { shouldValidate: true })}
+                        onRemove={() => form.setValue('file14ExpiryDate', undefined, { shouldValidate: true })}
                       />
                     </FormControl>
                   </div>
@@ -336,7 +329,7 @@ const RegisterXrayForm = ({ onSubmit }: RegisterXrayFormProps) => {
                         form={form}
                         name={field.name}
                         accept={[FileTypes.PDF]}
-                        onRemove={() => form.setValue('file8ExpiryDate', undefined as any, { shouldValidate: true })}
+                        onRemove={() => form.setValue('file8ExpiryDate', undefined, { shouldValidate: true })}
                       />
                     </FormControl>
                   </div>
@@ -404,7 +397,7 @@ const RegisterXrayForm = ({ onSubmit }: RegisterXrayFormProps) => {
                           form={form}
                           name={field.name}
                           accept={[FileTypes.PDF]}
-                          onRemove={() => form.setValue('file5ExpiryDate', undefined as any, { shouldValidate: true })}
+                          onRemove={() => form.setValue('file5ExpiryDate', undefined, { shouldValidate: true })}
                         />
                       </FormControl>
                     </div>
@@ -448,7 +441,7 @@ const RegisterXrayForm = ({ onSubmit }: RegisterXrayFormProps) => {
                           form={form}
                           name={field.name}
                           accept={[FileTypes.PDF]}
-                          onRemove={() => form.setValue('file7ExpiryDate', undefined as any, { shouldValidate: true })}
+                          onRemove={() => form.setValue('file7ExpiryDate', undefined, { shouldValidate: true })}
                         />
                       </FormControl>
                     </div>
@@ -492,7 +485,7 @@ const RegisterXrayForm = ({ onSubmit }: RegisterXrayFormProps) => {
                           form={form}
                           name={field.name}
                           accept={[FileTypes.PDF]}
-                          onRemove={() => form.setValue('file9ExpiryDate', undefined as any, { shouldValidate: true })}
+                          onRemove={() => form.setValue('file9ExpiryDate', undefined, { shouldValidate: true })}
                         />
                       </FormControl>
                     </div>

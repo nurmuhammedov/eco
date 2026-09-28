@@ -1,53 +1,32 @@
-import { XrayAppealDtoSchema } from '@/entities/create-application'
+import { CreateXrayApplicationDTO, XrayAppealDtoSchema } from '@/entities/create-application'
 import { stateService } from '@/entities/create-application/types/enums'
 import { useDistrictSelectQuery, useRegionSelectQuery } from '@/shared/api/dictionaries'
 import { getSelectOptions } from '@/shared/lib/get-select-options'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { useRadiationProfileCheck } from '@/shared/api/radiation-profile/use-radiation-profile-check'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { type FormDraft, zodFormResolver } from '@/shared/lib/zod-form-resolver'
 import { useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
-import { z } from 'zod'
-import { FORM_ERROR_MESSAGES } from '@/shared/validation'
+import { fillFromProfile, requireProfileFiles } from './radiation-profile-files'
+
+const PROFILE_FILE_FIELDS = [
+  'file5Path',
+  'file5ExpiryDate',
+  'file7Path',
+  'file7ExpiryDate',
+  'file9Path',
+  'file9ExpiryDate',
+] as const
 
 export const useCreateXrayApplication = () => {
   const { user } = useAuth()
   const userTin = user?.tinOrPin?.toString()
   const { data: profileData, isLoading: isProfileLoading } = useRadiationProfileCheck(userTin, 'XRAY')
 
-  const form = useForm<z.input<typeof XrayAppealDtoSchema>>({
-    resolver: (values, context, options) => {
-      const isDataNull = !profileData
-      const dynamicSchema = XrayAppealDtoSchema.superRefine((data, ctx) => {
-        if (isDataNull) {
-          if (!data.file5Path)
-            ctx.addIssue({ code: z.ZodIssueCode.custom, message: FORM_ERROR_MESSAGES.required, path: ['file5Path'] })
-          if (!data.file5ExpiryDate)
-            ctx.addIssue({
-              code: z.ZodIssueCode.custom,
-              message: FORM_ERROR_MESSAGES.required,
-              path: ['file5ExpiryDate'],
-            })
-          if (!data.file7Path)
-            ctx.addIssue({ code: z.ZodIssueCode.custom, message: FORM_ERROR_MESSAGES.required, path: ['file7Path'] })
-          if (!data.file7ExpiryDate)
-            ctx.addIssue({
-              code: z.ZodIssueCode.custom,
-              message: FORM_ERROR_MESSAGES.required,
-              path: ['file7ExpiryDate'],
-            })
-          if (!data.file9Path)
-            ctx.addIssue({ code: z.ZodIssueCode.custom, message: FORM_ERROR_MESSAGES.required, path: ['file9Path'] })
-          if (!data.file9ExpiryDate)
-            ctx.addIssue({
-              code: z.ZodIssueCode.custom,
-              message: FORM_ERROR_MESSAGES.required,
-              path: ['file9ExpiryDate'],
-            })
-        }
-      })
-      return zodResolver(dynamicSchema)(values, context, options)
-    },
+  const formSchema = profileData ? XrayAppealDtoSchema : requireProfileFiles(XrayAppealDtoSchema, PROFILE_FILE_FIELDS)
+
+  const form = useForm<FormDraft<typeof XrayAppealDtoSchema>, unknown, CreateXrayApplicationDTO>({
+    resolver: zodFormResolver<FormDraft<typeof XrayAppealDtoSchema>, CreateXrayApplicationDTO>(formSchema),
     defaultValues: {
       phoneNumber: '',
       licenseNumber: '',
@@ -77,15 +56,7 @@ export const useCreateXrayApplication = () => {
   const regionId = form.watch('regionId')
 
   useEffect(() => {
-    if (profileData && profileData.files) {
-      Object.keys(profileData.files).forEach((key) => {
-        const fileInfo = profileData.files[key]
-        if (fileInfo?.path) form.setValue(key as any, fileInfo.path, { shouldValidate: true })
-        const dateKey = key.replace('Path', 'ExpiryDate')
-        if (fileInfo?.expiryDate)
-          form.setValue(dateKey as any, new Date(fileInfo.expiryDate) as any, { shouldValidate: true })
-      })
-    }
+    if (profileData?.files) fillFromProfile(form.setValue, profileData.files)
   }, [profileData, form])
 
   const { data: regions } = useRegionSelectQuery()

@@ -4,52 +4,30 @@ import { useDistrictSelectQuery, useRegionSelectQuery } from '@/shared/api/dicti
 import { getSelectOptions } from '@/shared/lib/get-select-options'
 import { useRadiationProfileCheck } from '@/shared/api/radiation-profile/use-radiation-profile-check'
 import { useAuth } from '@/shared/hooks/use-auth'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { type FormDraft, zodFormResolver } from '@/shared/lib/zod-form-resolver'
 import { useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
-import { z } from 'zod'
-import { FORM_ERROR_MESSAGES } from '@/shared/validation'
+import { fillFromProfile, requireProfileFiles } from './radiation-profile-files'
+
+const PROFILE_FILE_FIELDS = [
+  'file17Path',
+  'file2Path',
+  'file2ExpiryDate',
+  'file5Path',
+  'file5ExpiryDate',
+  'file15Path',
+  'file15ExpiryDate',
+] as const
 
 export const useCreateIrsApplication = () => {
   const { user } = useAuth()
   const userTin = user?.tinOrPin?.toString()
   const { data: profileData, isLoading: isProfileLoading } = useRadiationProfileCheck(userTin, 'IRS')
 
-  const form = useForm<CreateIrsApplicationDTO>({
-    resolver: (values, context, options) => {
-      const isDataNull = !profileData
-      const dynamicSchema = IrsAppealDtoSchema.superRefine((data: any, ctx: any) => {
-        if (isDataNull) {
-          if (!data.file17Path)
-            ctx.addIssue({ code: z.ZodIssueCode.custom, message: FORM_ERROR_MESSAGES.required, path: ['file17Path'] })
-          if (!data.file2Path)
-            ctx.addIssue({ code: z.ZodIssueCode.custom, message: FORM_ERROR_MESSAGES.required, path: ['file2Path'] })
-          if (!data.file2ExpiryDate)
-            ctx.addIssue({
-              code: z.ZodIssueCode.custom,
-              message: FORM_ERROR_MESSAGES.required,
-              path: ['file2ExpiryDate'],
-            })
-          if (!data.file5Path)
-            ctx.addIssue({ code: z.ZodIssueCode.custom, message: FORM_ERROR_MESSAGES.required, path: ['file5Path'] })
-          if (!data.file5ExpiryDate)
-            ctx.addIssue({
-              code: z.ZodIssueCode.custom,
-              message: FORM_ERROR_MESSAGES.required,
-              path: ['file5ExpiryDate'],
-            })
-          if (!data.file15Path)
-            ctx.addIssue({ code: z.ZodIssueCode.custom, message: FORM_ERROR_MESSAGES.required, path: ['file15Path'] })
-          if (!data.file15ExpiryDate)
-            ctx.addIssue({
-              code: z.ZodIssueCode.custom,
-              message: FORM_ERROR_MESSAGES.required,
-              path: ['file15ExpiryDate'],
-            })
-        }
-      })
-      return zodResolver(dynamicSchema)(values, context, options)
-    },
+  const formSchema = profileData ? IrsAppealDtoSchema : requireProfileFiles(IrsAppealDtoSchema, PROFILE_FILE_FIELDS)
+
+  const form = useForm<FormDraft<typeof IrsAppealDtoSchema>, unknown, CreateIrsApplicationDTO>({
+    resolver: zodFormResolver<FormDraft<typeof IrsAppealDtoSchema>, CreateIrsApplicationDTO>(formSchema),
     defaultValues: {
       phoneNumber: '',
       parentOrganization: '',
@@ -68,9 +46,9 @@ export const useCreateIrsApplication = () => {
       type: '',
       category: undefined, // Enum
       country: '',
-      manufacturedAt: '', // String (date)
+      manufacturedAt: undefined,
       acceptedFrom: '',
-      acceptedAt: '', // String (date)
+      acceptedAt: undefined,
       isValid: true, // Boolean
       usageType: undefined, // Enum
       storageLocation: '',
@@ -93,15 +71,7 @@ export const useCreateIrsApplication = () => {
   const regionId = form.watch('regionId')
 
   useEffect(() => {
-    if (profileData && profileData.files) {
-      Object.keys(profileData.files).forEach((key) => {
-        const fileInfo = profileData.files[key]
-        if (fileInfo?.path) form.setValue(key as any, fileInfo.path, { shouldValidate: true })
-        const dateKey = key.replace('Path', 'ExpiryDate')
-        if (fileInfo?.expiryDate)
-          form.setValue(dateKey as any, new Date(fileInfo.expiryDate) as any, { shouldValidate: true })
-      })
-    }
+    if (profileData?.files) fillFromProfile(form.setValue, profileData.files)
   }, [profileData, form])
 
   const { data: regions } = useRegionSelectQuery()

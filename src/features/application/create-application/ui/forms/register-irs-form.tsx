@@ -13,10 +13,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Alert, AlertDescription } from '@/shared/components/ui/alert'
 import { FileLink } from '@/shared/components/common/file-link'
 import { getDate } from '@/shared/utils/date'
-import { parseISO, format } from 'date-fns'
+import { parseISO } from 'date-fns'
 import { TriangleAlert } from 'lucide-react'
 import { Skeleton } from '@/shared/components/ui/skeleton'
 import { EmptyValue } from '@/shared/components/common/empty-value'
+import {
+  withDatesAsDays,
+  withProfileFiles,
+} from '@/features/application/create-application/model/radiation-profile-files'
 
 interface RegisterIrsFormProps {
   onSubmit: (data: CreateIrsApplicationDTO) => void
@@ -49,17 +53,9 @@ const RegisterIrsForm = ({ onSubmit }: RegisterIrsFormProps) => {
     <Form {...form}>
       <form
         autoComplete="off"
-        onSubmit={form.handleSubmit((d) => {
-          const rawData = { ...form.getValues(), ...d }
-          const cleanedData = Object.fromEntries(
-            Object.entries(rawData).map(([key, value]) => {
-              if ((value as any) instanceof Date && !isNaN((value as any).getTime()))
-                return [key, format(value as any, 'yyyy-MM-dd')]
-              return [key, value]
-            })
-          )
-          onSubmit(cleanedData as any)
-        })}
+        onSubmit={form.handleSubmit((validated) =>
+          onSubmit(withDatesAsDays(withProfileFiles(form.getValues(), validated)))
+        )}
       >
         <GoBack title="Ionlashtiruvchi nurlanish manbalarini ro‘yxatga olish" />
         <CardForm className="mt-2 mb-2">
@@ -181,13 +177,7 @@ const RegisterIrsForm = ({ onSubmit }: RegisterIrsFormProps) => {
                       <SelectTrigger className="3xl:w-sm w-full">
                         <SelectValue placeholder="Identifikatsiya turini tanlang" />
                       </SelectTrigger>
-                      <SelectContent>
-                        {irsIdentifierTypeOptions.map((option: any) => (
-                          <SelectItem key={option.props.value} value={option.props.value}>
-                            {option.props.children}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
+                      <SelectContent>{irsIdentifierTypeOptions}</SelectContent>
                     </Select>
                   </FormControl>
                   <FormMessage />
@@ -288,13 +278,7 @@ const RegisterIrsForm = ({ onSubmit }: RegisterIrsFormProps) => {
                       <SelectTrigger className="3xl:w-sm w-full">
                         <SelectValue placeholder="Kategoriyani tanlang" />
                       </SelectTrigger>
-                      <SelectContent>
-                        {irsCategoryOptions.map((option: any) => (
-                          <SelectItem key={option.props.value} value={option.props.value}>
-                            {option.props.children}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
+                      <SelectContent>{irsCategoryOptions}</SelectContent>
                     </Select>
                   </FormControl>
                   <FormMessage />
@@ -400,13 +384,7 @@ const RegisterIrsForm = ({ onSubmit }: RegisterIrsFormProps) => {
                       <SelectTrigger className="3xl:w-sm w-full">
                         <SelectValue placeholder="Maqsadni tanlang" />
                       </SelectTrigger>
-                      <SelectContent>
-                        {irsUsageTypeOptions.map((option: any) => (
-                          <SelectItem key={option.props.value} value={option.props.value}>
-                            {option.props.children}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
+                      <SelectContent>{irsUsageTypeOptions}</SelectContent>
                     </Select>
                   </FormControl>
                   <FormMessage />
@@ -541,7 +519,7 @@ const RegisterIrsForm = ({ onSubmit }: RegisterIrsFormProps) => {
                           form={form}
                           name={field.name}
                           accept={[FileTypes.PDF]}
-                          onRemove={() => form.setValue('file2ExpiryDate', undefined as any, { shouldValidate: true })}
+                          onRemove={() => form.setValue('file2ExpiryDate', undefined, { shouldValidate: true })}
                         />
                       </FormControl>
                     </div>
@@ -585,7 +563,7 @@ const RegisterIrsForm = ({ onSubmit }: RegisterIrsFormProps) => {
                           form={form}
                           name={field.name}
                           accept={[FileTypes.PDF]}
-                          onRemove={() => form.setValue('file5ExpiryDate', undefined as any, { shouldValidate: true })}
+                          onRemove={() => form.setValue('file5ExpiryDate', undefined, { shouldValidate: true })}
                         />
                       </FormControl>
                     </div>
@@ -629,7 +607,7 @@ const RegisterIrsForm = ({ onSubmit }: RegisterIrsFormProps) => {
                           form={form}
                           name={field.name}
                           accept={[FileTypes.PDF]}
-                          onRemove={() => form.setValue('file15ExpiryDate', undefined as any, { shouldValidate: true })}
+                          onRemove={() => form.setValue('file15ExpiryDate', undefined, { shouldValidate: true })}
                         />
                       </FormControl>
                     </div>
