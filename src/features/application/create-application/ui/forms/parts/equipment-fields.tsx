@@ -1,5 +1,5 @@
 import { parseISO } from 'date-fns'
-import { UseFormReturn } from 'react-hook-form'
+import type { Control, FieldValues, Path, UseFormReturn } from 'react-hook-form'
 import { InputFile } from '@/shared/components/common/file-upload'
 import { FileTypes } from '@/shared/components/common/file-upload/model/file-types'
 import DatePicker from '@/shared/components/ui/datepicker'
@@ -11,9 +11,20 @@ import { PhoneInput } from '@/shared/components/ui/phone-input'
  * written out once per form, which is how the copies came to differ: the same
  * field carried up to six spellings across the seventeen forms.
  */
-interface FieldProps {
-  form: UseFormReturn<any>
+interface FieldProps<T extends FieldValues, TSubmitted> {
+  form: UseFormReturn<T, unknown, TSubmitted>
 }
+
+/**
+ * A part names its own field, and RHF cannot resolve that name on a form whose
+ * values are still a type parameter. The part therefore sees the form through
+ * its own field alone; its constraint on T is what checks the form has it.
+ */
+const controlOf = <TOwn extends FieldValues>(form: { control: unknown }) => form.control as Control<TOwn>
+
+type Phone = { phoneNumber?: string }
+type Manufactured = { manufacturedAt?: Date | string | null }
+type ServicePeriod = { servicePeriod?: Date | string | null }
 
 const asDate = (value: unknown) => {
   const parsed = typeof value === 'string' ? parseISO(value) : value
@@ -21,9 +32,9 @@ const asDate = (value: unknown) => {
   return parsed instanceof Date && !isNaN(parsed.valueOf()) ? parsed : undefined
 }
 
-export const PhoneNumberField = ({ form }: FieldProps) => (
+export const PhoneNumberField = <T extends Phone, TSubmitted>({ form }: FieldProps<T, TSubmitted>) => (
   <FormField
-    control={form.control}
+    control={controlOf<Phone>(form)}
     name="phoneNumber"
     render={({ field }) => (
       <FormItem>
@@ -37,9 +48,9 @@ export const PhoneNumberField = ({ form }: FieldProps) => (
   />
 )
 
-export const ManufacturedAtField = ({ form }: FieldProps) => (
+export const ManufacturedAtField = <T extends Manufactured, TSubmitted>({ form }: FieldProps<T, TSubmitted>) => (
   <FormField
-    control={form.control}
+    control={controlOf<Manufactured>(form)}
     name="manufacturedAt"
     render={({ field }) => (
       <FormItem className="3xl:w-sm w-full">
@@ -56,9 +67,9 @@ export const ManufacturedAtField = ({ form }: FieldProps) => (
   />
 )
 
-export const ServicePeriodField = ({ form }: FieldProps) => (
+export const ServicePeriodField = <T extends ServicePeriod, TSubmitted>({ form }: FieldProps<T, TSubmitted>) => (
   <FormField
-    control={form.control}
+    control={controlOf<ServicePeriod>(form)}
     name="servicePeriod"
     render={({ field }) => (
       <FormItem className="3xl:w-sm w-full">
@@ -75,12 +86,12 @@ export const ServicePeriodField = ({ form }: FieldProps) => (
  * ask for fourteen of these between them and each was written out in full, so
  * the same document ended up with several spellings of its own name.
  */
-export const DocumentField = ({
+export const DocumentField = <T extends FieldValues, TSubmitted>({
   form,
   name,
   label,
   required = false,
-}: FieldProps & { name: string; label: string; required?: boolean }) => (
+}: FieldProps<T, TSubmitted> & { name: Path<T>; label: string; required?: boolean }) => (
   <FormField
     name={name}
     control={form.control}

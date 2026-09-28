@@ -1,18 +1,22 @@
 import { parseISO } from 'date-fns'
-import { UseFormReturn } from 'react-hook-form'
+import type { UseFormReturn } from 'react-hook-form'
 import { CardForm } from '@/entities/create-application'
 import DetailRow from '@/shared/components/common/detail-row'
 import { Button } from '@/shared/components/ui/button'
 import DatePicker from '@/shared/components/ui/datepicker'
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
 import { Input } from '@/shared/components/ui/input'
+import type { OwnerData } from '../../../model/use-owner-lookup'
 
-interface ApplicantSearchCardProps {
-  form: UseFormReturn<any>
+/** The two fields the card fills in, as the forms hold them */
+type ApplicantFields = { identity?: string | null; birthDate?: Date | string | null }
+
+interface ApplicantSearchCardProps<T extends ApplicantFields, TSubmitted> {
+  form: UseFormReturn<T, unknown, TSubmitted>
   isUpdate: boolean
   isLegal: boolean
   isIndividual: boolean
-  ownerData: any
+  ownerData?: OwnerData | null
   isSearchLoading: boolean
   onSearch: () => void
   onClear: () => void
@@ -24,7 +28,7 @@ interface ApplicantSearchCardProps {
  * it, and each used to carry its own copy - by the time this was pulled out the
  * copies had drifted apart, so a fix to one never reached the others.
  */
-export const ApplicantSearchCard = ({
+export const ApplicantSearchCard = <T extends ApplicantFields, TSubmitted>({
   form,
   isUpdate,
   isLegal,
@@ -33,16 +37,20 @@ export const ApplicantSearchCard = ({
   isSearchLoading,
   onSearch,
   onClear,
-}: ApplicantSearchCardProps) => {
-  const identity = form.watch('identity')
-  const birthDateString = form.watch('birthDate')
+}: ApplicantSearchCardProps<T, TSubmitted>) => {
+  // RHF cannot resolve the card's field names on a form whose values are still
+  // a type parameter, so the card works through its own two fields; the
+  // constraint on T is what checks the form has them.
+  const applicant = form as unknown as UseFormReturn<ApplicantFields>
+  const identity = applicant.watch('identity')
+  const birthDateString = applicant.watch('birthDate')
 
   return (
     <CardForm className="my-2">
       {!isUpdate ? (
         <div className="3xl:flex 3xl:flex-wrap 4xl:w-4/5 mb-5 grid gap-x-4 gap-y-4 md:grid-cols-2 xl:grid-cols-3">
           <FormField
-            control={form.control}
+            control={applicant.control}
             name="identity"
             render={({ field }) => (
               <FormItem>
@@ -59,7 +67,7 @@ export const ApplicantSearchCard = ({
                       e.target.value = val
                       if (ownerData) onClear()
                       if (val.length !== 14) {
-                        form.setValue('birthDate', undefined as any)
+                        applicant.setValue('birthDate', undefined)
                       }
                       field.onChange(e)
                     }}
@@ -72,7 +80,7 @@ export const ApplicantSearchCard = ({
 
           {isIndividual && (
             <FormField
-              control={form.control}
+              control={applicant.control}
               name="birthDate"
               render={({ field }) => {
                 const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
