@@ -15,6 +15,29 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import useCustomSearchParams from '@/shared/hooks/api/use-search-params'
 import { paramText } from '@/shared/lib/url-params'
 import { isCountryTotal } from '../../lib/country-total'
+import type { ISearchParams } from '@/shared/types'
+import type { ExtendedColumnDef } from '@/shared/components/common/data-table/model/column-def'
+
+/** A count per belong type and status, e.g. `HF_NEW` or `ALL_TYPES_TOTAL` */
+type CountKey = `${string}_${string}`
+
+type Row = { regionName: string; isSummary: boolean } & Record<CountKey, number>
+
+interface RowConfig {
+  id: string | number
+  name: string
+  isSummary: boolean
+  regionId: number | null
+}
+
+interface CountTask {
+  rowId: string | number
+  belongType: string
+  status: InquiryStatus | null
+  params: ISearchParams
+}
+
+const countKey = (belongType: string, status: string): CountKey => `${belongType}_${status}`
 
 const InquiriesStatusReport: React.FC = () => {
   const { paramsObject, addParams } = useCustomSearchParams()
@@ -24,7 +47,7 @@ const InquiriesStatusReport: React.FC = () => {
   const { data: regionsList, isLoading: isRegionsLoading } = useRegionSelectQuery()
   const regionOptions = useMemo(() => regionsList || [], [regionsList])
 
-  const [tableData, setTableData] = useState<any[]>([])
+  const [tableData, setTableData] = useState<Row[]>([])
   const [isLoading, setIsLoading] = useState(false)
 
   const visibleStatuses = useMemo(() => {
@@ -55,12 +78,12 @@ const InquiriesStatusReport: React.FC = () => {
       setIsLoading(true)
 
       // Filter out 'Respublika' from region items since we will add a summary row manually
-      const filteredRegions = regionOptions.filter((r: any) => !isCountryTotal(r.name))
+      const filteredRegions = regionOptions.filter((r) => !isCountryTotal(r.name))
 
       // The rows we want: 1 summary + all regions
-      let rowsConfig = [
+      let rowsConfig: RowConfig[] = [
         { id: 'ALL', name: 'Respublika bo‘yicha', isSummary: true, regionId: null },
-        ...filteredRegions.map((r: any) => ({
+        ...filteredRegions.map((r) => ({
           id: r.id,
           name: r.name,
           isSummary: false,
@@ -75,7 +98,7 @@ const InquiriesStatusReport: React.FC = () => {
       const belongTypes = ['ALL_TYPES', ...Object.values(InquiryBelongType)]
 
       // Build all tasks
-      const tasks: any[] = []
+      const tasks: CountTask[] = []
 
       rowsConfig.forEach((rowCfg) => {
         belongTypes.forEach((bt) => {
@@ -117,13 +140,13 @@ const InquiriesStatusReport: React.FC = () => {
 
       // We will fill this object with results
       // grouped[rowId][belongType_status] = count
-      const grouped: Record<string, any> = {}
+      const grouped: Record<string, Row> = {}
       rowsConfig.forEach((r) => {
         grouped[r.id] = { regionName: r.name, isSummary: r.isSummary }
         belongTypes.forEach((bt) => {
-          grouped[r.id][`${bt}_TOTAL`] = 0
+          grouped[r.id][countKey(bt, 'TOTAL')] = 0
           visibleStatuses.forEach((st) => {
-            grouped[r.id][`${bt}_${st}`] = 0
+            grouped[r.id][countKey(bt, st)] = 0
           })
         })
       })
@@ -131,13 +154,13 @@ const InquiriesStatusReport: React.FC = () => {
       try {
         const promises = tasks.map(async (task) => {
           try {
-            const res = await apiClient.getWithPagination<any>('/inquiries', task.params)
+            const res = await apiClient.getWithPagination<unknown>('/inquiries', task.params)
             const count = res.data?.page?.totalElements || 0
 
             if (task.status === null) {
-              grouped[task.rowId][`${task.belongType}_TOTAL`] = count
+              grouped[task.rowId][countKey(task.belongType, 'TOTAL')] = count
             } else {
-              grouped[task.rowId][`${task.belongType}_${task.status}`] = count
+              grouped[task.rowId][countKey(task.belongType, task.status)] = count
             }
           } catch (err) {
             console.error('Failed to fetch count for', task.params, err)
@@ -165,7 +188,7 @@ const InquiriesStatusReport: React.FC = () => {
     }
   }, [regionOptions, regionNameParam, typeParam, visibleStatuses])
 
-  const columns = useMemo(() => {
+  const columns = useMemo((): ExtendedColumnDef<Row>[] => {
     const textColors: Record<string, string> = {
       [InquiryStatus.NEW]: 'text-blue-600',
       [InquiryStatus.IN_PROCESS]: 'text-amber-600',
@@ -183,24 +206,24 @@ const InquiriesStatusReport: React.FC = () => {
         id: 'regionName',
         minSize: 200,
         className: 'sticky left-0 z-20 border-r shadow-[1px_0_0_0_rgba(0,0,0,0.1)] font-medium',
-        cell: ({ row }: any) => {
+        cell: ({ row }) => {
           const value = row.original.regionName
           return (
             <span className={cn(row.original.isSummary ? 'font-bold text-gray-800' : 'text-gray-700')}>{value}</span>
           )
         },
       },
-      ...['ALL_TYPES', ...Object.values(InquiryBelongType)].map((bt) => {
+      ...['ALL_TYPES', ...Object.values(InquiryBelongType)].map((bt): ExtendedColumnDef<Row> => {
         const headerTitle = bt === 'ALL_TYPES' ? 'Barchasi' : inquiryBelongTypeLabels[bt as InquiryBelongType]
         return {
           header: headerTitle,
           columns: [
             {
               header: 'Jami',
-              accessorKey: `${bt}_TOTAL`,
+              accessorKey: countKey(bt, 'TOTAL'),
               className: 'text-center bg-gray-50/50 border-x',
-              cell: ({ row }: any) => {
-                const val = row.original[`${bt}_TOTAL`]
+              cell: ({ row }) => {
+                const val = row.original[countKey(bt, 'TOTAL')]
                 return (
                   <span
                     className={cn(row.original.isSummary ? 'font-bold text-gray-900' : 'font-semibold text-gray-700')}
@@ -210,33 +233,35 @@ const InquiriesStatusReport: React.FC = () => {
                 )
               },
             },
-            ...visibleStatuses.map((st) => ({
-              header: () => (
-                <div className="text-center text-xs whitespace-nowrap">
-                  {inquiryStatusLabels[st]?.split(' ').map((word: string, i: number) => (
-                    <React.Fragment key={i}>
-                      {word}
-                      <br />
-                    </React.Fragment>
-                  ))}
-                </div>
-              ),
-              accessorKey: `${bt}_${st}`,
-              className: 'text-center min-w-[70px]',
-              cell: ({ row }: any) => {
-                const val = row.original[`${bt}_${st}`] || 0
+            ...visibleStatuses.map(
+              (st): ExtendedColumnDef<Row> => ({
+                header: () => (
+                  <div className="text-center text-xs whitespace-nowrap">
+                    {inquiryStatusLabels[st]?.split(' ').map((word: string, i: number) => (
+                      <React.Fragment key={i}>
+                        {word}
+                        <br />
+                      </React.Fragment>
+                    ))}
+                  </div>
+                ),
+                accessorKey: countKey(bt, st),
+                className: 'text-center min-w-[70px]',
+                cell: ({ row }) => {
+                  const val = row.original[countKey(bt, st)] || 0
 
-                if (val === 0) {
-                  return <span className={cn('text-gray-800', row.original.isSummary && 'font-bold')}>0</span>
-                }
+                  if (val === 0) {
+                    return <span className={cn('text-gray-800', row.original.isSummary && 'font-bold')}>0</span>
+                  }
 
-                return (
-                  <span className={cn('font-semibold', textColors[st], row.original.isSummary ? 'font-bold' : '')}>
-                    {val}
-                  </span>
-                )
-              },
-            })),
+                  return (
+                    <span className={cn('font-semibold', textColors[st], row.original.isSummary ? 'font-bold' : '')}>
+                      {val}
+                    </span>
+                  )
+                },
+              })
+            ),
           ],
         }
       }),
@@ -256,7 +281,7 @@ const InquiriesStatusReport: React.FC = () => {
             <SelectContent>
               <SelectItem value="ALL">Barchasi</SelectItem>
               <SelectItem value="Respublika bo‘yicha">Respublika bo‘yicha</SelectItem>
-              {regionOptions.map((region: any) => (
+              {regionOptions.map((region) => (
                 <SelectItem key={region.id} value={region.name}>
                   {region.name}
                 </SelectItem>

@@ -8,12 +8,15 @@ import useCustomSearchParams from '@/shared/hooks/api/use-search-params'
 import { useRegionSelectQuery } from '@/shared/api/dictionaries'
 import { cn } from '@/shared/lib/utils'
 import { CadastrePassportReportItem } from './types'
+import type { ExtendedColumnDef } from '@/shared/components/common/data-table/model/column-def'
 
 const ALL = 'ALL'
 
 interface Row extends CadastrePassportReportItem {
   isSummary: boolean
 }
+
+type CountKey = Exclude<keyof CadastrePassportReportItem, 'regionId' | 'regionName'>
 
 const Count = ({ row, value, tone, bold }: { row: Row; value: number; tone?: string; bold?: boolean }) => (
   <span className={cn('tabular-nums', value === 0 ? 'text-gray-300' : tone, (bold || row.isSummary) && 'font-bold')}>
@@ -22,12 +25,12 @@ const Count = ({ row, value, tone, bold }: { row: Row; value: number; tone?: str
 )
 
 /** Ichki ustunlar (jami ichidagi taqsimot) bir xil ko‘rinishda beriladi. */
-const subColumn = (header: React.ReactNode, key: keyof CadastrePassportReportItem, tone?: string) => ({
+const subColumn = (header: string, key: CountKey, tone?: string): ExtendedColumnDef<Row> => ({
   header,
   accessorKey: key,
   id: key,
   className: 'text-center',
-  cell: ({ row }: any) => <Count row={row.original} value={row.original[key]} tone={tone} />,
+  cell: ({ row }) => <Count row={row.original} value={row.original[key]} tone={tone} />,
 })
 
 const CadastrePassportReport: React.FC = () => {
@@ -56,7 +59,7 @@ const CadastrePassportReport: React.FC = () => {
     return [...rows.filter((row) => row.isSummary), ...rows.filter((row) => !row.isSummary)]
   }, [data])
 
-  const columns = useMemo(
+  const columns = useMemo<ExtendedColumnDef<Row>[]>(
     () => [
       {
         header: 'Hududlar',
@@ -64,9 +67,7 @@ const CadastrePassportReport: React.FC = () => {
         id: 'regionName',
         minSize: 220,
         className: 'sticky left-0 z-20 border-r shadow-[1px_0_0_0_rgba(0,0,0,0.1)]',
-        cell: ({ row }: any) => (
-          <span className={cn(row.original.isSummary && 'font-bold')}>{row.original.regionName}</span>
-        ),
+        cell: ({ row }) => <span className={cn(row.original.isSummary && 'font-bold')}>{row.original.regionName}</span>,
       },
       {
         header: () => (
@@ -77,7 +78,7 @@ const CadastrePassportReport: React.FC = () => {
         accessorKey: 'totalCount',
         id: 'totalCount',
         className: 'text-center',
-        cell: ({ row }: any) => <Count row={row.original} value={row.original.totalCount} bold />,
+        cell: ({ row }) => <Count row={row.original} value={row.original.totalCount} bold />,
       },
       {
         header: () => (
@@ -88,7 +89,7 @@ const CadastrePassportReport: React.FC = () => {
         accessorKey: 'awaitingCustomerCount',
         id: 'awaitingCustomerCount',
         className: 'text-center',
-        cell: ({ row }: any) => <Count row={row.original} value={row.original.awaitingCustomerCount} />,
+        cell: ({ row }) => <Count row={row.original} value={row.original.awaitingCustomerCount} />,
       },
       {
         header: 'SES va FVV tasdiqlashida',
@@ -99,7 +100,7 @@ const CadastrePassportReport: React.FC = () => {
             accessorKey: 'inReviewCount',
             id: 'inReviewCount',
             className: 'text-center',
-            cell: ({ row }: any) => <Count row={row.original} value={row.original.inReviewCount} bold />,
+            cell: ({ row }) => <Count row={row.original} value={row.original.inReviewCount} bold />,
           },
           subColumn('Ikkalasida', 'awaitingBothCount'),
           subColumn('Faqat FVVda', 'awaitingFvvOnlyCount'),
@@ -111,16 +112,14 @@ const CadastrePassportReport: React.FC = () => {
         accessorKey: 'inCommitteeCount',
         id: 'inCommitteeCount',
         className: 'text-center',
-        cell: ({ row }: any) => <Count row={row.original} value={row.original.inCommitteeCount} />,
+        cell: ({ row }) => <Count row={row.original} value={row.original.inCommitteeCount} />,
       },
       {
         header: 'Tasdiqlangan',
         accessorKey: 'approvedCount',
         id: 'approvedCount',
         className: 'text-center',
-        cell: ({ row }: any) => (
-          <Count row={row.original} value={row.original.approvedCount} tone="text-green-600" bold />
-        ),
+        cell: ({ row }) => <Count row={row.original} value={row.original.approvedCount} tone="text-green-600" bold />,
       },
       {
         header: 'Rad etilgan',
@@ -131,9 +130,7 @@ const CadastrePassportReport: React.FC = () => {
             accessorKey: 'rejectedCount',
             id: 'rejectedCount',
             className: 'text-center',
-            cell: ({ row }: any) => (
-              <Count row={row.original} value={row.original.rejectedCount} tone="text-red-500" bold />
-            ),
+            cell: ({ row }) => <Count row={row.original} value={row.original.rejectedCount} tone="text-red-500" bold />,
           },
           subColumn('Buyurtmachi', 'rejectedByCustomerCount', 'text-red-500'),
           subColumn('FVV', 'rejectedByFvvCount', 'text-red-500'),
@@ -159,7 +156,7 @@ const CadastrePassportReport: React.FC = () => {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value={ALL}>Barcha hududlar</SelectItem>
-              {(regions ?? []).map((region: any) => (
+              {(regions ?? []).map((region) => (
                 <SelectItem key={region.id} value={String(region.id)}>
                   {region.name}
                 </SelectItem>
@@ -171,7 +168,7 @@ const CadastrePassportReport: React.FC = () => {
 
       <div className="flex-1 overflow-hidden rounded-md border bg-white shadow-sm">
         <DataTable
-          columns={columns as any}
+          columns={columns}
           data={tableData}
           isLoading={isLoading}
           isPaginated={false}

@@ -8,10 +8,12 @@ import axios from 'axios'
 import { useSearchParams, Link } from 'react-router-dom'
 import { Eye } from 'lucide-react'
 import { Button } from '@/shared/components/ui/button'
+import type { ExtendedColumnDef } from '@/shared/components/common/data-table/model/column-def'
 
 interface TurniketLog {
   name: string
   userId?: string
+  id?: string
   days: {
     sana: string
     kirish_vaqti: string
@@ -37,7 +39,7 @@ const formatWorkTime = (time: string | number | undefined) => {
   return `${h} s. ${m.toString().padStart(2, '0')} min.`
 }
 
-const getTotalMinutes = (days: any[], field: string) => {
+const getTotalMinutes = (days: TurniketLog['days'], field: 'umumiy_ishlangan' | 'norma_ishlangan') => {
   return days.reduce((total, log) => {
     const value = log[field]
     if (!value) return total
@@ -130,14 +132,14 @@ const TurniketReport: React.FC = () => {
   }, [year, month, daysInMonth])
 
   const columns = useMemo(() => {
-    const cols: any[] = [
+    const cols: ExtendedColumnDef<TurniketLog>[] = [
       {
         accessorKey: 'name',
         header: 'F.I.SH.',
         id: 'name',
         minSize: 300,
         className: 'sticky left-0 z-20 border-r shadow-[1px_0_0_0_rgba(0,0,0,0.1)] font-medium',
-        cell: ({ row }: any) => {
+        cell: ({ row }) => {
           const from = format(daysInMonth[0], 'yyyy-MM-dd')
           const to = format(daysInMonth[daysInMonth.length - 1], 'yyyy-MM-dd')
           const userId = row.original.userId || row.original.id // API might return id or userId
@@ -165,7 +167,7 @@ const TurniketReport: React.FC = () => {
         id: 'total-work',
         size: 150,
         className: 'text-center font-bold bg-blue-50/30 whitespace-nowrap',
-        cell: ({ row }: any) => {
+        cell: ({ row }) => {
           const total = getTotalMinutes(row.original.days, 'umumiy_ishlangan')
           return formatWorkTime(total)
         },
@@ -175,7 +177,7 @@ const TurniketReport: React.FC = () => {
         id: 'total-norma',
         size: 150,
         className: 'text-center font-bold bg-blue-50/30 whitespace-nowrap',
-        cell: ({ row }: any) => {
+        cell: ({ row }) => {
           const total = getTotalMinutes(row.original.days, 'norma_ishlangan')
           return formatWorkTime(total)
         },
@@ -197,8 +199,8 @@ const TurniketReport: React.FC = () => {
             id: `in-${dayStr}`,
             size: 80,
             className: weekendClass,
-            cell: ({ row }: any) => {
-              const log = row.original.days.find((d: any) => d.sana === dayStr)
+            cell: ({ row }) => {
+              const log = row.original.days.find((d) => d.sana === dayStr)
               if (!log?.kirish_vaqti) return '-'
 
               const isLate = log.kirish_vaqti >= '09:00:00'
@@ -214,8 +216,8 @@ const TurniketReport: React.FC = () => {
             id: `out-${dayStr}`,
             size: 80,
             className: weekendClass,
-            cell: ({ row }: any) => {
-              const log = row.original.days.find((d: any) => d.sana === dayStr)
+            cell: ({ row }) => {
+              const log = row.original.days.find((d) => d.sana === dayStr)
               if (!log?.chiqish_vaqti) return '-'
 
               const isEarlyLeave = log.chiqish_vaqti < '18:00:00'
@@ -231,8 +233,8 @@ const TurniketReport: React.FC = () => {
             id: `work-${dayStr}`,
             size: 100,
             className: `font-medium whitespace-nowrap ${weekendClass}`,
-            cell: ({ row }: any) => {
-              const log = row.original.days.find((d: any) => d.sana === dayStr)
+            cell: ({ row }) => {
+              const log = row.original.days.find((d) => d.sana === dayStr)
               return formatWorkTime(log?.umumiy_ishlangan)
             },
           },
@@ -241,8 +243,8 @@ const TurniketReport: React.FC = () => {
             id: `norma-${dayStr}`,
             size: 100,
             className: `font-medium whitespace-nowrap ${weekendClass}`,
-            cell: ({ row }: any) => {
-              const log = row.original.days.find((d: any) => d.sana === dayStr)
+            cell: ({ row }) => {
+              const log = row.original.days.find((d) => d.sana === dayStr)
               const timeStr = log?.norma_ishlangan
               if (!timeStr) return '-'
 

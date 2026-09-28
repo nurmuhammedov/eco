@@ -9,6 +9,7 @@ import axios from 'axios'
 import { format, parseISO } from 'date-fns'
 import { uz } from 'date-fns/locale'
 import { cn } from '@/shared/lib/utils'
+import type { ExtendedColumnDef } from '@/shared/components/common/data-table/model/column-def'
 
 interface TurniketDetailDay {
   sana: string
@@ -70,12 +71,12 @@ const TurniketReportDetail: React.FC = () => {
     }
   }, [from])
 
-  const columns = [
+  const columns: ExtendedColumnDef<TurniketDetailDay>[] = [
     {
       header: 'Sana',
       accessorKey: 'sana',
-      cell: ({ getValue }: any) => {
-        const val = getValue()
+      cell: ({ getValue }) => {
+        const val = getValue<string | null>()
         if (!val) return '-'
         try {
           return format(parseISO(val), 'dd.MM.yyyy')
@@ -89,8 +90,8 @@ const TurniketReportDetail: React.FC = () => {
     {
       header: 'Kelish',
       accessorKey: 'kirish_vaqti',
-      cell: ({ getValue }: any) => {
-        const val = getValue()
+      cell: ({ getValue }) => {
+        const val = getValue<string | null>()
         if (!val) return '-'
         const time = val.substring(0, 5)
         const isLate = val >= '09:00:00'
@@ -101,8 +102,8 @@ const TurniketReportDetail: React.FC = () => {
     {
       header: 'Ketish',
       accessorKey: 'chiqish_vaqti',
-      cell: ({ getValue }: any) => {
-        const val = getValue()
+      cell: ({ getValue }) => {
+        const val = getValue<string | null>()
         if (!val) return '-'
         const time = val.substring(0, 5)
         const isEarlyLeave = val < '18:00:00'
@@ -113,14 +114,14 @@ const TurniketReportDetail: React.FC = () => {
     {
       header: 'Umumiy ish soati',
       accessorKey: 'umumiy_ishlangan',
-      cell: ({ getValue }: any) => formatWorkTime(getValue()),
+      cell: ({ getValue }) => formatWorkTime(getValue<string>()),
       size: 150,
     },
     {
       header: 'Norma ish soati',
       accessorKey: 'norma_ishlangan',
-      cell: ({ getValue }: any) => {
-        const val = getValue()
+      cell: ({ getValue }) => {
+        const val = getValue<string | null>()
         if (!val) return '-'
         const isLow = val < '08:00'
         return <span className={isLow ? 'text-red-600' : 'text-green-600'}>{formatWorkTime(val)}</span>
