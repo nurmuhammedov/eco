@@ -1,5 +1,6 @@
 import type { IrsCategory, IrsIdentifierType, IrsUsageType } from '@/entities/create-application/types/enums'
 import type { FileDto } from '@/shared/types'
+import type { RegistrationMode } from './registry-status'
 
 /** IrsViewById (`GET /irs/{id}`) */
 export interface IrsDetail {
@@ -48,13 +49,13 @@ export interface XrayDetail {
   licenseRegistryNumber: string | null
   licenseDate: string | null
   address: string | null
-  stateService: string | null
+  stateService: 'X_RAY_PERMIT' | null
   model: string | null
   serialNumber: string | null
   manufacturedYear: number | null
   isActive: boolean | null
   files: Record<string, FileDto> | null
-  mode: string | null
+  mode: RegistrationMode | null
   managerName: string | null
   regionId: number | null
   districtId: number | null

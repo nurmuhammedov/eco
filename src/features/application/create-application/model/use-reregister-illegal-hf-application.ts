@@ -13,7 +13,7 @@ import { useForm } from 'react-hook-form'
 
 import { useDetail } from '@/shared/hooks'
 import { useOwnerLookup } from './use-owner-lookup'
-import type { HfDetail } from './hf-detail'
+import type { HfDetail } from '@/entities/registry'
 
 type ReRegisterIllegalHfDraft = FormDraft<typeof ReRegisterIllegalHFSchema>
 
@@ -78,7 +78,6 @@ export const useReRegisterIllegalHFApplication = () => {
         legalTin: currentTin,
         hazardousFacilityId: currentId,
         name: detail.name || '',
-        phoneNumber: detail.phoneNumber || '',
         upperOrganization: detail.upperOrganization || '',
         hfTypeId: detail.hfTypeId ? String(detail.hfTypeId) : undefined,
         regionId: detail.regionId ? String(detail.regionId) : '',

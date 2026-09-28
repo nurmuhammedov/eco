@@ -19,7 +19,7 @@ import {
   IllegalOilContainerAppealDtoBaseSchema,
 } from '@/entities/create-application'
 import { type OwnerData, useOwnerLookup } from './use-owner-lookup'
-import type { EquipmentDetail } from './equipment-detail'
+import type { EquipmentDetail } from '@/entities/registry'
 import { KEPT_OWNER_BIRTH_DATE, latinOrEmpty } from './edit-values'
 
 type OilContainerDraft = FormDraft<typeof IllegalOilContainerAppealDtoSchema>

@@ -11,7 +11,7 @@ import { type FormDraft, zodFormResolver } from '@/shared/lib/zod-form-resolver'
 import { useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { useDetail } from '@/shared/hooks'
-import type { HfDetail } from './hf-detail'
+import type { HfDetail } from '@/entities/registry'
 
 type ReRegisterHfDraft = FormDraft<typeof ReRegisterHFSchema>
 
@@ -64,7 +64,6 @@ export const useReRegisterHFApplication = () => {
       form.reset((p) => ({
         ...p,
         name: detail.name || '',
-        phoneNumber: detail.phoneNumber || '',
         upperOrganization: detail.upperOrganization || '',
         hfTypeId: detail.hfTypeId ? String(detail.hfTypeId) : undefined,
         regionId: detail.regionId ? String(detail.regionId) : '',

@@ -19,7 +19,7 @@ import {
 } from '@/entities/create-application/schemas/register-illegal-irs.schema'
 import { useRadiationProfileCheck } from '@/shared/api/radiation-profile/use-radiation-profile-check'
 import { type OwnerData, useOwnerLookup } from './use-owner-lookup'
-import type { IrsDetail } from './radiation-detail'
+import type { IrsDetail } from '@/entities/registry'
 import { asUpdatePayload, KEPT_OWNER_BIRTH_DATE, latinOrEmpty, withoutBlanks } from './edit-values'
 import { fillFromProfile, hasIncompleteFiles, requireProfileFiles, withProfileFiles } from './radiation-profile-files'
 
@@ -46,7 +46,7 @@ export const useRegisterIllegalIrs = (
   const navigate = useNavigate()
   const queryClient = useQueryClient()
 
-  const ownerLookup = useOwnerLookup({ type: 'IRS' })
+  const ownerLookup = useOwnerLookup()
 
   const { data: detail, isLoading: isDetailLoading } = useDetail<IrsDetail>(`/irs/`, id, !!id)
   const ownerIdentity = detail?.legalTin?.toString() || tin

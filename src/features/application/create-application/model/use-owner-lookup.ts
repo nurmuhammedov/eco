@@ -21,11 +21,7 @@ export interface OwnerData {
   phoneNumber?: string
 }
 
-/** The radiation registers answer per object kind */
-type LookupType = 'IRS' | 'XRAY'
-
 interface OwnerLookupOptions {
-  type?: LookupType
   /** Only organisations can own the object, so a citizen number is not looked up */
   legalOnly?: boolean
 }
@@ -34,14 +30,14 @@ interface OwnerLookupOptions {
  * Looks the owner up in the state registers by a taxpayer number, or by a
  * citizen number with a birth date.
  */
-export const useOwnerLookup = ({ type, legalOnly = false }: OwnerLookupOptions = {}) => {
+export const useOwnerLookup = ({ legalOnly = false }: OwnerLookupOptions = {}) => {
   const [owner, setOwner] = useState<OwnerData | null>(null)
   const [isSearching, setIsSearching] = useState(false)
 
   const lookup = (endpoint: string, body: Record<string, string>) => {
     setIsSearching(true)
     apiClient
-      .post<ApiResponse<OwnerData>>(endpoint, type ? { ...body, type } : body)
+      .post<ApiResponse<OwnerData>>(endpoint, body)
       .then((res) => setOwner(res.data?.data ?? null))
       .catch(() => setOwner(null))
       .finally(() => setIsSearching(false))

@@ -20,7 +20,7 @@ import { toast } from 'sonner'
 import { z } from 'zod'
 import { useRadiationProfileCheck } from '@/shared/api/radiation-profile/use-radiation-profile-check'
 import { type OwnerData, useOwnerLookup } from './use-owner-lookup'
-import type { XrayDetail } from './radiation-detail'
+import type { XrayDetail } from '@/entities/registry'
 import { asUpdatePayload, KEPT_OWNER_BIRTH_DATE, latinOrEmpty, withoutBlanks } from './edit-values'
 import { fillFromProfile, hasIncompleteFiles, requireProfileFiles, withProfileFiles } from './radiation-profile-files'
 
@@ -45,7 +45,7 @@ export const useRegisterIllegalXray = (
   const navigate = useNavigate()
   const queryClient = useQueryClient()
 
-  const ownerLookup = useOwnerLookup({ type: 'XRAY' })
+  const ownerLookup = useOwnerLookup()
 
   const { data: detail, isLoading: isDetailLoading } = useDetail<XrayDetail>(`/xrays`, id, !!id)
   const ownerIdentity = detail?.legalTin?.toString() || tin

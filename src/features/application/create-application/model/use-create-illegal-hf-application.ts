@@ -26,7 +26,7 @@ import { HF_CATEGORY_MODE } from '@/features/application/create-application/ui/f
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 import { z } from 'zod'
 import { type OwnerData, useOwnerLookup } from './use-owner-lookup'
-import type { HfDetail } from './hf-detail'
+import type { HfDetail } from '@/entities/registry'
 import { latinOrEmpty } from './edit-values'
 
 type HfDraft = FormDraft<typeof RegisterIllegalHfSchema>
@@ -99,7 +99,7 @@ export const useRegisterIllegalHf = (externalSubmit?: (data: RegisterIllegalHfDT
   const { data: detail, isLoading: isDetailLoading } = useDetail<HfDetail>(`/hf/`, id, !!id)
   const { mutateAsync: updateMutate, isPending: isUpdatePending } = useUpdate('/hf/', id, 'put')
 
-  const ownerIdentity = (detail?.ownerIdentity ? detail?.ownerIdentity?.toString() : null) || tin
+  const ownerIdentity = detail?.legalTin?.toString() || tin
   const regionId = form.watch('regionId')
   const { spheres } = useApplicationFormConstants()
 
@@ -116,8 +116,8 @@ export const useRegisterIllegalHf = (externalSubmit?: (data: RegisterIllegalHfDT
   useEffect(() => {
     if (detail && isUpdate) {
       form.reset({
-        identity: detail.ownerIdentity ? String(detail.ownerIdentity) : '',
-        phoneNumber: detail.phoneNumber || '',
+        identity: '',
+        phoneNumber: '',
         upperOrganization: latinOrEmpty(detail.upperOrganization || ''),
         name: latinOrEmpty(detail.name || ''),
         categoryId: detail.categoryId ? String(detail.categoryId) : undefined,
