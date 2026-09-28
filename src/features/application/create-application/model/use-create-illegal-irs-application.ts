@@ -46,7 +46,7 @@ export const useRegisterIllegalIrs = (
   const navigate = useNavigate()
   const queryClient = useQueryClient()
 
-  const ownerLookup = useOwnerLookup({ type: 'IRS' })
+  const ownerLookup = useOwnerLookup()
 
   const { data: detail, isLoading: isDetailLoading } = useDetail<IrsDetail>(`/irs/`, id, !!id)
   const ownerIdentity = detail?.legalTin?.toString() || tin

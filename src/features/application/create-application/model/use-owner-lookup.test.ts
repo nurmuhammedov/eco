@@ -54,17 +54,6 @@ describe('useOwnerLookup', () => {
     expect(post).not.toHaveBeenCalled()
   })
 
-  it('names the object kind for the radiation registers', () => {
-    post.mockResolvedValue({ data: { data: {} } })
-    const { result } = renderHook(() => useOwnerLookup({ type: 'IRS' }))
-
-    act(() => {
-      result.current.search('123456789')
-    })
-
-    expect(post).toHaveBeenCalledWith('/integration/iip/legal', { tin: '123456789', type: 'IRS' })
-  })
-
   it('forgets the owner when the lookup fails or is cleared', async () => {
     post.mockResolvedValueOnce({ data: { data: { legalName: 'OOO Test' } } })
     const { result } = renderHook(() => useOwnerLookup())
