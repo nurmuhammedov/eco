@@ -53,7 +53,7 @@ export const SectionFormDialog = ({ open, onOpenChange, passportId, slot, data, 
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit((values) => mutate(values))} className="space-y-6">
-            <ReviewDataFields control={form.control} groups={groups} />
+            <ReviewDataFields groups={groups} />
             <DialogFooter>
               <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={isPending}>
                 Bekor qilish

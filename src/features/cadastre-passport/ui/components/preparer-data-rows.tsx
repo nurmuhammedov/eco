@@ -11,7 +11,8 @@ const text = (value: string | number | null | undefined) => (isBlank(value) ? <E
 const unit = (value: string | number | null | undefined, suffix: string) =>
   isBlank(value) ? <EmptyValue /> : `${value} ${suffix}`
 
-const day = (value: string | null | undefined) => (value ? format(new Date(value), 'dd.MM.yyyy') : <EmptyValue />)
+const day = (value: string | number | null | undefined) =>
+  value ? format(new Date(value), 'dd.MM.yyyy') : <EmptyValue />
 
 /**
  * The rows follow "ТХЮЗ маълумоти" in its own order and wording, so the page
@@ -82,7 +83,7 @@ export const PreparerDataRows = ({ data }: { data: CadastreSection | null | unde
       />
       <DetailRow
         title="Obyektning hozirgi kundagi holati"
-        value={values.status ? <StatusBadge status={values.status} /> : <EmptyValue />}
+        value={values.status ? <StatusBadge status={String(values.status)} /> : <EmptyValue />}
       />
     </>
   )

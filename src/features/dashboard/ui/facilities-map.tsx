@@ -45,10 +45,18 @@ const MAP_CONTROLS = [
  * them left hands the whole arrangement back to the API instead of pinning each
  * one to a pixel that a different map size would get wrong.
  */
-const moveControlsLeft = (map: any) => {
+const moveControlsLeft = (map: ymaps.Map) => {
   for (const name of ['fullscreenControl', 'trafficControl', 'typeSelector', 'rulerControl']) {
-    map.controls.get(name)?.options.set({ float: 'left', position: null })
+    // Every standard control carries an option manager; the typings describe only the bare interface
+    const control = map.controls.get(name) as (ymaps.IControl & { options: ymaps.option.Manager }) | null
+    control?.options.set({ float: 'left', position: null })
   }
+}
+
+/** A point as ObjectManager keeps it: the plain feature it was given, not a GeoObject */
+interface ManagedFeature {
+  id: string
+  geometry: { coordinates: [number, number] }
 }
 
 const asArray = <T,>(value: T[] | undefined): T[] => (Array.isArray(value) ? value : [])
@@ -102,10 +110,10 @@ export const FacilitiesMap = () => {
   const [groupIds, setGroupIds] = useState<string[]>([])
   const [focusedId, setFocusedId] = useState<string | null>(null)
 
-  const mapRef = useRef<any>(null)
-  const managerRef = useRef<any>(null)
+  const mapRef = useRef<ymaps.Map | null>(null)
+  const managerRef = useRef<ymaps.ObjectManager | null>(null)
 
-  const bindMap = useCallback((instance: any) => {
+  const bindMap = useCallback((instance: ymaps.Map | null) => {
     if (!instance || mapRef.current === instance) return
     mapRef.current = instance
     moveControlsLeft(instance)
@@ -187,11 +195,13 @@ export const FacilitiesMap = () => {
 
   // instanceRef fires again on every re-render; binding twice would open the
   // card twice per click.
-  const bindManager = useCallback((instance: any) => {
+  // The library types every instanceRef as a Map; this one is the ObjectManager it is set on
+  const bindManager = useCallback((ref: ymaps.Map | null) => {
+    const instance = ref as unknown as ymaps.ObjectManager | null
     if (!instance || managerRef.current === instance) return
     managerRef.current = instance
 
-    instance.objects.events.add('click', (event: any) => {
+    instance.objects.events.add('click', (event: ymaps.IEvent) => {
       const id = String(event.get('objectId'))
       setGroupIds([id])
       setFocusedId(id)
@@ -203,25 +213,24 @@ export const FacilitiesMap = () => {
      * the zoom cannot go any further, the objects are listed instead, so a
      * cluster of facilities sharing one address is never a dead end.
      */
-    instance.clusters.events.add('click', (event: any) => {
+    instance.clusters.events.add('click', (event: ymaps.IEvent) => {
       const cluster = instance.clusters.getById(event.get('objectId'))
       const map = mapRef.current
       if (!cluster || !map) return
 
-      const objects = cluster.properties.geoObjects
+      const objects = cluster.properties.geoObjects as unknown as ManagedFeature[]
       const before = map.getZoom()
 
       map
-        .setBounds(
-          boundsOf(
-            objects.map((object: { geometry: { coordinates: [number, number] } }) => object.geometry.coordinates)
-          ),
-          { checkZoomRange: true, zoomMargin: 64, duration: 300 }
-        )
+        .setBounds(boundsOf(objects.map((object) => object.geometry.coordinates)), {
+          checkZoomRange: true,
+          zoomMargin: [64, 64, 64, 64],
+          duration: 300,
+        })
         .then(() => {
           if (map.getZoom() !== before) return
 
-          setGroupIds(objects.map((object: { id: string }) => String(object.id)))
+          setGroupIds(objects.map((object) => String(object.id)))
           setFocusedId(null)
         })
         .catch(() => undefined)

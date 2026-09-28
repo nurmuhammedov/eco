@@ -28,6 +28,18 @@ const useListCount = (endpoint: string, params: ISearchParams, enabled: boolean)
   return { count: Number(totalElements ?? 0), isFetching: enabled && isFetching }
 }
 
+/** The figures one registry tab shows; a registry without a status breakdown leaves those out */
+export interface RegistryStats {
+  total: number
+  active: number
+  inactive: number
+  valid?: number
+  invalid?: number
+  expired?: number
+  noDate?: number
+  isLoading: boolean
+}
+
 export const useDashboardStats = (regionId?: string | null, activeCategory?: string) => {
   const base: ISearchParams = regionId ? { regionId } : {}
 

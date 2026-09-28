@@ -40,9 +40,9 @@ export const WorkflowActions = ({ passport, workflow }: WorkflowActionsProps) =>
 
   const { mutate: run, isPending } = useMutation({
     mutationFn: ({ command, body }: { command: Command; body?: object }) =>
-      apiClient.post<any>(`/cadastre-passports/${passport.id}/workflow/${command}`, body ?? {}),
-    onSuccess: (response: any) => {
-      toast.success(response?.data?.message || 'Muvaffaqiyatli bajarildi')
+      apiClient.post<{ message?: string }>(`/cadastre-passports/${passport.id}/workflow/${command}`, body ?? {}),
+    onSuccess: (response) => {
+      toast.success(response.data?.message || 'Muvaffaqiyatli bajarildi')
       close()
       refresh()
     },

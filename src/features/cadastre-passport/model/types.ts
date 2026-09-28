@@ -10,7 +10,8 @@ export type WorkflowAction = 'FILL_DATA' | 'SUBMIT' | 'ENDORSE' | 'RETURN' | 'RE
 
 export type WorkflowStatus = 'IN_PROGRESS' | 'COMPLETED' | 'REJECTED' | 'CANCELLED'
 
-export type CadastreSection = Record<string, any>
+/** One party's part of the passport: its fields depend on the form that filled it */
+export type CadastreSection = Record<string, string | number | null | undefined>
 
 export interface CadastreReview {
   party: ReviewParty

@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import { FileText, PlusCircle, Clock, Gavel, HandCoins, CheckCircle, XCircle } from 'lucide-react'
 import { cn } from '@/shared/lib/utils'
 import usePaginatedData from '@/shared/hooks/api/use-paginated-data'
@@ -65,7 +66,7 @@ export const InquiriesStats = ({ regionId }: InquiriesStatsProps) => {
   const renderCleanCard = (
     title: string,
     value: number,
-    icon: any,
+    icon: ReactNode,
     colorText: string,
     bgColor: string,
     className?: string

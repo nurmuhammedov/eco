@@ -38,6 +38,14 @@ const searchSchema = z.object({
 })
 
 type FormValues = z.infer<typeof schema>
+
+/** CadastrePassportCreateDto */
+interface CadastreCreatePayload {
+  customerTin: number
+  passportFilePath: string
+  parentRequestNumber: string | null
+  preparerData: FormValues['cadastreData']
+}
 type SearchValues = z.infer<typeof searchSchema>
 
 export default function CadastreAdd() {
@@ -51,7 +59,8 @@ export default function CadastreAdd() {
 
   const ownTin = user?.tinOrPin ? String(user.tinOrPin) : null
 
-  const { mutate: createCadastre, isPending: isCreating } = useAdd<any, any, any>('/cadastre-passports')
+  // Its own toast names what happened, so the hook stays quiet
+  const { mutate: createCadastre, isPending: isCreating } = useAdd<CadastreCreatePayload>('/cadastre-passports', '')
 
   // An organisation preparing its own passport is both parties, so there is
   // nothing to look up - searching for yourself by your own TIN is busywork.
@@ -243,7 +252,7 @@ export default function CadastreAdd() {
             <DetailCardAccordion defaultValue={['cadastre-data', 'registry-data']}>
               <DetailCardAccordion.Item value="cadastre-data" title="TXYUZ kadastr pasportining atributiv ma’lumotlari">
                 <div className="pt-2 pb-5">
-                  <CadastreDataFields control={form.control} prefix="cadastreData." />
+                  <CadastreDataFields prefix="cadastreData." />
                 </div>
               </DetailCardAccordion.Item>
               <DetailCardAccordion.Item
@@ -251,7 +260,7 @@ export default function CadastreAdd() {
                 title="TXYUZ kadastr pasporti davlat reyestridan o‘tkazilganligi to‘g‘risida ma’lumotlar"
               >
                 <div className="pt-2 pb-5">
-                  <CadastreRegistryFields control={form.control} prefix="cadastreData." />
+                  <CadastreRegistryFields prefix="cadastreData." />
                 </div>
               </DetailCardAccordion.Item>
             </DetailCardAccordion>

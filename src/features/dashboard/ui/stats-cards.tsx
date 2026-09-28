@@ -4,10 +4,11 @@ import { Link } from 'react-router-dom'
 import { Card } from '@/shared/components/ui/card'
 import { cn } from '@/shared/lib/utils'
 import { StatValue } from './stat-value'
+import type { RegistryStats } from '../model/use-dashboard-stats'
 
 interface StatsCardsProps {
   type: 'hf' | 'equipment' | 'irs' | 'xray'
-  data: any
+  data: RegistryStats
   regionId?: string | null
 }
 
@@ -95,7 +96,7 @@ const StatsSection = ({ label, isLoading, children }: { label: string; isLoading
 )
 
 export const StatsCards = ({ type, data, regionId }: StatsCardsProps) => {
-  const isLoading = Boolean(data?.isLoading)
+  const { isLoading } = data
   const region = regionId ? `&regionId=${regionId}` : ''
 
   /**
@@ -119,10 +120,10 @@ export const StatsCards = ({ type, data, regionId }: StatsCardsProps) => {
         // The IRS registry has no status split; only the facility one does.
         ...(type === 'hf'
           ? [
-              { title: 'Faol XICHOlar', value: data.valid, tone: 'active' as Tone, href: `${base}&active=VALID` },
+              { title: 'Faol XICHOlar', value: data.valid ?? 0, tone: 'active' as Tone, href: `${base}&active=VALID` },
               {
                 title: 'Nofaol XICHOlar',
-                value: data.invalid,
+                value: data.invalid ?? 0,
                 tone: 'invalid' as Tone,
                 href: `${base}&active=INVALID`,
               },
@@ -142,16 +143,16 @@ export const StatsCards = ({ type, data, regionId }: StatsCardsProps) => {
       ...(isXray
         ? []
         : [
-            { title: 'Muddati amaldagi', value: data.valid, tone: 'active' as Tone, href: `${base}&status=VALID` },
+            { title: 'Muddati amaldagi', value: data.valid ?? 0, tone: 'active' as Tone, href: `${base}&status=VALID` },
             {
               title: 'Vaqtinchalik nofaol',
-              value: data.invalid,
+              value: data.invalid ?? 0,
               tone: 'invalid' as Tone,
               href: `${base}&status=INVALID`,
             },
           ]),
-      { title: `Muddati o‘tgan ${label}`, value: data.expired, tone: 'expired', href: `${base}&status=EXPIRED` },
-      { title: 'Muddati kiritilmaganlar', value: data.noDate, tone: 'noDate', href: `${base}&status=NO_DATE` },
+      { title: `Muddati o‘tgan ${label}`, value: data.expired ?? 0, tone: 'expired', href: `${base}&status=EXPIRED` },
+      { title: 'Muddati kiritilmaganlar', value: data.noDate ?? 0, tone: 'noDate', href: `${base}&status=NO_DATE` },
       { title: `Arxivdagi ${label}`, value: data.inactive, tone: 'inactive', href: archive },
     ]
   }

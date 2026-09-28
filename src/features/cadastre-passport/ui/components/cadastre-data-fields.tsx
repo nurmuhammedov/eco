@@ -5,7 +5,8 @@ import { Input } from '@/shared/components/ui/input'
 import DatePicker from '@/shared/components/ui/datepicker'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { useEffect } from 'react'
-import { Control, useFormContext, useWatch } from 'react-hook-form'
+import { useFormContext, useWatch } from 'react-hook-form'
+import type { OptionItem } from '@/shared/types/general'
 import { InputNumber } from '@/shared/components/ui/input-number'
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 import { SelectOrInput } from '@/shared/components/ui/select-or-input'
@@ -125,22 +126,22 @@ export const cadastreDataSchema = z
       .join(', '),
   }))
 
+/** The fields sit on whichever form wraps them, under `prefix` */
 interface CadastreDataFieldsProps {
-  control: Control<any>
   prefix?: string
 }
 
-const nameById = (list: any[] | undefined, id: string) =>
-  (list ?? []).find((item: any) => String(item.id) === String(id))?.name ?? ''
+const nameById = (list: OptionItem<number>[] | undefined, id: string) =>
+  (list ?? []).find((item) => String(item.id) === String(id))?.name ?? ''
 
-const idByName = (list: any[] | undefined, name: string) => {
-  const match = (list ?? []).find((item: any) => String(item.name).trim() === String(name).trim())
+const idByName = (list: OptionItem<number>[] | undefined, name: string) => {
+  const match = (list ?? []).find((item) => String(item.name).trim() === String(name).trim())
 
   return match ? String(match.id) : ''
 }
 
-export const CadastreDataFields = ({ control, prefix = 'cadastreData.' }: CadastreDataFieldsProps) => {
-  const { setValue } = useFormContext()
+export const CadastreDataFields = ({ prefix = 'cadastreData.' }: CadastreDataFieldsProps) => {
+  const { control, setValue } = useFormContext()
 
   const regionId = useWatch({ control, name: `${prefix}regionId` })
   const districtId = useWatch({ control, name: `${prefix}districtId` })
@@ -224,7 +225,7 @@ export const CadastreDataFields = ({ control, prefix = 'cadastreData.' }: Cadast
                     <SelectValue placeholder="Tanlang" />
                   </SelectTrigger>
                   <SelectContent>
-                    {(regions ?? []).map((region: any) => (
+                    {(regions ?? []).map((region) => (
                       <SelectItem key={region.id} value={String(region.id)}>
                         {region.name}
                       </SelectItem>
@@ -255,7 +256,7 @@ export const CadastreDataFields = ({ control, prefix = 'cadastreData.' }: Cadast
                     <SelectValue placeholder="Tanlang" />
                   </SelectTrigger>
                   <SelectContent>
-                    {(districts ?? []).map((district: any) => (
+                    {(districts ?? []).map((district) => (
                       <SelectItem key={district.id} value={String(district.id)}>
                         {district.name}
                       </SelectItem>
@@ -694,133 +695,139 @@ export const CadastreDataFields = ({ control, prefix = 'cadastreData.' }: Cadast
  * about the organisation. It is part of the same `preparerData` object, so it
  * shares the prefix; only the accordion it sits in is separate.
  */
-export const CadastreRegistryFields = ({ control, prefix = 'cadastreData.' }: CadastreDataFieldsProps) => (
-  <div className="@container">
-    <div className="grid grid-cols-1 items-end gap-x-4 gap-y-5 @2xl:grid-cols-2 @5xl:grid-cols-3">
-      <FormField
-        control={control}
-        name={`${prefix}stateRegistryCertNumber`}
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel required>Obyektning davlat ro‘yxatidan o‘tkazilganligi to‘g‘risidagi guvohnoma raqami</FormLabel>
-            <FormControl>
-              <Input
-                placeholder={STATE_REGISTRY_CERT_NUMBER_SAMPLE}
-                maxLength={50}
-                {...field}
-                value={field.value ?? ''}
-              />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-      <FormField
-        control={control}
-        name={`${prefix}stateRegistryCertDate`}
-        render={({ field }) => {
-          const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
-          return (
+export const CadastreRegistryFields = ({ prefix = 'cadastreData.' }: CadastreDataFieldsProps) => {
+  const { control } = useFormContext()
+
+  return (
+    <div className="@container">
+      <div className="grid grid-cols-1 items-end gap-x-4 gap-y-5 @2xl:grid-cols-2 @5xl:grid-cols-3">
+        <FormField
+          control={control}
+          name={`${prefix}stateRegistryCertNumber`}
+          render={({ field }) => (
             <FormItem>
               <FormLabel required>
-                Obyektning davlat ro‘yxatidan o‘tkazilganligi to‘g‘risidagi guvohnoma sanasi
+                Obyektning davlat ro‘yxatidan o‘tkazilganligi to‘g‘risidagi guvohnoma raqami
               </FormLabel>
-              <DatePicker
-                value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                onChange={field.onChange}
-                placeholder="Sanani tanlang"
-                disableStrategy="after"
-              />
+              <FormControl>
+                <Input
+                  placeholder={STATE_REGISTRY_CERT_NUMBER_SAMPLE}
+                  maxLength={50}
+                  {...field}
+                  value={field.value ?? ''}
+                />
+              </FormControl>
               <FormMessage />
             </FormItem>
-          )
-        }}
-      />
-      <FormField
-        control={control}
-        name={`${prefix}licenseNumber`}
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel required>Obyektning litsenziya raqami</FormLabel>
-            <FormControl>
-              <Input placeholder={LICENSE_NUMBER_SAMPLE} maxLength={50} {...field} value={field.value ?? ''} />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-      <FormField
-        control={control}
-        name={`${prefix}licenseDate`}
-        render={({ field }) => {
-          const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
-          return (
+          )}
+        />
+        <FormField
+          control={control}
+          name={`${prefix}stateRegistryCertDate`}
+          render={({ field }) => {
+            const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
+            return (
+              <FormItem>
+                <FormLabel required>
+                  Obyektning davlat ro‘yxatidan o‘tkazilganligi to‘g‘risidagi guvohnoma sanasi
+                </FormLabel>
+                <DatePicker
+                  value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
+                  onChange={field.onChange}
+                  placeholder="Sanani tanlang"
+                  disableStrategy="after"
+                />
+                <FormMessage />
+              </FormItem>
+            )
+          }}
+        />
+        <FormField
+          control={control}
+          name={`${prefix}licenseNumber`}
+          render={({ field }) => (
             <FormItem>
-              <FormLabel required>Obyektning litsenziya sanasi</FormLabel>
-              <DatePicker
-                value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                onChange={field.onChange}
-                placeholder="Sanani tanlang"
-                disableStrategy="after"
-              />
+              <FormLabel required>Obyektning litsenziya raqami</FormLabel>
+              <FormControl>
+                <Input placeholder={LICENSE_NUMBER_SAMPLE} maxLength={50} {...field} value={field.value ?? ''} />
+              </FormControl>
               <FormMessage />
             </FormItem>
-          )
-        }}
-      />
-      <FormField
-        control={control}
-        name={`${prefix}okpo`}
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel required>Korxona va tashkilotning umumdavlat tasnifi raqami (KTUT, OKPO)</FormLabel>
-            <FormControl>
-              <Input
-                placeholder="25648237"
-                inputMode="numeric"
-                maxLength={OKPO_LENGTH}
-                {...field}
-                value={field.value ?? ''}
-                onChange={(event) => field.onChange(onlyDigits(event.target.value, OKPO_LENGTH))}
-              />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-      <FormField
-        control={control}
-        name={`${prefix}bankMfo`}
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel required>Filiallararo aylanma pul muomalalarining xos raqami (YBK, MFO)</FormLabel>
-            <FormControl>
-              <Input
-                placeholder="00440"
-                inputMode="numeric"
-                maxLength={BANK_MFO_LENGTH}
-                {...field}
-                value={field.value ?? ''}
-                onChange={(event) => field.onChange(onlyDigits(event.target.value, BANK_MFO_LENGTH))}
-              />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-      <FormField
-        control={control}
-        name={`${prefix}phoneNumber`}
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel required>Telefon raqami</FormLabel>
-            <FormControl>
-              <PhoneInput {...field} value={field.value ?? ''} />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
+          )}
+        />
+        <FormField
+          control={control}
+          name={`${prefix}licenseDate`}
+          render={({ field }) => {
+            const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
+            return (
+              <FormItem>
+                <FormLabel required>Obyektning litsenziya sanasi</FormLabel>
+                <DatePicker
+                  value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
+                  onChange={field.onChange}
+                  placeholder="Sanani tanlang"
+                  disableStrategy="after"
+                />
+                <FormMessage />
+              </FormItem>
+            )
+          }}
+        />
+        <FormField
+          control={control}
+          name={`${prefix}okpo`}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel required>Korxona va tashkilotning umumdavlat tasnifi raqami (KTUT, OKPO)</FormLabel>
+              <FormControl>
+                <Input
+                  placeholder="25648237"
+                  inputMode="numeric"
+                  maxLength={OKPO_LENGTH}
+                  {...field}
+                  value={field.value ?? ''}
+                  onChange={(event) => field.onChange(onlyDigits(event.target.value, OKPO_LENGTH))}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={control}
+          name={`${prefix}bankMfo`}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel required>Filiallararo aylanma pul muomalalarining xos raqami (YBK, MFO)</FormLabel>
+              <FormControl>
+                <Input
+                  placeholder="00440"
+                  inputMode="numeric"
+                  maxLength={BANK_MFO_LENGTH}
+                  {...field}
+                  value={field.value ?? ''}
+                  onChange={(event) => field.onChange(onlyDigits(event.target.value, BANK_MFO_LENGTH))}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={control}
+          name={`${prefix}phoneNumber`}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel required>Telefon raqami</FormLabel>
+              <FormControl>
+                <PhoneInput {...field} value={field.value ?? ''} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      </div>
     </div>
-  </div>
-)
+  )
+}

@@ -1,6 +1,7 @@
 import { z } from 'zod'
 import { format } from 'date-fns'
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
+import type { CadastreSection } from './types'
 
 /**
  * The attributive tables FVV and SES fill in when they sign, taken from
@@ -160,7 +161,7 @@ export const toReviewPayload = (groups: ReviewGroup[], values: Record<string, un
 }
 
 /** Turns an API response back into form values so the edit dialog opens filled in. */
-export const fromReviewPayload = (groups: ReviewGroup[], source: Record<string, any> | undefined | null) => {
+export const fromReviewPayload = (groups: ReviewGroup[], source: CadastreSection | undefined | null) => {
   const values: Record<string, unknown> = {}
 
   for (const field of reviewFieldsOf(groups)) {

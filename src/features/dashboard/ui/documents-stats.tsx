@@ -4,8 +4,17 @@ import { FileText, FileCheck, Award, FileSignature, Scroll, Building2, ShieldAle
 import { Link } from 'react-router-dom'
 import { useData } from '@/shared/hooks'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
+import type { ConclusionCount } from '@/entities/expertise/model/conclusion.types'
 
 type TabType = 'permits' | 'expertises'
+
+/** PermitCountView (`GET /permits/count`) */
+interface PermitCount {
+  allCount: number | null
+  permissionCount: number | null
+  licenseCount: number | null
+  conclusionCount: number | null
+}
 
 const TABS: { id: TabType; label: string }[] = [
   { id: 'permits', label: 'Ruxsat etuvchi hujjatlar' },
@@ -15,8 +24,8 @@ const TABS: { id: TabType; label: string }[] = [
 export const DocumentsStats = ({ regionId }: { regionId?: string }) => {
   const [activeTab, setActiveTab] = useState<TabType>('permits')
   // PermitParamsDto carries no region, so this block stays republic-wide.
-  const { data: permitsData } = useData<any>('/permits/count')
-  const { data: conclusionsData } = useData<any>('/conclusions/count', true, regionId ? { regionId } : {})
+  const { data: permitsData } = useData<PermitCount>('/permits/count')
+  const { data: conclusionsData } = useData<ConclusionCount>('/conclusions/count', true, regionId ? { regionId } : {})
 
   const renderCleanCard = (
     title: string,

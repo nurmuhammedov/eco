@@ -26,7 +26,7 @@ const MAP_CONTROLS = ['zoomControl']
  * without the panels, filters or detail cards, for a screen nobody clicks.
  */
 export const PointsMap = ({ points, focusRegionId = null }: PointsMapProps) => {
-  const mapRef = useRef<any>(null)
+  const mapRef = useRef<ymaps.Map | null>(null)
 
   const placed = useMemo(
     () =>
@@ -55,7 +55,7 @@ export const PointsMap = ({ points, focusRegionId = null }: PointsMapProps) => {
     [visible]
   )
 
-  const bindMap = useCallback((instance: any) => {
+  const bindMap = useCallback((instance: ymaps.Map | null) => {
     if (!instance || mapRef.current === instance) return
     mapRef.current = instance
   }, [])
