@@ -9,6 +9,9 @@ import type { ApiResponse } from '@/shared/types'
  * `IndividualUserDto`). The screens show whichever of the names is there.
  */
 export interface OwnerData {
+  /** The IIP answers carry the number they were looked up by */
+  tin?: number
+  pin?: number
   name?: string
   legalName?: string
   fullName?: string

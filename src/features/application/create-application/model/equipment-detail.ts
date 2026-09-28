@@ -29,12 +29,3 @@ export interface EquipmentDetail {
   parameters: Record<string, string> | null
   files: Record<string, FileDto> | null
 }
-
-/**
- * An edit keeps the owner, yet the schemas still ask a citizen owner for a
- * birth date. Any date passes; the update endpoints do not read it.
- */
-export const KEPT_OWNER_BIRTH_DATE = new Date(1900, 0, 1)
-
-/** Old records hold Cyrillic in fields the forms now take in Latin only; those start empty */
-export const latinOrEmpty = <T>(value: T) => (typeof value === 'string' && /[\u0400-\u04FF]/.test(value) ? '' : value)

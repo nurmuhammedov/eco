@@ -20,7 +20,8 @@ import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { toast } from 'sonner'
 import { z } from 'zod'
 import { type OwnerData, useOwnerLookup } from './use-owner-lookup'
-import { EquipmentDetail, KEPT_OWNER_BIRTH_DATE, latinOrEmpty } from './equipment-detail'
+import type { EquipmentDetail } from './equipment-detail'
+import { KEPT_OWNER_BIRTH_DATE, latinOrEmpty } from './edit-values'
 
 export const useRegisterIllegalEscalator = (externalSubmit?: (data: RegisterIllegalEscalatorDTO) => void) => {
   const { type, id } = useParams<{ type: string; id: string }>()

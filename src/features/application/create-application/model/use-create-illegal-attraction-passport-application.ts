@@ -19,7 +19,8 @@ import { toast } from 'sonner'
 import { z } from 'zod'
 import type { OptionItem } from '@/shared/types'
 import { type OwnerData, useOwnerLookup } from './use-owner-lookup'
-import { EquipmentDetail, KEPT_OWNER_BIRTH_DATE, latinOrEmpty } from './equipment-detail'
+import type { EquipmentDetail } from './equipment-detail'
+import { KEPT_OWNER_BIRTH_DATE, latinOrEmpty } from './edit-values'
 
 export const useRegisterIllegalAttraction = (externalSubmit?: (data: RegisterIllegalAttractionDTO) => void) => {
   const { type, id } = useParams<{ type: string; id: string }>()
