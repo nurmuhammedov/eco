@@ -1,8 +1,9 @@
 import { RegisterActiveTab } from '@/features/register/model/register-tabs'
+import type { ISearchParams, UrlParams, UrlParamValue } from '@/shared/types'
 
 export interface BuildRegisterQueryInput {
   tab: string
-  paramsObject: Record<string, any>
+  paramsObject: UrlParams
   isArchive?: boolean
   defaultRegionId: string
   hfId?: string
@@ -11,10 +12,10 @@ export interface BuildRegisterQueryInput {
 
 export interface RegisterQuery {
   endpoint: string
-  params: Record<string, any>
+  params: ISearchParams
 }
 
-const normalizeRegionId = (regionId: string) => (regionId === 'ALL' ? '' : regionId)
+const normalizeRegionId = (regionId: UrlParamValue) => (regionId === 'ALL' ? '' : regionId)
 
 /**
  * Two crane tabs are not equipment types of their own: they are cranes pinned to
@@ -41,7 +42,7 @@ interface ReportChangeFilters {
   changed: true
 }
 
-function readReportChangeFilters(paramsObject: Record<string, any>): ReportChangeFilters | null {
+function readReportChangeFilters(paramsObject: UrlParams): ReportChangeFilters | null {
   const belongType = paramsObject.reportChangeBelongType
   if (!belongType) return null
 

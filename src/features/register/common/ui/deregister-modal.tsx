@@ -34,7 +34,7 @@ export const DeregisterModal = ({ isOpen, onClose, endpoint, onSuccess }: Deregi
     },
   })
 
-  const { mutate, isPending } = useAdd<DeregisterFormValues, any, any>(
+  const { mutate, isPending } = useAdd<DeregisterFormValues>(
     endpoint,
     'So‘rov mas’ul xodimga yuborildi. O‘zgarishlar tasdiqlangandan so‘ng ko‘rinadi!'
   )

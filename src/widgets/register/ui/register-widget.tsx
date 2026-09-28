@@ -10,11 +10,10 @@ import { useAuth } from '@/shared/hooks/use-auth'
 import React from 'react'
 import { RegisterActiveTab } from '@/features/register/model/register-tabs'
 import { useCustomSearchParams, useData } from '@/shared/hooks'
-import { API_ENDPOINTS } from '@/shared/api'
 import { cn } from '@/shared/lib/utils'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { getSelectOptions } from '@/shared/lib/get-select-options'
-import { useDistrictSelectQuery } from '@/shared/api/dictionaries'
+import { useDistrictSelectQuery, useRegionSelectQuery } from '@/shared/api/dictionaries'
 import { buildRegisterExportQuery } from '@/features/register/model/build-register-query'
 import { paramText } from '@/shared/lib/url-params'
 
@@ -39,7 +38,7 @@ const RegisterWidget = ({ isArchive }: RegisterWidgetProps) => {
   const regionId = paramText(paramsObject.regionId, defaultRegionId)
   const districtId = paramText(paramsObject.districtId)
 
-  const { data: page } = useData<any>('/hf/count', user?.role != UserRoles.INDIVIDUAL, {
+  const { data: hfCount = 0 } = useData<number>('/hf/count', user?.role != UserRoles.INDIVIDUAL, {
     mode,
     regionId: regionId === 'ALL' ? '' : regionId,
     districtId,
@@ -65,7 +64,7 @@ const RegisterWidget = ({ isArchive }: RegisterWidgetProps) => {
     active: !isArchive,
   })
 
-  const { data: regionOptions, isLoading: isLoadingRegions } = useData<any>(`${API_ENDPOINTS.REGIONS_SELECT}`)
+  const { data: regionOptions, isLoading: isLoadingRegions } = useRegionSelectQuery()
   const { data: districts, isLoading: isDistrictsLoading } = useDistrictSelectQuery(regionId)
 
   const exportQuery = buildRegisterExportQuery({ tab, paramsObject, isArchive, defaultRegionId })
@@ -171,7 +170,7 @@ const RegisterWidget = ({ isArchive }: RegisterWidgetProps) => {
                 <TabsTrigger value={RegisterActiveTab.HF}>
                   XICHO
                   <Badge variant="destructive" className="ml-2">
-                    {page || 0}
+                    {hfCount}
                   </Badge>
                 </TabsTrigger>
                 <TabsTrigger value={RegisterActiveTab.EQUIPMENTS}>

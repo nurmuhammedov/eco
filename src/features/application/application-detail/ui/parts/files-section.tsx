@@ -9,7 +9,7 @@ interface Props {
   files: FileType[]
   userRole?: UserRoles
   applicationStatus?: ApplicationStatus
-  appealId?: string
+  appealId?: string | null
   register?: boolean
   url?: string
   edit?: boolean

@@ -2,10 +2,10 @@ import { Document, Font, Image, Page, StyleSheet, Text, View } from '@react-pdf/
 import { getDate } from '@/shared/utils/date'
 
 interface StickerData {
-  registryNumber?: string
-  registrationDate?: string
-  ownerName?: string
-  attractionName?: string
+  registryNumber?: string | null
+  registrationDate?: string | null
+  ownerName?: string | null
+  attractionName?: string | null
   qrCodeDataUrl: string
 }
 

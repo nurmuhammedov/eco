@@ -1,6 +1,7 @@
 import { xrayDetailApi } from '@/features/register/xray/model/xray-detail.api'
 import { endpointKey } from '@/shared/lib/query/endpoint-key'
 import { useQuery } from '@tanstack/react-query'
+import { toLabelledFiles } from '@/entities/application'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 
@@ -12,12 +13,7 @@ export const useXrayDetail = () => {
     enabled: !!id,
     queryFn: () => xrayDetailApi.getDetail(id),
     select: (data) => {
-      const files = Object.entries(data?.files)
-        .filter(([label]) => label.includes('Path'))
-        .map((file) => {
-          const label = `labels.XRAY.${file[0]}`
-          return { label: t(label), data: file[1] }
-        })
+      const files = toLabelledFiles(data.files, (field) => t(`labels.XRAY.${field}`))
       return {
         ...data,
         files,

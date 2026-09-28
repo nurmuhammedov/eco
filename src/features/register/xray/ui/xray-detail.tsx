@@ -4,10 +4,10 @@ import { RefreshLegalInfoButton } from '@/features/application/application-detai
 import LegalApplicantInfo from '@/features/application/application-detail/ui/parts/legal-applicant-info'
 import { useXrayDetail } from '@/features/register/xray/hooks/use-xray-detail'
 import { GoBack } from '@/shared/components/common'
-import { DetailCardAccordion } from '@/shared/components/common/detail-card'
+import { DetailCardAccordion, DetailPageSkeleton } from '@/shared/components/common/detail-card'
 import DetailRow from '@/shared/components/common/detail-row'
 import FileLink from '@/shared/components/common/file-link'
-import { Coordinate } from '@/shared/components/common/yandex-map'
+import { parseCoordinate } from '@/shared/components/common/yandex-map'
 import YandexMap from '@/shared/components/common/yandex-map/ui/yandex-map'
 import { getDate } from '@/shared/utils/date'
 import { Link, useParams } from 'react-router-dom'
@@ -25,11 +25,10 @@ const XrayDetail = () => {
   const { user } = useAuth()
   const [isDeregisterModalOpen, setIsDeregisterModalOpen] = useState(false)
   const canDeregister = user?.role === UserRoles.MANAGER && data?.isActive
-  const currentObjLocation = data?.location?.split(',') || ([] as Coordinate[])
+  const objectPoint = parseCoordinate(data?.location)
 
-  if (isLoading || !data) {
-    return null
-  }
+  if (isLoading) return <DetailPageSkeleton />
+  if (!data) return null
 
   return (
     <div>
@@ -110,9 +109,9 @@ const XrayDetail = () => {
         <DetailCardAccordion.Item value="object_files" title="Obyektga biriktirilgan fayllar">
           <FilesSection files={data?.files || []} />
         </DetailCardAccordion.Item>
-        {!!currentObjLocation?.length && (
+        {objectPoint && (
           <DetailCardAccordion.Item value="object_location" title="Obyekt yoki qurilma ko‘rsatilgan joyi">
-            <YandexMap coords={[currentObjLocation]} center={currentObjLocation} zoom={16} />
+            <YandexMap coords={[objectPoint]} center={objectPoint} zoom={16} />
           </DetailCardAccordion.Item>
         )}
         <DetailCardAccordion.Item value="history" title="O‘zgartirishlar tarixi">

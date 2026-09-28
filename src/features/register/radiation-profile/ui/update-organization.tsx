@@ -1,7 +1,8 @@
 import { FC, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { zodFormResolver } from '@/shared/lib/zod-form-resolver'
+import type { RadiationProfile } from '@/shared/api/radiation-profile/use-radiation-profile-check'
 import * as z from 'zod'
 import { useData, useUpdate } from '@/shared/hooks'
 import { useQueryClient } from '@tanstack/react-query'
@@ -41,22 +42,25 @@ const updateSchema = z
     file18Path: z.string().optional().nullable(),
     file18ExpiryDate: fileDateSchema,
   })
-  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'file2Path', 'file2ExpiryDate'))
-  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'file5Path', 'file5ExpiryDate'))
-  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'file7Path', 'file7ExpiryDate'))
-  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'file9Path', 'file9ExpiryDate'))
-  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'file15Path', 'file15ExpiryDate'))
-  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'file18Path', 'file18ExpiryDate'))
+  .superRefine((data, ctx) => checkExpiryDate(data, ctx, 'file2Path', 'file2ExpiryDate'))
+  .superRefine((data, ctx) => checkExpiryDate(data, ctx, 'file5Path', 'file5ExpiryDate'))
+  .superRefine((data, ctx) => checkExpiryDate(data, ctx, 'file7Path', 'file7ExpiryDate'))
+  .superRefine((data, ctx) => checkExpiryDate(data, ctx, 'file9Path', 'file9ExpiryDate'))
+  .superRefine((data, ctx) => checkExpiryDate(data, ctx, 'file15Path', 'file15ExpiryDate'))
+  .superRefine((data, ctx) => checkExpiryDate(data, ctx, 'file18Path', 'file18ExpiryDate'))
+
+type ProfileDraft = z.input<typeof updateSchema>
+type ProfileFiles = z.infer<typeof updateSchema>
 
 export const UpdateOrganization: FC = () => {
   const { id, type } = useParams<{ id: string; type: string }>()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
 
-  const { data, isLoading } = useData<any>(`/radiation-profiles/${id}`)
+  const { data, isLoading } = useData<RadiationProfile>(`/radiation-profiles/${id}`)
 
-  const form = useForm<z.infer<typeof updateSchema>>({
-    resolver: zodResolver(updateSchema),
+  const form = useForm<ProfileDraft, unknown, ProfileFiles>({
+    resolver: zodFormResolver<ProfileDraft, ProfileFiles>(updateSchema),
     defaultValues: {
       file2Path: '',
       file2ExpiryDate: undefined,
@@ -96,13 +100,13 @@ export const UpdateOrganization: FC = () => {
     }
   }, [data, form])
 
-  const onSubmit = (values: z.infer<typeof updateSchema>) => {
+  const onSubmit = (values: ProfileFiles) => {
     const isIrs = type === 'IRS'
     const isXray = type === 'XRAY'
 
-    const formatValue = (val: any) => (val === '' || val === null || val === undefined ? null : val)
+    const formatValue = (val?: string | null) => val || null
 
-    let payload: any = {}
+    let payload: Record<string, string | null> = {}
 
     if (isIrs) {
       payload = {
@@ -127,18 +131,19 @@ export const UpdateOrganization: FC = () => {
       }
     }
 
-    payload.type = type || 'IRS'
-
-    mutate(payload, {
-      onSuccess: () => {
-        toast.success('So‘rov mas’ul xodimga yuborildi. O‘zgarishlar tasdiqlangandan so‘ng ko‘rinadi!')
-        invalidateRegistryQueries(queryClient)
-        navigate(-1)
-      },
-      onError: () => {
-        toast.error('Xatolik yuz berdi!')
-      },
-    })
+    mutate(
+      { ...payload, type: type || 'IRS' },
+      {
+        onSuccess: () => {
+          toast.success('So‘rov mas’ul xodimga yuborildi. O‘zgarishlar tasdiqlangandan so‘ng ko‘rinadi!')
+          invalidateRegistryQueries(queryClient)
+          navigate(-1)
+        },
+        onError: () => {
+          toast.error('Xatolik yuz berdi!')
+        },
+      }
+    )
   }
 
   if (isLoading) return null
@@ -194,9 +199,7 @@ export const UpdateOrganization: FC = () => {
                                 form={form}
                                 name={field.name}
                                 accept={[FileTypes.PDF]}
-                                onRemove={() =>
-                                  form.setValue('file18ExpiryDate', undefined as any, { shouldValidate: true })
-                                }
+                                onRemove={() => form.setValue('file18ExpiryDate', undefined, { shouldValidate: true })}
                               />
                             </FormControl>
                           </div>
@@ -241,9 +244,7 @@ export const UpdateOrganization: FC = () => {
                                 form={form}
                                 name={field.name}
                                 accept={[FileTypes.PDF]}
-                                onRemove={() =>
-                                  form.setValue('file2ExpiryDate', undefined as any, { shouldValidate: true })
-                                }
+                                onRemove={() => form.setValue('file2ExpiryDate', undefined, { shouldValidate: true })}
                               />
                             </FormControl>
                           </div>
@@ -290,9 +291,7 @@ export const UpdateOrganization: FC = () => {
                             form={form}
                             name={field.name}
                             accept={[FileTypes.PDF]}
-                            onRemove={() =>
-                              form.setValue('file5ExpiryDate', undefined as any, { shouldValidate: true })
-                            }
+                            onRemove={() => form.setValue('file5ExpiryDate', undefined, { shouldValidate: true })}
                           />
                         </FormControl>
                       </div>
@@ -339,9 +338,7 @@ export const UpdateOrganization: FC = () => {
                                 form={form}
                                 name={field.name}
                                 accept={[FileTypes.PDF]}
-                                onRemove={() =>
-                                  form.setValue('file7ExpiryDate', undefined as any, { shouldValidate: true })
-                                }
+                                onRemove={() => form.setValue('file7ExpiryDate', undefined, { shouldValidate: true })}
                               />
                             </FormControl>
                           </div>
@@ -386,9 +383,7 @@ export const UpdateOrganization: FC = () => {
                                 form={form}
                                 name={field.name}
                                 accept={[FileTypes.PDF]}
-                                onRemove={() =>
-                                  form.setValue('file9ExpiryDate', undefined as any, { shouldValidate: true })
-                                }
+                                onRemove={() => form.setValue('file9ExpiryDate', undefined, { shouldValidate: true })}
                               />
                             </FormControl>
                           </div>
@@ -436,9 +431,7 @@ export const UpdateOrganization: FC = () => {
                               form={form}
                               name={field.name}
                               accept={[FileTypes.PDF]}
-                              onRemove={() =>
-                                form.setValue('file15ExpiryDate', undefined as any, { shouldValidate: true })
-                              }
+                              onRemove={() => form.setValue('file15ExpiryDate', undefined, { shouldValidate: true })}
                             />
                           </FormControl>
                         </div>

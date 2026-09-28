@@ -2,7 +2,7 @@ import { endpointKey } from '@/shared/lib/query/endpoint-key'
 import { useQuery } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
-import type { AppealFile, ApplicationDetailWithFiles } from '@/entities/application'
+import { type ApplicationDetailWithFiles, toLabelledFiles } from '@/entities/application'
 import type { FileDto } from '@/shared/types'
 import { applicationDetailApi } from '../model/application-detail.api'
 
@@ -16,10 +16,8 @@ export const useApplicationDetail = () => {
     select: (data): ApplicationDetailWithFiles => {
       const appealType = data?.appealType?.replace('DEREGISTER_', '')?.replace('REGISTER_', '')?.replace('RE_', '')
 
-      const toFileList = (set?: Record<string, FileDto> | null): AppealFile[] =>
-        Object.entries(set || {})
-          .filter(([key]) => key.includes('Path'))
-          .map(([key, value]) => ({ label: t(`labels.${appealType}.${key}`), data: value, fieldName: key }))
+      const toFileList = (set?: Record<string, FileDto> | null) =>
+        toLabelledFiles(set, (field) => t(`labels.${appealType}.${field}`))
 
       /**
        * A multi-sector facility carries one attachment set per category instead

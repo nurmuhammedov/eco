@@ -1,6 +1,8 @@
 import { hfDetailApi } from '@/features/register/hf/model/hf-detail.api'
 import { endpointKey } from '@/shared/lib/query/endpoint-key'
 import { useQuery } from '@tanstack/react-query'
+import type { FileDto } from '@/shared/types'
+import { toLabelledFiles } from '@/entities/application'
 import { useTranslation } from 'react-i18next'
 import { useParams } from 'react-router-dom'
 
@@ -12,10 +14,8 @@ export const useHfDetail = () => {
     enabled: !!id,
     queryFn: () => hfDetailApi.getDetail(id),
     select: (data) => {
-      const toFileList = (set: Record<string, unknown> | undefined) =>
-        Object.entries(set || {})
-          .filter(([label]) => label.includes('Path'))
-          .map(([key, value]) => ({ label: t(`labels.HF.${key || 'file'}`), data: value as string, fieldName: key }))
+      const toFileList = (set?: Record<string, FileDto> | null) =>
+        toLabelledFiles(set, (field) => t(`labels.HF.${field || 'file'}`))
 
       /**
        * A multi-sector facility keeps one attachment set per category and leaves
@@ -23,10 +23,7 @@ export const useHfDetail = () => {
        * render.
        */
       const multiCategoryFiles = Object.fromEntries(
-        Object.entries(data?.multiCategoryFiles || {}).map(([categoryId, set]) => [
-          categoryId,
-          toFileList(set as Record<string, unknown>),
-        ])
+        Object.entries(data?.multiCategoryFiles || {}).map(([categoryId, set]) => [categoryId, toFileList(set)])
       )
 
       return {

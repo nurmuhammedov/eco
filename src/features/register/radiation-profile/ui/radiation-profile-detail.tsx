@@ -1,5 +1,5 @@
 import { GoBack } from '@/shared/components/common'
-import { DetailCardAccordion } from '@/shared/components/common/detail-card'
+import { DetailCardAccordion, DetailPageSkeleton } from '@/shared/components/common/detail-card'
 import { RefreshLegalInfoButton } from '@/features/application/application-detail/ui/parts/refresh-legal-info-button'
 import LegalApplicantInfo from '@/features/application/application-detail/ui/parts/legal-applicant-info'
 import { useAuth } from '@/shared/hooks/use-auth'
@@ -10,6 +10,8 @@ import { IrsList } from '@/features/register/irs/ui/irs-list'
 import { XrayList } from '@/features/register/xray/ui/xray-list'
 import { useTranslation } from 'react-i18next'
 import { UserRoles } from '@/shared/types/user'
+import { toLabelledFiles } from '@/entities/application'
+import type { RadiationProfile } from '@/shared/api/radiation-profile/use-radiation-profile-check'
 
 export const RadiationProfileDetail = () => {
   const { id } = useParams()
@@ -19,19 +21,11 @@ export const RadiationProfileDetail = () => {
 
   const { t } = useTranslation()
 
-  const { data, isLoading } = useData<any>(`/radiation-profiles/${id}`)
+  const { data, isLoading } = useData<RadiationProfile>(`/radiation-profiles/${id}`)
 
-  const formattedFiles = data?.files
-    ? Object.entries(data.files)
-        .filter(([label]) => label.includes('Path'))
-        .map(([key, val]) => ({
-          label: t(`labels.${type || 'XRAY'}.${key}`),
-          data: val as any,
-          fieldName: key,
-        }))
-    : []
+  const formattedFiles = toLabelledFiles(data?.files, (field) => t(`labels.${type || 'XRAY'}.${field}`))
 
-  if (isLoading) return null
+  if (isLoading) return <DetailPageSkeleton />
 
   return (
     <div>

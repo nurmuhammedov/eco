@@ -8,10 +8,10 @@ import { RefreshLegalInfoButton } from '@/features/application/application-detai
 import LegalApplicantInfo from '@/features/application/application-detail/ui/parts/legal-applicant-info'
 import { useHfDetail } from '@/features/register/hf/hooks/use-hf-detail'
 import { GoBack } from '@/shared/components/common'
-import { DetailCardAccordion } from '@/shared/components/common/detail-card'
+import { DetailCardAccordion, DetailPageSkeleton } from '@/shared/components/common/detail-card'
 import DetailRow from '@/shared/components/common/detail-row'
 import FileLink from '@/shared/components/common/file-link'
-import { Coordinate } from '@/shared/components/common/yandex-map'
+import { parseCoordinate } from '@/shared/components/common/yandex-map'
 import YandexMap from '@/shared/components/common/yandex-map/ui/yandex-map'
 import { getDate } from '@/shared/utils/date'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
@@ -44,9 +44,9 @@ const HfDetail = () => {
   const { id } = useParams()
   const [searchParams] = useSearchParams()
   const { isLoading, data, refetch } = useHfDetail()
-  const currentObjLocation = data?.location?.split(',') || ([] as Coordinate[])
+  const objectPoint = parseCoordinate(data?.location)
 
-  const multiCategoryFiles: Record<string, any[]> = data?.multiCategoryFiles || {}
+  const multiCategoryFiles = data?.multiCategoryFiles || {}
   const multiCategoryIds = Object.keys(multiCategoryFiles)
 
   /**
@@ -72,9 +72,8 @@ const HfDetail = () => {
   const isRegistryActive = data?.active ?? searchParams.get('active') === 'true'
   const canAction = user?.role === UserRoles.INSPECTOR && isRegistryActive
 
-  if (isLoading || !data) {
-    return null
-  }
+  if (isLoading) return <DetailPageSkeleton />
+  if (!data) return null
 
   return (
     <div>
@@ -200,11 +199,9 @@ const HfDetail = () => {
             <FilesSection appealId={data?.appealId} userRole={user?.role} register={true} files={data?.files || []} />
           </DetailCardAccordion.Item>
         )}
-        {!!currentObjLocation?.length && (
+        {objectPoint && (
           <DetailCardAccordion.Item value="object_location" title="Obyekt yoki qurilma ko‘rsatilgan joyi">
-            {isOpen('object_location') && (
-              <YandexMap coords={[currentObjLocation]} center={currentObjLocation} zoom={16} />
-            )}
+            {isOpen('object_location') && <YandexMap coords={[objectPoint]} center={objectPoint} zoom={16} />}
           </DetailCardAccordion.Item>
         )}
         <DetailCardAccordion.Item value="attached_equipments" title="Biriktirilgan qurilmalar">

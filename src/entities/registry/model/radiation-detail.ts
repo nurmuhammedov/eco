@@ -37,6 +37,12 @@ export interface IrsDetail {
   districtId: number | null
   regionName: string | null
   districtName: string | null
+
+  // The detail page asks for these, but IrsViewById does not send them yet
+  location?: string | null
+  deactivationDate?: string | null
+  deregisterBasisPath?: string | null
+  deregisterReason?: string | null
 }
 
 /** XRayResById (`GET /xrays/{id}`) */
@@ -64,4 +70,7 @@ export interface XrayDetail {
   deregisterReason: string | null
   deregisterBasisPath: string | null
   deactivationDate: string | null
+
+  // The detail page asks for it, but XRayResById does not send it yet
+  location?: string | null
 }

@@ -213,43 +213,42 @@ export const XrayList = ({ isArchive, radiationProfileId, hideTabs }: XrayListPr
       {!isArchive && !hideTabs && user?.role !== UserRoles.PROCURATOR && (
         <TabsLayout
           activeTab={currentStatus}
-          tabs={
-            [
-              // { id: 'ALL', name: 'Barchasi', count: currentStatus === 'ALL' ? totalElements : undefined },
-              {
-                id: 'ACTIVE',
-                name: 'Reyestrdagi rentgenlar',
-                count: currentStatus === 'ACTIVE' ? totalElements : undefined,
-              },
-              {
-                id: 'EXPIRED',
-                name: 'Muddati o‘tganlar',
-                count: currentStatus === 'EXPIRED' ? totalElements : undefined,
-              },
-              {
-                id: 'NO_DATE',
-                name: 'Muddati kiritilmaganlar',
-                count: currentStatus === 'NO_DATE' ? totalElements : undefined,
-              },
-              {
-                id: 'ORGANIZATIONS',
-                name: 'Tashkilotlar',
-                count: currentStatus === 'ORGANIZATIONS' ? totalElements : undefined,
-              },
-              {
-                id: 'CHANGED',
-                name: 'Rentgenlarni o‘zgartirish so‘rovlari',
-                count: changedCountData?.page?.totalElements || 0,
-              },
-              canManageOrgs
-                ? {
+          tabs={[
+            {
+              id: 'ACTIVE',
+              name: 'Reyestrdagi rentgenlar',
+              count: currentStatus === 'ACTIVE' ? totalElements : undefined,
+            },
+            {
+              id: 'EXPIRED',
+              name: 'Muddati o‘tganlar',
+              count: currentStatus === 'EXPIRED' ? totalElements : undefined,
+            },
+            {
+              id: 'NO_DATE',
+              name: 'Muddati kiritilmaganlar',
+              count: currentStatus === 'NO_DATE' ? totalElements : undefined,
+            },
+            {
+              id: 'ORGANIZATIONS',
+              name: 'Tashkilotlar',
+              count: currentStatus === 'ORGANIZATIONS' ? totalElements : undefined,
+            },
+            {
+              id: 'CHANGED',
+              name: 'Rentgenlarni o‘zgartirish so‘rovlari',
+              count: changedCountData?.page?.totalElements || 0,
+            },
+            ...(canManageOrgs
+              ? [
+                  {
                     id: 'CHANGED_ORGANIZATIONS',
                     name: 'Tashkilotlarni o‘zgartirish so‘rovlari',
                     count: changedOrgCountData?.page?.totalElements || 0,
-                  }
-                : null,
-            ].filter(Boolean) as any
-          }
+                  },
+                ]
+              : []),
+          ]}
           onTabChange={(type) => {
             if (type === 'CHANGED' || type === 'CHANGED_ORGANIZATIONS') {
               addParams({ status: type, changeStatus: 'ALL' }, ...RESET_KEYS)

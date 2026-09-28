@@ -1,4 +1,5 @@
 import { SafeHtml } from '@/shared/components/common/safe-html'
+import type { RegistryChange } from '@/entities/registry'
 import { FC } from 'react'
 import { ArrowUpRight } from 'lucide-react'
 import { Link, useParams } from 'react-router-dom'
@@ -6,7 +7,7 @@ import { useDetail } from '@/shared/hooks'
 import DetailRow from '@/shared/components/common/detail-row'
 import { formatDate } from '@/shared/utils/date'
 import ChangeLogTable from '@/features/register/register-change-detail/ui/change-log-table'
-import { DetailCardAccordion } from '@/shared/components/common/detail-card'
+import { DetailCardAccordion, DetailPageSkeleton } from '@/shared/components/common/detail-card'
 import { ApplicationStatusRow } from '@/entities/application/ui/application-status-row'
 import { GoBack } from '@/shared/components/common'
 import LegalApplicantInfo from '@/features/application/application-detail/ui/parts/legal-applicant-info'
@@ -37,7 +38,7 @@ const RegisterChangeDetail: FC = () => {
 
   const { user } = useAuth()
 
-  const { detail: changeDetail, isLoading = true } = useDetail<any>('/changes/by-belong', id, !!id)
+  const { detail: changeDetail, isLoading = true } = useDetail<RegistryChange>('/changes/by-belong', id, !!id)
 
   const changeId = changeDetail?.id
   const isLegal = changeDetail?.ownerIdentity?.toString()?.length === 9
@@ -74,9 +75,7 @@ const RegisterChangeDetail: FC = () => {
     (status === ApplicationStatus.IN_APPROVAL &&
       ((isIrsType && user?.role === UserRoles.HEAD) || (isHfType && user?.role === UserRoles.MANAGER)))
 
-  if (isLoading) {
-    return null
-  }
+  if (isLoading) return <DetailPageSkeleton />
 
   const isControllerOrSupervisor = user?.isController || user?.isSupervisor
   const cannotExecute = isControllerOrSupervisor && !isHfType
@@ -94,7 +93,7 @@ const RegisterChangeDetail: FC = () => {
           }
         />
         <div className="flex gap-2">
-          {!cannotExecute && (
+          {!cannotExecute && changeId && (
             <>
               {canReturn && <ReturnChangeModal changeId={changeId} />}
               {canAssign && (
@@ -111,8 +110,8 @@ const RegisterChangeDetail: FC = () => {
                 <>
                   <ConfirmProcessModal
                     changeId={changeId}
-                    title={`${ApplicationStatus.IN_APPROVAL ? 'Tasdiqlansinmi' : 'Kelishilsinmi'}`}
-                    buttonText={ApplicationStatus.IN_APPROVAL ? 'Tasdiqlash' : 'Kelishish'}
+                    title={status === ApplicationStatus.IN_APPROVAL ? 'Tasdiqlansinmi' : 'Kelishilsinmi'}
+                    buttonText={status === ApplicationStatus.IN_APPROVAL ? 'Tasdiqlash' : 'Kelishish'}
                   />
                 </>
               )}

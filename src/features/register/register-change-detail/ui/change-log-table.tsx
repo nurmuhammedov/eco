@@ -4,6 +4,7 @@ import { usePaginatedData, useCustomSearchParams } from '@/shared/hooks'
 import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
 import { formatDate } from '@/shared/utils/date'
 import FileLink from '@/shared/components/common/file-link'
+import type { ChangeLogEntry } from '@/entities/registry'
 
 interface Props {
   changeId?: string
@@ -14,9 +15,13 @@ const ChangeLogTable: FC<Props> = ({ changeId }) => {
     paramsObject: { page = 1, size = 100 },
   } = useCustomSearchParams()
 
-  const { data, isLoading } = usePaginatedData<any>(`/change-logs/by-change/${changeId}`, { page, size }, !!changeId)
+  const { data, isLoading } = usePaginatedData<ChangeLogEntry>(
+    `/change-logs/by-change/${changeId}`,
+    { page, size },
+    !!changeId
+  )
 
-  const columns: ExtendedColumnDef<any, any>[] = [
+  const columns: ExtendedColumnDef<ChangeLogEntry>[] = [
     {
       header: 'Maydon nomi',
       accessorKey: 'fieldNameUz',
@@ -55,9 +60,7 @@ const ChangeLogTable: FC<Props> = ({ changeId }) => {
     },
   ]
 
-  return (
-    <DataTable className="min-h-[500px]" columns={columns as any} data={data || []} isLoading={isLoading} isPaginated />
-  )
+  return <DataTable className="min-h-[500px]" columns={columns} data={data || []} isLoading={isLoading} isPaginated />
 }
 
 export default ChangeLogTable

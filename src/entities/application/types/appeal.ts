@@ -117,7 +117,10 @@ export interface AppealInfoData {
   // Declaration check
   legalTin?: number | string | null
   hfRegistryNumber?: string | null
+}
 
+/** An appeal's payload: the rows above and the attachments it was filed with */
+export interface AppealPayload extends AppealInfoData {
   files?: Record<string, FileDto> | null
   /** One attachment set per declared category, keyed by its id */
   multiCategoryFiles?: Record<string, Record<string, FileDto>> | null
@@ -143,7 +146,7 @@ export interface ApplicationDetail {
   departmentName: string | null
   mode: string | null
   /** The appeal's own payload, shaped by its type */
-  data: AppealInfoData | null
+  data: AppealPayload | null
   phoneNumber: string | null
   basisPath: string | null
   sourceType?: string | null

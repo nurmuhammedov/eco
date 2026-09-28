@@ -12,7 +12,7 @@ import { EquipmentRow } from '@/features/register/model/types'
 import { useChildEquipmentTypes } from '@/shared/api/dictionaries'
 import { UserRoles } from '@/shared/types/user'
 import { useAuth } from '@/shared/hooks/use-auth'
-import { AutoTabKey, tabs as autoTabs } from '@/features/register/auto/model/auto-tabs'
+import { TANKER_COUNT_KEY, tabs as autoTabs } from '@/features/register/auto/model/auto-tabs'
 import { formatDate } from 'date-fns'
 import { useParkSelectQuery } from '@/entities/admin/park/hooks/use-park-select-query'
 import { ApplicationTypeEnum } from '@/entities/create-application/types/enums'
@@ -23,6 +23,7 @@ import { CRANE_TAB_CHILD_ID, buildRegisterQuery } from '@/features/register/mode
 import { REPORT_KEYS, RESET_KEYS } from '@/features/register/model/report-drill-down'
 import { RegisterActiveTab } from '@/features/register/model/register-tabs'
 import { paramText } from '@/shared/lib/url-params'
+import type { TankerCount } from '@/entities/registry'
 
 interface EquipmentsListProps {
   isArchive?: boolean
@@ -33,6 +34,17 @@ interface EquipmentsListProps {
 
 /** Attractions and escalators stand in parks rather than on a hazardous facility */
 const PARK_TYPES: string[] = [ApplicationTypeEnum.ATTRACTION, ApplicationTypeEnum.ESCALATOR]
+
+/** The registered equipment kinds, the two crane tabs right after cranes */
+const EQUIPMENT_TABS = APPLICATIONS_DATA.filter(
+  (application) =>
+    application.category === ApplicationCategory.EQUIPMENTS && application.parentId === MainApplicationCategory.REGISTER
+).flatMap(({ equipmentType, name }) => {
+  const tab: { id: string; name: string } = { id: equipmentType ?? '', name: name ?? '' }
+  return equipmentType === ApplicationTypeEnum.CRANE
+    ? [tab, { id: 'AUTO_CRANE', name: 'Avtokranlar' }, { id: 'TOWER_CRANE', name: 'Minorali kranlar' }]
+    : [tab]
+})
 
 export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: EquipmentsListProps) => {
   const navigate = useNavigate()
@@ -102,7 +114,7 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
     regionId: regionId === 'ALL' ? '' : regionId,
     districtId: districtId === 'ALL' ? '' : districtId,
   })
-  const { data: tankersCount } = useData<any>('/tankers/count', isTanker && !isArchive, {
+  const { data: tankersCount } = useData<TankerCount>('/tankers/count', isTanker && !isArchive, {
     mode,
     regionId: regionId === 'ALL' ? '' : regionId,
     districtId: districtId === 'ALL' ? '' : districtId,
@@ -361,20 +373,7 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
                   },
                 ]
               : []),
-            ...(APPLICATIONS_DATA?.filter(
-              (i) => i?.category == ApplicationCategory.EQUIPMENTS && i?.parentId == MainApplicationCategory.REGISTER
-            )?.reduce((acc, i) => {
-              const item = {
-                id: i?.equipmentType?.toString() || '',
-                name: i?.name?.toString() || '',
-              }
-              acc.push(item)
-              if (item.id === 'CRANE') {
-                acc.push({ id: 'AUTO_CRANE', name: 'Avtokranlar' })
-                acc.push({ id: 'TOWER_CRANE', name: 'Minorali kranlar' })
-              }
-              return acc
-            }, [] as any[]) || []),
+            ...EQUIPMENT_TABS,
             ...(!isArchive
               ? [
                   {
@@ -383,11 +382,11 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
                   },
                 ]
               : []),
-          ]?.map((i) => ({
-            ...i,
+          ].map((tab) => ({
+            ...tab,
             count:
-              i?.id === type
-                ? CRANE_TAB_CHILD_ID[String(i?.id)]
+              tab.id === type
+                ? CRANE_TAB_CHILD_ID[tab.id]
                   ? totalElements
                   : ((isTanker ? tankersCount?.allCount : dataForNewCount) ?? 0)
                 : undefined,
@@ -406,20 +405,7 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
               tabs={autoTabs.map((tab) => ({
                 id: tab.key,
                 name: tab.label,
-                count:
-                  tab.key === AutoTabKey.ALL
-                    ? tankersCount?.allCount
-                    : tab.key === AutoTabKey.OIL_PRODUCTS
-                      ? tankersCount?.oilCount
-                      : tab.key === AutoTabKey.LPG_TRANSPORT
-                        ? tankersCount?.lpgCount
-                        : tab.key === AutoTabKey.CHEMICALS
-                          ? tankersCount?.chemicalCount
-                          : tab.key === AutoTabKey.CRYOGENIC_GASES
-                            ? tankersCount?.cryogenicCount
-                            : tab.key === AutoTabKey.NUCLEAR_MATERIALS
-                              ? tankersCount?.radioactiveCount
-                              : undefined,
+                count: tankersCount?.[TANKER_COUNT_KEY[tab.key]],
               }))}
               onTabChange={(val) => {
                 if (val === 'ALL') {

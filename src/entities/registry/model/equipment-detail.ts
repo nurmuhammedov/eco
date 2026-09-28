@@ -69,4 +69,7 @@ export interface EquipmentDetail {
   districtName: string | null
   deregisterBasisPath: string | null
   status: RegistryStatus | 'EXPIRED' | 'NO_DATE' | null
+
+  // Read as a fallback for the owner's name; EquipmentViewById does not send it
+  ownerName?: string | null
 }

@@ -2,13 +2,16 @@ import { useQuery } from '@tanstack/react-query'
 import { apiClient } from '@/shared/api/api-client'
 import type { ApiResponse, FileDto } from '@/shared/types'
 
-/** The organization's radiation profile for one kind of device (RadiationProfileResById), or null when it has none */
-export type RadiationProfileCheck = {
+/** RadiationProfileResById: the files an organisation keeps for one kind of radiation device */
+export interface RadiationProfile {
   id: string
   legalTin: number
   isActive: boolean
   files: Record<string, FileDto>
-} | null
+}
+
+/** The organisation's profile, or null when it has none */
+export type RadiationProfileCheck = RadiationProfile | null
 
 export const useRadiationProfileCheck = (tin?: string | null, type?: 'IRS' | 'XRAY') => {
   return useQuery({

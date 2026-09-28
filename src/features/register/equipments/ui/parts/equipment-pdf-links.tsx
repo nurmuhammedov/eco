@@ -4,10 +4,10 @@ import { EquipmentPdfDocument } from '@/shared/components/common/equipment-pdf-d
 import { EquipmentStickerPdf } from '@/shared/components/common/equipment-sticker-pdf'
 
 interface EquipmentPdfData {
-  ownerName?: string
-  registryNumber?: string
-  registrationDate?: string
-  attractionName?: string
+  ownerName?: string | null
+  registryNumber?: string | null
+  registrationDate?: string | null
+  attractionName?: string | null
   qrCodeDataUrl: string
 }
 

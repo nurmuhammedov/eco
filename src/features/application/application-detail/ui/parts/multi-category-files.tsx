@@ -11,7 +11,7 @@ interface MultiCategoryFilesProps {
   multiCategoryFiles: Record<string, AppealFile[]>
   userRole?: UserRoles
   applicationStatus?: ApplicationStatus
-  appealId?: string
+  appealId?: string | null
   /** The registry detail renders the same sets under its own rules. */
   register?: boolean
 }

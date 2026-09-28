@@ -1,5 +1,5 @@
 import { GoBack } from '@/shared/components/common'
-import { DetailCardAccordion } from '@/shared/components/common/detail-card'
+import { DetailCardAccordion, DetailPageSkeleton } from '@/shared/components/common/detail-card'
 import DetailRow from '@/shared/components/common/detail-row'
 import { useParams } from 'react-router-dom'
 import { RefreshLegalInfoButton } from '@/features/application/application-detail/ui/parts/refresh-legal-info-button'
@@ -10,6 +10,7 @@ import { UserRoles } from '@/shared/types/user'
 import { formatDate } from 'date-fns'
 import { paramText } from '@/shared/lib/url-params'
 import { tabs } from '@/features/register/auto/model/auto-tabs'
+import type { TankerDetail } from '@/entities/registry'
 
 export default function AutoDetail() {
   const { id } = useParams<{ id: string }>()
@@ -17,8 +18,10 @@ export default function AutoDetail() {
     paramsObject: { tin },
   } = useCustomSearchParams()
   const currentTin = paramText(tin)
-  const { data } = useData<any>(`/tankers/${id}`)
+  const { data, isLoading } = useData<TankerDetail>(`/tankers/${id}`, !!id)
   const { user } = useAuth()
+
+  if (isLoading) return <DetailPageSkeleton />
 
   return (
     <div>
@@ -27,7 +30,7 @@ export default function AutoDetail() {
       </div>
       <div className="mt-4">
         <DetailCardAccordion defaultValue={['main', 'auto']}>
-          {currentTin?.toString()?.length == 14 ? (
+          {currentTin.length === 14 ? (
             <DetailCardAccordion.Item value="org_info" title="Fuqaro to‘g‘risida ma’lumot">
               <DetailRow title="Fuqaro JSHSHIR:" value={currentTin || '-'} />
             </DetailCardAccordion.Item>
@@ -55,10 +58,7 @@ export default function AutoDetail() {
               title="Xulosa amal qilish muddati"
               value={data?.expiryDate ? formatDate(data?.expiryDate, 'dd.MM.yyyy') : '-'}
             />
-            <DetailRow
-              title="Faoliyat turi"
-              value={data?.activityType ? tabs?.find((i) => i?.key == data?.activityType)?.label : '-'}
-            />
+            <DetailRow title="Faoliyat turi" value={tabs.find((tab) => tab.key === data?.activityType)?.label || '-'} />
           </DetailCardAccordion.Item>
 
           <DetailCardAccordion.Item value="auto" title="Avtotransport vositasi haqida">
@@ -76,7 +76,7 @@ export default function AutoDetail() {
               title="Texnik ko‘rik amal qilish muddati"
               value={data?.validUntil ? formatDate(data?.validUntil, 'dd.MM.yyyy') : '-'}
             />
-            <DetailRow title="Viloyat" value={data?.region?.name || data?.region?.nameUz || data?.regionName || '-'} />
+            <DetailRow title="Viloyat" value={data?.regionName || '-'} />
           </DetailCardAccordion.Item>
         </DetailCardAccordion>
       </div>

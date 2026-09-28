@@ -3,23 +3,25 @@ import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks'
 import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
 import { useParams } from 'react-router-dom'
 import { format } from 'date-fns'
+import type { ChangeLogEntry } from '@/entities/registry'
 import FileLink from '@/shared/components/common/file-link'
 import ApplicationLogsModal from '@/features/application/application-detail/ui/modals/application-logs-modal'
 import { Eye } from 'lucide-react'
 
-export const Logs = ({ url = 'hf' }: any) => {
+/** The change history of a record: `url` is the register it lives in, e.g. hf, irs, equipments */
+export const Logs = ({ url = 'hf' }: { url?: string }) => {
   const { id } = useParams()
 
   const {
     paramsObject: { page = 1, size = 10 },
   } = useCustomSearchParams()
 
-  const { data = [], isLoading } = usePaginatedData<any>(`/${url}/${id}/logs`, {
+  const { data = [], isLoading } = usePaginatedData<ChangeLogEntry>(`/${url}/${id}/logs`, {
     page,
     size,
   })
 
-  const columns: ExtendedColumnDef<any, any>[] = [
+  const columns: ExtendedColumnDef<ChangeLogEntry>[] = [
     {
       header: 'Maydon',
       accessorKey: 'fieldNameUz',
@@ -79,13 +81,5 @@ export const Logs = ({ url = 'hf' }: any) => {
     },
   ]
 
-  return (
-    <DataTable
-      showFilters={true}
-      isPaginated
-      isLoading={isLoading}
-      data={data || []}
-      columns={columns as unknown as any}
-    />
-  )
+  return <DataTable showFilters={true} isPaginated isLoading={isLoading} data={data || []} columns={columns} />
 }

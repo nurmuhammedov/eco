@@ -5,10 +5,10 @@ import { RefreshLegalInfoButton } from '@/features/application/application-detai
 import LegalApplicantInfo from '@/features/application/application-detail/ui/parts/legal-applicant-info'
 import { useEquipmentsDetail } from '@/features/register/equipments/hooks/use-equipments-detail'
 import { GoBack } from '@/shared/components/common'
-import { DetailCardAccordion } from '@/shared/components/common/detail-card'
+import { DetailCardAccordion, DetailPageSkeleton } from '@/shared/components/common/detail-card'
 import DetailRow from '@/shared/components/common/detail-row'
 import FileLink from '@/shared/components/common/file-link'
-import { Coordinate } from '@/shared/components/common/yandex-map'
+import { parseCoordinate } from '@/shared/components/common/yandex-map'
 import YandexMap from '@/shared/components/common/yandex-map/ui/yandex-map'
 import { getDate } from '@/shared/utils/date'
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
@@ -42,7 +42,7 @@ const EquipmentsDetail = () => {
     }
   }
   const { isLoading, data, refetch } = useEquipmentsDetail()
-  const currentObjLocation = data?.location?.split(',').map(Number) || ([] as Coordinate[])
+  const objectPoint = parseCoordinate(data?.location)
   const { user } = useAuth()
   const { id: equipmentUuid } = useParams<{ id: string }>()
   const [searchParams] = useSearchParams()
@@ -66,9 +66,8 @@ const EquipmentsDetail = () => {
     }
   }, [data])
 
-  if (isLoading || !data) {
-    return null
-  }
+  if (isLoading) return <DetailPageSkeleton />
+  if (!data) return null
   const equipmentPublicUrl = `${window.location.origin}/qr/${equipmentUuid}/equipments`
 
   const handleQrCanvasRef = (canvas: HTMLCanvasElement | null) => {
@@ -243,9 +242,9 @@ const EquipmentsDetail = () => {
           </div>
         </DetailCardAccordion.Item>
 
-        {!!currentObjLocation?.length && (
+        {objectPoint && (
           <DetailCardAccordion.Item value="object_location" title="Obyekt yoki qurilma ko‘rsatilgan joyi">
-            <YandexMap coords={[currentObjLocation]} center={currentObjLocation} zoom={16} />
+            <YandexMap coords={[objectPoint]} center={objectPoint} zoom={16} />
           </DetailCardAccordion.Item>
         )}
         <DetailCardAccordion.Item value="history" title="O‘zgartirishlar tarixi">
