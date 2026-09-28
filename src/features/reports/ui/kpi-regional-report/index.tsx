@@ -6,6 +6,26 @@ import { GoBack } from '@/shared/components/common'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { getQuarter, subQuarters } from 'date-fns'
 import { cn } from '@/shared/lib/utils'
+import type { ExtendedColumnDef } from '@/shared/components/common/data-table/model/column-def'
+
+/** RiskAnalysisKpiDto */
+interface RiskAnalysisKpi {
+  previousMediumCount: number
+  currentLowCount: number
+  currentMediumCount: number
+  currentHighCount: number
+  currentInActiveCount: number
+}
+
+/** KpiRegionalDto; the country total is the row without a region */
+interface KpiRegionalRow {
+  regionId: number | null
+  regionName: string
+  riskAnalysis: RiskAnalysisKpi | null
+  injuryAccident: number
+  nonInjuryAccident: number
+  isSummary?: boolean
+}
 
 const QUARTERS = [
   { value: '1', label: '1-chorak' },
@@ -33,7 +53,7 @@ const KpiRegionalReport: React.FC = () => {
   const year = String(paramsObject.year ?? defaultYear)
   const quarter = String(paramsObject.quarter ?? defaultQuarter)
 
-  const { data: rawData, isLoading } = useData<any[]>('/reports/kpi-regional', true, {
+  const { data: rawData, isLoading } = useData<KpiRegionalRow[]>('/reports/kpi-regional', true, {
     year: Number(year),
     quarter: Number(quarter),
   })
@@ -43,27 +63,25 @@ const KpiRegionalReport: React.FC = () => {
     const regions = rawData.filter((r) => r.regionId !== null)
     const summary = rawData.find((r) => r.regionId === null)
 
-    const result = []
+    const result: KpiRegionalRow[] = []
     if (summary) result.push({ ...summary, isSummary: true, regionName: 'Respublika bo‘yicha' })
     result.push(...regions)
     return result
   }, [rawData])
 
-  const columns: any[] = [
+  const columns: ExtendedColumnDef<KpiRegionalRow, number>[] = [
     {
       header: 'Hududlar',
       accessorKey: 'regionName',
       id: 'regionName',
       minSize: 200,
       className: 'sticky left-0 z-20 border-r shadow-[1px_0_0_0_rgba(0,0,0,0.1)]',
-      cell: ({ row }: any) => (
-        <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.regionName}</span>
-      ),
+      cell: ({ row }) => <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.regionName}</span>,
     },
     {
       header: 'Umumiy KPI natijasi',
       id: 'totalKpi',
-      accessorFn: (row: any) => {
+      accessorFn: (row) => {
         const prev = row.riskAnalysis?.previousMediumCount ?? 0
         const low = row.riskAnalysis?.currentLowCount ?? 0
         const out = row.riskAnalysis?.currentInActiveCount ?? 0
@@ -73,7 +91,7 @@ const KpiRegionalReport: React.FC = () => {
         return xKpi * 0.5 + bKpi * 0.3 + aKpi * 0.2
       },
       className: 'text-center font-bold bg-slate-50',
-      cell: ({ row, getValue }: any) => {
+      cell: ({ row, getValue }) => {
         const val = getValue()
         const percentage = Math.round(val)
         let colorClass = 'text-red-600'
@@ -94,7 +112,7 @@ const KpiRegionalReport: React.FC = () => {
         {
           header: 'KPI ko‘rsatkichi % da',
           id: 'kpiPercentage',
-          accessorFn: (row: any) => {
+          accessorFn: (row) => {
             const prev = row.riskAnalysis?.previousMediumCount ?? 0
             const low = row.riskAnalysis?.currentLowCount ?? 0
             const out = row.riskAnalysis?.currentInActiveCount ?? 0
@@ -102,7 +120,7 @@ const KpiRegionalReport: React.FC = () => {
             return ((low + out) / prev) * 100
           },
           className: 'text-center font-semibold',
-          cell: ({ row, getValue }: any) => {
+          cell: ({ row, getValue }) => {
             const val = getValue()
             const percentage = Math.round(val)
             let colorClass = 'text-red-600'
@@ -119,7 +137,7 @@ const KpiRegionalReport: React.FC = () => {
         {
           header: 'KPI natijasi % da',
           id: 'kpiResultPercentage',
-          accessorFn: (row: any) => {
+          accessorFn: (row) => {
             const prev = row.riskAnalysis?.previousMediumCount ?? 0
             const low = row.riskAnalysis?.currentLowCount ?? 0
             const out = row.riskAnalysis?.currentInActiveCount ?? 0
@@ -127,7 +145,7 @@ const KpiRegionalReport: React.FC = () => {
             return ((low + out) / prev) * 100 * 0.5
           },
           className: 'text-center font-semibold bg-slate-50',
-          cell: ({ row, getValue }: any) => {
+          cell: ({ row, getValue }) => {
             const val = getValue()
             const percentage = Math.round(val)
             let colorClass = 'text-red-600'
@@ -145,47 +163,37 @@ const KpiRegionalReport: React.FC = () => {
         {
           header: 'Oldingi o‘rta xavf',
           id: 'previousMediumCount',
-          accessorFn: (row: any) => row.riskAnalysis?.previousMediumCount ?? 0,
+          accessorFn: (row) => row.riskAnalysis?.previousMediumCount ?? 0,
           className: 'text-center whitespace-nowrap text-slate-600',
-          cell: ({ row, getValue }: any) => (
-            <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
-          ),
+          cell: ({ row, getValue }) => <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>,
         },
         {
           header: 'Xavfi past',
           id: 'currentLowCount',
-          accessorFn: (row: any) => row.riskAnalysis?.currentLowCount ?? 0,
+          accessorFn: (row) => row.riskAnalysis?.currentLowCount ?? 0,
           className: 'text-center whitespace-nowrap text-green-600',
-          cell: ({ row, getValue }: any) => (
-            <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
-          ),
+          cell: ({ row, getValue }) => <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>,
         },
         {
           header: 'Xavfi o‘rta',
           id: 'currentMediumCount',
-          accessorFn: (row: any) => row.riskAnalysis?.currentMediumCount ?? 0,
+          accessorFn: (row) => row.riskAnalysis?.currentMediumCount ?? 0,
           className: 'text-center whitespace-nowrap text-amber-600',
-          cell: ({ row, getValue }: any) => (
-            <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
-          ),
+          cell: ({ row, getValue }) => <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>,
         },
         {
           header: 'Xavfi yuqori',
           id: 'currentHighCount',
-          accessorFn: (row: any) => row.riskAnalysis?.currentHighCount ?? 0,
+          accessorFn: (row) => row.riskAnalysis?.currentHighCount ?? 0,
           className: 'text-center whitespace-nowrap text-red-600',
-          cell: ({ row, getValue }: any) => (
-            <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
-          ),
+          cell: ({ row, getValue }) => <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>,
         },
         {
           header: 'Ro‘yxatdan chiqarilgan',
           id: 'currentInActiveCount',
-          accessorFn: (row: any) => row.riskAnalysis?.currentInActiveCount ?? 0,
+          accessorFn: (row) => row.riskAnalysis?.currentInActiveCount ?? 0,
           className: 'text-center whitespace-nowrap text-slate-500',
-          cell: ({ row, getValue }: any) => (
-            <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
-          ),
+          cell: ({ row, getValue }) => <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>,
         },
       ],
     },
@@ -196,9 +204,9 @@ const KpiRegionalReport: React.FC = () => {
         {
           header: 'Baxtsiz hodisalar KPI ko‘rsatkichi % da',
           id: 'injuryAccidentPercent',
-          accessorFn: (row: any) => (row.injuryAccident > 0 ? 0 : 100),
+          accessorFn: (row) => (row.injuryAccident > 0 ? 0 : 100),
           className: 'text-center whitespace-nowrap font-semibold',
-          cell: ({ row, getValue }: any) => {
+          cell: ({ row, getValue }) => {
             const val = getValue()
             const colorClass = val === 100 ? 'text-green-600' : 'text-red-600'
             return <span className={cn(colorClass, row.original.isSummary ? 'font-bold' : '')}>{val}%</span>
@@ -207,9 +215,9 @@ const KpiRegionalReport: React.FC = () => {
         {
           header: 'KPI natijasi % da',
           id: 'injuryAccidentKpiResult',
-          accessorFn: (row: any) => (row.injuryAccident > 0 ? 0 : 30),
+          accessorFn: (row) => (row.injuryAccident > 0 ? 0 : 30),
           className: 'text-center whitespace-nowrap font-semibold bg-slate-50',
-          cell: ({ row, getValue }: any) => {
+          cell: ({ row, getValue }) => {
             const val = getValue()
             const colorClass = val === 30 ? 'text-green-600' : 'text-red-600'
             return <span className={cn(colorClass, row.original.isSummary ? 'font-bold' : '')}>{val}%</span>
@@ -220,9 +228,7 @@ const KpiRegionalReport: React.FC = () => {
           id: 'injuryAccident',
           accessorKey: 'injuryAccident',
           className: 'text-center whitespace-nowrap',
-          cell: ({ row, getValue }: any) => (
-            <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
-          ),
+          cell: ({ row, getValue }) => <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>,
         },
       ],
     },
@@ -233,9 +239,9 @@ const KpiRegionalReport: React.FC = () => {
         {
           header: 'Avariyalar KPI ko‘rsatkichi % da',
           id: 'nonInjuryAccidentPercent',
-          accessorFn: (row: any) => (row.nonInjuryAccident > 0 ? 0 : 100),
+          accessorFn: (row) => (row.nonInjuryAccident > 0 ? 0 : 100),
           className: 'text-center whitespace-nowrap font-semibold',
-          cell: ({ row, getValue }: any) => {
+          cell: ({ row, getValue }) => {
             const val = getValue()
             const colorClass = val === 100 ? 'text-green-600' : 'text-red-600'
             return <span className={cn(colorClass, row.original.isSummary ? 'font-bold' : '')}>{val}%</span>
@@ -244,9 +250,9 @@ const KpiRegionalReport: React.FC = () => {
         {
           header: 'KPI natijasi % da',
           id: 'nonInjuryAccidentKpiResult',
-          accessorFn: (row: any) => (row.nonInjuryAccident > 0 ? 0 : 20),
+          accessorFn: (row) => (row.nonInjuryAccident > 0 ? 0 : 20),
           className: 'text-center whitespace-nowrap font-semibold bg-slate-50',
-          cell: ({ row, getValue }: any) => {
+          cell: ({ row, getValue }) => {
             const val = getValue()
             const colorClass = val === 20 ? 'text-green-600' : 'text-red-600'
             return <span className={cn(colorClass, row.original.isSummary ? 'font-bold' : '')}>{val}%</span>
@@ -257,9 +263,7 @@ const KpiRegionalReport: React.FC = () => {
           id: 'nonInjuryAccident',
           accessorKey: 'nonInjuryAccident',
           className: 'text-center whitespace-nowrap',
-          cell: ({ row, getValue }: any) => (
-            <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
-          ),
+          cell: ({ row, getValue }) => <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>,
         },
       ],
     },
@@ -301,7 +305,7 @@ const KpiRegionalReport: React.FC = () => {
 
       <div className="flex-1 overflow-hidden rounded-md border bg-white shadow-sm">
         <DataTable
-          columns={columns as any}
+          columns={columns}
           data={tableData}
           isLoading={isLoading}
           isPaginated={false}
