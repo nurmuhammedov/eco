@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { apiClient } from '@/shared/api/api-client'
-import { NotificationItem } from './types'
+import type { NotificationItem } from './types'
+import type { ApiResponse } from '@/shared/types/api'
 
 export const NOTIFICATIONS_LIST_KEY = ['/notifications']
 export const NOTIFICATIONS_COUNT_KEY = ['/notifications/unread-count']
@@ -15,8 +16,8 @@ export const useUnreadNotificationCount = (enabled = true) =>
     refetchInterval: UNREAD_REFETCH_INTERVAL,
     refetchIntervalInBackground: false,
     queryFn: async () => {
-      const { data } = await apiClient.get<any>('/notifications/unread-count')
-      return Number(data?.data ?? 0)
+      const { data } = await apiClient.get<ApiResponse<number>>('/notifications/unread-count')
+      return Number(data.data ?? 0)
     },
   })
 
@@ -26,18 +27,22 @@ export const useNotificationList = (enabled = true) =>
     enabled,
     staleTime: 30_000,
     queryFn: async () => {
-      const { data } = await apiClient.get<any>('/notifications', { page: 1, size: PAGE_SIZE })
-      return (data?.data?.content ?? []) as NotificationItem[]
+      const { data } = await apiClient.getWithPagination<NotificationItem>('/notifications', {
+        page: 1,
+        size: PAGE_SIZE,
+      })
+      return data?.content ?? []
     },
   })
 
 export const useNotificationActions = () => {
   const queryClient = useQueryClient()
 
-  const invalidate = () => {
-    queryClient.invalidateQueries({ queryKey: NOTIFICATIONS_LIST_KEY })
-    queryClient.invalidateQueries({ queryKey: NOTIFICATIONS_COUNT_KEY })
-  }
+  const invalidate = () =>
+    Promise.all([
+      queryClient.invalidateQueries({ queryKey: NOTIFICATIONS_LIST_KEY }),
+      queryClient.invalidateQueries({ queryKey: NOTIFICATIONS_COUNT_KEY }),
+    ])
 
   const markAsRead = useMutation({
     mutationFn: (id: string) => apiClient.patch(`/notifications/${id}/read`, {}),

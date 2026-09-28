@@ -2,10 +2,17 @@ import { useMemo } from 'react'
 import uzGeoData from '@/shared/assets/uz-regions.json'
 import { regionByCode } from '../model/regions'
 
+/** A GeoJSON ring: [longitude, latitude] pairs */
+type Ring = number[][]
+
 interface GeoFeature {
   properties: { id?: string; name?: string }
-  geometry: { type: 'Polygon' | 'MultiPolygon'; coordinates: any[] }
+  geometry: { type: 'Polygon'; coordinates: Ring[] } | { type: 'MultiPolygon'; coordinates: Ring[][] }
 }
+
+/** Every ring of the region, whether it is one polygon or several */
+const ringsOf = ({ geometry }: GeoFeature): Ring[] =>
+  geometry.type === 'Polygon' ? geometry.coordinates : geometry.coordinates.flat()
 
 interface RegionMapProps {
   /** Keyed by registry region id; absent means the category has no regional breakdown. */
@@ -24,16 +31,10 @@ const project = (lon: number, lat: number): [number, number] => [
   HEIGHT - ((lat - BOUNDS.minLat) / (BOUNDS.maxLat - BOUNDS.minLat)) * HEIGHT,
 ]
 
-const ringPath = (ring: number[][]) =>
+const ringPath = (ring: Ring) =>
   ring.map((coord, index) => `${index === 0 ? 'M' : 'L'}${project(coord[0], coord[1]).join(',')}`).join('') + 'Z '
 
-const buildPath = (feature: GeoFeature) => {
-  const { type, coordinates } = feature.geometry
-
-  return type === 'Polygon'
-    ? (coordinates as number[][][]).map(ringPath).join('')
-    : (coordinates as number[][][][]).map((polygon) => polygon.map(ringPath).join('')).join('')
-}
+const buildPath = (feature: GeoFeature) => ringsOf(feature).map(ringPath).join('')
 
 const isInside = (x: number, y: number, ring: [number, number][]) => {
   let inside = false
@@ -55,10 +56,7 @@ const isInside = (x: number, y: number, ring: [number, number][]) => {
  * the visual centre of the shape.
  */
 const labelPoint = (feature: GeoFeature): [number, number] => {
-  const rings: number[][][] =
-    feature.geometry.type === 'Polygon'
-      ? (feature.geometry.coordinates as number[][][])
-      : (feature.geometry.coordinates as number[][][][]).flat()
+  const rings = ringsOf(feature)
 
   const largest = rings.reduce((best, ring) => (ring.length > best.length ? ring : best), rings[0] ?? [])
   const ring = largest.map(([lon, lat]) => project(lon, lat))
@@ -97,10 +95,7 @@ const labelPoint = (feature: GeoFeature): [number, number] => {
 
 /** Shoelace area of the outer ring, in viewBox units. */
 const ringArea = (feature: GeoFeature) => {
-  const rings: number[][][] =
-    feature.geometry.type === 'Polygon'
-      ? (feature.geometry.coordinates as number[][][])
-      : (feature.geometry.coordinates as number[][][][]).flat()
+  const rings = ringsOf(feature)
 
   const ring = rings.reduce((best, item) => (item.length > best.length ? item : best), rings[0] ?? [])
   const projected = ring.map(([lon, lat]) => project(lon, lat))
@@ -131,6 +126,7 @@ const format = (value: number) => value.toLocaleString('ru-RU').replace(/\s/g, '
 export const RegionMap = ({ counts, activeRegionId, onSelect, accent }: RegionMapProps) => {
   const shapes = useMemo(
     () =>
+      // The bundled outline is GeoJSON of exactly this shape; JSON imports carry no geometry types
       (uzGeoData as unknown as { features: GeoFeature[] }).features.flatMap((feature) => {
         const region = regionByCode(feature.properties.id ?? '')
         if (!region) return []

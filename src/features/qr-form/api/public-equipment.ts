@@ -1,28 +1,33 @@
 import { AxiosError } from 'axios'
 import { publicApi } from '@/shared/api/public'
+import type { FileDto } from '@/shared/types/api'
 
+export type PublicEquipmentStatus = 'VALID' | 'INVALID' | 'INACTIVE' | 'EXPIRED' | 'NO_DATE'
+
+/** EquipmentViewByQr (`GET /public/equipments/{id}`): what the sticker's QR code opens */
 export interface PublicEquipment {
   id: string
-  type: string
-  attractionName: string
-  typeName: string
-  childEquipmentName?: string
-  childEquipmentSortName?: string
-  registryNumber: string
-  inspectorName?: string
-  deregisterFilePath?: string
-  registrationDate?: string
-  manufacturedAt?: string
-  files?: any
-  parameters?: any
-  acceptedAt?: string
-  servicePeriod?: string
-  riskLevel?: string
-  status: 'ACTIVE' | 'INACTIVE' | 'EXPIRED' | 'NO_DATE'
-  location?: string
-  ownerName?: string
-  ownerIdentity?: string
-  registryFilePath?: string
+  type: string | null
+  typeName: string | null
+  attractionName: string | null
+  childEquipmentName: string | null
+  childEquipmentSortName: string | null
+  registryNumber: string | null
+  inspectorName: string | null
+  registrationDate: string | null
+  manufacturedAt: string | null
+  acceptedAt: string | null
+  servicePeriod: string | null
+  riskLevel: string | null
+  status: PublicEquipmentStatus | null
+  location: string | null
+  ownerName: string | null
+  ownerIdentity: number | null
+  registryFilePath: string | null
+  /** Not in EquipmentViewByQr: the backend does not send it yet */
+  deregisterFilePath?: string | null
+  parameters: Record<string, string> | null
+  files: Record<string, FileDto> | null
 }
 
 interface ApiResponse<T> {

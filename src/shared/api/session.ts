@@ -5,7 +5,8 @@ import { type RawUserRole, UserRoles, UserState } from '@/shared/types/user'
 
 export const SESSION_QUERY_KEY = ['me'] as const
 
-type RawUser = Omit<UserState, 'role'> & { role: RawUserRole }
+/** The signed-in user as the backend describes them */
+export type RawUser = Omit<UserState, 'role'> & { role: RawUserRole }
 
 /**
  * The backend reports supervision and control as roles of their own, while the

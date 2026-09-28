@@ -34,7 +34,8 @@ export interface InputFileProps<T extends FieldValues, TSubmitted = T> {
   id?: string
   maxFilenameLength?: number
   onUploadStart?: () => void
-  onUploadComplete?: (urls: string) => void
+  /** The uploaded address, or every address the field now holds when it takes several */
+  onUploadComplete?: (urls: string | string[]) => void
   onUploadError?: (error: Error) => void
   onUploadProgress?: (progress: number) => void
   onRemove?: () => void
@@ -309,7 +310,7 @@ function InputFileComponent<T extends FieldValues, TSubmitted = T>({
             const currentVal = (watch(name) as string[]) || []
             const updatedUrls = [...currentVal, ...newUrls]
             setValue(name, updatedUrls as PathValue<T, Path<T>>, { shouldValidate: true })
-            onUploadComplete?.(updatedUrls as unknown as string)
+            onUploadComplete?.(updatedUrls)
           } else {
             const url = newUrls[0]
             setValue(name, url as PathValue<T, Path<T>>, { shouldValidate: true })
@@ -352,6 +353,7 @@ function InputFileComponent<T extends FieldValues, TSubmitted = T>({
         const newUrls = currentUrls.filter((_, index) => index !== indexToRemove)
         setValue(name, newUrls as PathValue<T, Path<T>>, { shouldValidate: true })
       } else {
+        // The field holds a path, but the generic form cannot know that
         setValue(name, '' as unknown as PathValue<T, Path<T>>, { shouldValidate: true })
       }
       onRemove?.()

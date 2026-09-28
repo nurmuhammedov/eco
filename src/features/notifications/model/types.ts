@@ -1,8 +1,9 @@
+/** NotificationDto (`GET /notifications`) */
 export interface NotificationItem {
   id: string
-  title: string
-  message: string
+  title: string | null
+  message: string | null
   url: string | null
-  isRead: boolean
-  createdAt: string
+  isRead: boolean | null
+  createdAt: string | null
 }

@@ -13,15 +13,15 @@ import { withFullPageSuspense } from '@/app/routes/utils'
 export const publicRoutes = [
   {
     path: '/qr/:id/equipments',
-    element: withFullPageSuspense(ContactPage as any),
+    element: withFullPageSuspense(ContactPage),
   },
   {
     path: '/public/risk-analysis/:id',
-    element: withFullPageSuspense(PublicRiskAnalysisInfo as any),
+    element: withFullPageSuspense(PublicRiskAnalysisInfo),
   },
   {
     path: '/public-inquiry-choice',
-    element: withFullPageSuspense(PublicInquiryChoice as any),
+    element: withFullPageSuspense(PublicInquiryChoice),
   },
 ]
 

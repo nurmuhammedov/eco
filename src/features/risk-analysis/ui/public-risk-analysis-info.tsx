@@ -1,18 +1,14 @@
 import RiskAnalysisItem from '@/features/risk-analysis/ui/parts/risk-analysis-item'
 import { FC } from 'react'
-import { RiskAnalysisData, RiskIndicators } from '@/features/risk-analysis/ui/risk-analysis'
+import type { RiskAnalysisData } from '@/features/risk-analysis/ui/risk-analysis'
 import { useParams } from 'react-router-dom'
 import { useDetail } from '@/shared/hooks'
 import { Loader2 } from 'lucide-react'
 import RiskAnalysisInspectorInfo from '@/features/risk-analysis/ui/parts/risk-analysis-inspector-info'
 
-interface Props {
-  data: RiskIndicators | null
-}
-
-const PublicRiskAnalysisInfo: FC<Props> = () => {
+const PublicRiskAnalysisInfo: FC = () => {
   const { id } = useParams()
-  const { data, isLoading: isDetailLoading } = useDetail<RiskAnalysisData>(`/public/risk-analyses/`, id, !!id)
+  const { data, isLoading: isDetailLoading } = useDetail<RiskAnalysisData>('/public/risk-analyses', id, !!id)
 
   if (isDetailLoading) {
     return (

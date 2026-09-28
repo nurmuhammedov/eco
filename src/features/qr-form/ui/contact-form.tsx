@@ -8,12 +8,13 @@ import YandexMap from '@/shared/components/common/yandex-map/ui/yandex-map'
 import { Button } from '@/shared/components/ui/button'
 import { cn } from '@/shared/lib/utils'
 import { Badge } from '@/shared/components/ui/badge'
-import { Coordinate } from '@/shared/components/common/yandex-map'
+import { parseCoordinate } from '@/shared/components/common/yandex-map'
+import type { PublicEquipmentStatus } from '../api/public-equipment'
 import FileLink from '@/shared/components/common/file-link'
 
-const STATUS_MAP: Record<string, { label: string; className: string }> = {
-  ACTIVE: { label: 'Reyestrdagi qurilma', className: 'bg-green-100 text-green-700 hover:bg-green-200' },
+const STATUS_MAP: Record<PublicEquipmentStatus | 'DEFAULT', { label: string; className: string }> = {
   VALID: { label: 'Reyestrdagi qurilma', className: 'bg-green-100 text-green-700 hover:bg-green-200' },
+  INVALID: { label: 'Vaqtinchalik nofaol', className: 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200' },
   INACTIVE: { label: 'Reyestrdan chiqarilgan', className: 'bg-red-100 text-red-700 hover:bg-red-200' },
   EXPIRED: { label: 'Muddati o‘tgan', className: 'bg-red-100 text-red-700 hover:bg-red-200' },
   NO_DATE: { label: 'Muddati kiritilmagan', className: 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200' },
@@ -46,11 +47,7 @@ export const ContactForm = () => {
   const { t } = useTranslation()
   const { data, isLoading } = usePublicEquipmentDetail(id)
 
-  const mapCoordinates = useMemo(() => {
-    if (!data?.location) return []
-    const coords = data.location.split(',')?.map(Number)
-    return coords.length === 2 ? [coords] : []
-  }, [data?.location])
+  const mapPoint = useMemo(() => parseCoordinate(data?.location), [data?.location])
 
   if (isLoading) {
     return (
@@ -68,7 +65,7 @@ export const ContactForm = () => {
     )
   }
 
-  const status = STATUS_MAP[data.status || ''] || STATUS_MAP.DEFAULT
+  const status = STATUS_MAP[data.status ?? 'DEFAULT']
 
   return (
     <div className="mx-auto w-full max-w-4xl space-y-6 pb-6">
@@ -118,7 +115,7 @@ export const ContactForm = () => {
             value={data.deregisterFilePath ? <FileLink url={data.deregisterFilePath} title="Yuklab olish" /> : null}
           />
 
-          {Object.entries(data.files).map(([key, file]: [string, any]) => {
+          {Object.entries(data.files ?? {}).map(([key, file]) => {
             if (!file || !file.expiryDate) return null
             const equipmentType = data.type || 'CRANE'
             const label = t(`labels.${equipmentType}.${key}`)
@@ -147,14 +144,10 @@ export const ContactForm = () => {
         </div>
       </div>
 
-      {mapCoordinates.length > 0 && (
+      {mapPoint && (
         <div className="bg-card overflow-hidden rounded-lg border shadow-sm">
           <SectionHeader title="Qurilma manzili" />
-          <YandexMap
-            coords={mapCoordinates as unknown as Coordinate[]}
-            center={mapCoordinates[0] as unknown as Coordinate}
-            zoom={16}
-          />
+          <YandexMap coords={[mapPoint]} center={mapPoint} zoom={16} />
         </div>
       )}
     </div>

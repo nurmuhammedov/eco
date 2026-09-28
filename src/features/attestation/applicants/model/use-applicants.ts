@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
-import { servicesApiClient } from '@/shared/api/services-api-client'
+import { serviceData, servicesApiClient } from '@/shared/api/services-api-client'
 import { SERVICES_API_ENDPOINTS } from '@/shared/api/endpoints'
 import type {
   AttestationApplication,
@@ -9,13 +9,13 @@ import type {
 } from '@/entities/attestation/model/types'
 import { invalidateAttestation } from '@/entities/attestation/lib/invalidate'
 
-const unwrapList = <T>(response: { data: unknown }): T => {
-  const payload = response.data as any
-
-  return (payload?.data?.content ?? payload?.data ?? []) as T
+/** A list from the services API, paged or not */
+const unwrapList = <T>(response: { data: unknown }): T[] => {
+  const payload = serviceData<T[] | { content?: T[] } | null>(response)
+  return (Array.isArray(payload) ? payload : payload?.content) ?? []
 }
 
-const unwrapOne = <T>(response: { data: unknown }): T => (response.data as any)?.data as T
+const unwrapOne = <T>(response: { data: unknown }): T => serviceData<T>(response)
 
 export const APPLICANT_KEYS = {
   calendar: (id: string) => ['attestation-calendar', id] as const,
@@ -45,7 +45,7 @@ export const useExamQuestions = (applicationId: string, enabled = true) =>
   useQuery({
     queryKey: APPLICANT_KEYS.exam(applicationId),
     queryFn: async () =>
-      unwrapList<AttestationExamSession[]>(
+      unwrapList<AttestationExamSession>(
         await servicesApiClient.get(SERVICES_API_ENDPOINTS.EXAM_BY_APPLICATION(applicationId))
       ),
     enabled: !!applicationId && enabled,

@@ -62,7 +62,7 @@ export function OrganizationList() {
     { id: 'NON_STATE', name: 'Davlat tashkilot bo‘lmaganlar', count: counts?.NON_STATE || 0 },
   ]
 
-  const columns: ExtendedColumnDef<Organization, any>[] = useMemo(
+  const columns: ExtendedColumnDef<Organization, unknown>[] = useMemo(
     () => [
       {
         accessorKey: 'name',

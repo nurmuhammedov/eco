@@ -3,8 +3,8 @@ import { Toaster } from 'sonner'
 import { ErrorBoundary } from '@/widgets/error-boundary'
 import { createPortal } from 'react-dom'
 
-export const withErrorBoundary = (Component: React.ComponentType) => {
-  return function WithErrorBoundary(props: any) {
+export const withErrorBoundary = <P extends object>(Component: React.ComponentType<P>) => {
+  return function WithErrorBoundary(props: P) {
     const alertElement = document.querySelector('#alert')
 
     return (

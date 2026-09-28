@@ -1,12 +1,6 @@
-import { ComponentProps } from 'react'
-import { YMaps } from '@pbe/react-yandex-maps'
 import borders from '@/shared/assets/uz-borders.json'
 
-/**
- * The library's types predate uz_UZ, which the Yandex API itself accepts - the
- * cast is narrowed to this one value rather than silencing the whole element.
- */
-export const MAP_QUERY = { load: 'package.full', lang: 'uz_UZ' } as unknown as ComponentProps<typeof YMaps>['query']
+export { MAP_QUERY } from '@/shared/components/common/yandex-map/model/yandex-map-config'
 
 /**
  * Fitting to the outline beats a hand-picked centre and zoom: the country fills

@@ -52,13 +52,14 @@ export const InspectionList: React.FC = () => {
       month,
       regionId: regionId == 'ALL' ? '' : regionId,
       year,
-      status: [UserRoles.LEGAL, UserRoles?.INSPECTOR]?.includes(user?.role as unknown as UserRoles)
-        ? subStatus
-        : status === InspectionStatus.ALL
-          ? undefined
-          : status == InspectionStatus.ASSIGNED
-            ? subStatus
-            : status,
+      status:
+        user?.role === UserRoles.LEGAL || user?.role === UserRoles.INSPECTOR
+          ? subStatus
+          : status === InspectionStatus.ALL
+            ? undefined
+            : status == InspectionStatus.ASSIGNED
+              ? subStatus
+              : status,
     },
     status !== InspectionStatus.TEN_DAYS
   )

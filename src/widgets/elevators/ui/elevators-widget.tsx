@@ -2,10 +2,30 @@ import { DataTable } from '@/shared/components/common/data-table'
 import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
 import React from 'react'
 
-const elevators: any[] = []
+/** An elevator as the external register lists it; the page has no data source yet */
+interface ElevatorRow {
+  buyurtmachi: string
+  stir: string
+  sertifikat_raqami: string
+  ishlab_chiqaruvchi: string
+  model: string
+  seriya_raqami: string
+  viloyat: string
+  tuman: string
+  mahalla: string
+  kucha: string
+  uy: string
+  lift_turi: string
+  uy_qavati: number
+  kadastr_number: string
+  texnik_korik_sana: string
+  keyingi_korik_sana: string
+}
+
+const elevators: ElevatorRow[] = []
 
 const ElevatorsWidget = () => {
-  const columns: ExtendedColumnDef<any, any>[] = [
+  const columns: ExtendedColumnDef<ElevatorRow, unknown>[] = [
     {
       header: 'Buyurtmachi',
       accessorKey: 'buyurtmachi',

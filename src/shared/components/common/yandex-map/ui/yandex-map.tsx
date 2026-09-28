@@ -1,6 +1,6 @@
 import { toast } from 'sonner'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { MAP_DEFAULTS } from '../model/yandex-map-config'
+import { MAP_DEFAULTS, MAP_QUERY } from '../model/yandex-map-config'
 import { Map, Placemark, YMaps } from '@pbe/react-yandex-maps'
 import type { YMapsApi } from '@pbe/react-yandex-maps/typings/util/typing'
 import type { Coordinate, YandexMapProps } from '../model/yandex-map-types'
@@ -133,8 +133,7 @@ const YandexMap: React.FC<YandexMapProps> = ({
   return (
     <div className="flex w-full flex-col gap-3" style={{ height: typeof height === 'number' ? `${height}px` : height }}>
       <div className="relative w-full flex-1 overflow-hidden rounded-md border" style={{ width }}>
-        {/* @ts-ignore */}
-        <YMaps query={{ load: 'package.full', lang: 'uz_UZ' }}>
+        <YMaps query={MAP_QUERY}>
           <Map
             width="100%"
             height="100%"

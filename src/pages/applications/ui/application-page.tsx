@@ -33,7 +33,7 @@ const ApplicationPage = () => {
   const status = paramText(useCustomSearchParams().paramsObject.status, ApplicationStatus.ALL)
 
   const action = useMemo(() => {
-    if ([UserRoles.LEGAL, UserRoles.INDIVIDUAL]?.includes(user?.role as unknown as UserRoles)) {
+    if (user?.role === UserRoles.LEGAL || user?.role === UserRoles.INDIVIDUAL) {
       return (
         <Button onClick={() => navigate('/applications/add')}>
           <PlusCircle /> Ariza yaratish

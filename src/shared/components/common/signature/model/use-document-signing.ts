@@ -9,7 +9,8 @@ interface SignDocumentParams {
   documentUrl: string
   hashCode?: string | null
   Client: SignatureClient
-  signature: SignatureKey | string | null
+  /** A key from the E-IMZO store, or 'ckc' for the ID card reader */
+  signature: SignatureKey | 'ckc' | null
   /** Receives the attached signature, or false when signing did not go through */
   onSuccess?: (result: Awaited<ReturnType<typeof signDocumentWithMetadata>>) => void
 }
@@ -43,7 +44,7 @@ export const signDocumentWithMetadata = async ({
     let keyId
 
     if (signature !== 'ckc') {
-      const keyResponse = await Client.loadKey(signature as unknown as SignatureKey).catch(() => {
+      const keyResponse = await Client.loadKey(signature).catch(() => {
         toast.error('Kiritilgan parol noto‘g‘ri!', { richColors: true })
       })
       keyId = keyResponse?.id
