@@ -1,12 +1,13 @@
 import { DataTable } from '@/shared/components/common/data-table'
 import { format } from 'date-fns'
+import type { Row } from '@tanstack/react-table'
 import { Button } from '@/shared/components/ui/button'
 import { Badge } from '@/shared/components/ui/badge'
 import { Eye, Plus, Pencil } from 'lucide-react'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import usePaginatedData from '@/shared/hooks/api/use-paginated-data'
-import { AccidentListItem } from '../model/types'
+import { type AccidentListItem, AccidentProcessStatus } from '../model/types'
 import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
 import { useCurrentRole } from '@/shared/hooks/use-current-role'
 import { UserRoles } from '@/shared/types/user'
@@ -94,7 +95,7 @@ const AccidentList: React.FC = () => {
     }
   }
 
-  const columns: ExtendedColumnDef<AccidentListItem, any>[] = [
+  const columns: ExtendedColumnDef<AccidentListItem, unknown>[] = [
     {
       header: 'Tashkilot nomi',
       accessorKey: 'legalName',
@@ -120,9 +121,10 @@ const AccidentList: React.FC = () => {
       filterKey: 'date',
       filterType: 'date',
       cell: ({ row }) => {
-        const val = type === 'INJURY' ? (row.original as any).date : row.original.dateTime
-        if (!val) return '-'
-        return type === 'INJURY' ? format(new Date(val), 'dd.MM.yyyy') : format(new Date(val), 'dd.MM.yyyy, HH:mm')
+        const isInjury = type === 'INJURY'
+        const value = isInjury ? row.original.date : row.original.dateTime
+        if (!value) return '-'
+        return format(value, isInjury ? 'dd.MM.yyyy' : 'dd.MM.yyyy, HH:mm')
       },
     },
     ...(type === 'INJURY'
@@ -142,7 +144,7 @@ const AccidentList: React.FC = () => {
           {
             header: 'Guruhli',
             accessorKey: 'multiple',
-            cell: ({ row }: any) => (row.original.multiple ? 'Ha' : 'Yo‘q'),
+            cell: ({ row }: { row: Row<AccidentListItem> }) => (row.original.multiple ? 'Ha' : 'Yo‘q'),
           },
         ]
       : []),
@@ -162,21 +164,23 @@ const AccidentList: React.FC = () => {
           <Button variant="ghost" size="icon" onClick={() => handleView(row.original)}>
             <Eye className="h-4 w-4" />
           </Button>
-          {role === UserRoles.INSPECTOR && row.original?.status !== 'COMPLETED' && row.original?.status !== 'NEW' && (
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => {
-                const editPath =
-                  row.original.type === 'INJURY'
-                    ? `/accidents/injury/${row.original.id}/edit`
-                    : `/accidents/non-injury/${row.original.id}/edit`
-                navigate(editPath)
-              }}
-            >
-              <Pencil className="h-4 w-4" />
-            </Button>
-          )}
+          {role === UserRoles.INSPECTOR &&
+            row.original.status !== AccidentProcessStatus.COMPLETED &&
+            row.original.status !== AccidentProcessStatus.NEW && (
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => {
+                  const editPath =
+                    row.original.type === 'INJURY'
+                      ? `/accidents/injury/${row.original.id}/edit`
+                      : `/accidents/non-injury/${row.original.id}/edit`
+                  navigate(editPath)
+                }}
+              >
+                <Pencil className="h-4 w-4" />
+              </Button>
+            )}
         </div>
       ),
     },

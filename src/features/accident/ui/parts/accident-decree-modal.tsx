@@ -2,6 +2,7 @@ import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { toast } from 'sonner'
+import type { OptionItem } from '@/shared/types/general'
 import { MultiSelect } from '@/shared/components/ui/multi-select'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
@@ -37,10 +38,14 @@ export const AccidentDecreeModal: React.FC<AccidentDecreeModalProps> = ({
   onSuccess,
 }) => {
   const { user } = useAuth()
-  const { data: inspectors } = useData<any[]>('/users/office-users/select', !user?.isSupervisor && !!user?.regionId, {
-    regionId: user?.regionId || '',
-  })
-  const addMutation = useAdd<FormValues, any, any>(`/accidents/${accidentId}/decree`)
+  const { data: inspectors } = useData<OptionItem<string>[]>(
+    '/users/office-users/select',
+    !user?.isSupervisor && !!user?.regionId,
+    {
+      regionId: user?.regionId || '',
+    }
+  )
+  const addMutation = useAdd<FormValues>(`/accidents/${accidentId}/decree`, '')
 
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
@@ -99,7 +104,7 @@ export const AccidentDecreeModal: React.FC<AccidentDecreeModalProps> = ({
                   <FormLabel required>Komissiya a’zolari</FormLabel>
                   <FormControl>
                     <MultiSelect
-                      options={(inspectors || []).map((i: any) => ({ id: i.id, name: i.name }))}
+                      options={inspectors ?? []}
                       value={field.value}
                       onChange={(val) => field.onChange(val as string[])}
                       placeholder="Komissiya a’zolarini tanlang"

@@ -2,13 +2,15 @@ import { useParams } from 'react-router-dom'
 import { Card, CardContent } from '@/shared/components/ui/card'
 import DetailRow from '@/shared/components/common/detail-row'
 import { GoBack } from '@/shared/components/common'
-import { DetailCardAccordion } from '@/shared/components/common/detail-card'
+import { DetailCardAccordion, DetailPageSkeleton } from '@/shared/components/common/detail-card'
 import useDetail from '@/shared/hooks/api/use-detail'
 import useData from '@/shared/hooks/api/use-data'
 import LegalApplicantInfo from '@/features/application/application-detail/ui/parts/legal-applicant-info'
 import AppealMainInfo from '@/features/application/application-detail/ui/parts/appeal-main-info'
 import FilesSection from '@/features/application/application-detail/ui/parts/files-section'
-import { Accident, AccidentNonInjury, InjuryStatus } from '../model/types'
+import { type AccidentDetail as AccidentDetailData, InjuryStatus } from '../model/types'
+import type { HfDetail } from '@/entities/registry'
+import type { AppealFile } from '@/entities/application'
 import { format } from 'date-fns'
 import { getStatusBadge } from '@/features/accident/ui/accident-list'
 import { useAuth } from '@/shared/hooks/use-auth'
@@ -19,15 +21,24 @@ import { AccidentDecreeModal } from './parts/accident-decree-modal'
 import { useState } from 'react'
 import FileLink from '@/shared/components/common/file-link'
 
+const INJURY_STATUS_LABELS: Record<InjuryStatus, string> = {
+  [InjuryStatus.MINOR]: 'Yengil (guruhiy)',
+  [InjuryStatus.SERIOUS]: 'Og‘ir',
+  [InjuryStatus.FATAL]: 'O‘lim',
+}
+
+/** A bare path as the files section takes it */
+const fileOf = (path: string | null): AppealFile['data'] => ({ path, number: null, uploadDate: null, expiryDate: null })
+
 export const AccidentDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>()
   const { user } = useAuth()
   const [isDecreeModalOpen, setIsDecreeModalOpen] = useState(false)
 
-  const { detail: accident, isLoading, refetch } = useDetail<Accident | AccidentNonInjury>('/accidents', id, !!id)
-  const { data: hfData } = useData<any>(`/hf/${accident?.hfId}`, !!accident?.hfId)
+  const { detail: accident, isLoading, refetch } = useDetail<AccidentDetailData>('/accidents', id, !!id)
+  const { data: hfData } = useData<HfDetail>(`/hf/${accident?.hfId}`, !!accident?.hfId)
 
-  if (isLoading) return <div>Yuklanmoqda...</div>
+  if (isLoading) return <DetailPageSkeleton sections={4} />
 
   if (!accident) {
     return (
@@ -41,19 +52,6 @@ export const AccidentDetail: React.FC = () => {
 
   const isInjury = accident.type === 'INJURY'
   const isNonInjury = accident.type === 'NON_INJURY'
-
-  const getInjuryStatusText = (status: InjuryStatus) => {
-    switch (status) {
-      case InjuryStatus.MINOR:
-        return 'Yengil (guruhiy)'
-      case InjuryStatus.SERIOUS:
-        return 'O‘gir'
-      case InjuryStatus.FATAL:
-        return 'O‘lim'
-      default:
-        return status
-    }
-  }
 
   return (
     <div className="container mx-auto space-y-4 pb-10">
@@ -69,15 +67,13 @@ export const AccidentDetail: React.FC = () => {
           accidentId={id}
           isOpen={isDecreeModalOpen}
           onOpenChange={setIsDecreeModalOpen}
-          onSuccess={() => {
-            refetch()
-          }}
+          onSuccess={() => void refetch()}
         />
       )}
 
       <DetailCardAccordion defaultValue={isInjury ? ['accident_info', 'victims', 'files'] : ['accident_info', 'files']}>
         <DetailCardAccordion.Item value="legal_info" title="Tashkilot to‘g‘risida ma’lumot">
-          {accident.legalTin && <LegalApplicantInfo tinNumber={accident.legalTin} />}
+          {accident.legalTin && <LegalApplicantInfo tinNumber={accident.legalTin.toString()} />}
         </DetailCardAccordion.Item>
 
         <DetailCardAccordion.Item value="object_info" title="XICHO to‘g‘risida ma’lumot">
@@ -87,10 +83,7 @@ export const AccidentDetail: React.FC = () => {
         {isInjury && (
           <DetailCardAccordion.Item value="accident_info" title="Baxtsiz hodisa tafsilotlari">
             <div className="flex flex-col gap-1 p-4">
-              <DetailRow
-                title="Sana:"
-                value={(accident as Accident).date ? format(new Date((accident as Accident).date), 'dd.MM.yyyy') : '-'}
-              />
+              <DetailRow title="Sana:" value={accident.date ? format(accident.date, 'dd.MM.yyyy') : '-'} />
               <DetailRow title="Qisqacha tafsilot:" value={accident.shortDetail || '-'} />
               <DetailRow title="Holati:" value={getStatusBadge(accident.status)} />
               {accident.mainInspector && (
@@ -98,32 +91,29 @@ export const AccidentDetail: React.FC = () => {
                   <DetailRow title="Komissiya raisi:" value={accident.mainInspector?.name || '-'} />
                   <DetailRow
                     title="Komissiya a’zolari:"
-                    value={accident.inspectors?.map((i: any) => i.name).join(', ') || '-'}
+                    value={accident.inspectors?.map((inspector) => inspector.name).join(', ') || '-'}
                   />
                 </>
               )}
               {accident.decreePath && (
                 <DetailRow title="Buyruq hujjati:" value={<FileLink url={accident.decreePath} />} />
               )}
-              <DetailRow
-                title="Baxtsiz hodisaning shart-sharoitlari:"
-                value={(accident as Accident).conditions || '-'}
-              />
+              <DetailRow title="Baxtsiz hodisaning shart-sharoitlari:" value={accident.conditions || '-'} />
               <DetailRow
                 title="Hujjat qaysi huquqni muhofaza qiluvchi organlarga yuborilgan, xat sanasi va raqami:"
-                value={(accident as Accident).lettersInfo || '-'}
+                value={accident.lettersInfo || '-'}
               />
               <DetailRow
                 title="Baxtsiz hodisa asosiy sabablari tahlili va muammolar:"
-                value={(accident as Accident).analyses || '-'}
+                value={accident.analyses || '-'}
               />
               <DetailRow
                 title="Sanoat xavfsizligi davlat qo‘mitasi hay'ati va korxona tomonidan ko‘rilgan profilaktik choralar:"
-                value={(accident as Accident).preventions || '-'}
+                value={accident.preventions || '-'}
               />
               <DetailRow
                 title="Baxtsiz hodisaning oldini olish va shunday holatlar takrorlanmasligi uchun berilgan takliflar:"
-                value={(accident as Accident).recommendations || '-'}
+                value={accident.recommendations || '-'}
               />
             </div>
           </DetailCardAccordion.Item>
@@ -134,11 +124,7 @@ export const AccidentDetail: React.FC = () => {
             <div className="flex flex-col gap-1 p-4">
               <DetailRow
                 title="Avariya yuz bergan vaqt va sana:"
-                value={
-                  (accident as AccidentNonInjury).dateTime
-                    ? format(new Date((accident as AccidentNonInjury).dateTime), 'dd.MM.yyyy, HH:mm')
-                    : '-'
-                }
+                value={accident.dateTime ? format(accident.dateTime, 'dd.MM.yyyy, HH:mm') : '-'}
               />
               <DetailRow title="Avariyaning qisqacha tavsifi:" value={accident.shortDetail || '-'} />
               <DetailRow title="Holati:" value={getStatusBadge(accident.status)} />
@@ -147,44 +133,33 @@ export const AccidentDetail: React.FC = () => {
                   <DetailRow title="Komissiya raisi:" value={accident.mainInspector?.name || '-'} />
                   <DetailRow
                     title="Komissiya a’zolari:"
-                    value={accident.inspectors?.map((i: any) => i.name).join(', ') || '-'}
+                    value={accident.inspectors?.map((inspector) => inspector.name).join(', ') || '-'}
                   />
                 </>
               )}
               {accident.decreePath && (
                 <DetailRow title="Buyruq hujjati:" value={<FileLink url={accident.decreePath} />} />
               )}
-              <DetailRow
-                title="Avariyadan ko‘rilgan iqtisodiy zarar (so‘m):"
-                value={(accident as AccidentNonInjury).economicLoss || '-'}
-              />
+              <DetailRow title="Avariyadan ko‘rilgan iqtisodiy zarar (so‘m):" value={accident.economicLoss || '-'} />
               <DetailRow
                 title="Obyektdan foydalanish to‘xtatilgan vaqt:"
-                value={
-                  (accident as AccidentNonInjury).stoppedFrom
-                    ? format(new Date((accident as unknown as any).stoppedFrom), 'dd.MM.yyyy, HH:mm')
-                    : '-'
-                }
+                value={accident.stoppedFrom ? format(accident.stoppedFrom, 'dd.MM.yyyy, HH:mm') : '-'}
               />
               <DetailRow
                 title="Obyektdan foydalanish qaytadan boshlangan vaqt:"
-                value={
-                  (accident as AccidentNonInjury).stoppedTo
-                    ? format(new Date((accident as unknown as any).stoppedTo), 'dd.MM.yyyy, HH:mm')
-                    : '-'
-                }
+                value={accident.stoppedTo ? format(accident.stoppedTo, 'dd.MM.yyyy, HH:mm') : '-'}
               />
               <DetailRow
                 title="Avariyaning yuz berishida aybdor bo‘lgan xodimlar va ularga nisbatan qo‘llanilgan intizomiy jazo:"
-                value={(accident as AccidentNonInjury).guiltyEmployees || '-'}
+                value={accident.guiltyEmployees || '-'}
               />
               <DetailRow
                 title="Komissiya xulosasiga asosan yuz bergan avariya oqibatlarini bartaraf etish bo‘yicha ko‘rilgan chora-tadbirlar:"
-                value={(accident as AccidentNonInjury).preventions || '-'}
+                value={accident.preventions || '-'}
               />
               <DetailRow
                 title="Chora-tadbirlar rejasining bajarilishi to‘g‘risida ma’lumotlar:"
-                value={(accident as AccidentNonInjury).executions || '-'}
+                value={accident.executions || '-'}
               />
             </div>
           </DetailCardAccordion.Item>
@@ -193,7 +168,7 @@ export const AccidentDetail: React.FC = () => {
         {isInjury && (
           <DetailCardAccordion.Item value="victims" title="Jabrlanuvchilar">
             <div className="flex flex-col gap-6 p-4">
-              {(accident as Accident).victims?.map((victim: any, index: number) => (
+              {accident.victims?.map((victim, index) => (
                 <div key={index} className="flex flex-col gap-2 border-b pb-4 last:border-0 last:pb-0">
                   <h4 className="text-lg font-semibold">
                     {index + 1}-jabrlanuvchi: {victim.fullName}
@@ -201,7 +176,7 @@ export const AccidentDetail: React.FC = () => {
                   <div className="flex flex-col gap-1">
                     <DetailRow
                       title="Tug‘ilgan sanasi:"
-                      value={victim.birthDate ? format(new Date(victim.birthDate), 'dd.MM.yyyy') : '-'}
+                      value={victim.birthDate ? format(victim.birthDate, 'dd.MM.yyyy') : '-'}
                     />
                     <DetailRow title="Yashash manzili:" value={victim.address || '-'} />
                     <DetailRow title="Egallagan lavozimi:" value={victim.position || '-'} />
@@ -209,14 +184,16 @@ export const AccidentDetail: React.FC = () => {
                     <DetailRow title="Oilaviy ahvoli:" value={victim.maritalStatus || '-'} />
                     <DetailRow
                       title="Sodir bo‘lgan baxtsiz hodisa oqibati:"
-                      value={<span className="font-bold">{getInjuryStatusText(victim.injuryStatus)}</span>}
+                      value={
+                        <span className="font-bold">
+                          {victim.injuryStatus ? INJURY_STATUS_LABELS[victim.injuryStatus] : '-'}
+                        </span>
+                      }
                     />
                   </div>
                 </div>
               ))}
-              {(!(accident as Accident).victims || (accident as Accident).victims?.length === 0) && (
-                <p className="text-muted-foreground">Jabrlanuvchilar yo‘q</p>
-              )}
+              {!accident.victims?.length && <p className="text-muted-foreground">Jabrlanuvchilar yo‘q</p>}
             </div>
           </DetailCardAccordion.Item>
         )}
@@ -228,52 +205,32 @@ export const AccidentDetail: React.FC = () => {
                 {
                   label: 'Maxsus tekshirish dalolatnomasi',
                   fieldName: 'specialActPath',
-                  data: {
-                    path: (accident as Accident).specialActPath || '',
-                    number: '',
-                    uploadDate: '',
-                    expiryDate: '',
-                  },
+                  data: fileOf(accident.specialActPath),
                 },
                 {
                   label: 'Buyruq (Qaror)',
                   fieldName: 'decreePath',
-                  data: {
-                    path: accident.decreePath || '',
-                    number: '',
-                    uploadDate: '',
-                    expiryDate: '',
-                  },
+                  data: fileOf(accident.decreePath),
                 },
                 {
                   label: 'N-1 shaklidagi dalolatnoma',
                   fieldName: 'n1ActPath',
-                  data: { path: (accident as Accident).n1ActPath || '', number: '', uploadDate: '', expiryDate: '' },
+                  data: fileOf(accident.n1ActPath),
                 },
                 {
                   label: 'Rejalar, sxemalar, tekshirish protokoli va baxtsiz hodisa yuz bergan joyning fotosuratlari',
                   fieldName: 'planSchemaPath',
-                  data: {
-                    path: (accident as Accident).planSchemaPath || '',
-                    number: '',
-                    uploadDate: '',
-                    expiryDate: '',
-                  },
+                  data: fileOf(accident.planSchemaPath),
                 },
                 {
                   label: 'Maxsus tekshirish komissiyasi tuzish haqidagi buyruq yoki qaror',
                   fieldName: 'commissionOrderPath',
-                  data: {
-                    path: (accident as Accident).commissionOrderPath || '',
-                    number: '',
-                    uploadDate: '',
-                    expiryDate: '',
-                  },
+                  data: fileOf(accident.commissionOrderPath),
                 },
                 {
                   label: 'So‘roqlar protokoli va boshqa baxtsiz hodisaga aloqador hujjatlar to‘plami',
                   fieldName: 'othersPath',
-                  data: { path: (accident as Accident).othersPath || '', number: '', uploadDate: '', expiryDate: '' },
+                  data: fileOf(accident.othersPath),
                 },
               ]}
             />
@@ -284,32 +241,17 @@ export const AccidentDetail: React.FC = () => {
                 {
                   label: 'Buyruq',
                   fieldName: 'commissionOrderPath',
-                  data: {
-                    path: (accident as AccidentNonInjury).commissionOrderPath || '',
-                    number: '',
-                    uploadDate: '',
-                    expiryDate: '',
-                  },
+                  data: fileOf(accident.commissionOrderPath),
                 },
                 {
                   label: 'Maxsus tekshirish dalolatnomasi',
                   fieldName: 'specialActPath',
-                  data: {
-                    path: (accident as AccidentNonInjury).specialActPath || '',
-                    number: '',
-                    uploadDate: '',
-                    expiryDate: '',
-                  },
+                  data: fileOf(accident.specialActPath),
                 },
                 {
                   label: 'Avariyaga aloqador boshqa hujjatlar to‘plami',
                   fieldName: 'othersPath',
-                  data: {
-                    path: (accident as AccidentNonInjury).othersPath || '',
-                    number: '',
-                    uploadDate: '',
-                    expiryDate: '',
-                  },
+                  data: fileOf(accident.othersPath),
                 },
               ]}
             />

@@ -1,11 +1,11 @@
 import { useHazardousFacilityByTinQuery } from '@/shared/api/dictionaries'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { zodFormResolver } from '@/shared/lib/zod-form-resolver'
+import type { z } from 'zod'
 import { useNavigate } from 'react-router-dom'
 import { Search } from 'lucide-react'
 import { toast } from 'sonner'
-import { format } from 'date-fns'
 
 import { Button } from '@/shared/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card'
@@ -16,22 +16,24 @@ import DetailRow from '@/shared/components/common/detail-row'
 import GoBack from '@/shared/components/common/go-back'
 
 import useAdd from '@/shared/hooks/api/use-add'
-import useData from '@/shared/hooks/api/use-data'
+import { useLegalOrganizationQuery } from '@/shared/api/dictionaries'
 import { accidentNonInjuryCreateSchema } from '@/features/accident/model/types'
+
+type AccidentCreatePayload = z.output<typeof accidentNonInjuryCreateSchema>
+type AccidentCreateDraft = Omit<z.input<typeof accidentNonInjuryCreateSchema>, 'dateTime'> & { dateTime?: Date }
 import DateTimePicker from '@/shared/components/ui/datetimepicker'
 
 export const AccidentNonInjuryAdd: React.FC = () => {
   const navigate = useNavigate()
-  const createMutation = useAdd<any, any, any>('/accidents/non-injury')
+  const createMutation = useAdd<AccidentCreatePayload>('/accidents/non-injury')
 
   const [stir, setStir] = useState('')
   const [searchedStir, setSearchedStir] = useState<string | null>(null)
 
-  const form = useForm<any>({
-    resolver: zodResolver(accidentNonInjuryCreateSchema),
+  const form = useForm<AccidentCreateDraft, unknown, AccidentCreatePayload>({
+    resolver: zodFormResolver<AccidentCreateDraft, AccidentCreatePayload>(accidentNonInjuryCreateSchema),
     defaultValues: {
       hfId: '',
-      dateTime: undefined,
       shortDetail: '',
     },
   })
@@ -40,7 +42,7 @@ export const AccidentNonInjuryAdd: React.FC = () => {
     data: legalInfo,
     isFetching: isLegalInfoLoading,
     isError: isLegalInfoError,
-  } = useData<any>(`/users/legal/${searchedStir}`, !!searchedStir && searchedStir.length === 9)
+  } = useLegalOrganizationQuery(searchedStir, searchedStir?.length === 9)
 
   const { data: hfOptions, isFetching: isHfLoading } = useHazardousFacilityByTinQuery(searchedStir, !!searchedStir)
 
@@ -48,7 +50,7 @@ export const AccidentNonInjuryAdd: React.FC = () => {
     if (stir.length === 9) {
       setSearchedStir(stir)
     } else {
-      toast.warning('STIR 9 ta raqamdan iborat bolishi kerak.')
+      toast.warning('STIR 9 ta raqamdan iborat bo‘lishi kerak.')
     }
   }
 
@@ -58,18 +60,7 @@ export const AccidentNonInjuryAdd: React.FC = () => {
     form.reset()
   }
 
-  const onSubmit = (data: any) => {
-    const payload = {
-      ...data,
-      dateTime: data.dateTime ? format(data.dateTime, "yyyy-MM-dd'T'HH:mm:ss") : null,
-    }
-
-    createMutation.mutate(payload, {
-      onSuccess: () => {
-        navigate(-1)
-      },
-    })
-  }
+  const onSubmit = (payload: AccidentCreatePayload) => createMutation.mutate(payload, { onSuccess: () => navigate(-1) })
 
   const hasLegalInfo = !!legalInfo && !isLegalInfoError
 

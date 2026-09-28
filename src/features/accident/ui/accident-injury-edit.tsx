@@ -1,7 +1,8 @@
 import { useEffect } from 'react'
+import { parseISO } from 'date-fns'
 import { useFieldArray, useForm } from 'react-hook-form'
 import { useParams, useNavigate } from 'react-router-dom'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { zodFormResolver } from '@/shared/lib/zod-form-resolver'
 import { toast } from 'sonner'
 import { Plus, Trash } from 'lucide-react'
 
@@ -16,32 +17,40 @@ import DatePicker from '@/shared/components/ui/datepicker'
 import { GoBack } from '@/shared/components/common'
 import { InputFile } from '@/shared/components/common/file-upload'
 import { FileTypes } from '@/shared/components/common/file-upload/model/file-types'
-import { DetailCardAccordion } from '@/shared/components/common/detail-card'
+import { DetailCardAccordion, DetailPageSkeleton } from '@/shared/components/common/detail-card'
 
 import useDetail from '@/shared/hooks/api/use-detail'
 import useUpdate from '@/shared/hooks/api/use-update'
 import useData from '@/shared/hooks/api/use-data'
 import LegalApplicantInfo from '@/features/application/application-detail/ui/parts/legal-applicant-info'
 import AppealMainInfo from '@/features/application/application-detail/ui/parts/appeal-main-info'
-import { Accident, AccidentFormValues, accidentEditSchema, InjuryStatus, AccidentProcessStatus } from '../model/types'
+import {
+  type AccidentDetail,
+  type AccidentFormValues,
+  type AccidentPayload,
+  accidentEditSchema,
+  AccidentProcessStatus,
+  EMPTY_VICTIM,
+  InjuryStatus,
+} from '../model/types'
+import type { HfDetail } from '@/entities/registry'
 
 export const AccidentEdit: React.FC = () => {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
 
-  const { detail: accident, isLoading } = useDetail<Accident>('/accidents', id, !!id)
-  const updateMutation = useUpdate<Accident, any, any>('/accidents/injury', id)
+  const { detail: accident, isLoading } = useDetail<AccidentDetail>('/accidents', id, !!id)
+  const updateMutation = useUpdate<AccidentPayload>('/accidents/injury', id)
 
-  const { data: hfData } = useData<any>(`/hf/${accident?.hfId}`, !!accident?.hfId)
+  const { data: hfData } = useData<HfDetail>(`/hf/${accident?.hfId}`, !!accident?.hfId)
 
-  const isCompleted = accident?.status === 'COMPLETED'
+  const isCompleted = accident?.status === AccidentProcessStatus.COMPLETED
   const isFieldsDisabled = accident?.status === AccidentProcessStatus.NEW
 
-  const form = useForm<AccidentFormValues>({
-    resolver: zodResolver(accidentEditSchema),
+  const form = useForm<AccidentFormValues, unknown, AccidentPayload>({
+    resolver: zodFormResolver<AccidentFormValues, AccidentPayload>(accidentEditSchema),
     defaultValues: {
       hfId: '',
-      date: undefined,
       shortDetail: '',
       conditions: '',
       lettersInfo: '',
@@ -65,30 +74,31 @@ export const AccidentEdit: React.FC = () => {
         return
       }
 
-      if (accident.status === AccidentProcessStatus.NEW) {
-        // Modal will be opened by button
-      }
-
       form.reset({
-        ...accident,
-        date: accident.date ? new Date(accident.date) : undefined,
+        hfId: accident.hfId ?? '',
+        date: accident.date ? parseISO(accident.date) : undefined,
         shortDetail: accident.shortDetail || '',
         conditions: accident.conditions || '',
         lettersInfo: accident.lettersInfo || '',
         analyses: accident.analyses || '',
         preventions: accident.preventions || '',
         recommendations: accident.recommendations || '',
+        specialActPath: accident.specialActPath,
+        n1ActPath: accident.n1ActPath,
+        planSchemaPath: accident.planSchemaPath,
+        commissionOrderPath: accident.commissionOrderPath,
+        othersPath: accident.othersPath,
         victims:
-          accident.victims?.map((v: any) => ({
-            fullName: v.fullName || '',
-            birthDate: v.birthDate ? new Date(v.birthDate) : undefined,
-            address: v.address || '',
-            position: v.position || '',
-            experience: v.experience || '',
-            maritalStatus: v.maritalStatus || '',
-            injuryStatus: v.injuryStatus,
-          })) || [],
-      } as AccidentFormValues)
+          accident.victims?.map((victim) => ({
+            fullName: victim.fullName || '',
+            birthDate: victim.birthDate ? parseISO(victim.birthDate) : undefined,
+            address: victim.address || '',
+            position: victim.position || '',
+            experience: victim.experience || '',
+            maritalStatus: victim.maritalStatus || '',
+            injuryStatus: victim.injuryStatus ?? undefined,
+          })) ?? [],
+      })
     }
   }, [accident, form, isCompleted, navigate, id])
 
@@ -97,41 +107,16 @@ export const AccidentEdit: React.FC = () => {
     name: 'victims',
   })
 
-  const onSubmit = (data: any) => {
-    // Check if all files are uploaded
-    const allFilesUploaded =
-      !!data.specialActPath &&
-      !!data.n1ActPath &&
-      !!data.planSchemaPath &&
-      !!data.commissionOrderPath &&
-      !!data.othersPath
-
-    const currentStatus = accident?.status
-    let newStatus = currentStatus
-
-    if (allFilesUploaded) {
-      newStatus = AccidentProcessStatus.COMPLETED
-    } else if (currentStatus === AccidentProcessStatus.NEW || currentStatus === AccidentProcessStatus.DECREE_UPLOADED) {
-      newStatus = AccidentProcessStatus.IN_PROCESS
-    }
-
-    const payload = {
-      ...data,
-      status: newStatus,
-    }
-
+  // The backend moves the status on by itself once the files are in
+  const onSubmit = (payload: AccidentPayload) =>
     updateMutation.mutate(payload, {
       onSuccess: () => {
         toast.success('Baxtsiz hodisa muvaffaqiyatli saqlandi')
         navigate(-1)
       },
-      onError: () => {
-        toast.error('Xatolik yuz berdi')
-      },
     })
-  }
 
-  if (isLoading) return <div>Yuklanmoqda...</div>
+  if (isLoading) return <DetailPageSkeleton sections={3} />
 
   if (!accident) {
     return (
@@ -151,7 +136,7 @@ export const AccidentEdit: React.FC = () => {
 
       <DetailCardAccordion defaultValue={['form_info']}>
         <DetailCardAccordion.Item value="legal_info" title="Tashkilot to‘g‘risida ma’lumot">
-          {accident.legalTin && <LegalApplicantInfo tinNumber={accident.legalTin} />}
+          {accident.legalTin && <LegalApplicantInfo tinNumber={accident.legalTin.toString()} />}
         </DetailCardAccordion.Item>
 
         <DetailCardAccordion.Item value="object_info" title="XICHO to‘g‘risida ma’lumot">
@@ -518,17 +503,7 @@ export const AccidentEdit: React.FC = () => {
                     type="button"
                     variant="default"
                     size="sm"
-                    onClick={() =>
-                      append({
-                        fullName: '',
-                        birthDate: undefined as unknown as Date,
-                        address: '',
-                        position: '',
-                        experience: '',
-                        maritalStatus: '',
-                        injuryStatus: undefined as any,
-                      })
-                    }
+                    onClick={() => append(EMPTY_VICTIM)}
                     disabled={isFieldsDisabled}
                   >
                     <Plus className="mr-2 h-4 w-4" /> Qo‘shish

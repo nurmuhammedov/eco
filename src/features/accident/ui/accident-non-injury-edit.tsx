@@ -1,8 +1,8 @@
 import { useEffect } from 'react'
-import { format } from 'date-fns'
+import { parseISO } from 'date-fns'
 import { useForm } from 'react-hook-form'
 import { useParams, useNavigate } from 'react-router-dom'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { zodFormResolver } from '@/shared/lib/zod-form-resolver'
 import { toast } from 'sonner'
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card'
@@ -15,7 +15,7 @@ import DateTimePicker from '@/shared/components/ui/datetimepicker'
 import { GoBack } from '@/shared/components/common'
 import { InputFile } from '@/shared/components/common/file-upload'
 import { FileTypes } from '@/shared/components/common/file-upload/model/file-types'
-import { DetailCardAccordion } from '@/shared/components/common/detail-card'
+import { DetailCardAccordion, DetailPageSkeleton } from '@/shared/components/common/detail-card'
 
 import useDetail from '@/shared/hooks/api/use-detail'
 import useUpdate from '@/shared/hooks/api/use-update'
@@ -23,33 +23,32 @@ import useData from '@/shared/hooks/api/use-data'
 import LegalApplicantInfo from '@/features/application/application-detail/ui/parts/legal-applicant-info'
 import AppealMainInfo from '@/features/application/application-detail/ui/parts/appeal-main-info'
 import {
-  AccidentNonInjury,
-  AccidentNonInjuryFormValues,
+  type AccidentDetail,
+  type AccidentNonInjuryFormValues,
+  type AccidentNonInjuryPayload,
   accidentNonInjuryEditSchema,
   AccidentProcessStatus,
 } from '../model/types'
+import type { HfDetail } from '@/entities/registry'
 
 export const AccidentNonInjuryEdit: React.FC = () => {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
 
-  const { detail: accident, isLoading } = useDetail<AccidentNonInjury>('/accidents', id, !!id)
-  const updateMutation = useUpdate<AccidentNonInjury, any, any>('/accidents/non-injury', id)
+  const { detail: accident, isLoading } = useDetail<AccidentDetail>('/accidents', id, !!id)
+  const updateMutation = useUpdate<AccidentNonInjuryPayload>('/accidents/non-injury', id)
 
-  const { data: hfData } = useData<any>(`/hf/${accident?.hfId}`, !!accident?.hfId)
+  const { data: hfData } = useData<HfDetail>(`/hf/${accident?.hfId}`, !!accident?.hfId)
 
-  const isCompleted = accident?.status === 'COMPLETED'
+  const isCompleted = accident?.status === AccidentProcessStatus.COMPLETED
   const isFieldsDisabled = accident?.status === AccidentProcessStatus.NEW
 
-  const form = useForm<AccidentNonInjuryFormValues>({
-    resolver: zodResolver(accidentNonInjuryEditSchema),
+  const form = useForm<AccidentNonInjuryFormValues, unknown, AccidentNonInjuryPayload>({
+    resolver: zodFormResolver<AccidentNonInjuryFormValues, AccidentNonInjuryPayload>(accidentNonInjuryEditSchema),
     defaultValues: {
       hfId: '',
-      dateTime: undefined,
       shortDetail: '',
       economicLoss: '',
-      stoppedFrom: undefined,
-      stoppedTo: undefined,
       guiltyEmployees: '',
       preventions: '',
       executions: '',
@@ -62,58 +61,38 @@ export const AccidentNonInjuryEdit: React.FC = () => {
   useEffect(() => {
     if (accident) {
       if (isCompleted) {
-        toast.warning('Bu avariya allaqachon yakunlangan va uni tahrirlab bolmaydi.')
+        toast.warning('Bu avariya allaqachon yakunlangan va uni tahrirlab bo‘lmaydi.')
         navigate(`/accidents/${id}`)
         return
       }
 
-      if (accident.status === AccidentProcessStatus.NEW) {
-        // Modal will be opened by button
-      }
-
       form.reset({
-        ...accident,
-        dateTime: accident.dateTime ? new Date(accident.dateTime) : undefined,
+        hfId: accident.hfId ?? '',
+        dateTime: accident.dateTime ? parseISO(accident.dateTime) : undefined,
         shortDetail: accident.shortDetail || '',
         economicLoss: accident.economicLoss?.toString() || '',
-        stoppedFrom: accident.stoppedFrom ? new Date(accident.stoppedFrom) : undefined,
-        stoppedTo: accident.stoppedTo ? new Date(accident.stoppedTo) : undefined,
+        stoppedFrom: accident.stoppedFrom ? parseISO(accident.stoppedFrom) : undefined,
+        stoppedTo: accident.stoppedTo ? parseISO(accident.stoppedTo) : undefined,
         guiltyEmployees: accident.guiltyEmployees || '',
         preventions: accident.preventions || '',
         executions: accident.executions || '',
-      } as AccidentNonInjuryFormValues)
+        specialActPath: accident.specialActPath,
+        commissionOrderPath: accident.commissionOrderPath,
+        othersPath: accident.othersPath,
+      })
     }
   }, [accident, form, isCompleted, navigate, id])
 
-  const onSubmit = (data: any) => {
-    const allFilesUploaded = !!data.specialActPath && !!data.commissionOrderPath && !!data.othersPath
-
-    const currentStatus = accident?.status
-    let newStatus = currentStatus
-
-    if (allFilesUploaded) {
-      newStatus = AccidentProcessStatus.COMPLETED
-    } else if (currentStatus === AccidentProcessStatus.NEW || currentStatus === AccidentProcessStatus.DECREE_UPLOADED) {
-      newStatus = AccidentProcessStatus.IN_PROCESS
-    }
-
-    const payload = {
-      ...data,
-      status: newStatus,
-      dateTime: data.dateTime ? format(data.dateTime, "yyyy-MM-dd'T'HH:mm:ss") : null,
-      stoppedFrom: data.stoppedFrom ? format(data.stoppedFrom, "yyyy-MM-dd'T'HH:mm:ss") : null,
-      stoppedTo: data.stoppedTo ? format(data.stoppedTo, "yyyy-MM-dd'T'HH:mm:ss") : null,
-    }
-
+  // The backend moves the status on by itself once the files are in
+  const onSubmit = (payload: AccidentNonInjuryPayload) =>
     updateMutation.mutate(payload, {
       onSuccess: () => {
         toast.success('Avariya muvaffaqiyatli saqlandi')
         navigate(-1)
       },
     })
-  }
 
-  if (isLoading) return <div>Yuklanmoqda...</div>
+  if (isLoading) return <DetailPageSkeleton sections={3} />
 
   if (!accident) {
     return (
@@ -133,7 +112,7 @@ export const AccidentNonInjuryEdit: React.FC = () => {
 
       <DetailCardAccordion defaultValue={['form_info']}>
         <DetailCardAccordion.Item value="legal_info" title="Tashkilot to‘g‘risida ma’lumot">
-          {accident.legalTin && <LegalApplicantInfo tinNumber={accident.legalTin} />}
+          {accident.legalTin && <LegalApplicantInfo tinNumber={accident.legalTin.toString()} />}
         </DetailCardAccordion.Item>
 
         <DetailCardAccordion.Item value="object_info" title="XICHO to‘g‘risida ma’lumot">

@@ -1,7 +1,8 @@
 import { useHazardousFacilityByTinQuery } from '@/shared/api/dictionaries'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { zodFormResolver } from '@/shared/lib/zod-form-resolver'
+import type { z } from 'zod'
 import { useNavigate } from 'react-router-dom'
 import { Search } from 'lucide-react'
 import { toast } from 'sonner'
@@ -16,21 +17,23 @@ import DetailRow from '@/shared/components/common/detail-row'
 import GoBack from '@/shared/components/common/go-back'
 
 import useAdd from '@/shared/hooks/api/use-add'
-import useData from '@/shared/hooks/api/use-data'
+import { useLegalOrganizationQuery } from '@/shared/api/dictionaries'
 import { accidentCreateSchema } from '@/features/accident/model/types'
+
+type AccidentCreatePayload = z.output<typeof accidentCreateSchema>
+type AccidentCreateDraft = Omit<z.input<typeof accidentCreateSchema>, 'date'> & { date?: Date }
 
 export const AccidentAdd: React.FC = () => {
   const navigate = useNavigate()
-  const createMutation = useAdd<any, any, any>('/accidents/injury')
+  const createMutation = useAdd<AccidentCreatePayload>('/accidents/injury')
 
   const [stir, setStir] = useState('')
   const [searchedStir, setSearchedStir] = useState<string | null>(null)
 
-  const form = useForm<any>({
-    resolver: zodResolver(accidentCreateSchema),
+  const form = useForm<AccidentCreateDraft, unknown, AccidentCreatePayload>({
+    resolver: zodFormResolver<AccidentCreateDraft, AccidentCreatePayload>(accidentCreateSchema),
     defaultValues: {
       hfId: '',
-      date: undefined,
       shortDetail: '',
     },
   })
@@ -39,7 +42,7 @@ export const AccidentAdd: React.FC = () => {
     data: legalInfo,
     isFetching: isLegalInfoLoading,
     isError: isLegalInfoError,
-  } = useData<any>(`/users/legal/${searchedStir}`, !!searchedStir && searchedStir.length === 9)
+  } = useLegalOrganizationQuery(searchedStir, searchedStir?.length === 9)
 
   const { data: hfOptions, isFetching: isHfLoading } = useHazardousFacilityByTinQuery(searchedStir, !!searchedStir)
 
@@ -57,13 +60,8 @@ export const AccidentAdd: React.FC = () => {
     form.reset()
   }
 
-  const onSubmit = (data: any) => {
-    createMutation.mutate(data, {
-      onSuccess: () => {
-        navigate('/accidents')
-      },
-    })
-  }
+  const onSubmit = (payload: AccidentCreatePayload) =>
+    createMutation.mutate(payload, { onSuccess: () => navigate('/accidents') })
 
   const hasLegalInfo = !!legalInfo && !isLegalInfoError
 
