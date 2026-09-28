@@ -1,4 +1,3 @@
-import { apiClient } from '@/shared/api/api-client'
 import { useHazardousFacilityByTinQuery } from '@/shared/api/dictionaries'
 import { useApplicationFormConstants, ReRegisterIllegalHFApplicationDTO } from '@/entities/create-application'
 import { ReRegisterIllegalHFSchema } from '@/entities/create-application/schemas/reregister-illegal-hf.schema'
@@ -8,15 +7,19 @@ import {
   useRegionSelectQuery,
 } from '@/shared/api/dictionaries'
 import { getSelectOptions } from '@/shared/lib/get-select-options'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useEffect, useMemo, useState } from 'react'
+import { type FormDraft, zodFormResolver } from '@/shared/lib/zod-form-resolver'
+import { useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 
 import { useDetail } from '@/shared/hooks'
+import { useOwnerLookup } from './use-owner-lookup'
+import type { HfDetail } from './hf-detail'
+
+type ReRegisterIllegalHfDraft = FormDraft<typeof ReRegisterIllegalHFSchema>
 
 export const useReRegisterIllegalHFApplication = () => {
-  const form = useForm<ReRegisterIllegalHFApplicationDTO>({
-    resolver: zodResolver(ReRegisterIllegalHFSchema),
+  const form = useForm<ReRegisterIllegalHfDraft, unknown, ReRegisterIllegalHFApplicationDTO>({
+    resolver: zodFormResolver<ReRegisterIllegalHfDraft, ReRegisterIllegalHFApplicationDTO>(ReRegisterIllegalHFSchema),
     defaultValues: {
       legalTin: '',
       hazardousFacilityId: undefined,
@@ -47,7 +50,8 @@ export const useReRegisterIllegalHFApplication = () => {
     },
   })
 
-  const [orgData, setOrgData] = useState<any>(undefined)
+  const ownerLookup = useOwnerLookup({ legalOnly: true })
+  const orgData = ownerLookup.owner
 
   const regionId = form.watch('regionId')
   const legalTin = form.watch('legalTin')
@@ -59,12 +63,9 @@ export const useReRegisterIllegalHFApplication = () => {
   const { data: districts } = useDistrictSelectQuery(regionId)
   const { data: hazardousFacilityTypes } = useHazardousFacilityTypeDictionarySelect()
 
-  /* const { mutateAsync: searchLegal, isPending: isSearching } = useAdd<any, any, any>('/integration/iip/legal') */
-  const [isSearching, setIsSearching] = useState(false)
-
   const { data: hfList } = useHazardousFacilityByTinQuery(legalTin, !!legalTin && legalTin.length === 9 && !!orgData)
 
-  const { data: detail } = useDetail<any>(`/hf/`, hazardousFacilityId, !!hazardousFacilityId)
+  const { data: detail } = useDetail<HfDetail>(`/hf/`, hazardousFacilityId, !!hazardousFacilityId)
 
   useEffect(() => {
     if (detail) {
@@ -79,7 +80,7 @@ export const useReRegisterIllegalHFApplication = () => {
         name: detail.name || '',
         phoneNumber: detail.phoneNumber || '',
         upperOrganization: detail.upperOrganization || '',
-        hfTypeId: detail.hfTypeId ? detail.hfTypeId : undefined,
+        hfTypeId: detail.hfTypeId ? String(detail.hfTypeId) : undefined,
         regionId: detail.regionId ? String(detail.regionId) : '',
         address: detail.address || '',
         location: detail.location || '',
@@ -109,21 +110,15 @@ export const useReRegisterIllegalHFApplication = () => {
 
   const handleSearch = () => {
     if (legalTin?.length === 9 && !form.formState.errors.legalTin) {
-      setIsSearching(true)
-      apiClient
-        .post<any>('/integration/iip/legal', { tin: legalTin })
-        .then((res) => {
-          setOrgData(res.data?.data || res.data)
-          form.setValue('hazardousFacilityId', undefined as any)
-        })
-        .finally(() => setIsSearching(false))
+      form.setValue('hazardousFacilityId', undefined)
+      ownerLookup.search(legalTin)
     } else {
       void form.trigger('legalTin')
     }
   }
 
   const handleClear = () => {
-    setOrgData(undefined)
+    ownerLookup.clear()
     form.reset({ legalTin: '' })
   }
 
@@ -142,6 +137,6 @@ export const useReRegisterIllegalHFApplication = () => {
     handleSearch,
     handleClear,
     orgData,
-    isSearching,
+    isSearching: ownerLookup.isSearching,
   }
 }

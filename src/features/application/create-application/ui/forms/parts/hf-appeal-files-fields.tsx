@@ -1,15 +1,18 @@
-import { UseFormReturn } from 'react-hook-form'
+import type { UseFormReturn } from 'react-hook-form'
 import { parseISO } from 'date-fns'
 import { FormControl, FormField, FormItem, FormLabel } from '@/shared/components/ui/form'
 import { InputFile } from '@/shared/components/common/file-upload'
 import { FileTypes } from '@/shared/components/common/file-upload/model/file-types'
 import DatePicker from '@/shared/components/ui/datepicker'
-import { HF_APPEAL_FILE_FIELDS } from '@/entities/create-application/schemas/hf-appeal-files'
+import { HF_APPEAL_FILE_FIELDS, type HfAppealFiles } from '@/entities/create-application/schemas/hf-appeal-files'
+
+/** The part of an HF form the attachment sets live in, one per category id */
+export type HfFilesForm = { hfAppealFilesDto?: Record<string, HfAppealFiles> }
 
 interface HfAppealFilesFieldsProps {
-  form: UseFormReturn<any>
-  /** Field path this set lives under, e.g. `hfAppealFilesDto.3.` */
-  prefix: string
+  form: UseFormReturn<HfFilesForm>
+  /** The category this set belongs to */
+  categoryId: string
   /** An edit does not ask again for the identification card or the fee receipt. */
   requireMandatory?: boolean
 }
@@ -19,11 +22,11 @@ interface HfAppealFilesFieldsProps {
  * it is driven by the field list rather than four hundred lines of repeated
  * JSX - which is also what kept the two HF forms from drifting apart.
  */
-export const HfAppealFilesFields = ({ form, prefix, requireMandatory = true }: HfAppealFilesFieldsProps) => (
+export const HfAppealFilesFields = ({ form, categoryId, requireMandatory = true }: HfAppealFilesFieldsProps) => (
   <div className="grid grid-cols-1 gap-x-8 gap-y-4 md:grid-cols-2 2xl:grid-cols-3">
     {HF_APPEAL_FILE_FIELDS.map((item) => {
-      const pathName = `${prefix}${item.name}`
-      const expiryName = item.expiry ? `${prefix}${item.expiry}` : undefined
+      const pathName = `hfAppealFilesDto.${categoryId}.${item.name}` as const
+      const expiryName = 'expiry' in item ? (`hfAppealFilesDto.${categoryId}.${item.expiry}` as const) : undefined
 
       return (
         <div key={item.name} className="border-b pb-4">
@@ -33,7 +36,10 @@ export const HfAppealFilesFields = ({ form, prefix, requireMandatory = true }: H
             render={({ field }) => (
               <FormItem className="mb-2">
                 <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
-                  <FormLabel required={item.required && requireMandatory} className="w-full sm:max-w-1/2 2xl:max-w-3/7">
+                  <FormLabel
+                    required={'required' in item && requireMandatory}
+                    className="w-full sm:max-w-1/2 2xl:max-w-3/7"
+                  >
                     {item.label}
                   </FormLabel>
                   <FormControl>
@@ -42,9 +48,7 @@ export const HfAppealFilesFields = ({ form, prefix, requireMandatory = true }: H
                       name={field.name}
                       accept={[FileTypes.PDF]}
                       onRemove={
-                        expiryName
-                          ? () => form.setValue(expiryName, undefined as any, { shouldValidate: true })
-                          : undefined
+                        expiryName ? () => form.setValue(expiryName, undefined, { shouldValidate: true }) : undefined
                       }
                     />
                   </FormControl>

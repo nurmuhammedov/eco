@@ -9,10 +9,9 @@ import {
 } from '@/shared/api/dictionaries'
 import { getSelectOptions, getHazardousFacilityTypeOptions } from '@/shared/lib/get-select-options'
 import { useDetail, useUpdate } from '@/shared/hooks'
-import useAdd from '@/shared/hooks/api/use-add'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { type FormDraft, zodFormResolver } from '@/shared/lib/zod-form-resolver'
 import { useQueryClient } from '@tanstack/react-query'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { toast } from 'sonner'
@@ -26,8 +25,13 @@ import { hfFilesToForm } from '@/entities/create-application/schemas/hf-appeal-f
 import { HF_CATEGORY_MODE } from '@/features/application/create-application/ui/forms/parts/hf-category-files-section'
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 import { z } from 'zod'
+import { type OwnerData, useOwnerLookup } from './use-owner-lookup'
+import type { HfDetail } from './hf-detail'
+import { latinOrEmpty } from './edit-values'
 
-export const useRegisterIllegalHf = (externalSubmit?: (data: any) => void) => {
+type HfDraft = FormDraft<typeof RegisterIllegalHfSchema>
+
+export const useRegisterIllegalHf = (externalSubmit?: (data: RegisterIllegalHfDTO & { legalTin?: string }) => void) => {
   const { type, id } = useParams<{ type: string; id: string }>()
   const [searchParams] = useSearchParams()
   const tin = searchParams.get('tin')
@@ -35,9 +39,9 @@ export const useRegisterIllegalHf = (externalSubmit?: (data: any) => void) => {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
 
-  const [manualOwnerData, setManualOwnerData] = useState<any>(null)
-  const form = useForm<RegisterIllegalHfDTO>({
-    resolver: zodResolver(
+  const ownerLookup = useOwnerLookup({ legalOnly: true })
+  const form = useForm<HfDraft, unknown, RegisterIllegalHfDTO>({
+    resolver: zodFormResolver<HfDraft, RegisterIllegalHfDTO>(
       isUpdate
         ? // An edit already knows the applicant, and the relaxed file set drops
           // the identification card and the fee receipt the registration holds.
@@ -92,10 +96,8 @@ export const useRegisterIllegalHf = (externalSubmit?: (data: any) => void) => {
     mode: 'onChange',
   })
 
-  const { data: detail, isLoading: isDetailLoading } = useDetail<any>(`/hf/`, id, !!id)
+  const { data: detail, isLoading: isDetailLoading } = useDetail<HfDetail>(`/hf/`, id, !!id)
   const { mutateAsync: updateMutate, isPending: isUpdatePending } = useUpdate('/hf/', id, 'put')
-
-  const { mutateAsync: legalMutateAsync, isPending: isLegalPending } = useAdd<any, any, any>('/integration/iip/legal')
 
   const ownerIdentity = (detail?.ownerIdentity ? detail?.ownerIdentity?.toString() : null) || tin
   const regionId = form.watch('regionId')
@@ -108,18 +110,16 @@ export const useRegisterIllegalHf = (externalSubmit?: (data: any) => void) => {
 
   const { data: fetchedOwnerData, isLoading: isOwnerLoading } = useLegalOrganizationQuery(ownerIdentity)
 
-  const currentOwnerData = isUpdate ? fetchedOwnerData : manualOwnerData
+  const currentOwnerData: OwnerData | null | undefined = isUpdate ? fetchedOwnerData : ownerLookup.owner
   const parseDate = (dateString?: string | null) => (dateString ? new Date(dateString) : undefined)
 
   useEffect(() => {
     if (detail && isUpdate) {
-      const getValue = (val: any) => (typeof val === 'string' && /[\u0400-\u04FF]/.test(val) ? '' : val)
-
       form.reset({
         identity: detail.ownerIdentity ? String(detail.ownerIdentity) : '',
         phoneNumber: detail.phoneNumber || '',
-        upperOrganization: getValue(detail.upperOrganization || ''),
-        name: getValue(detail.name || ''),
+        upperOrganization: latinOrEmpty(detail.upperOrganization || ''),
+        name: latinOrEmpty(detail.name || ''),
         categoryId: detail.categoryId ? String(detail.categoryId) : undefined,
         hfTypeId:
           detail.hfTypeName && ['3.1', '3.2', '3.3'].includes(detail.hfTypeName)
@@ -129,21 +129,21 @@ export const useRegisterIllegalHf = (externalSubmit?: (data: any) => void) => {
             : undefined,
         spheres: detail.spheres || [],
         regionId: detail.regionId ? String(detail.regionId) : '',
-        address: getValue(detail.address || ''),
-        location: getValue(detail.location || ''),
-        extraArea: getValue(detail.extraArea || ''),
-        hazardousSubstance: getValue(detail.hazardousSubstance || ''),
+        address: latinOrEmpty(detail.address || ''),
+        location: latinOrEmpty(detail.location || ''),
+        extraArea: latinOrEmpty(detail.extraArea || ''),
+        hazardousSubstance: latinOrEmpty(detail.hazardousSubstance || ''),
         hazardousSign: detail.hazardousSign || undefined,
         legalType: detail.legalType || undefined,
-        cadastreNumber: getValue(detail.cadastreNumber || ''),
+        cadastreNumber: latinOrEmpty(detail.cadastreNumber || ''),
         startedDate: parseDate(detail.startedDate),
         categoryMode: detail.multiCategoryIds?.length ? HF_CATEGORY_MODE.MULTI : HF_CATEGORY_MODE.SINGLE,
         multiCategoryIds: detail.multiCategoryIds?.map(String) || [],
         hfAppealFilesDto: hfFilesToForm(detail),
-        managerCount: detail.managerCount ? detail.managerCount?.toString() : '',
-        engineerCount: detail.engineerCount ? detail.engineerCount?.toString() : '',
-        workerCount: detail.workerCount ? detail.workerCount?.toString() : '',
-      } as any)
+        managerCount: detail.managerCount ? detail.managerCount.toString() : '',
+        engineerCount: detail.engineerCount ? detail.engineerCount.toString() : '',
+        workerCount: detail.workerCount ? detail.workerCount.toString() : '',
+      })
 
       setTimeout(() => {
         form.setValue('districtId', detail.districtId ? String(detail.districtId) : '')
@@ -154,17 +154,13 @@ export const useRegisterIllegalHf = (externalSubmit?: (data: any) => void) => {
   const handleSearch = () => {
     const identity = form.getValues('identity')?.trim()
 
-    if (identity && identity.length === 9) {
-      legalMutateAsync({ tin: identity })
-        .then((res) => setManualOwnerData(res.data?.data || res.data))
-        .catch(() => setManualOwnerData(null))
-    } else {
+    if (!ownerLookup.search(identity)) {
       form.trigger('identity')
     }
   }
 
   const handleClear = () => {
-    setManualOwnerData(null)
+    ownerLookup.clear()
     form.setValue('identity', '')
   }
 
@@ -172,18 +168,21 @@ export const useRegisterIllegalHf = (externalSubmit?: (data: any) => void) => {
     if (isUpdate) {
       // The update endpoint takes the attachment map under its own name; the
       // registration one still reads hfAppealFilesDto.
-      const { hfAppealFilesDto, ...rest } = data as RegisterIllegalHfDTO & { hfAppealFilesDto?: unknown }
+      const { hfAppealFilesDto, ...rest } = data
 
-      updateMutate({ ...rest, categoryFilesDto: hfAppealFilesDto } as any, {
-        onSuccess: () => {
-          invalidateRegistryQueries(queryClient)
-          toast.success('So‘rov mas’ul xodimga yuborildi. O‘zgarishlar tasdiqlangandan so‘ng ko‘rinadi!')
-          navigate(-1)
-        },
-      })
+      updateMutate(
+        { ...rest, categoryFilesDto: hfAppealFilesDto },
+        {
+          onSuccess: () => {
+            invalidateRegistryQueries(queryClient)
+            toast.success('So‘rov mas’ul xodimga yuborildi. O‘zgarishlar tasdiqlangandan so‘ng ko‘rinadi!')
+            navigate(-1)
+          },
+        }
+      )
     } else {
       if (externalSubmit) {
-        externalSubmit({ ...data, legalTin: data?.identity })
+        externalSubmit({ ...data, legalTin: data.identity })
       }
     }
   }
@@ -210,7 +209,7 @@ export const useRegisterIllegalHf = (externalSubmit?: (data: any) => void) => {
     ownerData: currentOwnerData,
     detail,
     isLoading: isDetailLoading || isOwnerLoading,
-    isSearchLoading: isLegalPending,
+    isSearchLoading: ownerLookup.isSearching,
     isSubmitPending: isUpdatePending,
     handleSearch,
     handleClear,

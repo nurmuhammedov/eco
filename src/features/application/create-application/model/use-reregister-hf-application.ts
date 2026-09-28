@@ -7,14 +7,17 @@ import {
   useRegionSelectQuery,
 } from '@/shared/api/dictionaries'
 import { getSelectOptions } from '@/shared/lib/get-select-options'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { type FormDraft, zodFormResolver } from '@/shared/lib/zod-form-resolver'
 import { useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { useDetail } from '@/shared/hooks'
+import type { HfDetail } from './hf-detail'
+
+type ReRegisterHfDraft = FormDraft<typeof ReRegisterHFSchema>
 
 export const useReRegisterHFApplication = () => {
-  const form = useForm<ReRegisterHFApplicationDTO>({
-    resolver: zodResolver(ReRegisterHFSchema),
+  const form = useForm<ReRegisterHfDraft, unknown, ReRegisterHFApplicationDTO>({
+    resolver: zodFormResolver<ReRegisterHfDraft, ReRegisterHFApplicationDTO>(ReRegisterHFSchema),
     defaultValues: {
       hazardousFacilityId: undefined,
       phoneNumber: '',
@@ -53,7 +56,7 @@ export const useReRegisterHFApplication = () => {
   const { data: hazardousFacilityTypes } = useHazardousFacilityTypeDictionarySelect()
   const { data: hazardousFacilities } = useHazardousFacilityDictionarySelect()
 
-  const { data: detail } = useDetail<any>(`/hf/`, hazardousFacilityId, !!hazardousFacilityId)
+  const { data: detail } = useDetail<HfDetail>(`/hf/`, hazardousFacilityId, !!hazardousFacilityId)
 
   useEffect(() => {
     if (detail) {
@@ -63,7 +66,7 @@ export const useReRegisterHFApplication = () => {
         name: detail.name || '',
         phoneNumber: detail.phoneNumber || '',
         upperOrganization: detail.upperOrganization || '',
-        hfTypeId: detail.hfTypeId ? detail.hfTypeId : undefined,
+        hfTypeId: detail.hfTypeId ? String(detail.hfTypeId) : undefined,
         regionId: detail.regionId ? String(detail.regionId) : '',
         address: detail.address || '',
         location: detail.location || '',

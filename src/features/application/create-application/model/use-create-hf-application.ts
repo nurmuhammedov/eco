@@ -10,13 +10,15 @@ import {
   useRegionSelectQuery,
 } from '@/shared/api/dictionaries'
 import { getSelectOptions, getHazardousFacilityTypeOptions } from '@/shared/lib/get-select-options'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { type FormDraft, zodFormResolver } from '@/shared/lib/zod-form-resolver'
 import { useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 
+type HfDraft = FormDraft<typeof HFAppealDtoSchema>
+
 export const useCreateHfApplication = () => {
-  const form = useForm<CreateHFApplicationDTO>({
-    resolver: zodResolver(HFAppealDtoSchema),
+  const form = useForm<HfDraft, unknown, CreateHFApplicationDTO>({
+    resolver: zodFormResolver<HfDraft, CreateHFApplicationDTO>(HFAppealDtoSchema),
     defaultValues: {
       phoneNumber: '',
       upperOrganization: '',

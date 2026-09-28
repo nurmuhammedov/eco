@@ -1,4 +1,4 @@
-import { CardForm } from '@/entities/create-application'
+import { CardForm, type CreateHFApplicationDTO } from '@/entities/create-application'
 import { useCreateHfApplication } from '../../model/use-create-hf-application'
 import { GoBack } from '@/shared/components/common'
 import { YandexMapModal } from '@/shared/components/common/yandex-map-modal'
@@ -21,7 +21,7 @@ import { parseISO } from 'date-fns'
 import { HF_HAZARDOUS_SIGN_OPTIONS, HF_LEGAL_TYPE_OPTIONS } from '@/shared/constants/hf-attributes'
 import { HfCategoryFilesSection } from './parts/hf-category-files-section'
 
-const RegisterHfForm = ({ onSubmit }: { onSubmit: (data: any) => void }) => {
+const RegisterHfForm = ({ onSubmit }: { onSubmit: (data: CreateHFApplicationDTO) => void }) => {
   const { form, spheres, regionOptions, districtOptions, hazardousFacilityTypeOptions } = useCreateHfApplication()
 
   return (

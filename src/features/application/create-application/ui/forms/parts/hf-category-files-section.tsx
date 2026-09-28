@@ -1,28 +1,34 @@
 import { useEffect, useMemo, useRef } from 'react'
-import { UseFormReturn } from 'react-hook-form'
+import type { UseFormReturn } from 'react-hook-form'
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
 import { RadioGroup, RadioGroupItem } from '@/shared/components/ui/radio-group'
 import { MultiSelect } from '@/shared/components/ui/multi-select'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { useHazardousFacilityCategoryDictionarySelect } from '@/shared/api/dictionaries'
-import { emptyHfAppealFiles } from '@/entities/create-application/schemas/hf-appeal-files'
-import { HfAppealFilesFields } from './hf-appeal-files-fields'
+import { emptyHfAppealFiles, type HfAppealFiles } from '@/entities/create-application/schemas/hf-appeal-files'
+import { HfAppealFilesFields, type HfFilesForm } from './hf-appeal-files-fields'
 
 export const HF_CATEGORY_MODE = { SINGLE: 'SINGLE', MULTI: 'MULTI' } as const
 
-const hasAnyFile = (set: unknown) =>
-  !!set &&
-  Object.values(set as Record<string, unknown>).some((value) => value !== undefined && value !== null && value !== '')
+const hasAnyFile = (set?: HfAppealFiles) =>
+  !!set && Object.values(set).some((value) => value !== undefined && value !== null && value !== '')
 
-interface HfCategoryFilesSectionProps {
-  form: UseFormReturn<any>
+/** The fields the section fills in, as the HF forms hold them */
+type HfCategoryForm = HfFilesForm & {
+  categoryMode?: (typeof HF_CATEGORY_MODE)[keyof typeof HF_CATEGORY_MODE]
+  categoryId?: string
+  multiCategoryIds?: (string | number)[]
+}
+
+interface HfCategoryFilesSectionProps<T extends HfCategoryForm, TSubmitted> {
+  form: UseFormReturn<T, unknown, TSubmitted>
   requireMandatory?: boolean
   /**
    * A record filed before the categories existed carries its attachments with
    * no category to hang them on. They belong to whichever single sector is
    * picked, rather than being lost.
    */
-  unassignedFiles?: Record<string, unknown> | null
+  unassignedFiles?: HfAppealFiles | null
 }
 
 /**
@@ -30,11 +36,15 @@ interface HfCategoryFilesSectionProps {
  * brings its own attachment set, which the server takes as a map keyed by
  * category id - single or multiple, the shape is the same.
  */
-export const HfCategoryFilesSection = ({
-  form,
+export const HfCategoryFilesSection = <T extends HfCategoryForm, TSubmitted>({
+  form: hfForm,
   requireMandatory = true,
   unassignedFiles,
-}: HfCategoryFilesSectionProps) => {
+}: HfCategoryFilesSectionProps<T, TSubmitted>) => {
+  // RHF cannot resolve the section's field names on a form whose values are
+  // still a type parameter, so the section works through its own fields; the
+  // constraint on T is what checks the form has them.
+  const form = hfForm as unknown as UseFormReturn<HfCategoryForm>
   const mode = form.watch('categoryMode')
   const isMulti = mode === HF_CATEGORY_MODE.MULTI
 
@@ -46,13 +56,10 @@ export const HfCategoryFilesSection = ({
   const selectedIds = useMemo(() => {
     if (!isMulti) return categoryId ? [String(categoryId)] : []
 
-    return ((multiCategoryIds || []) as (string | number)[]).map(String)
+    return (multiCategoryIds || []).map(String)
   }, [isMulti, multiCategoryIds, categoryId])
 
-  const nameById = useMemo(
-    () => new Map((categories as any[]).map((item) => [String(item.id), item.name as string])),
-    [categories]
-  )
+  const nameById = useMemo(() => new Map(categories.map((item) => [String(item.id), item.name])), [categories])
 
   /**
    * Attachments belong to the categories currently chosen. Dropping a category
@@ -73,7 +80,7 @@ export const HfCategoryFilesSection = ({
     // Only one sector can inherit the loose set; several would each claim the same files.
     const inherited = isMulti ? undefined : unassignedFiles
 
-    const next: Record<string, unknown> = {}
+    const next: Record<string, HfAppealFiles> = {}
     let changed = Object.keys(current).length !== selectedIds.length
 
     for (const id of selectedIds) {
@@ -165,7 +172,7 @@ export const HfCategoryFilesSection = ({
                     <SelectValue placeholder="XICHO toifasini tanlang" />
                   </SelectTrigger>
                   <SelectContent>
-                    {(categories as any[]).map((item) => (
+                    {categories.map((item) => (
                       <SelectItem key={item.id} value={String(item.id)}>
                         {item.name}
                       </SelectItem>
@@ -192,7 +199,7 @@ export const HfCategoryFilesSection = ({
             )}
           </div>
 
-          <HfAppealFilesFields form={form} prefix={`hfAppealFilesDto.${id}.`} requireMandatory={requireMandatory} />
+          <HfAppealFilesFields form={form} categoryId={id} requireMandatory={requireMandatory} />
         </section>
       ))}
     </>

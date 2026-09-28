@@ -368,9 +368,7 @@ const ReregisterIllegalHfForm = ({ onSubmit }: { onSubmit: (data: ReRegisterIlle
                         form={form}
                         name={field.name}
                         accept={[FileTypes.PDF]}
-                        onRemove={() =>
-                          form.setValue('insurancePolicyExpiryDate', undefined as any, { shouldValidate: true })
-                        }
+                        onRemove={() => form.setValue('insurancePolicyExpiryDate', undefined, { shouldValidate: true })}
                       />
                     </FormControl>
                   </div>
@@ -448,7 +446,7 @@ const ReregisterIllegalHfForm = ({ onSubmit }: { onSubmit: (data: ReRegisterIlle
                         form={form}
                         name={field.name}
                         accept={[FileTypes.PDF]}
-                        onRemove={() => form.setValue('licenseExpiryDate', undefined as any, { shouldValidate: true })}
+                        onRemove={() => form.setValue('licenseExpiryDate', undefined, { shouldValidate: true })}
                       />
                     </FormControl>
                   </div>
@@ -528,7 +526,7 @@ const ReregisterIllegalHfForm = ({ onSubmit }: { onSubmit: (data: ReRegisterIlle
                         form={form}
                         name={field.name}
                         accept={[FileTypes.PDF]}
-                        onRemove={() => form.setValue('permitExpiryDate', undefined as any, { shouldValidate: true })}
+                        onRemove={() => form.setValue('permitExpiryDate', undefined, { shouldValidate: true })}
                       />
                     </FormControl>
                   </div>
