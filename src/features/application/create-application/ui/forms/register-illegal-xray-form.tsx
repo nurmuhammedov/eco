@@ -84,7 +84,7 @@ const RegisterIllegalXrayForm = ({ onSubmit, isPending = false }: RegisterIllega
 
   return (
     <Form {...form}>
-      <form autoComplete="off" onSubmit={form.handleSubmit((d) => handleSubmit({ ...form.getValues(), ...d } as any))}>
+      <form autoComplete="off" onSubmit={form.handleSubmit(handleSubmit)}>
         <GoBack title={isUpdate ? 'Rentgen ma’lumotlarini tahrirlash' : 'Rentgen uskunasini ro‘yxatga olish'} />
         <NoteForm equipmentName="rentgen" onlyLatin={true} />
         <CardForm className="my-2">
@@ -108,7 +108,7 @@ const RegisterIllegalXrayForm = ({ onSubmit, isPending = false }: RegisterIllega
                           e.target.value = val
                           if (ownerData) handleClear()
                           if (val.length !== 14) {
-                            form.setValue('birthDate', undefined as any)
+                            form.setValue('birthDate', undefined)
                           }
                           field.onChange(e)
                         }}
@@ -256,7 +256,7 @@ const RegisterIllegalXrayForm = ({ onSubmit, isPending = false }: RegisterIllega
                           const expiryDate = addYears(date, 3)
                           form.setValue('file14ExpiryDate', expiryDate, { shouldValidate: true })
                         } else {
-                          form.setValue('file14ExpiryDate', undefined as any, { shouldValidate: true })
+                          form.setValue('file14ExpiryDate', undefined, { shouldValidate: true })
                         }
                       }}
                       placeholder="Sanani tanlang"
@@ -419,7 +419,7 @@ const RegisterIllegalXrayForm = ({ onSubmit, isPending = false }: RegisterIllega
                         form={form}
                         name={field.name}
                         accept={[FileTypes.PDF]}
-                        onRemove={() => form.setValue('file14ExpiryDate', undefined as any, { shouldValidate: true })}
+                        onRemove={() => form.setValue('file14ExpiryDate', undefined, { shouldValidate: true })}
                       />
                     </FormControl>
                   </div>
@@ -464,7 +464,7 @@ const RegisterIllegalXrayForm = ({ onSubmit, isPending = false }: RegisterIllega
                         form={form}
                         name={field.name}
                         accept={[FileTypes.PDF]}
-                        onRemove={() => form.setValue('file8ExpiryDate', undefined as any, { shouldValidate: true })}
+                        onRemove={() => form.setValue('file8ExpiryDate', undefined, { shouldValidate: true })}
                       />
                     </FormControl>
                   </div>
@@ -537,7 +537,7 @@ const RegisterIllegalXrayForm = ({ onSubmit, isPending = false }: RegisterIllega
                           form={form}
                           name={field.name}
                           accept={[FileTypes.PDF]}
-                          onRemove={() => form.setValue('file5ExpiryDate', undefined as any, { shouldValidate: true })}
+                          onRemove={() => form.setValue('file5ExpiryDate', undefined, { shouldValidate: true })}
                         />
                       </FormControl>
                     </div>
@@ -582,7 +582,7 @@ const RegisterIllegalXrayForm = ({ onSubmit, isPending = false }: RegisterIllega
                           form={form}
                           name={field.name}
                           accept={[FileTypes.PDF]}
-                          onRemove={() => form.setValue('file7ExpiryDate', undefined as any, { shouldValidate: true })}
+                          onRemove={() => form.setValue('file7ExpiryDate', undefined, { shouldValidate: true })}
                         />
                       </FormControl>
                     </div>
@@ -627,7 +627,7 @@ const RegisterIllegalXrayForm = ({ onSubmit, isPending = false }: RegisterIllega
                           form={form}
                           name={field.name}
                           accept={[FileTypes.PDF]}
-                          onRemove={() => form.setValue('file9ExpiryDate', undefined as any, { shouldValidate: true })}
+                          onRemove={() => form.setValue('file9ExpiryDate', undefined, { shouldValidate: true })}
                         />
                       </FormControl>
                     </div>

@@ -78,7 +78,7 @@ const RegisterIllegalIrsForm = ({ onSubmit, isPending = false }: RegisterIllegal
 
   return (
     <Form {...form}>
-      <form autoComplete="off" onSubmit={form.handleSubmit((d) => handleSubmit({ ...form.getValues(), ...d } as any))}>
+      <form autoComplete="off" onSubmit={form.handleSubmit(handleSubmit)}>
         <GoBack title={isUpdate ? 'INM ma’lumotlarini tahrirlash' : 'INMni ro‘yxatga olish arizasi'} />
         <NoteForm equipmentName="INM" onlyLatin={true} />
 
@@ -103,7 +103,7 @@ const RegisterIllegalIrsForm = ({ onSubmit, isPending = false }: RegisterIllegal
                           e.target.value = val
                           if (ownerData) handleClear()
                           if (val.length !== 14) {
-                            form.setValue('birthDate', undefined as any)
+                            form.setValue('birthDate', undefined)
                           }
                           field.onChange(e)
                         }}
@@ -291,13 +291,7 @@ const RegisterIllegalIrsForm = ({ onSubmit, isPending = false }: RegisterIllegal
                       <SelectTrigger className="3xl:w-sm w-full">
                         <SelectValue placeholder="Identifikatsiya turini tanlang" />
                       </SelectTrigger>
-                      <SelectContent>
-                        {irsIdentifierTypeOptions.map((option: any) => (
-                          <SelectItem key={option.props.value} value={option.props.value}>
-                            {option.props.children}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
+                      <SelectContent>{irsIdentifierTypeOptions}</SelectContent>
                     </Select>
                   </FormControl>
                   <FormMessage />
@@ -408,13 +402,7 @@ const RegisterIllegalIrsForm = ({ onSubmit, isPending = false }: RegisterIllegal
                       <SelectTrigger className="3xl:w-sm w-full">
                         <SelectValue placeholder="Kategoriyani tanlang" />
                       </SelectTrigger>
-                      <SelectContent>
-                        {irsCategoryOptions.map((option: any) => (
-                          <SelectItem key={option.props.value} value={option.props.value}>
-                            {option.props.children}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
+                      <SelectContent>{irsCategoryOptions}</SelectContent>
                     </Select>
                   </FormControl>
                   <FormMessage />
@@ -523,13 +511,7 @@ const RegisterIllegalIrsForm = ({ onSubmit, isPending = false }: RegisterIllegal
                       <SelectTrigger className="3xl:w-sm w-full">
                         <SelectValue placeholder="Maqsadni tanlang" />
                       </SelectTrigger>
-                      <SelectContent>
-                        {irsUsageTypeOptions.map((option: any) => (
-                          <SelectItem key={option.props.value} value={option.props.value}>
-                            {option.props.children}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
+                      <SelectContent>{irsUsageTypeOptions}</SelectContent>
                     </Select>
                   </FormControl>
                   <FormMessage />
@@ -658,7 +640,7 @@ const RegisterIllegalIrsForm = ({ onSubmit, isPending = false }: RegisterIllegal
                           form={form}
                           name={field.name}
                           accept={[FileTypes.PDF]}
-                          onRemove={() => form.setValue('file1ExpiryDate', undefined as any, { shouldValidate: true })}
+                          onRemove={() => form.setValue('file1ExpiryDate', undefined, { shouldValidate: true })}
                         />
                       </FormControl>
                     </div>
@@ -703,7 +685,7 @@ const RegisterIllegalIrsForm = ({ onSubmit, isPending = false }: RegisterIllegal
                           form={form}
                           name={field.name}
                           accept={[FileTypes.PDF]}
-                          onRemove={() => form.setValue('file2ExpiryDate', undefined as any, { shouldValidate: true })}
+                          onRemove={() => form.setValue('file2ExpiryDate', undefined, { shouldValidate: true })}
                         />
                       </FormControl>
                     </div>
@@ -748,7 +730,7 @@ const RegisterIllegalIrsForm = ({ onSubmit, isPending = false }: RegisterIllegal
                           form={form}
                           name={field.name}
                           accept={[FileTypes.PDF]}
-                          onRemove={() => form.setValue('file5ExpiryDate', undefined as any, { shouldValidate: true })}
+                          onRemove={() => form.setValue('file5ExpiryDate', undefined, { shouldValidate: true })}
                         />
                       </FormControl>
                     </div>
@@ -793,7 +775,7 @@ const RegisterIllegalIrsForm = ({ onSubmit, isPending = false }: RegisterIllegal
                           form={form}
                           name={field.name}
                           accept={[FileTypes.PDF]}
-                          onRemove={() => form.setValue('file15ExpiryDate', undefined as any, { shouldValidate: true })}
+                          onRemove={() => form.setValue('file15ExpiryDate', undefined, { shouldValidate: true })}
                         />
                       </FormControl>
                     </div>
