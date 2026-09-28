@@ -22,7 +22,7 @@ interface IEquipmentAppeal {
 
 const appealTypeTranslations = {
   APPEAL: 'Murojaat',
-  VIOLATION_REPORT: 'Huquqbuzarliik xabari',
+  VIOLATION_REPORT: 'Huquqbuzarlik xabari',
   SUGGESTION: 'Taklif',
 }
 

@@ -1,46 +1,37 @@
 import { apiClient } from '@/shared/api/api-client'
+import type { InquiryCourtExecution, InquiryInitialExecution } from './inquiry.types'
+
+interface InquiryCommand<T> {
+  id: string
+  data: T
+}
 
 export const inquiryApi = {
-  setInspector: async ({ id, data }: { id: string; data: any }) => {
-    const { data: res } = await apiClient.post<any>(`/inquiries/${id}/set-inspector`, data)
-    return res.data
+  setInspector: async ({ id, data }: InquiryCommand<{ executorId: string }>) => {
+    await apiClient.post<unknown>(`/inquiries/${id}/set-inspector`, data)
   },
-  executeInitial: async ({ id, data }: { id: string; data: any }) => {
-    const { data: res } = await apiClient.post<any>(`/inquiries/${id}/execute-initial`, data)
-    return res.data
+  executeInitial: async ({ id, data }: InquiryCommand<InquiryInitialExecution>) => {
+    await apiClient.post<unknown>(`/inquiries/${id}/execute-initial`, data)
   },
-  executeCourt: async ({ id, data }: { id: string; data: any }) => {
-    const { data: res } = await apiClient.post<any>(`/inquiries/${id}/execute-court`, data)
-    return res.data
+  executeCourt: async ({ id, data }: InquiryCommand<InquiryCourtExecution>) => {
+    await apiClient.post<unknown>(`/inquiries/${id}/execute-court`, data)
   },
-  postRecoveredAmount: async ({ id, data }: { id: string; data: { recoveredAmount: number } }) => {
-    const { data: res } = await apiClient.post<any>(`/inquiries/${id}/accountant/recovered-amount`, data)
-    return res.data
+  postRecoveredAmount: async ({ id, data }: InquiryCommand<{ recoveredAmount: number }>) => {
+    await apiClient.post<unknown>(`/inquiries/${id}/accountant/recovered-amount`, data)
   },
   postPaidReward: async ({
     id,
     data,
-  }: {
-    id: string
-    data: { paidRewardAmount: number; paymentExecutionFilePath: string }
-  }) => {
-    const { data: res } = await apiClient.post<any>(`/inquiries/${id}/accountant/paid-reward`, data)
-    return res.data
+  }: InquiryCommand<{ paidRewardAmount: number; paymentExecutionFilePath: string }>) => {
+    await apiClient.post<unknown>(`/inquiries/${id}/accountant/paid-reward`, data)
   },
-  postMibStatus: async ({ id, data }: { id: string; data: { isMib: boolean } }) => {
-    const { data: res } = await apiClient.post<any>(`/inquiries/${id}/accountant/mib-status`, data)
-    return res.data
+  postMibStatus: async ({ id, data }: InquiryCommand<{ isMib: boolean }>) => {
+    await apiClient.post<unknown>(`/inquiries/${id}/accountant/mib-status`, data)
   },
   postCompleteAccountant: async (id: string) => {
-    const { data: res } = await apiClient.post<any>(`/inquiries/${id}/accountant/complete`)
-    return res.data
+    await apiClient.post<unknown>(`/inquiries/${id}/accountant/complete`)
   },
-  changeRegion: async ({ id, data }: { id: string; data: { regionId: number } }) => {
-    const { data: res } = await apiClient.patch<any>(`/inquiries/${id}/region`, data)
-    return res.data
-  },
-  deleteInquiry: async (id: string) => {
-    const { data: res } = await apiClient.delete<any>(`/inquiries/${id}`)
-    return res.data
+  changeRegion: async ({ id, data }: InquiryCommand<{ regionId: number }>) => {
+    await apiClient.patch<unknown>(`/inquiries/${id}/region`, data)
   },
 }

@@ -6,9 +6,10 @@ import { cn } from '@/shared/lib/utils'
 import { EmptyValue } from '@/shared/components/common/empty-value'
 import { InquiryStatus, inquiryStatusLabels } from '../model/types'
 
+/** ExecutionProcessView (`GET /execution-processes/inquiry/{id}`) */
 export interface InquiryStatusStep {
   id: string
-  status: InquiryStatus | string
+  status: InquiryStatus
   description: string | null
   createdAt: string
   executorName: string | null
@@ -17,7 +18,7 @@ export interface InquiryStatusStep {
 interface Props {
   steps?: InquiryStatusStep[]
   /** The inquiry itself: its filing is the NEW step, which the history does not record */
-  submittedAt?: string
+  submittedAt?: string | null
 }
 
 const formatGap = (from: string, to: string) => {

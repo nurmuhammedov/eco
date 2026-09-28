@@ -31,7 +31,7 @@ const SetInspectorModal = () => {
   const { user } = useAuth()
   const { id } = useParams()
   const [isShow, setIsShow] = useState(false)
-  const { mutateAsync, isPending } = useSetInspector()
+  const { mutate, isPending } = useSetInspector()
 
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
@@ -50,13 +50,15 @@ const SetInspectorModal = () => {
 
   function onSubmit(data: z.infer<typeof schema>) {
     if (!id) return
-    mutateAsync({
-      id,
-      data: { executorId: data.executorId },
-    }).then(() => {
-      setIsShow(false)
-      form.reset()
-    })
+    mutate(
+      { id, data: { executorId: data.executorId } },
+      {
+        onSuccess: () => {
+          setIsShow(false)
+          form.reset()
+        },
+      }
+    )
   }
 
   return (

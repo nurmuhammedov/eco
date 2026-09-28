@@ -3,13 +3,13 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { Button } from '@/shared/components/ui/button'
 import { apiConfig } from '@/shared/api/constants'
 import { GoBack } from '@/shared/components/common'
-import { DetailCardAccordion } from '@/shared/components/common/detail-card'
+import { DetailCardAccordion, DetailPageSkeleton } from '@/shared/components/common/detail-card'
 import DetailRow from '@/shared/components/common/detail-row'
 import { InquiryStatusRow } from '@/features/inquiries/ui/inquiry-status-row'
 import { InquiryStatusHistoryModal, type InquiryStatusStep } from '@/features/inquiries/ui/inquiry-status-history'
 import FileLink from '@/shared/components/common/file-link'
 import YandexMap from '@/shared/components/common/yandex-map/ui/yandex-map'
-import { Coordinate } from '@/shared/components/common/yandex-map'
+import { parseCoordinate } from '@/shared/components/common/yandex-map'
 import useDetail from '@/shared/hooks/api/use-detail'
 import useData from '@/shared/hooks/api/use-data'
 import { formatDate } from 'date-fns'
@@ -17,10 +17,14 @@ import { cn } from '@/shared/lib/utils'
 import { useState } from 'react'
 import {
   appealTypeTranslations,
+  InquiryAction,
   inquiryBelongTypeLabels,
+  inquiryRegistryPath,
   inquiryResultLabels,
   InquiryStatus,
 } from '@/features/inquiries/model/types'
+import type { InquiryDetail, InquiryPlasticCard } from '@/features/inquiries/model/inquiry.types'
+import type { OtherInspectionDetail } from '@/entities/inspection/model/inspection.types'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { UserRoles } from '@/shared/types/user'
 import SetInspectorModal from '@/features/inquiries/ui/modals/set-inspector-modal'
@@ -36,16 +40,22 @@ import { AccountantCompleteModal } from '@/features/inquiries/ui/modals/accounta
 import { EmptyValue } from '@/shared/components/common/empty-value'
 import { Logs } from '@/features/register/hf/ui/parts/logs'
 
-// emptyText removed
+/** An amount in so‘m with two decimals, or a dash when there is none */
+const formatSum = (amount: number | null | undefined) =>
+  amount === null || amount === undefined ? (
+    <EmptyValue />
+  ) : (
+    `${amount.toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).replace(',', '.')} so‘m`
+  )
 
-const getCardType = (number: string): 'UZCARD' | 'HUMO' | 'UNKNOWN' => {
+const getCardType = (number: string | null): 'UZCARD' | 'HUMO' | 'UNKNOWN' => {
   const clean = number?.replace(/\s+/g, '') || ''
   if (clean.startsWith('8600') || clean.startsWith('5614')) return 'UZCARD'
   if (clean.startsWith('9860')) return 'HUMO'
   return 'UNKNOWN'
 }
 
-const formatCardNumber = (value: string) => {
+const formatCardNumber = (value: string | null) => {
   if (!value) return ''
   const v = value.replace(/\s+/g, '').replace(/[^0-9]/gi, '')
   const matches = v.match(/\d{4,16}/g)
@@ -61,79 +71,61 @@ const InquiryDetailPage = () => {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const { user } = useAuth()
-  const [expandedCardId, setExpandedCardId] = useState<string | number | null>(null)
+  const [expandedCardId, setExpandedCardId] = useState<string | null>(null)
 
-  const { data, isLoading } = useDetail<any>('/inquiries', id as string)
-  const { data: statusHistory } = useDetail<InquiryStatusStep[]>('/execution-processes/inquiry', id as string)
+  const { data, isLoading } = useDetail<InquiryDetail>('/inquiries', id)
+  const { data: statusHistory } = useDetail<InquiryStatusStep[]>('/execution-processes/inquiry', id)
 
-  const { data: inspectionByInquiry } = useDetail<any>(
+  const { data: inspectionByInquiry } = useDetail<OtherInspectionDetail>(
     '/inspections/by-inquiry',
-    id as string,
+    id,
     (user?.role === UserRoles.REGIONAL && data?.status === InquiryStatus.UNDER_INSPECTION) ||
       (data?.type === 'VIOLATION_REPORT' &&
         data?.status !== InquiryStatus.NEW &&
         data?.status !== InquiryStatus.IN_PROCESS)
   )
 
-  const { data: inquiryCards } = useData<any[]>(
+  const { data: cardsList = [] } = useData<InquiryPlasticCard[]>(
     `/plastic-cards/by-inquiry/${id}`,
     user?.role === UserRoles.ACCOUNTANT && data?.type === 'VIOLATION_REPORT'
   )
-  const cardsList = Array.isArray(inquiryCards) ? inquiryCards : []
 
-  const currentObjLocation = data?.location?.split(',').map(Number) || ([] as Coordinate[])
-  const hasLocation = currentObjLocation.length === 2 && !isNaN(currentObjLocation[0])
-  const files = data?.filePathList || []
+  const occurrencePoint = parseCoordinate(data?.location)
+  const files = data?.filePathList ?? []
+  const registryPath = data?.belongType ? inquiryRegistryPath[data?.belongType] : undefined
 
-  const belongTypeStr =
-    data?.belongType === 'HF'
-      ? 'hf'
-      : data?.belongType === 'EQUIPMENT'
-        ? 'equipments'
-        : data?.belongType === 'IRS'
-          ? 'irs'
-          : 'xrays'
-
-  if (isLoading) {
-    return <div className="p-8 text-center text-slate-500">Yuklanmoqda...</div>
-  }
+  if (isLoading) return <DetailPageSkeleton sections={4} />
 
   if (!data) {
     return <div className="p-8 text-center text-slate-500">Ma’lumot topilmadi.</div>
   }
 
-  const isCompletedEnabled =
-    data?.recoveredAmount !== null &&
-    data?.recoveredAmount !== undefined &&
-    data?.paidRewardAmount !== null &&
-    data?.paidRewardAmount !== undefined &&
-    data?.isMib !== null &&
-    data?.isMib !== undefined
+  const isCompletedEnabled = data.recoveredAmount !== null && data.paidRewardAmount !== null && data.isMib !== null
 
   return (
     <>
       <div className="flex items-center justify-between">
-        <GoBack title={`Murojaat raqami: ${data?.registryNumber || ''}`} />
+        <GoBack title={`Murojaat raqami: ${data.registryNumber || ''}`} />
         <div className="flex gap-2">
-          <InquiryStatusHistoryModal steps={statusHistory} submittedAt={data?.createdAt} />
+          <InquiryStatusHistoryModal steps={statusHistory} submittedAt={data.createdAt} />
 
-          {user?.role === UserRoles.REGIONAL && data?.status === InquiryStatus.NEW && (
+          {user?.role === UserRoles.REGIONAL && data.status === InquiryStatus.NEW && (
             <>
               <SetInspectorModal />
             </>
           )}
 
           {user?.role === UserRoles.REGIONAL &&
-            data?.status === InquiryStatus.UNDER_INSPECTION &&
-            !inspectionByInquiry && <CreateInquiryInspectionModal inquiry={data} />}
+            data.status === InquiryStatus.UNDER_INSPECTION &&
+            !inspectionByInquiry && <CreateInquiryInspectionModal inquiryId={data.id} />}
 
-          {user?.role === UserRoles.INSPECTOR && data?.status === InquiryStatus.IN_PROCESS && (
-            <ExecuteInitialModal inquiryType={data?.type} />
+          {user?.role === UserRoles.INSPECTOR && data.status === InquiryStatus.IN_PROCESS && (
+            <ExecuteInitialModal inquiryType={data.type} />
           )}
 
-          {user?.role === UserRoles.INSPECTOR && data?.status === InquiryStatus.IN_COURT && <ExecuteCourtModal />}
+          {user?.role === UserRoles.INSPECTOR && data.status === InquiryStatus.IN_COURT && <ExecuteCourtModal />}
 
-          {user?.role === UserRoles.ACCOUNTANT && data?.status === InquiryStatus.REWARD_PAYMENT && (
+          {user?.role === UserRoles.ACCOUNTANT && data.status === InquiryStatus.REWARD_PAYMENT && (
             <AccountantCompleteModal inquiryId={id!} disabled={!isCompletedEnabled} />
           )}
         </div>
@@ -153,32 +145,32 @@ const InquiryDetailPage = () => {
         >
           <DetailCardAccordion.Item value="general" title="Murojaat va ijro ma’lumotlari">
             <div className="flex flex-col py-1">
-              <DetailRow title="Murojaat raqami:" value={data?.registryNumber || <EmptyValue />} />
+              <DetailRow title="Murojaat raqami:" value={data.registryNumber || <EmptyValue />} />
               <DetailRow
                 title="Murojaat turi:"
-                value={data?.type ? appealTypeTranslations[data.type] || data.type : <EmptyValue />}
+                value={data.type ? appealTypeTranslations[data.type] : <EmptyValue />}
               />
-              <InquiryStatusRow status={data?.status} type={data?.type} />
+              <InquiryStatusRow status={data.status} type={data.type} />
               <DetailRow
                 title="Murojaat qilingan sana:"
-                value={data?.createdAt ? formatDate(new Date(data.createdAt), 'dd.MM.yyyy HH:mm') : <EmptyValue />}
+                value={data.createdAt ? formatDate(new Date(data.createdAt), 'dd.MM.yyyy HH:mm') : <EmptyValue />}
               />
               <DetailRow
                 title="Hodisa sodir bo‘lgan sana:"
-                value={data?.occurredAt ? formatDate(new Date(data.occurredAt), 'dd.MM.yyyy HH:mm') : <EmptyValue />}
+                value={data.occurredAt ? formatDate(new Date(data.occurredAt), 'dd.MM.yyyy HH:mm') : <EmptyValue />}
               />
 
-              <DetailRow title="Mas’ul inspektor:" value={data?.executorName || <EmptyValue />} />
-              <DetailRow title="Hudud:" value={data?.regionName || <EmptyValue />} />
+              <DetailRow title="Mas’ul inspektor:" value={data.executorName || <EmptyValue />} />
+              <DetailRow title="Hudud:" value={data.regionName || <EmptyValue />} />
 
-              <DetailRow title="Murojaat matni:" value={data?.message || <EmptyValue />} />
-              <DetailRow title="Ijro izohi:" value={data?.executionMessage || <EmptyValue />} />
+              <DetailRow title="Murojaat matni:" value={data.message || <EmptyValue />} />
+              <DetailRow title="Ijro izohi:" value={data.executionMessage || <EmptyValue />} />
 
-              {data?.type !== 'VIOLATION_REPORT' ? (
+              {data.type !== 'VIOLATION_REPORT' ? (
                 <DetailRow
                   title={'Asos hujjat:'}
                   value={
-                    data?.initialExecutionFilePath ? (
+                    data.initialExecutionFilePath ? (
                       <FileLink url={data.initialExecutionFilePath} title="Faylni ko‘rish" />
                     ) : (
                       <EmptyValue />
@@ -191,12 +183,12 @@ const InquiryDetailPage = () => {
                 <DetailRow
                   title="Obyekt:"
                   value={
-                    data?.belongId ? (
+                    data.belongId && registryPath ? (
                       <div className="flex items-center gap-4">
                         <span className="text-sm font-medium">
-                          {data?.belongType ? inquiryBelongTypeLabels[data.belongType] || data.belongType : ''}
+                          {data.belongType ? inquiryBelongTypeLabels[data.belongType] : ''}
                         </span>
-                        <Button size="sm" onClick={() => navigate(`/register/${belongTypeStr}/${data.belongId}`)}>
+                        <Button size="sm" onClick={() => navigate(`/register/${registryPath}/${data.belongId}`)}>
                           Obyektni ko‘rish
                         </Button>
                       </div>
@@ -209,67 +201,30 @@ const InquiryDetailPage = () => {
             </div>
           </DetailCardAccordion.Item>
 
-          {data?.type === 'VIOLATION_REPORT' && (
+          {data.type === 'VIOLATION_REPORT' && (
             <DetailCardAccordion.Item value="administrative_info" title="Ma’muriy ish ma’lumotlari">
               <div className="flex flex-col py-1">
                 <DetailRow
                   title="Ijro natijasi:"
-                  value={data?.result ? inquiryResultLabels[data.result] || data.result : <EmptyValue />}
+                  value={data.result ? inquiryResultLabels[data.result] : <EmptyValue />}
                 />
-                <DetailRow
-                  title="Ajratilgan mukofot puli:"
-                  value={
-                    data?.rewardAmount !== null && data?.rewardAmount !== undefined ? (
-                      `${Number(data.rewardAmount).toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).replace(',', '.')} so‘m`
-                    ) : (
-                      <EmptyValue />
-                    )
-                  }
-                />
-                <DetailRow
-                  title="Tashkilotga qo‘llanilgan jarima summasi:"
-                  value={
-                    data?.imposedFineAmount !== null && data?.imposedFineAmount !== undefined ? (
-                      `${Number(data.imposedFineAmount).toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).replace(',', '.')} so‘m`
-                    ) : (
-                      <EmptyValue />
-                    )
-                  }
-                />
+                <DetailRow title="Ajratilgan mukofot puli:" value={formatSum(data.rewardAmount)} />
+                <DetailRow title="Tashkilotga qo‘llanilgan jarima summasi:" value={formatSum(data.imposedFineAmount)} />
                 <DetailRow
                   title="E-ma’muriy tomonidan ushlangan komissiya yig‘imi:"
-                  value={
-                    data?.withholdingAmount !== null && data?.withholdingAmount !== undefined ? (
-                      `${Number(data.withholdingAmount).toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).replace(',', '.')} so‘m`
-                    ) : (
-                      <EmptyValue />
-                    )
-                  }
+                  value={formatSum(data.withholdingAmount)}
                 />
-                <DetailRow
-                  title="Qo‘mitaga kelib tushadigan summa:"
-                  value={
-                    data?.transferFineAmount !== null && data?.transferFineAmount !== undefined ? (
-                      `${Number(data.transferFineAmount).toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).replace(',', '.')} so‘m`
-                    ) : (
-                      <EmptyValue />
-                    )
-                  }
-                />
+                <DetailRow title="Qo‘mitaga kelib tushadigan summa:" value={formatSum(data.transferFineAmount)} />
                 <DetailRow
                   title="Tashkilotdan undirilgan summa:"
                   value={
                     <div className="flex items-center gap-2">
-                      {data?.recoveredAmount !== null && data?.recoveredAmount !== undefined ? (
-                        `${Number(data.recoveredAmount).toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).replace(',', '.')} so‘m`
-                      ) : (
-                        <EmptyValue />
-                      )}
-                      {user?.role === UserRoles.ACCOUNTANT && data?.status === InquiryStatus.REWARD_PAYMENT && (
+                      {formatSum(data.recoveredAmount)}
+                      {user?.role === UserRoles.ACCOUNTANT && data.status === InquiryStatus.REWARD_PAYMENT && (
                         <RecoveredAmountModal
                           inquiryId={id!}
-                          defaultValue={data?.recoveredAmount}
-                          fineAmount={data?.imposedFineAmount}
+                          defaultValue={data.recoveredAmount}
+                          fineAmount={data.imposedFineAmount}
                         />
                       )}
                     </div>
@@ -279,7 +234,7 @@ const InquiryDetailPage = () => {
                   title="MIB holati:"
                   value={
                     <div className="flex items-center gap-2">
-                      {data?.isMib !== null && data?.isMib !== undefined ? (
+                      {data.isMib !== null && data.isMib !== undefined ? (
                         data.isMib ? (
                           <span className="font-medium text-red-500">MIBga yuborildi</span>
                         ) : (
@@ -288,8 +243,8 @@ const InquiryDetailPage = () => {
                       ) : (
                         <EmptyValue />
                       )}
-                      {user?.role === UserRoles.ACCOUNTANT && data?.status === InquiryStatus.REWARD_PAYMENT && (
-                        <MibStatusModal inquiryId={id!} defaultValue={data?.isMib} />
+                      {user?.role === UserRoles.ACCOUNTANT && data.status === InquiryStatus.REWARD_PAYMENT && (
+                        <MibStatusModal inquiryId={id!} defaultValue={data.isMib} />
                       )}
                     </div>
                   }
@@ -298,28 +253,24 @@ const InquiryDetailPage = () => {
                   title="To‘lab berilgan mukofot puli:"
                   value={
                     <div className="flex items-center gap-2">
-                      {data?.paidRewardAmount !== null && data?.paidRewardAmount !== undefined ? (
-                        `${Number(data.paidRewardAmount).toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).replace(',', '.')} so‘m`
-                      ) : (
-                        <EmptyValue />
-                      )}
-                      {user?.role === UserRoles.ACCOUNTANT && data?.status === InquiryStatus.REWARD_PAYMENT && (
+                      {formatSum(data.paidRewardAmount)}
+                      {user?.role === UserRoles.ACCOUNTANT && data.status === InquiryStatus.REWARD_PAYMENT && (
                         <PaidRewardModal
                           inquiryId={id!}
-                          defaultValue={data?.paidRewardAmount}
-                          defaultFile={data?.paymentExecutionFilePath}
-                          rewardAmount={data?.rewardAmount}
+                          defaultValue={data.paidRewardAmount}
+                          defaultFile={data.paymentExecutionFilePath}
+                          rewardAmount={data.rewardAmount}
                         />
                       )}
                     </div>
                   }
                 />
-                <DetailRow title="To‘lanmaslik sababi:" value={data?.rejectReason || <EmptyValue />} />
+                <DetailRow title="To‘lanmaslik sababi:" value={data.rejectReason || <EmptyValue />} />
 
                 <DetailRow
-                  title={data?.action === 'SEND_TO_COURT' ? 'Sudga tayyorlangan hujjat:' : 'Asos hujjat:'}
+                  title={data.action === InquiryAction.SEND_TO_COURT ? 'Sudga tayyorlangan hujjat:' : 'Asos hujjat:'}
                   value={
-                    data?.initialExecutionFilePath ? (
+                    data.initialExecutionFilePath ? (
                       <FileLink url={data.initialExecutionFilePath} title="Faylni ko‘rish" />
                     ) : (
                       <EmptyValue />
@@ -329,7 +280,7 @@ const InquiryDetailPage = () => {
                 <DetailRow
                   title="Sud qarori:"
                   value={
-                    data?.courtExecutionFilePath ? (
+                    data.courtExecutionFilePath ? (
                       <FileLink url={data.courtExecutionFilePath} title="Faylni ko‘rish" />
                     ) : (
                       <EmptyValue />
@@ -339,7 +290,7 @@ const InquiryDetailPage = () => {
                 <DetailRow
                   title="To‘lov hujjati:"
                   value={
-                    data?.paymentExecutionFilePath ? (
+                    data.paymentExecutionFilePath ? (
                       <FileLink url={data.paymentExecutionFilePath} title="Faylni ko‘rish" />
                     ) : (
                       <EmptyValue />
@@ -350,18 +301,18 @@ const InquiryDetailPage = () => {
             </DetailCardAccordion.Item>
           )}
 
-          {data?.type === 'VIOLATION_REPORT' &&
-            data?.status !== InquiryStatus.NEW &&
-            data?.status !== InquiryStatus.IN_PROCESS &&
+          {data.type === 'VIOLATION_REPORT' &&
+            data.status !== InquiryStatus.NEW &&
+            data.status !== InquiryStatus.IN_PROCESS &&
             inspectionByInquiry && (
               <DetailCardAccordion.Item value="inspection_info" title="Tekshiruv ma’lumotlari">
                 <div className="flex flex-col py-1">
-                  <DetailRow title="Tashkilot nomi:" value={inspectionByInquiry?.legalName || <EmptyValue />} />
-                  <DetailRow title="Tashkilot STIR:" value={inspectionByInquiry?.legalTin || <EmptyValue />} />
+                  <DetailRow title="Tashkilot nomi:" value={inspectionByInquiry.legalName || <EmptyValue />} />
+                  <DetailRow title="Tashkilot STIR:" value={inspectionByInquiry.legalTin || <EmptyValue />} />
                   <DetailRow
                     title="Tekshiruv sanasi:"
                     value={
-                      inspectionByInquiry?.startDate && inspectionByInquiry?.endDate ? (
+                      inspectionByInquiry.startDate && inspectionByInquiry.endDate ? (
                         `${formatDate(new Date(inspectionByInquiry.startDate), 'dd.MM.yyyy')} - ${formatDate(new Date(inspectionByInquiry.endDate), 'dd.MM.yyyy')}`
                       ) : (
                         <EmptyValue />
@@ -371,18 +322,18 @@ const InquiryDetailPage = () => {
                   <DetailRow
                     title="Inspektorlar:"
                     value={
-                      inspectionByInquiry?.inspectors?.length > 0 ? (
-                        inspectionByInquiry.inspectors.map((i: any) => i.name).join(', ')
+                      inspectionByInquiry.inspectors?.length ? (
+                        inspectionByInquiry.inspectors.map((inspector) => inspector.name).join(', ')
                       ) : (
                         <EmptyValue />
                       )
                     }
                   />
-                  <DetailRow title="Buyruq raqami:" value={inspectionByInquiry?.decreeNumber || <EmptyValue />} />
+                  <DetailRow title="Buyruq raqami:" value={inspectionByInquiry.decreeNumber || <EmptyValue />} />
                   <DetailRow
                     title="Tekshiruv dasturi:"
                     value={
-                      inspectionByInquiry?.programPath ? (
+                      inspectionByInquiry.programPath ? (
                         <FileLink url={inspectionByInquiry.programPath} title="Faylni ko‘rish" />
                       ) : (
                         <EmptyValue />
@@ -392,7 +343,7 @@ const InquiryDetailPage = () => {
                   <DetailRow
                     title="Buyruq fayli:"
                     value={
-                      inspectionByInquiry?.decree?.path ? (
+                      inspectionByInquiry.decree?.path ? (
                         <FileLink url={inspectionByInquiry.decree.path} title="Faylni ko‘rish" />
                       ) : (
                         <EmptyValue />
@@ -405,21 +356,21 @@ const InquiryDetailPage = () => {
 
           <DetailCardAccordion.Item value="applicant_info" title="Yuboruvchi to‘g‘risida ma’lumot">
             <div className="flex flex-col py-1">
-              <DetailRow title="Yuboruvchi F.I.SH.:" value={data?.fullName || <EmptyValue />} />
-              <DetailRow title="Egasi PINFL/STIR:" value={data?.ownerIdentity || <EmptyValue />} />
-              <DetailRow title="Telefon raqami:" value={data?.phoneNumber || <EmptyValue />} />
+              <DetailRow title="Yuboruvchi F.I.SH.:" value={data.fullName || <EmptyValue />} />
+              <DetailRow title="Egasi PINFL/STIR:" value={data.ownerIdentity || <EmptyValue />} />
+              <DetailRow title="Telefon raqami:" value={data.phoneNumber || <EmptyValue />} />
             </div>
           </DetailCardAccordion.Item>
 
-          {user?.role === UserRoles.ACCOUNTANT && data?.type === 'VIOLATION_REPORT' && cardsList.length > 0 && (
+          {user?.role === UserRoles.ACCOUNTANT && data.type === 'VIOLATION_REPORT' && cardsList.length > 0 && (
             <DetailCardAccordion.Item value="plastic_cards" title="Murojaatchining plastik kartalari">
               <div className="grid grid-cols-1 gap-6 p-4 md:grid-cols-2 lg:grid-cols-3">
-                {cardsList.map((card, idx) => {
-                  const cardId = card.id || idx
+                {cardsList.map((card) => {
+                  const cardId = card.id
                   const isExpanded = expandedCardId === cardId
                   const typeVal = getCardType(card.cardNumber)
                   const formattedNum = formatCardNumber(card.cardNumber) || '0000 0000 0000 0000'
-                  const exp = card.expirationDate || card.expiryDate || ''
+                  const exp = card.expirationDate || ''
                   const formattedExp =
                     exp && !exp.includes('/') && exp.length === 4
                       ? `${exp.substring(0, 2)}/${exp.substring(2, 4)}`
@@ -511,16 +462,16 @@ const InquiryDetailPage = () => {
             </DetailCardAccordion.Item>
           )}
 
-          {hasLocation && (
+          {occurrencePoint && (
             <DetailCardAccordion.Item value="object_location" title="Hodisa sodir bo‘lgan joy">
-              <YandexMap coords={[currentObjLocation]} center={currentObjLocation} zoom={16} />
+              <YandexMap coords={[occurrencePoint]} center={occurrencePoint} zoom={16} />
             </DetailCardAccordion.Item>
           )}
 
           {files.length > 0 && (
             <DetailCardAccordion.Item value="appeal_files" title="Murojaatga biriktirilgan fayllar">
               <div className="grid grid-cols-1 gap-4 p-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                {files.map((fileUrl: string, idx: number) => (
+                {files.map((fileUrl, idx) => (
                   <a
                     key={idx}
                     href={`${apiConfig?.baseURL}${fileUrl}`}

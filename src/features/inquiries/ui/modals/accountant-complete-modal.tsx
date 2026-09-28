@@ -13,12 +13,9 @@ import { useAccountantComplete } from '@/features/inquiries/hooks/use-inquiry-mu
 
 export const AccountantCompleteModal = ({ inquiryId, disabled }: { inquiryId: string; disabled?: boolean }) => {
   const [open, setOpen] = useState(false)
-  const { mutateAsync, isPending } = useAccountantComplete()
+  const { mutate, isPending } = useAccountantComplete()
 
-  const handleComplete = async () => {
-    await mutateAsync(inquiryId)
-    setOpen(false)
-  }
+  const handleComplete = () => mutate(inquiryId, { onSuccess: () => setOpen(false) })
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

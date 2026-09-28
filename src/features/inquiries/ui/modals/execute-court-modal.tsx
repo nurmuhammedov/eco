@@ -44,7 +44,7 @@ const schema = z
 const ExecuteCourtModal = () => {
   const { id } = useParams()
   const [isShow, setIsShow] = useState(false)
-  const { mutateAsync, isPending } = useExecuteCourt()
+  const { mutate, isPending } = useExecuteCourt()
 
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
@@ -52,19 +52,21 @@ const ExecuteCourtModal = () => {
 
   const isPositive = form.watch('isPositive')
 
-  function onSubmit(data: any) {
+  function onSubmit({ isPositive, imposedFineAmount, ...values }: z.infer<typeof schema>) {
     if (!id) return
-    mutateAsync({
-      id,
-      data: {
-        ...data,
-        isPositive: data.isPositive === 'true',
-        imposedFineAmount: data.isPositive === 'true' ? data.imposedFineAmount : null,
+    const positive = isPositive === 'true'
+    mutate(
+      {
+        id,
+        data: { ...values, isPositive: positive, imposedFineAmount: positive ? (imposedFineAmount ?? null) : null },
       },
-    }).then(() => {
-      setIsShow(false)
-      form.reset()
-    })
+      {
+        onSuccess: () => {
+          setIsShow(false)
+          form.reset()
+        },
+      }
+    )
   }
 
   return (

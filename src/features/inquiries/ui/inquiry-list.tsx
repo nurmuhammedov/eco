@@ -9,6 +9,7 @@ import {
   InquiryStatus,
   inquiryStatusLabels,
   inquiryStatusBadgeVariants,
+  inquiryRegistryPath,
 } from '../model/types'
 import { formatDate } from 'date-fns'
 import { Link, useNavigate } from 'react-router-dom'
@@ -19,8 +20,14 @@ import { Eye } from 'lucide-react'
 import { Badge } from '@/shared/components/ui/badge'
 import { cn } from '@/shared/lib/utils'
 import { useRegionSelectQuery } from '@/shared/api/dictionaries'
+import { paramOneOf } from '@/shared/lib/url-params'
 import { ChangeRegionModal } from './modals/change-region-modal'
 import { TruncatedCell } from '@/shared/components/common/truncated-cell'
+import type { InquiryRow } from '../model/inquiry.types'
+
+/** How many inquiries a tab holds: one row is asked for, only the total is read */
+const useInquiryCount = (belongType: InquiryBelongType | undefined, enabled: boolean) =>
+  usePaginatedData<InquiryRow>('/inquiries', { page: 1, size: 1, belongType }, enabled, 60000).totalElements ?? 0
 
 const InquiryTable = () => {
   const { user } = useAuth()
@@ -33,96 +40,32 @@ const InquiryTable = () => {
 
   const { data: regions } = useRegionSelectQuery()
 
-  const activeTab = (belongType as InquiryBelongType | 'ALL') || 'ALL'
+  const activeTab = paramOneOf(belongType, [...Object.values(InquiryBelongType), 'ALL' as const], 'ALL')
 
   const isIndividual = user?.role === UserRoles.INDIVIDUAL
 
-  const { data, isLoading } = usePaginatedData<any>('/inquiries', {
+  const { data, isLoading } = usePaginatedData<InquiryRow>('/inquiries', {
     page,
     size,
     belongType: activeTab === 'ALL' ? undefined : activeTab,
     ...rest,
   })
 
-  const { data: hfData } = usePaginatedData<any>(
-    '/inquiries',
-    {
-      page: 1,
-      size: 1,
-      belongType: InquiryBelongType.HF,
-    },
-    true,
-    60000
-  )
-
-  const { data: equipmentsData } = usePaginatedData<any>(
-    '/inquiries',
-    {
-      page: 1,
-      size: 1,
-      belongType: InquiryBelongType.EQUIPMENT,
-    },
-    true,
-    60000
-  )
-
-  const { data: irsData } = usePaginatedData<any>(
-    '/inquiries',
-    {
-      page: 1,
-      size: 1,
-      belongType: InquiryBelongType.IRS,
-    },
-    true,
-    60000
-  )
-
-  const { data: xrayData } = usePaginatedData<any>(
-    '/inquiries',
-    {
-      page: 1,
-      size: 1,
-      belongType: InquiryBelongType.XRAY,
-    },
-    true,
-    60000
-  )
-
-  const { data: otherData } = usePaginatedData<any>(
-    '/inquiries',
-    {
-      page: 1,
-      size: 1,
-      belongType: InquiryBelongType.OTHER,
-    },
-    true,
-    60000
-  )
-
-  const { data: allDataCount } = usePaginatedData<any>(
-    '/inquiries',
-    {
-      page: 1,
-      size: 1,
-    },
-    true,
-    60000
-  )
-
-  const tabCounts = {
-    ALL: allDataCount?.page?.totalElements ?? 0,
-    [InquiryBelongType.HF]: hfData?.page?.totalElements ?? 0,
-    [InquiryBelongType.EQUIPMENT]: equipmentsData?.page?.totalElements ?? 0,
-    [InquiryBelongType.IRS]: irsData?.page?.totalElements ?? 0,
-    [InquiryBelongType.XRAY]: xrayData?.page?.totalElements ?? 0,
-    [InquiryBelongType.OTHER]: otherData?.page?.totalElements ?? 0,
+  // Only staff see the tabs, so only they need the counts on them
+  const tabCounts: Record<InquiryBelongType | 'ALL', number> = {
+    ALL: useInquiryCount(undefined, !isIndividual),
+    [InquiryBelongType.HF]: useInquiryCount(InquiryBelongType.HF, !isIndividual),
+    [InquiryBelongType.EQUIPMENT]: useInquiryCount(InquiryBelongType.EQUIPMENT, !isIndividual),
+    [InquiryBelongType.IRS]: useInquiryCount(InquiryBelongType.IRS, !isIndividual),
+    [InquiryBelongType.XRAY]: useInquiryCount(InquiryBelongType.XRAY, !isIndividual),
+    [InquiryBelongType.OTHER]: useInquiryCount(InquiryBelongType.OTHER, !isIndividual),
   }
 
   const handleTabChange = (tab: InquiryBelongType | 'ALL') => {
     addParams({ belongType: tab === 'ALL' ? undefined : tab, page: 1 })
   }
 
-  const columns: ExtendedColumnDef<any, any>[] = [
+  const columns: ExtendedColumnDef<InquiryRow, unknown>[] = [
     {
       accessorKey: 'registryNumber',
       header: () => <div className="whitespace-nowrap">Murojaat raqami</div>,
@@ -138,20 +81,16 @@ const InquiryTable = () => {
     {
       accessorKey: 'type',
       header: () => <div className="whitespace-nowrap">Murojaat turi</div>,
-      cell: ({ row }) => appealTypeTranslations[row.original.type] || row.original.type,
+      cell: ({ row }) => (row.original.type ? appealTypeTranslations[row.original.type] : '-'),
       filterKey: 'type',
       filterType: 'select',
-      filterOptions: [
-        { name: 'Murojaat', id: 'APPEAL' },
-        { name: 'Huquqbuzarliik xabari', id: 'VIOLATION_REPORT' },
-        { name: 'Taklif', id: 'SUGGESTION' },
-      ],
+      filterOptions: Object.entries(appealTypeTranslations).map(([id, name]) => ({ id, name })),
     },
     {
       accessorKey: 'regionId',
       header: () => <div className="whitespace-nowrap">Hudud</div>,
       cell: ({ row }) => {
-        const region = regions?.find((r: any) => r.id === row.original.regionId)
+        const region = regions?.find((region) => region.id === row.original.regionId)
         return region?.name || row.original.regionId || '-'
       },
     },
@@ -175,12 +114,11 @@ const InquiryTable = () => {
       accessorKey: 'status',
       header: () => <div className="whitespace-nowrap">Holat</div>,
       cell: ({ row }) => {
-        const status = row.original.status as InquiryStatus
-        const label = inquiryStatusLabels[status] || status || '-'
-        const variantClass = inquiryStatusBadgeVariants[status] || 'bg-gray-100 text-gray-800'
+        const { status } = row.original
+        if (!status) return '-'
         return (
-          <Badge variant="outline" className={cn('border-none font-medium', variantClass)}>
-            {label}
+          <Badge variant="outline" className={cn('border-none font-medium', inquiryStatusBadgeVariants[status])}>
+            {inquiryStatusLabels[status]}
           </Badge>
         )
       },
@@ -193,7 +131,7 @@ const InquiryTable = () => {
       accessorKey: 'actions',
       cell: ({ row }) => {
         // OTHER has no registry object behind it, so there is nothing to open
-        const belongTypeStr = REGISTRY_PATH[row.original.belongType as string]
+        const registryPath = row.original.belongType ? inquiryRegistryPath[row.original.belongType] : undefined
 
         // Up to the point real work starts: past IN_PROCESS an inspection or a
         // court case is already under way, and moving the inquiry would strand
@@ -204,8 +142,8 @@ const InquiryTable = () => {
 
         return (
           <div className="flex items-center gap-2">
-            {row.original.belongId && belongTypeStr && (
-              <Button size="sm" onClick={() => navigate(`/register/${belongTypeStr}/${row.original.belongId}`)}>
+            {row.original.belongId && registryPath && (
+              <Button size="sm" onClick={() => navigate(`/register/${registryPath}/${row.original.belongId}`)}>
                 Obyektni ko‘rish
               </Button>
             )}
@@ -227,8 +165,9 @@ const InquiryTable = () => {
     },
   ]
 
-  const filteredColumns =
-    user?.role === UserRoles.INDIVIDUAL ? columns.filter((c: any) => c.accessorKey !== 'fullName') : columns
+  const filteredColumns = isIndividual
+    ? columns.filter((column) => !('accessorKey' in column) || column.accessorKey !== 'fullName')
+    : columns
 
   return (
     <div className="flex h-full flex-col gap-2 overflow-hidden">
@@ -239,14 +178,14 @@ const InquiryTable = () => {
           </Button>
         </div>
       )}
-      {!isIndividual && <InquiryTabs activeTab={activeTab} onTabChange={handleTabChange} counts={tabCounts as any} />}
+      {!isIndividual && <InquiryTabs activeTab={activeTab} onTabChange={handleTabChange} counts={tabCounts} />}
 
       {/* Mobile view for INDIVIDUAL */}
       {isIndividual && (
         <div className="flex flex-1 flex-col gap-2 overflow-hidden md:hidden">
           <div className="flex flex-1 flex-col gap-2 overflow-y-auto pb-2">
             {data?.content?.length ? (
-              data.content.map((item: any) => (
+              data.content.map((item) => (
                 <Link
                   key={item.id}
                   to={`/inquiries/${item.id}`}
@@ -254,15 +193,17 @@ const InquiryTable = () => {
                 >
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-semibold text-blue-600">{item.registryNumber || 'Raqamsiz'}</span>
-                    <Badge
-                      variant="outline"
-                      className={cn(
-                        'border-none text-[10px] font-medium uppercase',
-                        inquiryStatusBadgeVariants[item.status as InquiryStatus] || 'bg-gray-100 text-gray-800'
-                      )}
-                    >
-                      {inquiryStatusLabels[item.status as InquiryStatus] || item.status || '-'}
-                    </Badge>
+                    {item.status && (
+                      <Badge
+                        variant="outline"
+                        className={cn(
+                          'border-none text-[10px] font-medium uppercase',
+                          inquiryStatusBadgeVariants[item.status]
+                        )}
+                      >
+                        {inquiryStatusLabels[item.status]}
+                      </Badge>
+                    )}
                   </div>
                   <div className="text-xs font-medium text-slate-400">
                     {item.createdAt ? formatDate(new Date(item.createdAt), 'dd.MM.yyyy HH:mm') : '-'}
@@ -294,7 +235,7 @@ const InquiryTable = () => {
           showNumeration={true}
           isPaginated={true}
           columns={filteredColumns}
-          data={data as any}
+          data={data ?? []}
           showFilters={true}
           isLoading={isLoading}
           className="flex-1"
@@ -302,13 +243,6 @@ const InquiryTable = () => {
       </div>
     </div>
   )
-}
-
-const REGISTRY_PATH: Record<string, string> = {
-  HF: 'hf',
-  EQUIPMENT: 'equipments',
-  IRS: 'irs',
-  XRAY: 'xrays',
 }
 
 export default InquiryTable

@@ -42,39 +42,41 @@ export const inquiryTabsConfig = [
   },
 ]
 
-export const appealTypeTranslations: Record<string, string> = {
+export type InquiryType = 'APPEAL' | 'SUGGESTION' | 'VIOLATION_REPORT'
+
+export const appealTypeTranslations: Record<InquiryType, string> = {
   APPEAL: 'Murojaat',
-  VIOLATION_REPORT: 'Huquqbuzarliik xabari',
+  VIOLATION_REPORT: 'Huquqbuzarlik xabari',
   SUGGESTION: 'Taklif',
 }
 
 export enum InquiryStatus {
-  NEW = 'NEW', // Yangi
-  IN_PROCESS = 'IN_PROCESS', // Ko‘rib chiqilmoqda
-  UNDER_INSPECTION = 'UNDER_INSPECTION', // Tekshiruv jarayonida
-  IN_COURT = 'IN_COURT', // Sud jarayonida
-  REWARD_PAYMENT = 'REWARD_PAYMENT', // Pul mukofotini to‘lov qilishda
-  COMPLETED = 'COMPLETED', // Yakunlangan
-  REJECTED = 'REJECTED', // Rad etilgan
+  NEW = 'NEW',
+  IN_PROCESS = 'IN_PROCESS',
+  UNDER_INSPECTION = 'UNDER_INSPECTION',
+  IN_COURT = 'IN_COURT',
+  REWARD_PAYMENT = 'REWARD_PAYMENT',
+  COMPLETED = 'COMPLETED',
+  REJECTED = 'REJECTED',
 }
 
 export enum InquiryAction {
-  SEND_TO_COURT = 'SEND_TO_COURT', // Sudga yuborildi
-  REJECT = 'REJECT', // Rad etildi
-  REDIRECT = 'REDIRECT', // Boshqa tashkilotga yuborildi
-  COMPLETE = 'COMPLETE', // Yakunlandi
+  SEND_TO_COURT = 'SEND_TO_COURT',
+  REJECT = 'REJECT',
+  REDIRECT = 'REDIRECT',
+  COMPLETE = 'COMPLETE',
 }
 
 export enum InquiryResult {
-  REWARD_PAID = 'REWARD_PAID', // Pul mukofoti to‘landi
-  REWARD_NOT_PAID = 'REWARD_NOT_PAID', // Pul mukofoti to‘lanmadi
-  REJECTED_BY_COURT = 'REJECTED_BY_COURT', // Sud tomonidan rad etildi
-  REJECTED_BY_INSPECTOR = 'REJECTED_BY_INSPECTOR', // Inspector tomonidan rad etildi
-  REDIRECTED = 'REDIRECTED', // Boshqa tashkilotga yuborildi
-  COMPLETED_BY_INSPECTOR = 'COMPLETED_BY_INSPECTOR', // Inspektor tomonidan yakunlandi
+  REWARD_PAID = 'REWARD_PAID',
+  REWARD_NOT_PAID = 'REWARD_NOT_PAID',
+  REJECTED_BY_COURT = 'REJECTED_BY_COURT',
+  REJECTED_BY_INSPECTOR = 'REJECTED_BY_INSPECTOR',
+  REDIRECTED = 'REDIRECTED',
+  COMPLETED_BY_INSPECTOR = 'COMPLETED_BY_INSPECTOR',
 }
 
-export const inquiryStatusLabels: Record<InquiryStatus | string, string> = {
+export const inquiryStatusLabels: Record<InquiryStatus, string> = {
   [InquiryStatus.NEW]: 'Yangi',
   [InquiryStatus.IN_PROCESS]: 'Ko‘rib chiqilmoqda',
   [InquiryStatus.UNDER_INSPECTION]: 'Tekshiruv jarayonida',
@@ -84,7 +86,7 @@ export const inquiryStatusLabels: Record<InquiryStatus | string, string> = {
   [InquiryStatus.REJECTED]: 'Rad etilgan',
 }
 
-export const inquiryStatusBadgeVariants: Record<InquiryStatus | string, string> = {
+export const inquiryStatusBadgeVariants: Record<InquiryStatus, string> = {
   [InquiryStatus.NEW]: 'bg-blue-100 text-blue-800 hover:bg-blue-100',
   [InquiryStatus.IN_PROCESS]: 'bg-amber-100 text-amber-800 hover:bg-amber-100',
   [InquiryStatus.UNDER_INSPECTION]: 'bg-teal-100 text-teal-800 hover:bg-teal-100',
@@ -94,14 +96,14 @@ export const inquiryStatusBadgeVariants: Record<InquiryStatus | string, string> 
   [InquiryStatus.REJECTED]: 'bg-red-100 text-red-800 hover:bg-red-100',
 }
 
-export const inquiryActionLabels: Record<InquiryAction | string, string> = {
+export const inquiryActionLabels: Record<InquiryAction, string> = {
   [InquiryAction.SEND_TO_COURT]: 'Sudga yuborish',
   [InquiryAction.REJECT]: 'Rad etish',
   [InquiryAction.REDIRECT]: 'Boshqa tashkilotga yuborish',
   [InquiryAction.COMPLETE]: 'Yakunlash',
 }
 
-export const inquiryResultLabels: Record<InquiryResult | string, string> = {
+export const inquiryResultLabels: Record<InquiryResult, string> = {
   [InquiryResult.REWARD_PAID]: 'Pul mukofoti to‘landi',
   [InquiryResult.REWARD_NOT_PAID]: 'Pul mukofoti to‘lanmadi',
   [InquiryResult.REJECTED_BY_COURT]: 'Sud tomonidan rad etildi',
@@ -110,10 +112,18 @@ export const inquiryResultLabels: Record<InquiryResult | string, string> = {
   [InquiryResult.COMPLETED_BY_INSPECTOR]: 'Inspektor tomonidan yakunlandi',
 }
 
-export const inquiryBelongTypeLabels: Record<string, string> = {
+export const inquiryBelongTypeLabels: Record<InquiryBelongType, string> = {
   [InquiryBelongType.HF]: 'XICHO',
   [InquiryBelongType.EQUIPMENT]: 'Qurilmalar',
   [InquiryBelongType.IRS]: 'INM',
   [InquiryBelongType.XRAY]: 'Rentgen',
   [InquiryBelongType.OTHER]: 'Boshqalar',
+}
+
+/** Where each kind of object lives in the registry; OTHER has none */
+export const inquiryRegistryPath: Partial<Record<InquiryBelongType, string>> = {
+  [InquiryBelongType.HF]: 'hf',
+  [InquiryBelongType.EQUIPMENT]: 'equipments',
+  [InquiryBelongType.IRS]: 'irs',
+  [InquiryBelongType.XRAY]: 'xrays',
 }

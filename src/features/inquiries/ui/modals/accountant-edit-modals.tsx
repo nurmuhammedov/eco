@@ -40,22 +40,20 @@ export const RecoveredAmountModal = ({
   fineAmount,
 }: {
   inquiryId: string
-  defaultValue?: number
-  fineAmount?: number
+  defaultValue?: number | null
+  fineAmount?: number | null
 }) => {
   const [open, setOpen] = useState(false)
-  const { mutateAsync, isPending } = useAccountantRecoveredAmount()
+  const { mutate, isPending } = useAccountantRecoveredAmount()
 
-  const schema = getRecoveredSchema(fineAmount)
+  const schema = getRecoveredSchema(fineAmount ?? undefined)
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: { recoveredAmount: defaultValue || undefined },
   })
 
-  const onSubmit = async (values: z.infer<ReturnType<typeof getRecoveredSchema>>) => {
-    await mutateAsync({ id: inquiryId, data: { recoveredAmount: values.recoveredAmount } })
-    setOpen(false)
-  }
+  const onSubmit = (values: z.infer<ReturnType<typeof getRecoveredSchema>>) =>
+    mutate({ id: inquiryId, data: { recoveredAmount: values.recoveredAmount } }, { onSuccess: () => setOpen(false) })
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -121,14 +119,14 @@ export const PaidRewardModal = ({
   rewardAmount,
 }: {
   inquiryId: string
-  defaultValue?: number
-  defaultFile?: string
-  rewardAmount?: number
+  defaultValue?: number | null
+  defaultFile?: string | null
+  rewardAmount?: number | null
 }) => {
   const [open, setOpen] = useState(false)
-  const { mutateAsync, isPending } = useAccountantPaidReward()
+  const { mutate, isPending } = useAccountantPaidReward()
 
-  const schema = getPaidRewardSchema(rewardAmount)
+  const schema = getPaidRewardSchema(rewardAmount ?? undefined)
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -137,13 +135,14 @@ export const PaidRewardModal = ({
     },
   })
 
-  const onSubmit = async (values: z.infer<ReturnType<typeof getPaidRewardSchema>>) => {
-    await mutateAsync({
-      id: inquiryId,
-      data: { paidRewardAmount: values.paidRewardAmount, paymentExecutionFilePath: values.paymentExecutionFilePath },
-    })
-    setOpen(false)
-  }
+  const onSubmit = (values: z.infer<ReturnType<typeof getPaidRewardSchema>>) =>
+    mutate(
+      {
+        id: inquiryId,
+        data: { paidRewardAmount: values.paidRewardAmount, paymentExecutionFilePath: values.paymentExecutionFilePath },
+      },
+      { onSuccess: () => setOpen(false) }
+    )
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -203,19 +202,17 @@ const mibStatusSchema = z.object({
   isMib: z.boolean(),
 })
 
-export const MibStatusModal = ({ inquiryId, defaultValue }: { inquiryId: string; defaultValue?: boolean }) => {
+export const MibStatusModal = ({ inquiryId, defaultValue }: { inquiryId: string; defaultValue?: boolean | null }) => {
   const [open, setOpen] = useState(false)
-  const { mutateAsync, isPending } = useAccountantMibStatus()
+  const { mutate, isPending } = useAccountantMibStatus()
 
   const form = useForm<z.infer<typeof mibStatusSchema>>({
     resolver: zodResolver(mibStatusSchema),
-    defaultValues: { isMib: defaultValue !== undefined ? defaultValue : undefined },
+    defaultValues: { isMib: defaultValue ?? undefined },
   })
 
-  const onSubmit = async (values: z.infer<typeof mibStatusSchema>) => {
-    await mutateAsync({ id: inquiryId, data: { isMib: values.isMib } })
-    setOpen(false)
-  }
+  const onSubmit = (values: z.infer<typeof mibStatusSchema>) =>
+    mutate({ id: inquiryId, data: { isMib: values.isMib } }, { onSuccess: () => setOpen(false) })
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

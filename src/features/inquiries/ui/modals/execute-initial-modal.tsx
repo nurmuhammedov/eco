@@ -20,6 +20,7 @@ import { Input } from '@/shared/components/ui/input'
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 import { useExecuteInitial } from '@/features/inquiries/hooks/use-inquiry-mutations'
 import {
+  appealTypeTranslations,
   InquiryAction,
   inquiryActionLabels,
   InquiryBelongType,
@@ -31,17 +32,32 @@ import { ApplicationModal } from '@/features/application/create-application'
 import { useEimzo } from '@/shared/hooks/use-eimzo'
 import { apiClient } from '@/shared/api/api-client'
 import { useQuery } from '@tanstack/react-query'
+import { endpointKey } from '@/shared/lib/query/endpoint-key'
+import type { ApiResponse } from '@/shared/types/api'
+import type { OptionItem } from '@/shared/types/general'
+import type { InquiryType } from '@/features/inquiries/model/types'
+
+/** The registry objects a violation report can be tied to: OTHER has nothing to pick */
+const BELONG_TYPES = [
+  InquiryBelongType.HF,
+  InquiryBelongType.EQUIPMENT,
+  InquiryBelongType.IRS,
+  InquiryBelongType.XRAY,
+] as const
+
+type BelongType = (typeof BELONG_TYPES)[number]
+
+/** Only a violation report goes to court, and this form ties one to its object instead */
+const EXECUTION_ACTIONS = Object.values(InquiryAction).filter((action) => action !== InquiryAction.SEND_TO_COURT)
 
 const schema = z
   .object({
     type: z.enum(['APPEAL', 'VIOLATION_REPORT', 'SUGGESTION']).optional(),
-    action: z
-      .enum([InquiryAction.SEND_TO_COURT, InquiryAction.REJECT, InquiryAction.REDIRECT, InquiryAction.COMPLETE])
-      .optional(),
+    action: z.nativeEnum(InquiryAction).optional(),
     initialExecutionFilePath: z.string().optional(),
     message: z.string().optional(),
     tin: z.string().optional(),
-    belongType: z.enum(['HF', 'EQUIPMENT', 'IRS', 'XRAY']).optional(),
+    belongType: z.enum(BELONG_TYPES).optional(),
     belongId: z.string().optional(),
   })
   .superRefine((data, ctx) => {
@@ -63,50 +79,43 @@ const schema = z
     }
   })
 
-const useFetchBelongs = (type: string | undefined, tin: string | undefined, enabled: boolean) => {
+const BELONG_SELECT_ENDPOINTS: Record<BelongType, string> = {
+  [InquiryBelongType.HF]: '/hf/by-tin/select',
+  [InquiryBelongType.IRS]: '/irs/by-tin/select',
+  [InquiryBelongType.XRAY]: '/xrays/by-tin/select',
+  [InquiryBelongType.EQUIPMENT]: '/equipments/by-tin/select',
+}
+
+/** A registry object as its select list names it */
+type BelongOption = OptionItem<string> & { brandName?: string | null; model?: string | null }
+
+const useFetchBelongs = (type: BelongType | undefined, tin: string, enabled: boolean) => {
+  const endpoint = type ? BELONG_SELECT_ENDPOINTS[type] : ''
   return useQuery({
-    queryKey: ['belongs', type, tin],
+    queryKey: endpointKey(endpoint, { legalTin: tin }),
     queryFn: async () => {
-      if (!tin || !type) return []
-      let url = ''
-      switch (type) {
-        case 'HF':
-          url = `/hf/by-tin/select?legalTin=${tin}`
-          break
-        case 'IRS':
-          url = `/irs/by-tin/select?legalTin=${tin}`
-          break
-        case 'XRAY':
-          url = `/xrays/by-tin/select?legalTin=${tin}`
-          break
-        case 'EQUIPMENT':
-          url = `/equipments/by-tin/select?legalTin=${tin}`
-          break
-        default:
-          return []
-      }
-      const { data } = await apiClient.get<any>(url)
-      return data?.data || []
+      const { data } = await apiClient.get<ApiResponse<BelongOption[]>>(endpoint, { legalTin: tin })
+      return data.data ?? []
     },
-    enabled: enabled && !!tin && !!type && (tin.length === 9 || tin.length === 14),
+    enabled: enabled && !!type && (tin.length === 9 || tin.length === 14),
   })
 }
 
 interface Props {
-  inquiryType?: string
+  inquiryType?: InquiryType | null
 }
 
 const ExecuteInitialModal = ({ inquiryType }: Props) => {
   const { id } = useParams()
   const [isShow, setIsShow] = useState(false)
-  const { mutateAsync, isPending } = useExecuteInitial()
+  const { mutate, isPending } = useExecuteInitial()
 
   const [searchTin, setSearchTin] = useState('')
 
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: {
-      type: inquiryType as any,
+      type: inquiryType ?? undefined,
       tin: '',
     },
   })
@@ -118,7 +127,7 @@ const ExecuteInitialModal = ({ inquiryType }: Props) => {
   const { data: belongOptions, isLoading: isBelongsLoading } = useFetchBelongs(belongTypeValue, searchTin, isShow)
 
   useEffect(() => {
-    form.setValue('belongId', undefined as any, { shouldValidate: typeValue === 'VIOLATION_REPORT' })
+    form.resetField('belongId')
     setSearchTin('')
   }, [tinValue, belongTypeValue, form, typeValue])
 
@@ -152,18 +161,23 @@ const ExecuteInitialModal = ({ inquiryType }: Props) => {
     if (typeValue === 'VIOLATION_REPORT') {
       handleCreateApplication({ belongType: data.belongType, belongId: data.belongId })
     } else {
-      mutateAsync({
-        id,
-        data: {
-          type: data.type,
-          action: data.action,
-          initialExecutionFilePath: data.initialExecutionFilePath,
-          message: data.message,
+      mutate(
+        {
+          id,
+          data: {
+            type: data.type,
+            action: data.action,
+            initialExecutionFilePath: data.initialExecutionFilePath,
+            message: data.message,
+          },
         },
-      }).then(() => {
-        setIsShow(false)
-        form.reset()
-      })
+        {
+          onSuccess: () => {
+            setIsShow(false)
+            form.reset()
+          },
+        }
+      )
     }
   }
 
@@ -190,9 +204,9 @@ const ExecuteInitialModal = ({ inquiryType }: Props) => {
                     <Select
                       onValueChange={(val) => {
                         field.onChange(val)
-                        form.setValue('action', undefined as any, { shouldValidate: true })
+                        form.resetField('action')
                       }}
-                      value={field.value || inquiryType}
+                      value={field.value ?? inquiryType ?? undefined}
                     >
                       <FormControl>
                         <SelectTrigger>
@@ -200,9 +214,11 @@ const ExecuteInitialModal = ({ inquiryType }: Props) => {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="APPEAL">Murojaat</SelectItem>
-                        <SelectItem value="VIOLATION_REPORT">Huquqbuzarliik xabari</SelectItem>
-                        <SelectItem value="SUGGESTION">Taklif</SelectItem>
+                        {Object.entries(appealTypeTranslations).map(([type, label]) => (
+                          <SelectItem key={type} value={type}>
+                            {label}
+                          </SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -225,9 +241,9 @@ const ExecuteInitialModal = ({ inquiryType }: Props) => {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            {Object.values(InquiryBelongType).map((bt) => (
-                              <SelectItem key={bt} value={bt}>
-                                {inquiryBelongTypeLabels[bt] || bt}
+                            {BELONG_TYPES.map((belongType) => (
+                              <SelectItem key={belongType} value={belongType}>
+                                {inquiryBelongTypeLabels[belongType]}
                               </SelectItem>
                             ))}
                           </SelectContent>
@@ -273,7 +289,7 @@ const ExecuteInitialModal = ({ inquiryType }: Props) => {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            {belongOptions?.map((item: any) => (
+                            {belongOptions?.map((item) => (
                               <SelectItem key={item.id} value={item.id}>
                                 {item.name || item.brandName || item.model || item.id}
                               </SelectItem>
@@ -305,18 +321,11 @@ const ExecuteInitialModal = ({ inquiryType }: Props) => {
                           </FormControl>
 
                           <SelectContent>
-                            {Object.values(InquiryAction)
-                              .filter((action) => {
-                                if (typeValue !== 'VIOLATION_REPORT' && action === InquiryAction.SEND_TO_COURT) {
-                                  return false
-                                }
-                                return true
-                              })
-                              .map((action) => (
-                                <SelectItem key={action} value={action}>
-                                  {inquiryActionLabels[action] || action}
-                                </SelectItem>
-                              ))}
+                            {EXECUTION_ACTIONS.map((action) => (
+                              <SelectItem key={action} value={action}>
+                                {inquiryActionLabels[action]}
+                              </SelectItem>
+                            ))}
                           </SelectContent>
                         </Select>
                         <FormMessage />
@@ -325,11 +334,7 @@ const ExecuteInitialModal = ({ inquiryType }: Props) => {
                   />
 
                   <div className="space-y-1">
-                    <FormLabel required>
-                      {form.watch('action') === InquiryAction.SEND_TO_COURT
-                        ? 'Sudga tayyorlangan hujjat'
-                        : 'Asos hujjat'}
-                    </FormLabel>
+                    <FormLabel required>Asos hujjat</FormLabel>
                     <InputFile
                       name="initialExecutionFilePath"
                       form={form}

@@ -31,22 +31,24 @@ interface ChangeRegionModalProps {
 
 export const ChangeRegionModal = ({ inquiryId, currentRegionId }: ChangeRegionModalProps) => {
   const [open, setOpen] = useState(false)
-  const { mutateAsync, isPending } = useChangeInquiryRegion()
+  const { mutate, isPending } = useChangeInquiryRegion()
   const { data: regions } = useRegionSelectQuery()
 
   const form = useForm<z.infer<typeof schema>>({ resolver: zodResolver(schema) })
 
   // Sending it back to where it already is would be a no-op the user cannot see.
-  const options = getSelectOptions(
-    (Array.isArray(regions) ? regions : []).filter((region) => Number(region?.id) !== Number(currentRegionId))
-  )
+  const options = getSelectOptions((regions ?? []).filter((region) => region.id !== currentRegionId))
 
-  const onSubmit = async (values: z.infer<typeof schema>) => {
-    await mutateAsync({ id: inquiryId, data: { regionId: Number(values.regionId) } })
-
-    setOpen(false)
-    form.reset()
-  }
+  const onSubmit = (values: z.infer<typeof schema>) =>
+    mutate(
+      { id: inquiryId, data: { regionId: Number(values.regionId) } },
+      {
+        onSuccess: () => {
+          setOpen(false)
+          form.reset()
+        },
+      }
+    )
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

@@ -8,7 +8,6 @@ import { Loader2 } from 'lucide-react'
 import { GoBack } from '@/shared/components/common'
 import { CardForm } from '@/entities/create-application'
 import useAdd from '@/shared/hooks/api/use-add'
-import useData from '@/shared/hooks/api/use-data'
 import { InputFile } from '@/shared/components/common/file-upload/ui/file-upload'
 import { FileTypes } from '@/shared/components/common/file-upload/model/file-types'
 import { PhoneInput } from '@/shared/components/ui/phone-input'
@@ -21,6 +20,10 @@ import YandexMapModal from '@/shared/components/common/yandex-map-modal/ui/yande
 import { USER_PATTERNS } from '@/shared/constants/custom-patterns'
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
+import { useRegionSelectQuery } from '@/shared/api/dictionaries'
+import { format } from 'date-fns'
+import { appealTypeTranslations, InquiryBelongType } from '@/features/inquiries/model/types'
+import type { InquiryPayload } from '@/features/inquiries/model/inquiry.types'
 
 const formSchema = z.object({
   type: z.enum(['APPEAL', 'VIOLATION_REPORT', 'SUGGESTION']),
@@ -45,14 +48,16 @@ const InquiryAddPage = () => {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const [searchParams] = useSearchParams()
-  const belongId = searchParams.get('belongId')
-  const belongType = searchParams.get('belongType')
+  const belongId = searchParams.get('belongId') || undefined
+  const belongTypeParam = searchParams.get('belongType')
+  const belongType = Object.values(InquiryBelongType).find((type) => type === belongTypeParam)
 
-  const { mutate: submitAppeal, isPending: isSubmitting } = useAdd<any, any, any>(
+  // The answer carries the new inquiry's number in its message
+  const { mutate: submitAppeal, isPending: isSubmitting } = useAdd<InquiryPayload, { message?: string }>(
     '/public/inquiries',
     'Murojaatingiz muvaffaqiyatli qabul qilindi'
   )
-  const { data: regions } = useData<any>('/regions/select')
+  const { data: regions } = useRegionSelectQuery()
 
   const [success, setSuccess] = useState(false)
   const [registryNumber, setRegistryNumber] = useState<string>('')
@@ -63,26 +68,27 @@ const InquiryAddPage = () => {
   })
 
   const onSubmit = (values: SimpleFormValues) => {
-    const payload = {
+    const payload: InquiryPayload = {
       type: values.type,
-      phoneNumber: values.phoneNumber || null,
+      phoneNumber: values.phoneNumber || undefined,
       message: values.message,
       location: values.location,
-      occurredAt: values.occurredAt.toISOString(),
+      // A LocalDateTime: the wall-clock time the person picked, not UTC
+      occurredAt: format(values.occurredAt, "yyyy-MM-dd'T'HH:mm:ss"),
       regionId: values.regionId,
-      belongId: belongId && belongId !== 'null' ? belongId : undefined,
-      belongType: belongType && belongType !== 'null' ? belongType : undefined,
+      belongId: belongId !== 'null' ? belongId : undefined,
+      belongType,
       filePathList: values.filePathList,
     }
 
     submitAppeal(payload, {
-      onSuccess: (res: any) => {
+      onSuccess: (response) => {
         setSuccess(true)
-        setRegistryNumber(res?.message || res?.data?.message || '')
+        setRegistryNumber(response?.message || '')
         // useAdd only raises a toast. Without this the list stays on its cached
         // page for the whole freshness window, so the inquiry just submitted is
         // missing from "Mening murojaatlarim".
-        invalidateEndpoint(queryClient, '/inquiries')
+        void invalidateEndpoint(queryClient, '/inquiries')
       },
     })
   }
@@ -137,9 +143,11 @@ const InquiryAddPage = () => {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="APPEAL">Murojaat</SelectItem>
-                      <SelectItem value="VIOLATION_REPORT">Huquqbuzarliik xabari</SelectItem>
-                      <SelectItem value="SUGGESTION">Taklif</SelectItem>
+                      {Object.entries(appealTypeTranslations).map(([type, label]) => (
+                        <SelectItem key={type} value={type}>
+                          {label}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -162,9 +170,9 @@ const InquiryAddPage = () => {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {regions?.map((r: any) => (
-                        <SelectItem key={r.id} value={r.id.toString()}>
-                          {r.name}
+                      {regions?.map((region) => (
+                        <SelectItem key={region.id} value={region.id.toString()}>
+                          {region.name}
                         </SelectItem>
                       ))}
                     </SelectContent>

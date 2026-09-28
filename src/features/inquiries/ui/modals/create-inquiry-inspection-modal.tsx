@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -29,22 +29,20 @@ import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 import { ApplicationModal } from '@/features/application/create-application'
 import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 
-export const CreateInquiryInspectionModal = ({ inquiry }: { inquiry: any }) => {
+const schema = z.object({
+  startDate: z.date({ message: FORM_ERROR_MESSAGES.required }),
+  endDate: z.date({ message: FORM_ERROR_MESSAGES.required }),
+  inspectorIdList: z.array(z.string()).min(1, FORM_ERROR_MESSAGES.required),
+  checklistCategoryIdList: z.array(z.number()).min(1, FORM_ERROR_MESSAGES.required),
+  programPath: z.string({ message: FORM_ERROR_MESSAGES.required }).min(1, FORM_ERROR_MESSAGES.required),
+})
+
+type FormValues = z.infer<typeof schema>
+
+export const CreateInquiryInspectionModal = ({ inquiryId }: { inquiryId: string }) => {
   const { t } = useTranslation()
   const [isOpen, setIsOpen] = useState(false)
   const queryClient = useQueryClient()
-
-  const schema = useMemo(() => {
-    return z.object({
-      startDate: z.date({ message: FORM_ERROR_MESSAGES.required }),
-      endDate: z.date({ message: FORM_ERROR_MESSAGES.required }),
-      inspectorIdList: z.array(z.string()).min(1, FORM_ERROR_MESSAGES.required),
-      checklistCategoryIdList: z.array(z.number()).min(1, FORM_ERROR_MESSAGES.required),
-      programPath: z.string({ message: FORM_ERROR_MESSAGES.required }).min(1, FORM_ERROR_MESSAGES.required),
-    })
-  }, [])
-
-  type FormValues = z.infer<typeof schema>
 
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
@@ -68,14 +66,13 @@ export const CreateInquiryInspectionModal = ({ inquiry }: { inquiry: any }) => {
     handleCreateApplication,
     submitApplicationMetaData,
   } = useEimzo({
-    pdfEndpoint: `/inquiries/${inquiry?.id}/inspection/generate-pdf`,
-    submitEndpoint: `/inquiries/${inquiry?.id}/inspection`,
+    pdfEndpoint: `/inquiries/${inquiryId}/inspection/generate-pdf`,
+    submitEndpoint: `/inquiries/${inquiryId}/inspection`,
     invalidates: '/inquiries',
     successMessage: t('success_saved'),
     onEnd: () => {
       setIsOpen(false)
-      invalidateEndpoint(queryClient, '/inquiries')
-      invalidateEndpoint(queryClient, '/inspections/by-inquiry')
+      void invalidateEndpoint(queryClient, '/inspections/by-inquiry')
     },
   })
 
@@ -168,7 +165,7 @@ export const CreateInquiryInspectionModal = ({ inquiry }: { inquiry: any }) => {
                     <FormLabel required>Kategoriya tanlang</FormLabel>
                     <FormControl>
                       <MultiSelect
-                        options={(categoryOptions || []).map((c: any) => ({ id: c.id, name: c.name }))}
+                        options={categoryOptions ?? []}
                         value={field.value}
                         onChange={field.onChange}
                         placeholder={t('select')}
