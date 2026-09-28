@@ -9,9 +9,10 @@ import { regionsAPI } from '../queries/regions.api'
  * used to be cached twice under two hand-written keys, and invalidating one
  * left the other showing last week's data.
  */
-export const useRegionSelectQuery = () =>
+export const useRegionSelectQuery = (enabled: boolean = true) =>
   useQuery({
     staleTime: DICTIONARY_STALE_TIME,
     queryKey: endpointKey(API_ENDPOINTS.REGIONS_SELECT),
     queryFn: () => regionsAPI.list(),
+    enabled,
   })

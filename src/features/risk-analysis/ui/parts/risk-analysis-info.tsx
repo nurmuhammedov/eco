@@ -1,61 +1,36 @@
 import { Tabs } from '@/shared/components/ui/tabs'
-import { FC, useEffect, useState } from 'react'
+import { FC, useState } from 'react'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { UserRoles } from '@/shared/types/user'
 import RiskAnalysisInspectorInfo from '@/features/risk-analysis/ui/parts/risk-analysis-inspector-info'
 import { Badge } from '@/shared/components/ui/badge'
 import { RiskAnalysisData } from '../risk-analysis'
-import { apiClient } from '@/shared/api/api-client'
 import RiskAnalysisForm from '@/features/risk-analysis/ui/parts/risk-analysis-form'
+import useDetail from '@/shared/hooks/api/use-detail'
+import FormSkeleton from '@/shared/components/common/form-skeleton/ui'
 
 interface RiskAnalysisIndicatorProps {
-  belongId: any
+  riskAnalysisId?: string
 }
 
-const RiskAnalysisIndicator: FC<RiskAnalysisIndicatorProps> = ({ belongId }) => {
+const RiskAnalysisIndicator: FC<RiskAnalysisIndicatorProps> = ({ riskAnalysisId }) => {
   const { user } = useAuth()
   const isInspector = user?.role === UserRoles.INSPECTOR
-  const defaultTab = isInspector ? 'analysis_indicators' : 'inspector_info'
-  const [activeTab, setActiveTab] = useState(defaultTab)
+  const [activeTab, setActiveTab] = useState(isInspector ? 'analysis_indicators' : 'inspector_info')
 
-  const [analysisData, setAnalysisData] = useState<RiskAnalysisData | null>(null)
-  const [isAnalysisLoading, setAnalysisLoading] = useState<boolean>(true)
-  const [analysisError, setAnalysisError] = useState<string | null>(null)
-
-  useEffect(() => {
-    if (!belongId) {
-      setAnalysisLoading(false)
-      setAnalysisError('Kerakli parametrlar (belongId yoki intervalId) mavjud emas.')
-      return
-    }
-
-    const fetchData = async () => {
-      setAnalysisLoading(true)
-      try {
-        const url = `/risk-analyses/${belongId}`
-        const response = await apiClient.get<{ data: RiskAnalysisData }>(url)
-        setAnalysisData(response.data.data)
-      } finally {
-        setAnalysisLoading(false)
-      }
-    }
-
-    void fetchData()
-  }, [belongId])
+  const { data: analysisData, isLoading } = useDetail<RiskAnalysisData>('/risk-analyses', riskAnalysisId)
 
   const totalScore = analysisData?.totalScore || 0
 
-  if (isAnalysisLoading) {
-    return <div>Yuklanmoqda...</div>
+  if (isLoading) {
+    return (
+      <div className="flex flex-col gap-4 py-2">
+        <FormSkeleton length={4} />
+      </div>
+    )
   }
 
-  if (analysisError) {
-    return <div>{analysisError || 'Ma’lumotlarni yuklashda xatolik.'}</div>
-  }
-
-  if (!analysisData) {
-    return null
-  }
+  if (!analysisData) return null
 
   return (
     <Tabs value={activeTab} onValueChange={setActiveTab}>

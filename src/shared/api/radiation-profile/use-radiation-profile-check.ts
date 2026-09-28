@@ -3,11 +3,12 @@ import { apiClient } from '@/shared/api/api-client'
 import type { ApiResponse, FileDto } from '@/shared/types'
 
 /** RadiationProfileResById: the files an organisation keeps for one kind of radiation device */
+/** RadiationProfileResById */
 export interface RadiationProfile {
   id: string
-  legalTin: number
-  isActive: boolean
-  files: Record<string, FileDto>
+  legalTin: number | null
+  isActive: boolean | null
+  files: Record<string, FileDto> | null
 }
 
 /** The organisation's profile, or null when it has none */

@@ -1,4 +1,5 @@
-import { RiskAnalysisItem } from '@/entities/risk-analysis/model/risk-analysis.types'
+import type { RiskAnalysisItem } from '@/entities/risk-analysis/model/risk-analysis.types'
+import type { ResponseData } from '@/shared/types/api'
 import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table'
 import { useCustomSearchParams } from '@/shared/hooks'
 import { RiskAnalysisTab } from '@/entities/risk-analysis/model/risk-analysis-tabs'
@@ -8,22 +9,26 @@ import { useNavigate } from 'react-router-dom'
 import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
 
 interface Props {
-  data?: any
+  data?: ResponseData<RiskAnalysisItem>
   isLoading?: boolean
 }
 
-const List: FC<Props> = ({ data = [], isLoading = false }) => {
+const List: FC<Props> = ({ data, isLoading = false }) => {
   const navigate = useNavigate()
   const { paramsObject } = useCustomSearchParams()
   const { t } = useTranslation('common')
   const type = paramsObject.mainTab || RiskAnalysisTab.HF
   const handleView = (row: RiskAnalysisItem) => {
-    navigate(
-      `/risk-analysis/detail?tin=${row.legalTin}&id=${row.belongId}&type=${type}&name=${row.legalName || row.name || ''}`
-    )
+    const query = new URLSearchParams({
+      tin: row.legalTin?.toString() ?? '',
+      id: row.belongId,
+      type: String(type),
+      name: row.legalName || row.name || '',
+    })
+    navigate(`/risk-analysis/detail?${query}`)
   }
 
-  const columns: ExtendedColumnDef<RiskAnalysisItem, any>[] = [
+  const columns: ExtendedColumnDef<RiskAnalysisItem, unknown>[] = [
     ...(type === RiskAnalysisTab.INM || type === RiskAnalysisTab.XRAY
       ? []
       : [
@@ -68,7 +73,7 @@ const List: FC<Props> = ({ data = [], isLoading = false }) => {
     {
       header: t('Ballar'),
       accessorKey: 'score',
-      cell: ({ row }: any) => row.original?.score ?? 'Yo‘q',
+      cell: ({ row }) => row.original.score ?? 'Yo‘q',
       filterKey: 'score',
       className: '!w-[1%]',
 
@@ -76,7 +81,7 @@ const List: FC<Props> = ({ data = [], isLoading = false }) => {
     },
     {
       id: 'actions',
-      cell: ({ row }: any) => <DataTableRowActions showView onView={() => handleView(row.original)} row={row} />,
+      cell: ({ row }) => <DataTableRowActions showView onView={() => handleView(row.original)} row={row} />,
     },
   ]
 
@@ -85,7 +90,7 @@ const List: FC<Props> = ({ data = [], isLoading = false }) => {
       paginationClassName="!pb-2"
       showFilters={true}
       isPaginated
-      data={data || []}
+      data={data ?? []}
       columns={columns}
       isLoading={isLoading}
     />

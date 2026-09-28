@@ -15,9 +15,9 @@ const RiskAnalysisInfoById = () => {
       <div className="mb-4 flex items-center justify-between">
         <GoBack title={`Tashkilot: ${name || ''} ${tin ? `(${tin})` : ''}`} />
       </div>
-      <DetailCardAccordion defaultValue={['risk_anlalysis_info']}>
-        <DetailCardAccordion.Item value="risk_anlalysis_info" title="Xavfni tahlil qilish bo‘yicha ma’lumotlar">
-          <RiskAnalysisIndicator belongId={id} />
+      <DetailCardAccordion defaultValue={['risk_analysis_info']}>
+        <DetailCardAccordion.Item value="risk_analysis_info" title="Xavfni tahlil qilish bo‘yicha ma’lumotlar">
+          <RiskAnalysisIndicator riskAnalysisId={id} />
         </DetailCardAccordion.Item>
       </DetailCardAccordion>
     </>

@@ -8,7 +8,11 @@ import { useData } from '@/shared/hooks/api'
 import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks'
 import { UserRoles } from '@/shared/types/user'
 import { useAuth } from '@/shared/hooks/use-auth'
-import { RiskAnalysisItem } from '@/entities/risk-analysis/model/risk-analysis.types'
+import type {
+  RiskAnalysisItem,
+  RiskLevelCount,
+  RiskRegionCount,
+} from '@/entities/risk-analysis/model/risk-analysis.types'
 import { RiskStatisticsCards } from '@/entities/risk-analysis/ui/risk-statistics-cards'
 import { cn } from '@/shared/lib/utils'
 import { TabsLayout } from '@/shared/layouts'
@@ -18,17 +22,7 @@ import { Loader2 } from 'lucide-react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { apiClient } from '@/shared/api/api-client'
 import { toast } from 'sonner'
-interface RiskCountResponse {
-  lowCount: number
-  mediumCount: number
-  highCount: number
-}
-
-interface RegionCountDto {
-  regionId: number
-  count: number
-  region: string
-}
+import { useRegionSelectQuery } from '@/shared/api/dictionaries'
 
 const TAB_TO_API_TYPE: Record<string, string> = {
   [RiskAnalysisTab.HF]: 'HF',
@@ -57,18 +51,10 @@ const RiskAnalysisWidget = ({ periodType }: RiskAnalysisWidgetProps) => {
   const { data: switchData } = useData<boolean>('/risk-analysis-switch', isChairman && isDaily)
 
   const { mutate: runDaily, isPending: isRunningDaily } = useMutation({
-    mutationFn: async () => {
-      const response = await apiClient.post<any>('/risk-analyses/run-daily')
-      return response
-    },
-    onSuccess: (res: any) => {
-      const message = res?.message || res?.data?.message || 'Kunlik tahlil muvaffaqiyatli ishga tushirildi!'
-      toast.success(message, { richColors: true })
-      invalidateEndpoint(queryClient, '/risk-analysis-switch')
-    },
-    onError: (error: any) => {
-      const message = error?.response?.data?.message || error?.message || 'Xatolik yuz berdi'
-      toast.error(message, { richColors: true })
+    mutationFn: async () => (await apiClient.post<{ message?: string }>('/risk-analyses/run-daily')).data,
+    onSuccess: (response) => {
+      toast.success(response?.message || 'Kunlik tahlil muvaffaqiyatli ishga tushirildi!', { richColors: true })
+      void invalidateEndpoint(queryClient, '/risk-analysis-switch')
     },
   })
 
@@ -110,11 +96,11 @@ const RiskAnalysisWidget = ({ periodType }: RiskAnalysisWidgetProps) => {
   const month = paramText(monthParam, defaultMonth)
   const date = paramText(dateParam, defaultDate)
 
-  const isRestrictedRole = [UserRoles.INSPECTOR, UserRoles.REGIONAL].includes(user?.role as unknown as UserRoles)
+  const isRestrictedRole = user?.role === UserRoles.INSPECTOR || user?.role === UserRoles.REGIONAL
   const isSupervisorOrController = user?.isSupervisor || user?.isController
   const shouldShowRegions = !isRestrictedRole || isSupervisorOrController
 
-  const { data: regions = [] } = useData<{ id: number; name: string }[]>('/regions/select', shouldShowRegions)
+  const { data: regions = [] } = useRegionSelectQuery(shouldShowRegions)
 
   const activeRegion = shouldShowRegions
     ? regionId?.toString() || (regions.length > 0 ? regions[0].id.toString() : '')
@@ -154,24 +140,24 @@ const RiskAnalysisWidget = ({ periodType }: RiskAnalysisWidgetProps) => {
     date: periodType === 'DAILY' ? date : undefined,
   }
 
-  const { data: hfRiskCounts } = useData<RiskCountResponse>('/risk-analyses/count', true, {
+  const { data: hfRiskCounts } = useData<RiskLevelCount>('/risk-analyses/count', true, {
     type: 'HF',
     ...countsApiParams,
   })
-  const { data: irsRiskCounts } = useData<RiskCountResponse>('/risk-analyses/count', true, {
+  const { data: irsRiskCounts } = useData<RiskLevelCount>('/risk-analyses/count', true, {
     type: 'IRS',
     ...countsApiParams,
   })
-  const { data: xrayRiskCounts } = useData<RiskCountResponse>('/risk-analyses/count', true, {
+  const { data: xrayRiskCounts } = useData<RiskLevelCount>('/risk-analyses/count', true, {
     type: 'XRAY',
     ...countsApiParams,
   })
-  const { data: attractionRiskCounts } = useData<RiskCountResponse>('/risk-analyses/count', true, {
+  const { data: attractionRiskCounts } = useData<RiskLevelCount>('/risk-analyses/count', true, {
     type: 'ATTRACTION',
     ...countsApiParams,
   })
 
-  const getSum = (counts?: RiskCountResponse) =>
+  const getSum = (counts?: RiskLevelCount) =>
     (counts?.lowCount || 0) + (counts?.mediumCount || 0) + (counts?.highCount || 0)
 
   const hfTotalCount = getSum(hfRiskCounts)
@@ -179,7 +165,7 @@ const RiskAnalysisWidget = ({ periodType }: RiskAnalysisWidgetProps) => {
   const xrayTotalCount = getSum(xrayRiskCounts)
   const attractionTotalCount = getSum(attractionRiskCounts)
 
-  const { data: regionCounts = [] } = useData<RegionCountDto[]>('/risk-analyses/count/by-region', shouldShowRegions, {
+  const { data: regionCounts = [] } = useData<RiskRegionCount[]>('/risk-analyses/count/by-region', shouldShowRegions, {
     type: currentApiType,
     periodType,
     level: riskLevel == 'ALL' ? undefined : riskLevel,

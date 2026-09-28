@@ -81,7 +81,7 @@ const InspectionDetail = () => {
   const [openSections, setOpenSections] = useState<string[]>([
     'org_info',
     'belong_info',
-    'risk_anlalysis_info',
+    'risk_analysis_info',
     'inspection_info',
   ])
 
@@ -142,7 +142,7 @@ const InspectionDetail = () => {
             )}
           </DetailCardAccordion.Item>
         ) : (
-          <DetailCardAccordion.Item value="risk_anlalysis_info" title="Xavfni tahlil qilish bo‘yicha ma’lumotlar">
+          <DetailCardAccordion.Item value="risk_analysis_info" title="Xavfni tahlil qilish bo‘yicha ma’lumotlar">
             {canManageInspection && (
               <div className="flex justify-end py-2">
                 {inspectionData?.status === InspectionStatus.NEW && (

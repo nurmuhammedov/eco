@@ -3,35 +3,34 @@ import { endpointKey } from '@/shared/lib/query/endpoint-key'
 import { useSearchParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { riskAnalysisDetailApi } from '@/features/risk-analysis/model/risk-analysis-detail.api'
+import { toLabelledFiles } from '@/entities/application'
 
+/**
+ * The registry record behind a risk analysis. Radiation sources and X-rays
+ * are analysed per organisation, so for them the radiation profile is read
+ * instead and this stays idle.
+ */
 export const useObjectInfo = () => {
   const { t } = useTranslation()
   const [searchParams] = useSearchParams()
-  let currentType = searchParams.get('type') || ''
-  const currentId = searchParams.get('id') || ''
+  const type = searchParams.get('type') || ''
+  const id = searchParams.get('id') || ''
 
-  const isRadProfile = currentType === 'IRS' || currentType === 'XRAY'
-
-  if (currentType !== 'HF' && currentType !== 'IRS' && currentType !== 'XRAY') {
-    currentType = 'equipments'
-  }
+  const isRadProfile = type === 'IRS' || type === 'XRAY'
+  const isHf = type === 'HF'
+  const endpoint = isHf ? '/hf' : '/equipments'
 
   return useQuery({
-    queryKey: endpointKey(`/${currentType.toLowerCase()}`, currentId),
-    enabled: !!currentId && !isRadProfile,
-    queryFn: () => riskAnalysisDetailApi.getObjectInfo({ type: currentType?.toLowerCase(), id: currentId }),
+    queryKey: endpointKey(endpoint, id),
+    enabled: !!id && !isRadProfile,
+    queryFn: () => riskAnalysisDetailApi.getObjectInfo({ endpoint, id }),
     select: (data) => {
-      const fileNamePrefix = currentType !== 'equipments' ? currentType.toUpperCase() : data.type
-
-      const files = Object.entries(data?.files)
-        .filter(([label, value]) => label.includes('Path') && !!value)
-        .map((file) => {
-          const label = `labels.${fileNamePrefix}.${file[0]}`
-          return { label: t(label), data: file[1] }
-        })
+      const labelPrefix = isHf ? 'HF' : 'type' in data ? data.type : ''
       return {
         ...data,
-        files,
+        files: toLabelledFiles(data.files, (field) => t(`labels.${labelPrefix}.${field}`)).filter(
+          (file) => !!file.data
+        ),
       }
     },
   })
