@@ -8,6 +8,23 @@ import { cn } from '@/shared/lib/utils'
 import { useRegionSelectQuery } from '@/shared/api/dictionaries'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { isCountryTotal } from '../../lib/country-total'
+import type { ExtendedColumnDef } from '@/shared/components/common/data-table/model/column-def'
+
+/** ChecklistIssueByReport */
+interface SectionCounts {
+  allCount: number
+  acceptedCount: number
+  inProcessCount: number
+  expiredCount: number
+}
+
+type Section = 'hf' | 'irs' | 'elevator' | 'attraction' | 'xray' | 'lpgPowered'
+
+/** ReportByInspectionExecution */
+type RegionCounts = { regionName: string } & Record<Section, SectionCounts | null>
+
+/** The country total is put together here, so its sections may be missing */
+type Row = { regionName: string; isSummary?: boolean } & Partial<Record<Section, SectionCounts | null>>
 
 const MONTHS = [
   { value: 'JANUARY', label: 'Yanvar' },
@@ -47,7 +64,7 @@ const InspectionExecutionReport: React.FC = () => {
 
   const { data: regionsList } = useRegionSelectQuery()
 
-  const { data: rawData, isLoading } = useData<any[]>('/reports/inspection-execution', true, {
+  const { data: rawData, isLoading } = useData<RegionCounts[]>('/reports/inspection-execution', true, {
     year: Number(year),
     month,
   })
@@ -57,8 +74,8 @@ const InspectionExecutionReport: React.FC = () => {
     const regions = rawData.filter((r) => !isCountryTotal(r.regionName))
     const backendSummary = rawData.find((r) => isCountryTotal(r.regionName))
 
-    const summaryRow = {
-      ...(backendSummary || {}),
+    const summaryRow: Row = {
+      ...backendSummary,
       regionName: 'Respublika bo‘yicha',
       isSummary: true,
     }
@@ -73,25 +90,25 @@ const InspectionExecutionReport: React.FC = () => {
     return [summaryRow, ...filteredRegions]
   }, [rawData, regionName])
 
-  const createSectionColumns = (header: string, accessorPrefix: string) => ({
+  const createSectionColumns = (header: string, accessorPrefix: Section): ExtendedColumnDef<Row, number> => ({
     header,
     id: accessorPrefix,
     columns: [
       {
         header: 'Jami chora\u00A0tadbirlar',
         id: `${accessorPrefix}_allCount`,
-        accessorFn: (row: any) => row[accessorPrefix]?.allCount || 0,
+        accessorFn: (row) => row[accessorPrefix]?.allCount || 0,
         className: 'text-center text-slate-900',
-        cell: ({ row, getValue }: any) => {
+        cell: ({ row, getValue }) => {
           return <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
         },
       },
       {
         header: 'Yakunlanganlar',
         id: `${accessorPrefix}_acceptedCount`,
-        accessorFn: (row: any) => row[accessorPrefix]?.acceptedCount || 0,
+        accessorFn: (row) => row[accessorPrefix]?.acceptedCount || 0,
         className: 'text-center text-slate-700 font-medium',
-        cell: ({ row, getValue }: any) => {
+        cell: ({ row, getValue }) => {
           return (
             <span className={row.original.isSummary ? 'font-bold text-green-600' : 'text-green-600'}>{getValue()}</span>
           )
@@ -100,9 +117,9 @@ const InspectionExecutionReport: React.FC = () => {
       {
         header: 'Jarayondagilar',
         id: `${accessorPrefix}_inProcessCount`,
-        accessorFn: (row: any) => row[accessorPrefix]?.inProcessCount || 0,
+        accessorFn: (row) => row[accessorPrefix]?.inProcessCount || 0,
         className: 'text-center text-slate-700 font-medium',
-        cell: ({ row, getValue }: any) => {
+        cell: ({ row, getValue }) => {
           return (
             <span className={row.original.isSummary ? 'font-bold text-orange-500' : 'text-orange-500'}>
               {getValue()}
@@ -113,9 +130,9 @@ const InspectionExecutionReport: React.FC = () => {
       {
         header: 'Bajarilmaganlar',
         id: `${accessorPrefix}_expiredCount`,
-        accessorFn: (row: any) => row[accessorPrefix]?.expiredCount || 0,
+        accessorFn: (row) => row[accessorPrefix]?.expiredCount || 0,
         className: 'text-center text-slate-700 font-medium',
-        cell: ({ row, getValue }: any) => {
+        cell: ({ row, getValue }) => {
           return (
             <span className={row.original.isSummary ? 'font-bold text-red-500' : 'text-red-500'}>{getValue()}</span>
           )
@@ -124,14 +141,14 @@ const InspectionExecutionReport: React.FC = () => {
     ],
   })
 
-  const columns: any[] = [
+  const columns: ExtendedColumnDef<Row, number>[] = [
     {
       header: 'Hududlar',
       accessorKey: 'regionName',
       id: 'regionName',
       minSize: 200,
       className: 'sticky left-0 z-20 border-r shadow-[1px_0_0_0_rgba(0,0,0,0.1)]',
-      cell: ({ row }: any) => {
+      cell: ({ row }) => {
         const value = row.original.regionName
         return <span className={cn(row.original.isSummary ? 'font-bold' : '')}>{value}</span>
       },
@@ -183,7 +200,7 @@ const InspectionExecutionReport: React.FC = () => {
             <SelectContent>
               <SelectItem value="ALL">Barchasi</SelectItem>
               <SelectItem value="Respublika bo‘yicha">Respublika bo‘yicha</SelectItem>
-              {regionsList?.map((region: any) => (
+              {regionsList?.map((region) => (
                 <SelectItem key={region.id} value={region.name}>
                   {region.name}
                 </SelectItem>
@@ -195,7 +212,7 @@ const InspectionExecutionReport: React.FC = () => {
 
       <div className="flex-1 overflow-hidden rounded-md border bg-white shadow-sm">
         <DataTable
-          columns={columns as any}
+          columns={columns}
           data={tableData || []}
           isLoading={isLoading}
           isPaginated={false}

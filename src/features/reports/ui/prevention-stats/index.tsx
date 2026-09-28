@@ -6,6 +6,23 @@ import { GoBack } from '@/shared/components/common'
 import { cn } from '@/shared/lib/utils'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { isCountryTotal } from '../../lib/country-total'
+import type { ExtendedColumnDef } from '@/shared/components/common/data-table/model/column-def'
+
+/** PreventionByReport */
+interface SectionCounts {
+  allCount: number
+  unassignedCount: number
+  processCount: number
+  conductedCount: number
+}
+
+type Section = 'hf' | 'irs' | 'elevator' | 'attraction' | 'xray' | 'lpgPowered'
+
+/** ReportByPrevention */
+type RegionCounts = { regionName: string } & Record<Section, SectionCounts | null>
+
+/** The country total is put together here, so its sections may be missing */
+type Row = { regionName: string; isSummary?: boolean } & Partial<Record<Section, SectionCounts | null>>
 
 const MONTHS = [
   { value: 'JANUARY', label: 'Yanvar' },
@@ -53,20 +70,18 @@ const PreventionStatsReport: React.FC = () => {
   const year = String(paramsObject.year ?? currentYear)
   const month = String(paramsObject.month ?? currentMonth)
 
-  const { data: rawData, isLoading } = useData<any[]>('/reports/prevention', true, {
+  const { data: rawData, isLoading } = useData<RegionCounts[]>('/reports/prevention', true, {
     year: Number(year),
     month,
   })
 
   const tableData = useMemo(() => {
     if (!rawData) return []
-    const isSummaryItem = (r: any) => r.regionId === null || isCountryTotal(r.regionName)
+    const regions = rawData.filter((r) => !isCountryTotal(r.regionName))
+    const backendSummary = rawData.find((r) => isCountryTotal(r.regionName))
 
-    const regions = rawData.filter((r) => !isSummaryItem(r))
-    const backendSummary = rawData.find((r) => isSummaryItem(r))
-
-    const summaryRow = {
-      ...(backendSummary || {}),
+    const summaryRow: Row = {
+      ...backendSummary,
       regionName: 'Respublika bo‘yicha',
       isSummary: true,
     }
@@ -74,57 +89,49 @@ const PreventionStatsReport: React.FC = () => {
     return [summaryRow, ...regions]
   }, [rawData])
 
-  const createSectionColumns = (header: string, accessorPrefix: string) => ({
+  const createSectionColumns = (header: string, accessorPrefix: Section): ExtendedColumnDef<Row, number> => ({
     header,
     id: accessorPrefix,
     columns: [
       {
         header: 'Barchasi',
         id: `${accessorPrefix}_allCount`,
-        accessorFn: (row: any) => row[accessorPrefix]?.allCount || 0,
+        accessorFn: (row) => row[accessorPrefix]?.allCount || 0,
         className: 'text-center text-slate-900',
-        cell: ({ row, getValue }: any) => (
-          <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
-        ),
+        cell: ({ row, getValue }) => <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>,
       },
       {
         header: 'Inspektor belgilanmagan',
         id: `${accessorPrefix}_unassignedCount`,
-        accessorFn: (row: any) => row[accessorPrefix]?.unassignedCount || 0,
+        accessorFn: (row) => row[accessorPrefix]?.unassignedCount || 0,
         className: 'text-center text-slate-700 font-medium',
-        cell: ({ row, getValue }: any) => (
-          <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
-        ),
+        cell: ({ row, getValue }) => <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>,
       },
       {
         header: 'Jarayondagilar',
         id: `${accessorPrefix}_processCount`,
-        accessorFn: (row: any) => row[accessorPrefix]?.processCount || 0,
+        accessorFn: (row) => row[accessorPrefix]?.processCount || 0,
         className: 'text-center text-slate-700 font-medium',
-        cell: ({ row, getValue }: any) => (
-          <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
-        ),
+        cell: ({ row, getValue }) => <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>,
       },
       {
         header: 'Yakunlangan',
         id: `${accessorPrefix}_conductedCount`,
-        accessorFn: (row: any) => row[accessorPrefix]?.conductedCount || 0,
+        accessorFn: (row) => row[accessorPrefix]?.conductedCount || 0,
         className: 'text-center text-slate-700 font-medium',
-        cell: ({ row, getValue }: any) => (
-          <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
-        ),
+        cell: ({ row, getValue }) => <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>,
       },
     ],
   })
 
-  const columns: any[] = [
+  const columns: ExtendedColumnDef<Row, number>[] = [
     {
       header: 'Hududlar',
       accessorKey: 'regionName',
       id: 'regionName',
       minSize: 200,
       className: 'sticky left-0 z-20 border-r shadow-[1px_0_0_0_rgba(0,0,0,0.1)]',
-      cell: ({ row }: any) => {
+      cell: ({ row }) => {
         return <span className={cn(row.original.isSummary ? 'font-bold' : '')}>{row.original.regionName}</span>
       },
     },
@@ -170,7 +177,7 @@ const PreventionStatsReport: React.FC = () => {
 
       <div className="flex-1 overflow-hidden rounded-md border bg-white shadow-sm">
         <DataTable
-          columns={columns as any}
+          columns={columns}
           data={tableData}
           isLoading={isLoading}
           isPaginated={false}

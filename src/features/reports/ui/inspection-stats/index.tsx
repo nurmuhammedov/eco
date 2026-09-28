@@ -8,6 +8,24 @@ import { cn } from '@/shared/lib/utils'
 import { useRegionSelectQuery } from '@/shared/api/dictionaries'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { isCountryTotal } from '../../lib/country-total'
+import type { ExtendedColumnDef } from '@/shared/components/common/data-table/model/column-def'
+
+/** InspectionByReport */
+interface SectionCounts {
+  allCount: number
+  newCount: number
+  notSignedCount: number
+  assignedCount: number
+  conductedCount: number
+}
+
+type Section = 'hf' | 'irs' | 'elevator' | 'attraction' | 'xray' | 'lpgPowered'
+
+/** ReportByInspection */
+type RegionCounts = { regionName: string } & Record<Section, SectionCounts | null>
+
+/** The country total is put together here, so its sections may be missing */
+type Row = { regionName: string; isSummary?: boolean } & Partial<Record<Section, SectionCounts | null>>
 
 const MONTHS = [
   { value: 'JANUARY', label: 'Yanvar' },
@@ -45,7 +63,7 @@ const InspectionStatsReport: React.FC = () => {
 
   const { data: regionsList } = useRegionSelectQuery()
 
-  const { data: rawData, isLoading } = useData<any[]>('/reports/inspection', true, {
+  const { data: rawData, isLoading } = useData<RegionCounts[]>('/reports/inspection', true, {
     year: Number(year),
     month,
   })
@@ -55,8 +73,8 @@ const InspectionStatsReport: React.FC = () => {
     const regions = rawData.filter((r) => !isCountryTotal(r.regionName))
     const backendSummary = rawData.find((r) => isCountryTotal(r.regionName))
 
-    const summaryRow = {
-      ...(backendSummary || {}),
+    const summaryRow: Row = {
+      ...backendSummary,
       regionName: 'Respublika bo‘yicha',
       isSummary: true,
     }
@@ -71,66 +89,66 @@ const InspectionStatsReport: React.FC = () => {
     return [summaryRow, ...filteredRegions]
   }, [rawData, regionName])
 
-  const createSectionColumns = (header: string, accessorPrefix: string) => ({
+  const createSectionColumns = (header: string, accessorPrefix: Section): ExtendedColumnDef<Row, number> => ({
     header,
     id: accessorPrefix,
     columns: [
       {
         header: 'Barchasi',
         id: `${accessorPrefix}_allCount`,
-        accessorFn: (row: any) => row[accessorPrefix]?.allCount || 0,
+        accessorFn: (row) => row[accessorPrefix]?.allCount || 0,
         className: 'text-center text-slate-900',
-        cell: ({ row, getValue }: any) => {
+        cell: ({ row, getValue }) => {
           return <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
         },
       },
       {
         header: 'Buyruq qilinmagan',
         id: `${accessorPrefix}_newCount`,
-        accessorFn: (row: any) => row[accessorPrefix]?.newCount || 0,
+        accessorFn: (row) => row[accessorPrefix]?.newCount || 0,
         className: 'text-center text-slate-700 font-medium',
-        cell: ({ row, getValue }: any) => {
+        cell: ({ row, getValue }) => {
           return <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
         },
       },
       {
         header: 'Buyruq imzolanish jarayonida',
         id: `${accessorPrefix}_notSignedCount`,
-        accessorFn: (row: any) => row[accessorPrefix]?.notSignedCount || 0,
+        accessorFn: (row) => row[accessorPrefix]?.notSignedCount || 0,
         className: 'text-center text-slate-700 font-medium',
-        cell: ({ row, getValue }: any) => {
+        cell: ({ row, getValue }) => {
           return <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
         },
       },
       {
         header: 'Inspektor biriktirilgan',
         id: `${accessorPrefix}_assignedCount`,
-        accessorFn: (row: any) => row[accessorPrefix]?.assignedCount || 0,
+        accessorFn: (row) => row[accessorPrefix]?.assignedCount || 0,
         className: 'text-center text-slate-700 font-medium',
-        cell: ({ row, getValue }: any) => {
+        cell: ({ row, getValue }) => {
           return <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
         },
       },
       {
         header: 'Tekshiruv o‘tkazilgan',
         id: `${accessorPrefix}_conductedCount`,
-        accessorFn: (row: any) => row[accessorPrefix]?.conductedCount || 0,
+        accessorFn: (row) => row[accessorPrefix]?.conductedCount || 0,
         className: 'text-center text-slate-700 font-medium',
-        cell: ({ row, getValue }: any) => {
+        cell: ({ row, getValue }) => {
           return <span className={cn('text-green-600', row.original.isSummary ? 'font-bold' : '')}>{getValue()}</span>
         },
       },
     ],
   })
 
-  const columns: any[] = [
+  const columns: ExtendedColumnDef<Row, number>[] = [
     {
       header: 'Hududlar',
       accessorKey: 'regionName',
       id: 'regionName',
       minSize: 200,
       className: 'sticky left-0 z-20 border-r shadow-[1px_0_0_0_rgba(0,0,0,0.1)]',
-      cell: ({ row }: any) => {
+      cell: ({ row }) => {
         const value = row.original.regionName
         return <span className={cn(row.original.isSummary ? 'font-bold' : '')}>{value}</span>
       },
@@ -182,7 +200,7 @@ const InspectionStatsReport: React.FC = () => {
             <SelectContent>
               <SelectItem value="ALL">Barchasi</SelectItem>
               <SelectItem value="Respublika bo‘yicha">Respublika bo‘yicha</SelectItem>
-              {regionsList?.map((region: any) => (
+              {regionsList?.map((region) => (
                 <SelectItem key={region.id} value={region.name}>
                   {region.name}
                 </SelectItem>
@@ -194,7 +212,7 @@ const InspectionStatsReport: React.FC = () => {
 
       <div className="flex-1 overflow-hidden rounded-md border bg-white shadow-sm">
         <DataTable
-          columns={columns as any}
+          columns={columns}
           data={tableData || []}
           isLoading={isLoading}
           isPaginated={false}

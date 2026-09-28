@@ -11,6 +11,40 @@ import { getDefaultYearAndMonthForRiskAnalysis } from '@/shared/utils/date'
 import { RiskStatisticsCards } from '@/entities/risk-analysis/ui/risk-statistics-cards'
 import { paramText } from '@/shared/lib/url-params'
 import { isCountryTotal } from '../../lib/country-total'
+import type { ExtendedColumnDef } from '@/shared/components/common/data-table/model/column-def'
+
+/** TrackerDynamicCount: one re-analysis date */
+interface DynamicCount {
+  date: string
+  lowCount: number
+  mediumCount: number
+  highCount: number
+  deregisteredCount: number
+}
+
+/** ReportRiskAnalysisDynamicDto */
+interface RegionDynamics {
+  regionName: string
+  analysisCount: number
+  dynamics: DynamicCount[]
+}
+
+interface DateCounts {
+  low: number
+  mid: number
+  high: number
+  out: number
+}
+
+interface Row {
+  regionName: string
+  isSummary: boolean
+  totalCapacity: number
+  currentLow: number
+  currentMid: number
+  currentOut: number
+  months: Record<string, DateCounts>
+}
 
 const MONTHS = [
   { id: 'JANUARY', name: 'Yanvar' },
@@ -51,13 +85,17 @@ const RiskDateComparisonReport: React.FC = () => {
   const riskLevel = paramText(paramsObject.riskLevel, 'LOW')
   const regionName = paramText(paramsObject.regionName, 'all')
 
-  const { data: dynamicsData, isLoading: dynamicsLoading } = useData<any[]>('/reports/risk-analysis/dynamic', true, {
-    year: Number(year),
-    month: month,
-    periodType: 'MONTHLY',
-    level: riskLevel,
-    type: TAB_TO_API_TYPE[mainTab] || 'HF',
-  })
+  const { data: dynamicsData, isLoading: dynamicsLoading } = useData<RegionDynamics[]>(
+    '/reports/risk-analysis/dynamic',
+    true,
+    {
+      year: Number(year),
+      month: month,
+      periodType: 'MONTHLY',
+      level: riskLevel,
+      type: TAB_TO_API_TYPE[mainTab] || 'HF',
+    }
+  )
 
   const generateYears = () => {
     const years = []
@@ -67,26 +105,21 @@ const RiskDateComparisonReport: React.FC = () => {
     return years
   }
 
-  const rawList: any[] = useMemo(() => {
-    if (!dynamicsData) return []
-    if (Array.isArray(dynamicsData)) return dynamicsData
-    if (Array.isArray((dynamicsData as any)?.data)) return (dynamicsData as any).data
-    return []
-  }, [dynamicsData])
+  const rawList = useMemo(() => dynamicsData ?? [], [dynamicsData])
 
   const { tableData, columns } = useMemo(() => {
     const dateSet = new Set<string>()
 
-    const filteredRawList = rawList.filter((item: any) => {
+    const filteredRawList = rawList.filter((item) => {
       if (regionName === 'all') return true
       return item.regionName === regionName
     })
 
-    const mapped = filteredRawList.map((item: any) => {
-      const monthsObj: any = {}
-      const dynList: any[] = Array.isArray(item.dynamics) ? item.dynamics : []
+    const mapped = filteredRawList.map((item): Row => {
+      const monthsObj: Row['months'] = {}
+      const dynList = item.dynamics ?? []
 
-      dynList.forEach((d: any) => {
+      dynList.forEach((d) => {
         if (!d.date) return
         const key = d.date.split('-').reverse().join('.')
         dateSet.add(key)
@@ -104,7 +137,6 @@ const RiskDateComparisonReport: React.FC = () => {
         regionName: item.regionName,
         isSummary: isCountryTotal(item.regionName),
         totalCapacity: item.analysisCount ?? 0,
-        currentStatusValue: latest ? (latest.currentCount ?? 0) : 0,
         currentLow: latest ? (latest.lowCount ?? 0) : 0,
         currentMid: latest ? (latest.mediumCount ?? 0) : 0,
         currentOut: latest ? (latest.deregisteredCount ?? 0) : 0,
@@ -120,57 +152,59 @@ const RiskDateComparisonReport: React.FC = () => {
       return parse(a) - parse(b)
     })
 
-    const dateColumns = sortedDates.map((dStr) => ({
-      header: dStr,
-      id: `date_${dStr}`,
-      columns: [
-        {
-          header: 'Xavfi past',
-          id: `low_${dStr}`,
-          accessorFn: (row: any) => row.months[dStr]?.low ?? 0,
-          className: 'whitespace-nowrap text-green-600 text-center',
-          cell: ({ row, getValue }: any) => (
-            <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
-          ),
-        },
-        {
-          header: 'Xavfi o‘rta',
-          id: `mid_${dStr}`,
-          accessorFn: (row: any) => row.months[dStr]?.mid ?? 0,
-          className: 'whitespace-nowrap text-amber-600 text-center',
-          cell: ({ row, getValue }: any) => (
-            <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
-          ),
-        },
-        {
-          header: 'Xavfi yuqori',
-          id: `high_${dStr}`,
-          accessorFn: (row: any) => row.months[dStr]?.high ?? 0,
-          className: 'whitespace-nowrap text-red-600 text-center',
-          cell: ({ row, getValue }: any) => (
-            <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
-          ),
-        },
-        {
-          header: 'Ro‘yxatdan chiqarilgan',
-          id: `out_${dStr}`,
-          accessorFn: (row: any) => row.months[dStr]?.out ?? 0,
-          className: 'whitespace-nowrap text-slate-500 text-center',
-          cell: ({ row, getValue }: any) => (
-            <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
-          ),
-        },
-      ],
-    }))
+    const dateColumns = sortedDates.map(
+      (dStr): ExtendedColumnDef<Row, number> => ({
+        header: dStr,
+        id: `date_${dStr}`,
+        columns: [
+          {
+            header: 'Xavfi past',
+            id: `low_${dStr}`,
+            accessorFn: (row) => row.months[dStr]?.low ?? 0,
+            className: 'whitespace-nowrap text-green-600 text-center',
+            cell: ({ row, getValue }) => (
+              <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
+            ),
+          },
+          {
+            header: 'Xavfi o‘rta',
+            id: `mid_${dStr}`,
+            accessorFn: (row) => row.months[dStr]?.mid ?? 0,
+            className: 'whitespace-nowrap text-amber-600 text-center',
+            cell: ({ row, getValue }) => (
+              <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
+            ),
+          },
+          {
+            header: 'Xavfi yuqori',
+            id: `high_${dStr}`,
+            accessorFn: (row) => row.months[dStr]?.high ?? 0,
+            className: 'whitespace-nowrap text-red-600 text-center',
+            cell: ({ row, getValue }) => (
+              <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
+            ),
+          },
+          {
+            header: 'Ro‘yxatdan chiqarilgan',
+            id: `out_${dStr}`,
+            accessorFn: (row) => row.months[dStr]?.out ?? 0,
+            className: 'whitespace-nowrap text-slate-500 text-center',
+            cell: ({ row, getValue }) => (
+              <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
+            ),
+          },
+        ],
+      })
+    )
 
-    const cols = [
+    const cols: ExtendedColumnDef<Row, number>[] = [
       {
         header: 'Hududlar',
         accessorKey: 'regionName',
         id: 'regionName',
         minSize: 200,
         className: 'sticky left-0 z-20 border-r shadow-[1px_0_0_0_rgba(0,0,0,0.1)]',
-        cell: ({ row }: any) => {
+        cell: ({ row }) => {
           const value = row.original.regionName
           const isSummary = row.original.isSummary
           return <span className={isSummary ? 'font-bold' : ''}>{isSummary ? 'Respublika bo‘yicha' : value}</span>
@@ -186,9 +220,7 @@ const RiskDateComparisonReport: React.FC = () => {
         accessorKey: 'totalCapacity',
         id: 'totalCapacity',
         className: 'whitespace-nowrap text-center font-semibold',
-        cell: ({ row, getValue }: any) => (
-          <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
-        ),
+        cell: ({ row, getValue }) => <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>,
       },
       {
         header: () => (
@@ -196,10 +228,9 @@ const RiskDateComparisonReport: React.FC = () => {
             KPI ko‘rsatkichi <br /> % da
           </div>
         ),
-        accessorKey: 'currentStatusValue',
         id: 'currentStatusValue',
         className: 'whitespace-nowrap text-center font-semibold',
-        cell: ({ row }: any) => {
+        cell: ({ row }) => {
           const totalInitial = row.original.totalCapacity
           const low = row.original.currentLow
           const mid = row.original.currentMid
@@ -229,7 +260,7 @@ const RiskDateComparisonReport: React.FC = () => {
       ...dateColumns,
     ]
 
-    const groupedCols = [
+    const groupedCols: ExtendedColumnDef<Row, number>[] = [
       ...cols.slice(0, 3),
       ...(dateColumns.length > 0
         ? [
@@ -246,7 +277,7 @@ const RiskDateComparisonReport: React.FC = () => {
   }, [rawList, regionName, riskLevel, year, month])
 
   const regionOptions = useMemo(() => {
-    const names = rawList.map((item: any) => item.regionName).filter(Boolean)
+    const names = rawList.map((item) => item.regionName).filter(Boolean)
     return Array.from(new Set(names))
   }, [rawList])
 
@@ -330,7 +361,7 @@ const RiskDateComparisonReport: React.FC = () => {
 
       <div className="flex-1 overflow-hidden rounded-md border bg-white shadow-sm">
         <DataTable
-          columns={columns as any}
+          columns={columns}
           data={tableData}
           isLoading={dynamicsLoading}
           isPaginated={false}

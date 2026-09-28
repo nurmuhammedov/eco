@@ -1,30 +1,39 @@
 import useCustomSearchParams from '@/shared/hooks/api/use-search-params'
 import React from 'react'
 import { DataTable } from '@/shared/components/common/data-table'
-import { usePaginatedData } from '@/shared/hooks'
+import { useData } from '@/shared/hooks'
 import { ExportExcelButton, GoBack } from '@/shared/components/common'
 import { format } from 'date-fns'
+import type { ExtendedColumnDef } from '@/shared/components/common/data-table/model/column-def'
 
-export enum InspectionStatus {
-  LEGAL = 'LEGAL',
-  INDIVIDUAL = 'INDIVIDUAL',
+/** ReportByRegistryDto */
+interface RegistryCount {
+  regionName: string
+  activeHf: number
+  inactiveHf: number
+  activeEquipment: number
+  inactiveEquipment: number
+  expiredEquipment: number
+  noDateEquipment: number
+  activeIrs: number
+  inactiveIrs: number
 }
+
+type Counts = Omit<RegistryCount, 'regionName'>
+
+type Row = RegistryCount & { isSummary?: boolean }
 
 const RegistryObjectsReport: React.FC = () => {
   const { paramsObject } = useCustomSearchParams()
-  const { data: inspections, isLoading } = usePaginatedData<any>('/reports/registry', {
-    ...paramsObject,
-    ownerType: paramsObject?.ownerType || InspectionStatus.INDIVIDUAL,
-  })
+  const { data, isLoading } = useData<RegistryCount[]>('/reports/registry', true, paramsObject)
 
   function calcPercent(value: number, total: number): string {
     if (!total || total === 0) return '0%'
     return parseFloat(((value / total) * 100).toFixed(2)) + '%'
   }
 
-  const data: any = inspections as unknown as any
   const totals = React.useMemo(() => {
-    const initialTotals = {
+    const initialTotals: Counts = {
       activeHf: 0,
       inactiveHf: 0,
       activeEquipment: 0,
@@ -40,9 +49,9 @@ const RegistryObjectsReport: React.FC = () => {
     }
 
     return data.reduce(
-      (acc: any, currentItem: any) => {
-        for (const key in initialTotals) {
-          acc[key as keyof typeof initialTotals] += currentItem[key] || 0
+      (acc, currentItem) => {
+        for (const key of Object.keys(initialTotals) as (keyof Counts)[]) {
+          acc[key] += currentItem[key] || 0
         }
         return acc
       },
@@ -52,7 +61,7 @@ const RegistryObjectsReport: React.FC = () => {
 
   const tableData = React.useMemo(() => {
     if (!data) return []
-    const summaryRow = {
+    const summaryRow: Row = {
       isSummary: true,
       regionName: 'Respublika bo‘yicha',
       ...totals,
@@ -60,16 +69,14 @@ const RegistryObjectsReport: React.FC = () => {
     return [summaryRow, ...data]
   }, [data, totals])
 
-  const columns = [
+  const columns: ExtendedColumnDef<Row, number>[] = [
     {
       header: 'Hududlar',
       accessorKey: 'regionName',
       id: 'regionName',
       minSize: 250,
       className: 'sticky left-0 z-20 border-r shadow-[1px_0_0_0_rgba(0,0,0,0.1)]',
-      cell: ({ row }: any) => (
-        <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.regionName}</span>
-      ),
+      cell: ({ row }) => <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.regionName}</span>,
     },
     {
       header: 'XICHO',
@@ -81,13 +88,13 @@ const RegistryObjectsReport: React.FC = () => {
               header: 'dona',
               accessorKey: 'activeHf',
               size: 80,
-              cell: ({ row }: any) => (
+              cell: ({ row }) => (
                 <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.activeHf}</span>
               ),
             },
             {
               header: '%',
-              cell: ({ row }: any) => calcPercent(row.original.activeHf, totals.activeHf),
+              cell: ({ row }) => calcPercent(row.original.activeHf, totals.activeHf),
               size: 80,
             },
           ],
@@ -99,13 +106,13 @@ const RegistryObjectsReport: React.FC = () => {
               header: 'dona',
               accessorKey: 'inactiveHf',
               size: 80,
-              cell: ({ row }: any) => (
+              cell: ({ row }) => (
                 <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.inactiveHf}</span>
               ),
             },
             {
               header: '%',
-              cell: ({ row }: any) => calcPercent(row.original.inactiveHf, totals.inactiveHf),
+              cell: ({ row }) => calcPercent(row.original.inactiveHf, totals.inactiveHf),
               size: 80,
             },
           ],
@@ -122,13 +129,13 @@ const RegistryObjectsReport: React.FC = () => {
               header: 'dona',
               accessorKey: 'activeEquipment',
               size: 80,
-              cell: ({ row }: any) => (
+              cell: ({ row }) => (
                 <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.activeEquipment}</span>
               ),
             },
             {
               header: '%',
-              cell: ({ row }: any) => calcPercent(row.original.activeEquipment, totals.activeEquipment),
+              cell: ({ row }) => calcPercent(row.original.activeEquipment, totals.activeEquipment),
               size: 80,
             },
           ],
@@ -140,13 +147,13 @@ const RegistryObjectsReport: React.FC = () => {
               header: 'dona',
               accessorKey: 'inactiveEquipment',
               size: 80,
-              cell: ({ row }: any) => (
+              cell: ({ row }) => (
                 <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.inactiveEquipment}</span>
               ),
             },
             {
               header: '%',
-              cell: ({ row }: any) => calcPercent(row.original.inactiveEquipment, totals.inactiveEquipment),
+              cell: ({ row }) => calcPercent(row.original.inactiveEquipment, totals.inactiveEquipment),
               size: 80,
             },
           ],
@@ -158,13 +165,13 @@ const RegistryObjectsReport: React.FC = () => {
               header: 'dona',
               accessorKey: 'expiredEquipment',
               size: 80,
-              cell: ({ row }: any) => (
+              cell: ({ row }) => (
                 <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.expiredEquipment}</span>
               ),
             },
             {
               header: '%',
-              cell: ({ row }: any) => calcPercent(row.original.expiredEquipment, totals.expiredEquipment),
+              cell: ({ row }) => calcPercent(row.original.expiredEquipment, totals.expiredEquipment),
               size: 80,
             },
           ],
@@ -176,13 +183,13 @@ const RegistryObjectsReport: React.FC = () => {
               header: 'dona',
               accessorKey: 'noDateEquipment',
               size: 80,
-              cell: ({ row }: any) => (
+              cell: ({ row }) => (
                 <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.noDateEquipment}</span>
               ),
             },
             {
               header: '%',
-              cell: ({ row }: any) => calcPercent(row.original.noDateEquipment, totals.noDateEquipment),
+              cell: ({ row }) => calcPercent(row.original.noDateEquipment, totals.noDateEquipment),
               size: 80,
             },
           ],
@@ -199,13 +206,13 @@ const RegistryObjectsReport: React.FC = () => {
               header: 'dona',
               accessorKey: 'activeIrs',
               size: 80,
-              cell: ({ row }: any) => (
+              cell: ({ row }) => (
                 <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.activeIrs}</span>
               ),
             },
             {
               header: '%',
-              cell: ({ row }: any) => calcPercent(row.original.activeIrs, totals.activeIrs),
+              cell: ({ row }) => calcPercent(row.original.activeIrs, totals.activeIrs),
               size: 80,
             },
           ],
@@ -217,13 +224,13 @@ const RegistryObjectsReport: React.FC = () => {
               header: 'dona',
               accessorKey: 'inactiveIrs',
               size: 80,
-              cell: ({ row }: any) => (
+              cell: ({ row }) => (
                 <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.inactiveIrs}</span>
               ),
             },
             {
               header: '%',
-              cell: ({ row }: any) => calcPercent(row.original.inactiveIrs, totals.inactiveIrs),
+              cell: ({ row }) => calcPercent(row.original.inactiveIrs, totals.inactiveIrs),
               size: 80,
             },
           ],
@@ -263,7 +270,7 @@ const RegistryObjectsReport: React.FC = () => {
           headerCenter={true}
           isHeaderSticky={true}
           data={tableData}
-          columns={columns as unknown as any}
+          columns={columns}
           isLoading={isLoading}
           initialState={{ columnPinning: { left: ['regionName'] } }}
           className="h-full"

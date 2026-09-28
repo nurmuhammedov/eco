@@ -13,8 +13,45 @@ import {
   buildChangeReportLink,
 } from '../../model/change-report-link'
 import { isCountryTotal } from '../../lib/country-total'
+import type { ExtendedColumnDef } from '@/shared/components/common/data-table/model/column-def'
 
-const BELONG_TYPE_BY_PREFIX: Record<string, ReportChangeBelongType> = {
+/** ChangeDeregisterByReport */
+interface DeregisterCounts {
+  allCount: number
+  newCount: number
+  inProcessCount: number
+  completedCount: number
+}
+
+/** ReportByChangeDeregisterDto */
+interface RegionDeregistrations {
+  regionName: string
+  regionId: number | null
+  hf: DeregisterCounts | null
+  equipment: DeregisterCounts | null
+  irs: DeregisterCounts | null
+  xray: DeregisterCounts | null
+}
+
+interface GroupCounts {
+  total: number
+  not_completed: number
+  in_process: number
+  completed: number
+}
+
+type GroupKey = 'x' | 'q' | 'irs' | 'xray'
+
+type Row = { officeName: string; regionId: number | null; isSummary: boolean } & Record<GroupKey, GroupCounts>
+
+const toGroup = (counts: DeregisterCounts | null): GroupCounts => ({
+  total: counts?.allCount || 0,
+  not_completed: counts?.newCount || 0,
+  in_process: counts?.inProcessCount || 0,
+  completed: counts?.completedCount || 0,
+})
+
+const BELONG_TYPE_BY_PREFIX: Record<GroupKey, ReportChangeBelongType> = {
   x: REPORT_CHANGE_BELONG_TYPE.HF,
   q: REPORT_CHANGE_BELONG_TYPE.EQUIPMENT,
   irs: REPORT_CHANGE_BELONG_TYPE.IRS,
@@ -32,9 +69,9 @@ const CountCell = ({
   prefix,
   status,
 }: {
-  row: any
+  row: Row
   value: number
-  prefix: string
+  prefix: GroupKey
   status: ReportChangeStatus
 }) => {
   // Only a zero has nothing behind it.
@@ -64,50 +101,25 @@ const CountCell = ({
 }
 
 const RegistryDeregistrationsReport: React.FC = () => {
-  const { data: reportData, isLoading } = useData<any[]>('/reports/change/by-deregister', true)
+  const { data: reportData, isLoading } = useData<RegionDeregistrations[]>('/reports/change/by-deregister', true)
 
   const tableData = useMemo(() => {
-    if (!reportData || !Array.isArray(reportData)) return []
+    if (!reportData) return []
 
-    return reportData.map((item: any) => {
-      const hf = item.hf || {}
-      const equipment = item.equipment || {}
-      const irs = item.irs || {}
-      const xray = item.xray || {}
-
-      return {
+    return reportData.map(
+      (item): Row => ({
         officeName: item.regionName,
         regionId: item.regionId,
         isSummary: isCountryTotal(item.regionName),
-        x: {
-          total: hf.allCount || 0,
-          not_completed: hf.newCount || 0,
-          in_process: hf.inProcessCount || 0,
-          completed: hf.completedCount || 0,
-        },
-        q: {
-          total: equipment.allCount || 0,
-          not_completed: equipment.newCount || 0,
-          in_process: equipment.inProcessCount || 0,
-          completed: equipment.completedCount || 0,
-        },
-        irs: {
-          total: irs.allCount || 0,
-          not_completed: irs.newCount || 0,
-          in_process: irs.inProcessCount || 0,
-          completed: irs.completedCount || 0,
-        },
-        xray: {
-          total: xray.allCount || 0,
-          not_completed: xray.newCount || 0,
-          in_process: xray.inProcessCount || 0,
-          completed: xray.completedCount || 0,
-        },
-      }
-    })
+        x: toGroup(item.hf),
+        q: toGroup(item.equipment),
+        irs: toGroup(item.irs),
+        xray: toGroup(item.xray),
+      })
+    )
   }, [reportData])
 
-  const createGroup = (prefix: string, header: string) => ({
+  const createGroup = (prefix: GroupKey, header: string): ExtendedColumnDef<Row, number> => ({
     header,
     columns: (
       [
@@ -116,25 +128,27 @@ const RegistryDeregistrationsReport: React.FC = () => {
         ['in_process', 'Jarayonda', REPORT_CHANGE_STATUS.IN_PROCESS],
         ['completed', 'Yakunlandi', REPORT_CHANGE_STATUS.COMPLETED],
       ] as const
-    ).map(([key, label, status]) => ({
-      id: `${prefix}_${key}`,
-      header: label,
-      accessorFn: (row: any) => row[prefix]?.[key] || 0,
-      className: cn('text-center', key === 'total' && 'font-semibold text-slate-900'),
-      cell: ({ row, getValue }: any) => (
-        <CountCell row={row.original} value={getValue()} prefix={prefix} status={status} />
-      ),
-    })),
+    ).map(
+      ([key, label, status]): ExtendedColumnDef<Row, number> => ({
+        id: `${prefix}_${key}`,
+        header: label,
+        accessorFn: (row) => row[prefix]?.[key] || 0,
+        className: cn('text-center', key === 'total' && 'font-semibold text-slate-900'),
+        cell: ({ row, getValue }) => (
+          <CountCell row={row.original} value={getValue()} prefix={prefix} status={status} />
+        ),
+      })
+    ),
   })
 
-  const columns = [
+  const columns: ExtendedColumnDef<Row, number>[] = [
     {
       header: 'Hududiy boshqarma/bo‘limlar',
       accessorKey: 'officeName',
       id: 'officeName',
       minSize: 200,
       className: 'sticky left-0 z-20 border-r shadow-[1px_0_0_0_rgba(0,0,0,0.1)]',
-      cell: ({ row }: any) => {
+      cell: ({ row }) => {
         const value = row.original.officeName
         const isSummary = row.original.isSummary
         return <span className={cn(isSummary ? 'font-bold' : '')}>{isSummary ? 'Respublika bo‘yicha' : value}</span>
@@ -154,7 +168,7 @@ const RegistryDeregistrationsReport: React.FC = () => {
 
       <div className="flex-1 overflow-hidden rounded-md border bg-white shadow-sm">
         <DataTable
-          columns={columns as any}
+          columns={columns}
           data={tableData}
           isLoading={isLoading}
           isPaginated={false}

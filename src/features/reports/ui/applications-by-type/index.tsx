@@ -2,22 +2,42 @@ import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
 import useCustomSearchParams from '@/shared/hooks/api/use-search-params'
 import React from 'react'
 import { DataTable } from '@/shared/components/common/data-table'
-import { usePaginatedData } from '@/shared/hooks'
+import { useData } from '@/shared/hooks'
+import { OwnerType } from '../../model/owner-type'
 import Filter from '@/shared/components/common/filter'
 import { ExportExcelButton, GoBack } from '@/shared/components/common'
 import { paramText } from '@/shared/lib/url-params'
+import type { ExtendedColumnDef } from '@/shared/components/common/data-table/model/column-def'
 
-export enum InspectionStatus {
-  LEGAL = 'LEGAL',
-  INDIVIDUAL = 'INDIVIDUAL',
-}
+type RegionKey =
+  | 'karakalpakstan'
+  | 'andijan'
+  | 'bukhara'
+  | 'jizzakh'
+  | 'kashkadarya'
+  | 'navoi'
+  | 'namangan'
+  | 'samarkand'
+  | 'syrdarya'
+  | 'surkhandarya'
+  | 'tashkent'
+  | 'tashkentRegion'
+  | 'fergana'
+  | 'khorezm'
+
+type Counts = Record<'total' | RegionKey, number>
+
+/** ReportByAppealTypeView */
+type AppealTypeCount = Counts & { appealType: string; committee: number }
+
+type Row = Counts & { appealType: string; isSummary?: boolean }
 
 const ApplicationsByTypeReport: React.FC = () => {
   const { paramsObject, addParams } = useCustomSearchParams()
   const activeTab = paramText(paramsObject.ownerType)
-  const { data, isLoading } = usePaginatedData<any>('/reports/appeal-type', {
+  const { data: inspections, isLoading } = useData<AppealTypeCount[]>('/reports/appeal-type', true, {
     ...paramsObject,
-    ownerType: paramsObject?.ownerType || InspectionStatus.INDIVIDUAL,
+    ownerType: paramsObject?.ownerType || OwnerType.INDIVIDUAL,
   })
 
   const handleTabChange = (value: string) => {
@@ -29,10 +49,8 @@ const ApplicationsByTypeReport: React.FC = () => {
     return ((value / total) * 100).toFixed(2) + '%'
   }
 
-  const inspections: any = data as unknown as any
-
   const totals = React.useMemo(() => {
-    const initialTotals = {
+    const initialTotals: Counts = {
       total: 0,
       karakalpakstan: 0,
       andijan: 0,
@@ -50,16 +68,14 @@ const ApplicationsByTypeReport: React.FC = () => {
       khorezm: 0,
     }
 
-    if (!inspections || inspections?.length === 0) {
+    if (!inspections || inspections.length === 0) {
       return initialTotals
     }
 
-    return inspections?.reduce(
-      (acc: any, currentItem: any) => {
-        for (const key in initialTotals) {
-          if (Object.prototype.hasOwnProperty.call(initialTotals, key)) {
-            acc[key as keyof typeof initialTotals] += currentItem[key] || 0
-          }
+    return inspections.reduce(
+      (acc, currentItem) => {
+        for (const key of Object.keys(initialTotals) as (keyof Counts)[]) {
+          acc[key] += currentItem[key] || 0
         }
         return acc
       },
@@ -69,7 +85,7 @@ const ApplicationsByTypeReport: React.FC = () => {
 
   const tableData = React.useMemo(() => {
     if (!inspections) return []
-    const summaryRow = {
+    const summaryRow: Row = {
       isSummary: true,
       appealType: 'Respublika bo‘yicha',
       ...totals,
@@ -77,7 +93,7 @@ const ApplicationsByTypeReport: React.FC = () => {
     return [summaryRow, ...inspections]
   }, [inspections, totals])
 
-  const regionConfigs = [
+  const regionConfigs: { header: string; key: RegionKey }[] = [
     { header: 'Qoraqalpog‘iston XB', key: 'karakalpakstan' },
     { header: 'Andijon XB', key: 'andijan' },
     { header: 'Buxoro XB', key: 'bukhara' },
@@ -94,16 +110,14 @@ const ApplicationsByTypeReport: React.FC = () => {
     { header: 'Xorazm XB', key: 'khorezm' },
   ]
 
-  const columns = [
+  const columns: ExtendedColumnDef<Row, number>[] = [
     {
       header: 'Ariza turi',
       accessorKey: 'appealType',
       id: 'appealType',
       minSize: 350,
       className: 'sticky left-0 z-20 border-r shadow-[1px_0_0_0_rgba(0,0,0,0.1)]',
-      cell: ({ row }: any) => (
-        <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.appealType}</span>
-      ),
+      cell: ({ row }) => <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.appealType}</span>,
     },
     {
       header: 'Jami',
@@ -113,38 +127,38 @@ const ApplicationsByTypeReport: React.FC = () => {
           className: 'text-center',
           accessorKey: 'total',
           size: 70,
-          cell: ({ row }: any) => (
-            <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.total}</span>
-          ),
+          cell: ({ row }) => <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.total}</span>,
         },
         {
           header: '%',
           className: 'text-center',
           size: 70,
-          cell: ({ row }: any) => calcPercent(row.original.total, totals.total),
+          cell: ({ row }) => calcPercent(row.original.total, totals.total),
         },
       ],
     },
-    ...regionConfigs.map((region) => ({
-      header: region.header,
-      columns: [
-        {
-          header: 'dona',
-          className: 'text-center',
-          accessorKey: region.key,
-          size: 70,
-          cell: ({ row }: any) => (
-            <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original[region.key]}</span>
-          ),
-        },
-        {
-          header: '%',
-          className: 'text-center',
-          size: 70,
-          cell: ({ row }: any) => calcPercent(row.original[region.key], totals[region.key as keyof typeof totals]),
-        },
-      ],
-    })),
+    ...regionConfigs.map(
+      (region): ExtendedColumnDef<Row, number> => ({
+        header: region.header,
+        columns: [
+          {
+            header: 'dona',
+            className: 'text-center',
+            accessorKey: region.key,
+            size: 70,
+            cell: ({ row }) => (
+              <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original[region.key]}</span>
+            ),
+          },
+          {
+            header: '%',
+            className: 'text-center',
+            size: 70,
+            cell: ({ row }) => calcPercent(row.original[region.key], totals[region.key]),
+          },
+        ],
+      })
+    ),
   ]
 
   return (
@@ -157,7 +171,7 @@ const ApplicationsByTypeReport: React.FC = () => {
           <Filter className="mb-0" inputKeys={['startDate', 'endDate']} />
           <ExportExcelButton
             endpoint={'/reports/appeal-type/export-excel'}
-            params={{ ...paramsObject, ownerType: paramsObject?.ownerType || InspectionStatus.INDIVIDUAL }}
+            params={{ ...paramsObject, ownerType: paramsObject?.ownerType || OwnerType.INDIVIDUAL }}
             fileName={
               'Jismoniy va yuridik shaxslardan yuborilgan arizalarni turlari bo‘yicha hududlar kesimida taqsimlanishi'
             }
@@ -167,12 +181,12 @@ const ApplicationsByTypeReport: React.FC = () => {
 
       {/* Both tabs read the same query, keyed by ownerType - one table serves
           them, rather than two identical ones. */}
-      <Tabs value={activeTab || InspectionStatus.INDIVIDUAL} onValueChange={handleTabChange}>
+      <Tabs value={activeTab || OwnerType.INDIVIDUAL} onValueChange={handleTabChange}>
         <TabsList className="w-full overflow-x-auto sm:w-max">
-          <TabsTrigger value={InspectionStatus.INDIVIDUAL} className="flex-1 sm:flex-none">
+          <TabsTrigger value={OwnerType.INDIVIDUAL} className="flex-1 sm:flex-none">
             Jismoniy shaxslar
           </TabsTrigger>
-          <TabsTrigger value={InspectionStatus.LEGAL} className="flex-1 sm:flex-none">
+          <TabsTrigger value={OwnerType.LEGAL} className="flex-1 sm:flex-none">
             Yuridik shaxslar
           </TabsTrigger>
         </TabsList>
@@ -185,7 +199,7 @@ const ApplicationsByTypeReport: React.FC = () => {
           headerCenter={true}
           isHeaderSticky={true}
           data={tableData}
-          columns={columns as unknown as any}
+          columns={columns}
           isLoading={isLoading}
           initialState={{ columnPinning: { left: ['appealType'] } }}
           className="h-full"

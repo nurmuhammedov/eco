@@ -2,22 +2,33 @@ import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
 import useCustomSearchParams from '@/shared/hooks/api/use-search-params'
 import React from 'react'
 import { DataTable } from '@/shared/components/common/data-table'
-import { usePaginatedData } from '@/shared/hooks'
+import { useData } from '@/shared/hooks'
+import { OwnerType } from '../../model/owner-type'
 import Filter from '@/shared/components/common/filter'
 import { ExportExcelButton, GoBack } from '@/shared/components/common'
 import { paramText } from '@/shared/lib/url-params'
+import type { ExtendedColumnDef } from '@/shared/components/common/data-table/model/column-def'
 
-export enum InspectionStatus {
-  LEGAL = 'LEGAL',
-  INDIVIDUAL = 'INDIVIDUAL',
+/** ReportByAppealStatusView */
+interface OfficeCount {
+  officeName: string
+  total: number
+  inProcess: number
+  inAgreement: number
+  inApproval: number
+  completed: number
+  canceled: number
+  rejected: number
 }
+
+type Row = OfficeCount & { isSummary?: boolean }
 
 const ApplicationsByRegionReport: React.FC = () => {
   const { paramsObject, addParams } = useCustomSearchParams()
   const activeTab = paramText(paramsObject.ownerType)
-  const { data: inspections, isLoading } = usePaginatedData('/reports/appeal-status', {
+  const { data: offices, isLoading } = useData<OfficeCount[]>('/reports/appeal-status', true, {
     ...paramsObject,
-    ownerType: paramsObject?.ownerType || InspectionStatus.INDIVIDUAL,
+    ownerType: paramsObject?.ownerType || OwnerType.INDIVIDUAL,
   })
 
   const handleTabChange = (value: string) => {
@@ -30,10 +41,9 @@ const ApplicationsByRegionReport: React.FC = () => {
   }
 
   const tableData = React.useMemo(() => {
-    if (!inspections) return []
-    const list = (inspections as unknown as any[]) || []
-    const totals = list.reduce(
-      (acc: any, curr: any) => {
+    if (!offices) return []
+    const totals = offices.reduce(
+      (acc, curr) => {
         acc.total += curr.total || 0
         acc.inProcess += curr.inProcess || 0
         acc.inAgreement += curr.inAgreement || 0
@@ -54,25 +64,23 @@ const ApplicationsByRegionReport: React.FC = () => {
       }
     )
 
-    const summaryRow = {
+    const summaryRow: Row = {
       isSummary: true,
       officeName: 'Respublika bo‘yicha',
       ...totals,
     }
 
-    return [summaryRow, ...list]
-  }, [inspections])
+    return [summaryRow, ...offices]
+  }, [offices])
 
-  const columns = [
+  const columns: ExtendedColumnDef<Row, number>[] = [
     {
       header: 'Hududiy boshqarma/bo‘limlar',
       accessorKey: 'officeName',
       id: 'officeName',
       minSize: 220,
       className: 'sticky left-0 z-20 border-r shadow-[1px_0_0_0_rgba(0,0,0,0.1)]',
-      cell: ({ row }: any) => (
-        <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.officeName}</span>
-      ),
+      cell: ({ row }) => <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.officeName}</span>,
     },
     {
       header: 'Jami',
@@ -80,14 +88,12 @@ const ApplicationsByRegionReport: React.FC = () => {
         {
           header: 'dona',
           className: 'text-center',
-          cell: ({ row }: any) => (
-            <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.total}</span>
-          ),
+          cell: ({ row }) => <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.total}</span>,
         },
         {
           header: '%',
           className: 'text-center',
-          cell: ({ row }: any) => calcPercent(row.original.total, row.original.total),
+          cell: ({ row }) => calcPercent(row.original.total, row.original.total),
         },
       ],
     },
@@ -100,14 +106,14 @@ const ApplicationsByRegionReport: React.FC = () => {
             {
               header: 'dona',
               className: 'text-center',
-              cell: ({ row }: any) => (
+              cell: ({ row }) => (
                 <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.inProcess}</span>
               ),
             },
             {
               header: '%',
               className: 'text-center',
-              cell: ({ row }: any) => calcPercent(row.original.inProcess, row.original.total),
+              cell: ({ row }) => calcPercent(row.original.inProcess, row.original.total),
             },
           ],
         },
@@ -117,14 +123,14 @@ const ApplicationsByRegionReport: React.FC = () => {
             {
               header: 'dona',
               className: 'text-center',
-              cell: ({ row }: any) => (
+              cell: ({ row }) => (
                 <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.inAgreement}</span>
               ),
             },
             {
               header: '%',
               className: 'text-center',
-              cell: ({ row }: any) => calcPercent(row.original.inAgreement, row.original.total),
+              cell: ({ row }) => calcPercent(row.original.inAgreement, row.original.total),
             },
           ],
         },
@@ -134,14 +140,14 @@ const ApplicationsByRegionReport: React.FC = () => {
             {
               header: 'dona',
               className: 'text-center',
-              cell: ({ row }: any) => (
+              cell: ({ row }) => (
                 <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.inApproval}</span>
               ),
             },
             {
               header: '%',
               className: 'text-center',
-              cell: ({ row }: any) => calcPercent(row.original.inApproval, row.original.total),
+              cell: ({ row }) => calcPercent(row.original.inApproval, row.original.total),
             },
           ],
         },
@@ -151,14 +157,14 @@ const ApplicationsByRegionReport: React.FC = () => {
             {
               header: 'dona',
               className: 'text-center',
-              cell: ({ row }: any) => (
+              cell: ({ row }) => (
                 <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.completed}</span>
               ),
             },
             {
               header: '%',
               className: 'text-center',
-              cell: ({ row }: any) => calcPercent(row.original.completed, row.original.total),
+              cell: ({ row }) => calcPercent(row.original.completed, row.original.total),
             },
           ],
         },
@@ -168,14 +174,14 @@ const ApplicationsByRegionReport: React.FC = () => {
             {
               header: 'dona',
               className: 'text-center',
-              cell: ({ row }: any) => (
+              cell: ({ row }) => (
                 <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.rejected}</span>
               ),
             },
             {
               header: '%',
               className: 'text-center',
-              cell: ({ row }: any) => calcPercent(row.original.rejected, row.original.total),
+              cell: ({ row }) => calcPercent(row.original.rejected, row.original.total),
             },
           ],
         },
@@ -185,14 +191,14 @@ const ApplicationsByRegionReport: React.FC = () => {
             {
               header: 'dona',
               className: 'text-center',
-              cell: ({ row }: any) => (
+              cell: ({ row }) => (
                 <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original.canceled}</span>
               ),
             },
             {
               header: '%',
               className: 'text-center',
-              cell: ({ row }: any) => calcPercent(row.original.canceled, row.original.total),
+              cell: ({ row }) => calcPercent(row.original.canceled, row.original.total),
             },
           ],
         },
@@ -210,7 +216,7 @@ const ApplicationsByRegionReport: React.FC = () => {
           <Filter className="mb-0" inputKeys={['startDate', 'endDate']} />
           <ExportExcelButton
             endpoint={'/reports/appeal-status/export-excel'}
-            params={{ ...paramsObject, ownerType: paramsObject?.ownerType || InspectionStatus.INDIVIDUAL }}
+            params={{ ...paramsObject, ownerType: paramsObject?.ownerType || OwnerType.INDIVIDUAL }}
             fileName={'Jismoniy va yuridik shaxslardan yuborilgan arizalarni hududlar kesimida taqsimlanishi'}
           />
         </div>
@@ -218,12 +224,12 @@ const ApplicationsByRegionReport: React.FC = () => {
 
       {/* Both tabs read the same query, keyed by ownerType - one table serves
           them, rather than two identical ones. */}
-      <Tabs value={activeTab || InspectionStatus.INDIVIDUAL} onValueChange={handleTabChange}>
+      <Tabs value={activeTab || OwnerType.INDIVIDUAL} onValueChange={handleTabChange}>
         <TabsList className="w-full overflow-x-auto sm:w-max">
-          <TabsTrigger value={InspectionStatus.INDIVIDUAL} className="flex-1 sm:flex-none">
+          <TabsTrigger value={OwnerType.INDIVIDUAL} className="flex-1 sm:flex-none">
             Jismoniy shaxslar
           </TabsTrigger>
-          <TabsTrigger value={InspectionStatus.LEGAL} className="flex-1 sm:flex-none">
+          <TabsTrigger value={OwnerType.LEGAL} className="flex-1 sm:flex-none">
             Yuridik shaxslar
           </TabsTrigger>
         </TabsList>
@@ -236,7 +242,7 @@ const ApplicationsByRegionReport: React.FC = () => {
           headerCenter={true}
           isHeaderSticky={true}
           data={tableData}
-          columns={columns as unknown as any}
+          columns={columns}
           isLoading={isLoading}
           initialState={{ columnPinning: { left: ['officeName'] } }}
           className="h-full"
