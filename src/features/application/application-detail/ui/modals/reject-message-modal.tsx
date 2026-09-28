@@ -4,7 +4,7 @@ import { FC } from 'react'
 import { TriangleAlert } from 'lucide-react'
 
 interface Props {
-  message: any
+  message: string
   setMessage: (message: string) => void
 }
 

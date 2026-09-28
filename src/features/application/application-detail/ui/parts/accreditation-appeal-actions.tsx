@@ -43,9 +43,17 @@ const replySchema = z
 
 type ReplyFormValues = z.infer<typeof replySchema>
 
+/** AccreditationAppealReplyDto */
+interface AccreditationReply {
+  basisPath?: string
+  conclusion?: string
+  result: boolean
+  spheres?: string[]
+}
+
 interface AccreditationAppealActionsProps {
-  appealId: string
-  status?: ApplicationStatus
+  appealId?: string
+  status?: ApplicationStatus | null
 }
 
 export const AccreditationAppealActions = ({ appealId, status }: AccreditationAppealActionsProps) => {
@@ -68,19 +76,19 @@ export const AccreditationAppealActions = ({ appealId, status }: AccreditationAp
     mutate: process,
     isPending: isProcessing,
     isSuccess: isProcessSuccess,
-  } = useAdd<any, any, any>(`/appeals/accreditation/${appealId}/process`, 'Ariza ijroga olindi!')
+  } = useAdd<Record<string, never>>(`/appeals/accreditation/${appealId}/process`, 'Ariza ijroga olindi!')
 
   const {
     mutate: cancel,
     isPending: isCanceling,
     isSuccess: isCancelSuccess,
-  } = useAdd<{ reason: string }, any, any>(`/appeals/accreditation/${appealId}/cancel`, 'Ariza qaytarildi!')
+  } = useAdd<{ reason: string }>(`/appeals/accreditation/${appealId}/cancel`, 'Ariza qaytarildi!')
 
   const {
     mutate: reply,
     isPending: isReplying,
     isSuccess: isReplySuccess,
-  } = useAdd<any, any, any>(`/appeals/accreditation/${appealId}/reply`, 'Ariza ijrosi bajarildi!')
+  } = useAdd<AccreditationReply>(`/appeals/accreditation/${appealId}/reply`, 'Ariza ijrosi bajarildi!')
 
   useEffect(() => {
     if (isProcessSuccess || isCancelSuccess || isReplySuccess) {

@@ -1,5 +1,5 @@
 import { FC } from 'react'
-import { ApplicationStatus } from '@/entities/application'
+import { type AppealFile, ApplicationStatus } from '@/entities/application'
 import { UserRoles } from '@/shared/types/user'
 import { DetailCardAccordion } from '@/shared/components/common/detail-card'
 import { useHazardousFacilityCategoryDictionarySelect } from '@/shared/api/dictionaries'
@@ -8,7 +8,7 @@ import FilesSection from './files-section'
 export const multiCategoryFileValue = (categoryId: string) => `appeal_files_${categoryId}`
 
 interface MultiCategoryFilesProps {
-  multiCategoryFiles: Record<string, any[]>
+  multiCategoryFiles: Record<string, AppealFile[]>
   userRole?: UserRoles
   applicationStatus?: ApplicationStatus
   appealId?: string
@@ -25,7 +25,7 @@ export const MultiCategoryFiles: FC<MultiCategoryFilesProps> = ({ multiCategoryF
   const { data: categories = [] } = useHazardousFacilityCategoryDictionarySelect(true)
 
   const nameOf = (categoryId: string) =>
-    (categories as any[]).find((item) => String(item.id) === String(categoryId))?.name || `Toifa #${categoryId}`
+    categories.find((item) => String(item.id) === String(categoryId))?.name || `Toifa #${categoryId}`
 
   return (
     <>

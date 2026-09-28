@@ -10,7 +10,7 @@ export function formatDate(isoDateString: string | null | undefined): string {
   return `${day}.${month}.${year}, ${hours}:${minutes}`
 }
 
-export const getDate = (dateStr?: string): string => {
+export const getDate = (dateStr?: string | null): string => {
   let date: Date
 
   if (dateStr) {

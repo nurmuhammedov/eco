@@ -2,7 +2,7 @@ import { useApplicantDocs } from '@/features/application/application-detail/hook
 import { ColumnDef } from '@tanstack/react-table'
 import type { ApplicationDocument, DocumentSigner } from '../../model/document-types'
 import { DataTable } from '@/shared/components/common/data-table'
-import { formatDate } from 'date-fns'
+import { getDate } from '@/shared/utils/date'
 import { Badge } from '@/shared/components/ui/badge'
 import { documentTypes } from '@/features/application/application-detail/ui/parts/appeal-response-docs'
 import { signStatuses } from '../../model/sign-statuses'
@@ -19,19 +19,22 @@ const ApplicantDocsTable = () => {
     {
       accessorKey: 'createdAt',
       header: 'Sana',
-      cell: (cell) => formatDate(cell.row.original.createdAt, 'dd.MM.yyyy'),
+      cell: (cell) => getDate(cell.row.original.createdAt),
     },
     {
       accessorKey: 'documentType',
       header: 'Hujjat nomi',
-      cell: (cell) => documentTypes.get(cell.row.original.documentType),
+      cell: (cell) => {
+        const type = cell.row.original.documentType
+        return type ? documentTypes.get(type) : undefined
+      },
     },
     {
       accessorKey: 'isFullySigned',
       header: 'Imzo holati',
       cell: (cell) => {
         const status = cell.row.original.isFullySigned
-        const currentLabel = signStatuses.get(status)
+        const currentLabel = status == null ? undefined : signStatuses.get(status)
         const signersList = cell.row.original.signers ?? []
         if (currentLabel) {
           return (

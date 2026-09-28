@@ -1,5 +1,6 @@
 import type { ApplicationDocument, ExecutionLog } from './document-types'
 import { apiClient } from '@/shared/api/api-client'
+import type { ApplicationDetail } from '@/entities/application'
 import { type ApiResponse } from '@/shared/types/api'
 import { type OptionItem } from '@/shared/types/general'
 
@@ -19,7 +20,7 @@ export const applicationDetailApi = {
     return data
   },
   getApplicationDetail: async (id?: string) => {
-    const { data } = await apiClient.get<any>(`/appeals/${id}`)
+    const { data } = await apiClient.get<ApiResponse<ApplicationDetail>>(`/appeals/${id}`)
     return data.data
   },
   getApplicationLogs: async (id: string) => {
@@ -43,23 +44,23 @@ export const applicationDetailApi = {
     return data.data
   },
   attachInspector: async (data: RequestBody) => {
-    const { data: res } = await apiClient.post<any>(`/appeals/set-inspector`, data)
+    const { data: res } = await apiClient.post<ApiResponse<unknown>>(`/appeals/set-inspector`, data)
     return res.data
   },
   rejectDocument: async (data: RequestBody) => {
-    const { data: res } = await apiClient.post<any>(`/appeals/rejection`, data)
+    const { data: res } = await apiClient.post<ApiResponse<unknown>>(`/appeals/rejection`, data)
     return res.data
   },
   confirmDocument: async (data: { appealId?: string; documentId?: string; shouldRegister?: boolean }) => {
-    const { data: res } = await apiClient.post<any>(`/appeals/confirmation`, data)
+    const { data: res } = await apiClient.post<ApiResponse<unknown>>(`/appeals/confirmation`, data)
     return res.data
   },
   uploadFile: async (payload: RequestBody, url = '/appeals/upload-file') => {
-    const { data: res } = await apiClient.post<any>(url, payload)
+    const { data: res } = await apiClient.post<ApiResponse<unknown>>(url, payload)
     return res.data
   },
   updateFile: async (id: string, payload: RequestBody, url = 'hf') => {
-    const { data: res } = await apiClient.patch<any>(`/${url}/${id}`, payload)
+    const { data: res } = await apiClient.patch<ApiResponse<unknown>>(`/${url}/${id}`, payload)
     return res.data
   },
 }

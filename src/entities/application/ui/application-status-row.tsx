@@ -3,7 +3,7 @@ import Stepper from '@/shared/components/common/stepper'
 import { cn } from '@/shared/lib/utils'
 
 interface Props {
-  status: ApplicationStatus
+  status?: ApplicationStatus | null
   title?: string
 }
 
@@ -25,7 +25,7 @@ export const ApplicationStatusRow = ({ status, title = 'Ariza holati:' }: Props)
     <div className="grid grid-cols-1 gap-2 rounded-md py-2 pr-6 pl-2 odd:bg-neutral-50 sm:grid-cols-2 sm:gap-4">
       <span className="self-center text-sm font-medium text-gray-500">{title}</span>
       <div className="py-2 pb-4">
-        <Stepper size="sm" activeStep={status} steps={Object.values(ApplicationStatus).slice(1, -2)} />
+        <Stepper size="sm" activeStep={status ?? ''} steps={Object.values(ApplicationStatus).slice(1, -2)} />
       </div>
     </div>
   )

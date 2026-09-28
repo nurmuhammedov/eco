@@ -1,7 +1,7 @@
 import { SourceTypeBadge } from '@/entities/application/ui/source-type-badge'
 import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ApplicationStatus, ApplicationStatusBadge } from '@/entities/application'
+import { type ApplicationRow, ApplicationStatus, ApplicationStatusBadge } from '@/entities/application'
 import { AppealReturnedMark } from '@/entities/application/ui/appeal-returned-mark'
 import { getAppealTypeFilterOptions, getApplicationTitle, isKnownAppealType } from '@/entities/create-application'
 import { useApplicationList } from '@/features/application/application-table/hooks'
@@ -13,6 +13,7 @@ import { getDate } from '@/shared/utils/date'
 import useData from '../../../../shared/hooks/api/use-data'
 import { API_ENDPOINTS } from '@/shared/api'
 import { UserRoles } from '@/shared/types/user'
+import type { OptionItem } from '@/shared/types/general'
 
 export const ApplicationTable = () => {
   const navigate = useNavigate()
@@ -37,10 +38,29 @@ export const ApplicationTable = () => {
     endDate,
   })
 
-  const { data: officeSelect } = useData<any>(`${API_ENDPOINTS.OFFICES}/select`)
-  const { data: executorOptions } = useData<any>(`${API_ENDPOINTS.USERS}/office-users/inspectors/select`)
+  const { data: officeSelect } = useData<OptionItem<number>[]>(`${API_ENDPOINTS.OFFICES}/select`)
+  const { data: executorOptions } = useData<OptionItem<string>[]>(
+    `${API_ENDPOINTS.USERS}/office-users/inspectors/select`
+  )
 
-  const columns: ExtendedColumnDef<any, any>[] = useMemo(() => {
+  const columns = useMemo((): ExtendedColumnDef<ApplicationRow>[] => {
+    const ownerColumns: ExtendedColumnDef<ApplicationRow>[] = [
+      {
+        accessorKey: 'ownerName',
+        header: 'Arizachi tashkilot nomi',
+        filterKey: 'ownerName',
+        filterType: 'search',
+      },
+      {
+        accessorKey: 'ownerIdentity',
+        header: 'Arizachi STIR/JSHSHIR',
+        className: '!w-[1%]',
+        filterKey: 'search',
+        filterType: 'number',
+        filterMaxLength: 14,
+      },
+    ]
+
     return [
       {
         accessorKey: 'number',
@@ -53,7 +73,7 @@ export const ApplicationTable = () => {
         id: 'date',
         header: () => <div className="whitespace-nowrap">Ariza sanasi</div>,
         className: '!w-[1%]',
-        accessorFn: (row: any) => getDate(row.createdAt),
+        accessorFn: (row) => getDate(row.createdAt),
       },
       {
         header: 'Ariza turi',
@@ -64,31 +84,14 @@ export const ApplicationTable = () => {
         // Auto layout shrinks a wrapping column to its longest word, so the
         // longest text in the table was living in the narrowest column and
         // stretching every row to five lines.
-        cell: (cell: any) => (
+        cell: (cell) => (
           <div className="flex min-w-[165px] flex-col items-start gap-1">
             <SourceTypeBadge sourceType={cell.row.original.sourceType} />
             <span>{getApplicationTitle(cell.row.original.appealType)}</span>
           </div>
         ),
       },
-      ...((user?.role !== UserRoles.LEGAL && user?.role !== UserRoles.INDIVIDUAL
-        ? [
-            {
-              accessorKey: 'ownerName',
-              header: 'Arizachi tashkilot nomi',
-              filterKey: 'ownerName',
-              filterType: 'search',
-            },
-            {
-              accessorKey: 'ownerIdentity',
-              header: 'Arizachi STIR/JSHSHIR',
-              className: '!w-[1%]',
-              filterKey: 'search',
-              filterType: 'number',
-              filterMaxLength: 14,
-            },
-          ]
-        : []) as unknown as any),
+      ...(user?.role !== UserRoles.LEGAL && user?.role !== UserRoles.INDIVIDUAL ? ownerColumns : []),
       {
         accessorKey: 'officeName',
         header: 'Ijrochi hududiy boshqarma',
@@ -105,7 +108,7 @@ export const ApplicationTable = () => {
       },
       {
         id: 'deadline',
-        accessorFn: (row: any) => getDate(row.deadline),
+        accessorFn: (row) => getDate(row.deadline),
         header: () => <div className="whitespace-nowrap">Ijro muddati</div>,
         className: '!w-[1%]',
         filterKey: 'deadline',
@@ -113,21 +116,21 @@ export const ApplicationTable = () => {
       },
       {
         header: 'Ariza holati',
-        cell: (cell: any) => (
+        cell: (cell) => (
           <div className="flex items-center gap-1.5">
-            <ApplicationStatusBadge status={cell.row.original.status} />
+            {cell.row.original.status && <ApplicationStatusBadge status={cell.row.original.status} />}
             {cell.row.original.isRejected && <AppealReturnedMark />}
           </div>
         ),
       },
       {
         id: 'actions',
-        cell: ({ row }: any) => (
+        cell: ({ row }) => (
           <DataTableRowActions
             showView
             showDelete
             row={row}
-            onView={(row: any) => navigate(`/applications/${row?.original?.id}`)}
+            onView={(row) => navigate(`/applications/${row.original.id}`)}
           />
         ),
       },

@@ -3,7 +3,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/shar
 import { cn } from '@/shared/lib/utils'
 import { RefreshCcw } from 'lucide-react'
 
-export const RefreshLegalInfoButton = ({ tinNumber }: { tinNumber: any }) => {
+export const RefreshLegalInfoButton = ({ tinNumber }: { tinNumber?: string | number | null }) => {
   const { handleUpdate, isPending } = useUpdateLegalInfo(tinNumber)
 
   if (!tinNumber) return null

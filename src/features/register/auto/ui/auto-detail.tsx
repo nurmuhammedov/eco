@@ -8,13 +8,15 @@ import { useCustomSearchParams, useData } from '@/shared/hooks'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { UserRoles } from '@/shared/types/user'
 import { formatDate } from 'date-fns'
+import { paramText } from '@/shared/lib/url-params'
 import { tabs } from '@/features/register/auto/model/auto-tabs'
 
 export default function AutoDetail() {
   const { id } = useParams<{ id: string }>()
   const {
-    paramsObject: { tin: currentTin = '' },
+    paramsObject: { tin },
   } = useCustomSearchParams()
+  const currentTin = paramText(tin)
   const { data } = useData<any>(`/tankers/${id}`)
   const { user } = useAuth()
 

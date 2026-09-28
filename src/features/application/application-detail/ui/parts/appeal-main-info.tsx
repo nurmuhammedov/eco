@@ -1,7 +1,7 @@
 import DetailRow from '@/shared/components/common/detail-row'
 import { getDate } from '@/shared/utils/date'
 import { useHazardousFacilityCategoryDictionarySelect } from '@/shared/api/dictionaries'
-import { FC } from 'react'
+import { FC, ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import {
@@ -14,23 +14,30 @@ import { ACCREDITATION_SPHERE_LABELS } from '@/shared/constants/accreditation-sp
 import { HF_HAZARDOUS_SIGN_LABELS, HF_LEGAL_TYPE_LABELS } from '@/shared/constants/hf-attributes'
 import { EmptyValue } from '@/shared/components/common/empty-value'
 import FileLink from '@/shared/components/common/file-link'
+import type { AppealInfoData } from '@/entities/application'
 import { TrainedEmployeesRows } from './trained-employees-rows'
 
 interface Props {
-  address: any
+  address?: string | null
   /** Kept on the appeal itself rather than in its payload. */
-  number?: string
-  deadline?: string
-  resolution?: string
-  basisPath?: string
-  data: any
+  number?: string | null
+  deadline?: string | null
+  resolution?: string | null
+  basisPath?: string | null
+  data?: AppealInfoData | null
   isRegister?: boolean
   /** Staff headcount lives on the registry record, not on the appeal. */
   showStaffCounts?: boolean
   /** Organization whose staff trained at the partner training centre is shown */
-  trainedEmployeesTin?: string
-  type: any
+  trainedEmployeesTin?: string | number | null
+  /** Which object the rows describe: HF, CRANE, IRS, XRAY... */
+  type?: string | null
 }
+
+/** The label a code is shown under, or the code itself when it has none */
+const labelOf = (labels: Record<string, string>, code?: string | null) => (code ? labels[code] || code : undefined)
+
+const STATE_SERVICE_LABELS: Record<string, string> = { ...stateService }
 
 const ACCREDITATION_FIELDS = ['phoneNumber', 'email', 'spheres', 'address']
 
@@ -503,7 +510,7 @@ const AppealMainInfo: FC<Props> = ({
       .flat()
       .find((i) => i.id === data?.stateService)?.title ||
     APPLICATIONS_DATA.find((i) => i.type === data?.stateService)?.title ||
-    (stateService as any)[data?.stateService]
+    labelOf(STATE_SERVICE_LABELS, data?.stateService)
 
   const USAGE_TYPE_MAP: Record<string, string> = {
     [IrsUsageType.USAGE]: 'Ishlatish (foydalanish) uchun',
@@ -525,9 +532,9 @@ const AppealMainInfo: FC<Props> = ({
     IV: 'IV daraja',
   }
 
-  const usageTypeName = USAGE_TYPE_MAP[data?.usageType]
+  const usageTypeName = labelOf(USAGE_TYPE_MAP, data?.usageType)
 
-  const isAccreditation = ACCREDITATION_TYPES.includes(type)
+  const isAccreditation = !!type && ACCREDITATION_TYPES.includes(type)
 
   // A declaration check carries the applicant's own details rather than an
   // object of its own, so it has nothing in common with the rows below.
@@ -538,26 +545,26 @@ const AppealMainInfo: FC<Props> = ({
    * categoryName comes back empty; the names are looked up from the dictionary
    * the multi-category selector reads.
    */
-  const multiCategoryIds: (number | string)[] = data?.multiCategoryIds || []
+  const multiCategoryIds = data?.multiCategoryIds || []
   const { data: multiCategories = [] } = useHazardousFacilityCategoryDictionarySelect(multiCategoryIds.length > 0)
 
   const categoryValue =
     data?.categoryName ||
     multiCategoryIds
-      .map((id) => (multiCategories as any[]).find((item) => String(item.id) === String(id))?.name || `Toifa #${id}`)
+      .map((id) => multiCategories.find((item) => String(item.id) === String(id))?.name || `Toifa #${id}`)
       .join(', ')
 
-  const allowedFields = ALLOWED_FIELDS[type] || []
+  const allowedFields = (type && ALLOWED_FIELDS[type]) || []
 
   const isAllowed = (field: string) => allowedFields.includes(field)
 
-  const renderRow = (labelKey: string, value: any, isDate = false) => {
+  const renderRow = (labelKey: string, value: ReactNode) => {
     if (!isAllowed(labelKey)) return null
 
-    const finalValue = isDate ? getDate(value) : value
-
-    return <DetailRow key={labelKey} title={t(`labels.${type}.${labelKey}`)} value={finalValue || <EmptyValue />} />
+    return <DetailRow key={labelKey} title={t(`labels.${type}.${labelKey}`)} value={value || <EmptyValue />} />
   }
+
+  const renderDate = (labelKey: string, value?: string | null) => renderRow(labelKey, getDate(value))
 
   return (
     <div className="flex flex-col py-1">
@@ -570,7 +577,7 @@ const AppealMainInfo: FC<Props> = ({
           {renderRow('legalTin', data?.legalTin)}
           {renderRow('hfRegistryNumber', data?.hfRegistryNumber)}
           {renderRow('phoneNumber', data?.phoneNumber)}
-          {renderRow('sourceType', SOURCE_TYPE_MAP[data?.sourceType] || data?.sourceType)}
+          {renderRow('sourceType', labelOf(SOURCE_TYPE_MAP, data?.sourceType))}
           {renderRow('deadline', getDate(deadline))}
           {renderRow('address', address)}
           {renderRow('resolution', resolution)}
@@ -585,25 +592,22 @@ const AppealMainInfo: FC<Props> = ({
       {renderRow('hfTypeId', data?.hfTypeName)}
       {isAllowed('spheres') &&
         !isAccreditation &&
-        renderRow('spheres', data?.spheres?.map((item: string) => t('application.' + item)).join(', '))}
+        renderRow('spheres', data?.spheres?.map((item) => t('application.' + item)).join(', '))}
 
       {isAccreditation && (
         <>
           {renderRow('phoneNumber', data?.phoneNumber)}
           {renderRow('email', data?.email)}
           {!!data?.spheres?.length &&
-            renderRow(
-              'spheres',
-              data.spheres.map((item: string) => ACCREDITATION_SPHERE_LABELS[item] || item).join('; ')
-            )}
+            renderRow('spheres', data.spheres.map((item) => ACCREDITATION_SPHERE_LABELS[item] || item).join('; '))}
         </>
       )}
       {renderRow('extraArea', data?.extraArea)}
       {renderRow('hazardousSubstance', data?.hazardousSubstance)}
-      {renderRow('hazardousSign', HF_HAZARDOUS_SIGN_LABELS[data?.hazardousSign] || data?.hazardousSign)}
-      {renderRow('legalType', HF_LEGAL_TYPE_LABELS[data?.legalType] || data?.legalType)}
+      {renderRow('hazardousSign', labelOf(HF_HAZARDOUS_SIGN_LABELS, data?.hazardousSign))}
+      {renderRow('legalType', labelOf(HF_LEGAL_TYPE_LABELS, data?.legalType))}
       {renderRow('cadastreNumber', data?.cadastreNumber)}
-      {renderRow('startedDate', data?.startedDate, true)}
+      {renderDate('startedDate', data?.startedDate)}
       {renderRow('sign', data?.sign)}
 
       {/* Qurilmalar uchun umumiy maydonlar */}
@@ -628,16 +632,16 @@ const AppealMainInfo: FC<Props> = ({
       {renderRow('factoryNumber', data?.factoryNumber)}
       {renderRow('factory', data?.factory)}
       {renderRow('model', data?.model)}
-      {renderRow('manufacturedAt', data?.manufacturedAt, true)}
-      {renderRow('partialCheckDate', data?.partialCheckDate, true)}
-      {renderRow('fullCheckDate', data?.fullCheckDate, true)}
-      {renderRow('servicePeriod', data?.servicePeriod, true)}
+      {renderDate('manufacturedAt', data?.manufacturedAt)}
+      {renderDate('partialCheckDate', data?.partialCheckDate)}
+      {renderDate('fullCheckDate', data?.fullCheckDate)}
+      {renderDate('servicePeriod', data?.servicePeriod)}
 
       {/* Rentgen (XRAY) maydonlari */}
       {renderRow('licenseNumber', data?.licenseNumber)}
       {renderRow('licenseRegistryNumber', data?.licenseRegistryNumber)}
-      {renderRow('licenseDate', data?.licenseDate, true)}
-      {renderRow('licenseExpiryDate', data?.licenseExpiryDate, true)}
+      {renderDate('licenseDate', data?.licenseDate)}
+      {renderDate('licenseExpiryDate', data?.licenseExpiryDate)}
       {renderRow('serialNumber', data?.serialNumber)}
       {renderRow('manufacturedYear', data?.manufacturedYear)}
       {renderRow('stateService', serviceName || data?.stateService)}
@@ -656,7 +660,7 @@ const AppealMainInfo: FC<Props> = ({
       {renderRow('category', data?.category)}
       {renderRow('country', data?.country)}
       {renderRow('acceptedFrom', data?.acceptedFrom)}
-      {renderRow('acceptedAt', data?.acceptedAt, true)}
+      {renderDate('acceptedAt', data?.acceptedAt)}
       {isAllowed('isValid') &&
         renderRow('isValid', data?.isValid !== undefined ? (data?.isValid ? 'Aktiv' : 'Aktiv emas') : null)}
       {renderRow('usageType', usageTypeName || data?.usageType)}
@@ -680,12 +684,12 @@ const AppealMainInfo: FC<Props> = ({
       {renderRow('passengerCount', data?.parameters?.passengerCount)}
       {renderRow('height', data?.parameters?.height)}
       {renderRow('fuel', data?.parameters?.fuel)}
-      {renderRow('nonDestructiveCheckDate', data?.nonDestructiveCheckDate, true)}
+      {renderDate('nonDestructiveCheckDate', data?.nonDestructiveCheckDate)}
 
       {/* Attraksion uchun maxsus */}
       {renderRow('attractionName', data?.attractionName)}
       {renderRow('childEquipmentSortId', data?.childEquipmentSortName || data?.childEquipmentSortId)}
-      {renderRow('riskLevel', RISK_LEVEL_MAP[data?.riskLevel] || data?.riskLevel)}
+      {renderRow('riskLevel', labelOf(RISK_LEVEL_MAP, data?.riskLevel))}
 
       {renderRow('parkName', data?.parkName)}
       {!isDeclarationCheck && renderRow('address', address)}

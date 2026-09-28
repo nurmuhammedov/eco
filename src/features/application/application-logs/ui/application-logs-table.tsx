@@ -6,7 +6,14 @@ import { formatDate } from 'date-fns'
 import { useExecutionLogs } from '@/features/application/application-detail/hooks/use-execution-logs'
 import { useParams } from 'react-router-dom'
 
-export const ApplicationLogsList = ({ isShow, id: propId, type = 'appeal' }: any) => {
+interface ApplicationLogsListProps {
+  isShow?: boolean
+  /** The appeal or registry change; the route's own id when left out */
+  id?: string
+  type?: 'appeal' | 'change'
+}
+
+export const ApplicationLogsList = ({ isShow, id: propId, type = 'appeal' }: ApplicationLogsListProps) => {
   const { id: paramsId } = useParams()
   const id = propId || paramsId
   const { data, isLoading } = useExecutionLogs(id, type, isShow)

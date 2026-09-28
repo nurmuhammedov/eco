@@ -23,7 +23,7 @@ const schema = z.object({
 })
 
 interface Props {
-  documentId: any
+  documentId: string
   label: string
 }
 

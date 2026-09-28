@@ -8,6 +8,7 @@ import { useAuth } from '@/shared/hooks/use-auth'
 import { TabsLayout } from '@/shared/layouts'
 import { PlusCircle } from 'lucide-react'
 import { useMemo } from 'react'
+import type { OptionItem } from '@/shared/types/general'
 import { useNavigate } from 'react-router-dom'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { getSelectOptions } from '@/shared/lib/get-select-options'
@@ -24,12 +25,13 @@ const ApplicationPage = () => {
   const mode = paramText(modeParam)
   const { user } = useAuth()
 
-  const { data: regionOptions, isLoading: isLoadingRegions } = useData<any>(`${API_ENDPOINTS.REGIONS_SELECT}`)
+  const { data: regionOptions, isLoading: isLoadingRegions } = useData<OptionItem<number>[]>(
+    `${API_ENDPOINTS.REGIONS_SELECT}`
+  )
 
   const { handleChangeTab, applicationStatus } = useApplicationPage()
   const status = paramText(useCustomSearchParams().paramsObject.status, ApplicationStatus.ALL)
 
-  useData('/hf/locations')
   const action = useMemo(() => {
     if ([UserRoles.LEGAL, UserRoles.INDIVIDUAL]?.includes(user?.role as unknown as UserRoles)) {
       return (

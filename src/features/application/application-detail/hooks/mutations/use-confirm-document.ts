@@ -4,8 +4,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 
 interface ConfirmDocumentPayload {
-  appealId: any
-  documentId: any
+  appealId?: string
+  documentId?: string
   shouldRegister?: boolean
 }
 

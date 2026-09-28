@@ -8,7 +8,7 @@ import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
  * so a missing one is rejected rather than sent - silently, because it means
  * the screen is still loading, which is nothing for the user to read about.
  */
-const useUpdate = <TVariables extends object, TData, TError>(
+const useUpdate = <TVariables extends object, TData = unknown, TError = Error>(
   endpoint: string,
   id?: string | number | boolean | null,
   method: 'put' | 'patch' = 'put',

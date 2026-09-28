@@ -7,7 +7,7 @@ import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
  * A create against `endpoint`. The lists that endpoint feeds are refetched on
  * success, so a new row shows up without the caller invalidating by hand.
  */
-const useAdd = <TVariables extends object, TData, TError>(
+const useAdd = <TVariables extends object, TData = unknown, TError = Error>(
   endpoint: string,
   successMessage: string = 'Muvaffaqiyatli saqlandi!'
 ) => {

@@ -1,10 +1,15 @@
-import type { DocumentSigner } from '../../model/document-types'
+import type { DocumentSigner, SignatureStatus } from '../../model/document-types'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog'
 
 import { FC } from 'react'
 import { Badge } from '@/shared/components/ui/badge'
 import { format } from 'date-fns'
-import { signStatuses } from '../../model/sign-statuses'
+
+/** Each signer either signed or turned the document down */
+const SIGNER_STATUSES: Record<SignatureStatus, { label: string; variant: 'info' | 'error' }> = {
+  APPROVED: { label: 'Imzolangan', variant: 'info' },
+  REJECTED: { label: 'Rad etilgan', variant: 'error' },
+}
 
 interface Props {
   signers: DocumentSigner[]
@@ -25,16 +30,16 @@ const SignersModal: FC<Props> = ({ signers, setSigners }) => {
         </DialogHeader>
         <div>
           {signers.map((signer) => {
-            const currentLabel = signStatuses.get(signer.isSigned)
+            const currentLabel = signer.status ? SIGNER_STATUSES[signer.status] : undefined
 
             return (
               <div
-                key={signer?.id ?? signer?.signedBy}
+                key={signer.signerUserId ?? signer.signedBy}
                 className="flex items-center justify-between gap-4 rounded p-2.5 text-sm odd:bg-neutral-50"
               >
-                <p>{signer?.signedBy}</p>
+                <p>{signer.signedBy}</p>
                 <p className="flex-shrink-0 text-xs text-slate-400">
-                  {format(signer?.createdAt, 'dd.MM.yyyy, HH:mm:ss')}
+                  {signer.createdAt && format(signer.createdAt, 'dd.MM.yyyy, HH:mm:ss')}
                 </p>
                 <p className="shrink-0">
                   {currentLabel && <Badge variant={currentLabel.variant}>{currentLabel.label}</Badge>}

@@ -1,20 +1,28 @@
 import type { UserLogsTypeEnum } from '@/entities/admin/user-logs/model/user-logs.enums'
 
+/** DocumentSignatureStatus: the signer signed the document or turned it down */
+export type SignatureStatus = 'APPROVED' | 'REJECTED'
+
+/** SignerView */
 export interface DocumentSigner {
-  id?: string
-  signedBy: string
-  isSigned: boolean
-  createdAt: string
+  signedBy: string | null
+  createdAt: string | null
+  signerUserId: string | null
+  status: SignatureStatus | null
 }
 
-/** A document attached to an application, by the applicant or in reply */
+/** DocumentViewByRequest / DocumentViewByReply: a document attached to an appeal, by the applicant or in reply */
 export interface ApplicationDocument {
-  id?: string
-  createdAt: string
-  documentType: string
-  isFullySigned: boolean
-  signers: DocumentSigner[]
-  path?: string
+  documentId: string | null
+  createdAt: string | null
+  documentType: string | null
+  isFullySigned: boolean | null
+  path: string | null
+  signers: DocumentSigner[] | null
+  /** A reply's verdict from the head: AGREED, APPROVED, NOT_AGREED, NOT_APPROVED */
+  agreementStatus?: string | null
+  /** Why a reply was turned down */
+  description?: string | null
 }
 
 /** One step in an application's (or a registry change's) execution history */

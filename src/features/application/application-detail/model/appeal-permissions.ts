@@ -30,7 +30,7 @@ const EQUIPMENT_KEYWORDS = [
   'LPG_POWERED',
 ]
 
-export function getAppealDomain(appealType?: string): AppealDomain {
+export function getAppealDomain(appealType?: string | null): AppealDomain {
   if (!appealType) return AppealDomain.UNKNOWN
   if (ACCREDITATION_TYPES.includes(appealType)) return AppealDomain.ACCREDITATION
   if (appealType.includes('IRS') || appealType.includes('XRAY')) return AppealDomain.RADIATION
@@ -71,8 +71,8 @@ function getDomainActors(domain: AppealDomain) {
 
 export function getAppealPermissions(
   role: UserRoles | undefined,
-  appealType: string | undefined,
-  status: ApplicationStatus | undefined
+  appealType?: string | null,
+  status?: ApplicationStatus | null
 ): AppealPermissions {
   const domain = getAppealDomain(appealType)
   const actors = getDomainActors(domain)

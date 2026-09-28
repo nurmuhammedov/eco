@@ -8,7 +8,7 @@ interface TrainedEmployees {
 }
 
 /** Staff the organization has had trained at the partner training centre */
-export const TrainedEmployeesRows = ({ tinNumber }: { tinNumber: string }) => {
+export const TrainedEmployeesRows = ({ tinNumber }: { tinNumber: string | number }) => {
   const { data } = useData<TrainedEmployees>('/integration/ktnu/trained-employees', !!tinNumber, {
     legalTin: tinNumber,
   })

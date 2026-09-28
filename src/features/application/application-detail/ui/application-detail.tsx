@@ -9,18 +9,18 @@ import LegalApplicantInfo from '@/features/application/application-detail/ui/par
 import { DetailCardAccordion } from '@/shared/components/common/detail-card'
 import { MultiCategoryFiles, multiCategoryFileValue } from './parts/multi-category-files'
 import DetailRow from '@/shared/components/common/detail-row'
-import { Coordinate } from '@/shared/components/common/yandex-map'
+import { parseCoordinate } from '@/shared/components/common/yandex-map'
 import YandexMap from '@/shared/components/common/yandex-map/ui/yandex-map'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
 import { getDate } from '@/shared/utils/date'
 import { ApplicationStatusRow } from '@/entities/application/ui/application-status-row'
-import { ApplicationStatus } from '@/entities/application'
+import { type ApplicationDetailWithFiles, ApplicationStatus } from '@/entities/application'
 import { EmptyValue } from '@/shared/components/common/empty-value'
 
 /** Reply documents only matter while the appeal is being agreed or approved */
 const RESPONSE_DOCS_STATUSES = [ApplicationStatus.IN_AGREEMENT, ApplicationStatus.IN_APPROVAL]
 
-function getDefaultDocsTab(status?: ApplicationStatus) {
+function getDefaultDocsTab(status?: ApplicationStatus | null) {
   if (status === ApplicationStatus.IN_PROCESS) return 'applicant_docs'
   if (status && RESPONSE_DOCS_STATUSES.includes(status)) return 'response_docs'
 
@@ -31,15 +31,15 @@ const ApplicationDetail = ({
   data,
   userRole,
 }: {
-  data: any
+  data?: ApplicationDetailWithFiles
   userRole?: UserRoles
   showAttestationActions?: boolean
 }) => {
-  const currentObjLocation = data?.data?.location?.split(',') || ([] as Coordinate[])
+  const objectPoint = parseCoordinate(data?.data?.location)
   const isLegalApplication = data?.ownerType == 'LEGAL'
   const defaultDocsTab = getDefaultDocsTab(data?.status)
 
-  const multiCategoryFiles: Record<string, any[]> = data?.multiCategoryFiles || {}
+  const multiCategoryFiles = data?.multiCategoryFiles || {}
   const multiCategoryIds = Object.keys(multiCategoryFiles)
   const hasMultiCategoryFiles = multiCategoryIds.length > 0
 
@@ -72,7 +72,6 @@ const ApplicationDetail = ({
         {isLegalApplication && (
           <DetailCardAccordion.Item value="applicant_info_legal" title="Arizachi to‘g‘risida ma’lumot">
             <LegalApplicantInfo
-              showTrainedEmployees
               isShowPhoneNumber={true}
               tinNumber={data?.ownerIdentity}
               phoneNumber={data?.phoneNumber}
@@ -132,16 +131,16 @@ const ApplicationDetail = ({
           <MultiCategoryFiles
             multiCategoryFiles={multiCategoryFiles}
             userRole={userRole}
-            applicationStatus={data?.status}
+            applicationStatus={data?.status ?? undefined}
             appealId={data?.id}
           />
         ) : (
-          data?.files?.length > 0 && (
+          !!data?.files.length && (
             <DetailCardAccordion.Item value="appeal_files" title="Arizaga biriktirilgan fayllar">
               <FilesSection
                 files={data?.files || []}
                 userRole={userRole}
-                applicationStatus={data?.status}
+                applicationStatus={data?.status ?? undefined}
                 appealId={data?.id}
                 edit={true}
               />
@@ -149,9 +148,9 @@ const ApplicationDetail = ({
           )
         )}
 
-        {!!currentObjLocation?.length && (
+        {objectPoint && (
           <DetailCardAccordion.Item value="object_location" title="Arizada ko‘rsatilgan obyekt yoki qurilma joyi">
-            <YandexMap coords={[currentObjLocation]} center={currentObjLocation} zoom={16} />
+            <YandexMap coords={[objectPoint]} center={objectPoint} zoom={16} />
           </DetailCardAccordion.Item>
         )}
       </DetailCardAccordion>

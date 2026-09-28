@@ -1,20 +1,9 @@
-import { ApplicationStatus } from '@/entities/application'
+import { type AppealFile as FileType, ApplicationStatus } from '@/entities/application'
 import { UserRoles } from '@/shared/types/user'
 import FileLink from '@/shared/components/common/file-link'
 import { FC } from 'react'
 import { getDate } from '@/shared/utils/date'
 import { EmptyValue } from '@/shared/components/common/empty-value'
-
-type FileType = {
-  label: string
-  data: {
-    path: string
-    number: string
-    uploadDate: string
-    expiryDate: string
-  }
-  fieldName: string
-}
 
 interface Props {
   files: FileType[]

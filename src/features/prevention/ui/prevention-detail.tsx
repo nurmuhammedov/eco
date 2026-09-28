@@ -9,6 +9,8 @@ import { DetailCardAccordion } from '@/shared/components/common/detail-card'
 import DetailRow from '@/shared/components/common/detail-row'
 import { Badge } from '@/shared/components/ui/badge'
 import { useCustomSearchParams, useData, useDetail } from '@/shared/hooks'
+import { paramText } from '@/shared/lib/url-params'
+import type { AppealInfoData } from '@/entities/application'
 import { useAuth } from '@/shared/hooks/use-auth'
 import FileLink from '@/shared/components/common/file-link'
 import { IrsList } from '@/features/register/irs/ui/irs-list'
@@ -21,7 +23,7 @@ const PreventionDetail = () => {
   const { paramsObject } = useCustomSearchParams()
   const { data: details, isLoading } = useDetail<any>('/preventions/', id)
 
-  const tin = paramsObject.tin || ''
+  const tin = paramText(paramsObject.tin)
 
   const requestType =
     details?.belongType === 'HF' || details?.belongType === 'IRS'
@@ -30,7 +32,7 @@ const PreventionDetail = () => {
         ? 'xrays'
         : 'equipments'
 
-  const { data: objectData } = useData(
+  const { data: objectData } = useData<AppealInfoData>(
     `/${requestType.toLowerCase()}/${details?.belongId}`,
     !!details?.belongType && !!details?.belongId && details?.belongType !== 'IRS' && details?.belongType !== 'XRAY'
   )

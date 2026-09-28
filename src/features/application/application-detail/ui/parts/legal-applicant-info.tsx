@@ -3,7 +3,14 @@ import DetailRow from '@/shared/components/common/detail-row'
 import { Skeleton } from '@/shared/components/ui/skeleton'
 import { EmptyValue } from '@/shared/components/common/empty-value'
 
-const LegalApplicantInfo = ({ tinNumber, phoneNumber, isShowPhoneNumber = false }: any) => {
+interface LegalApplicantInfoProps {
+  tinNumber?: string | number | null
+  /** The number the appeal gave to reach the applicant */
+  phoneNumber?: string | null
+  isShowPhoneNumber?: boolean
+}
+
+const LegalApplicantInfo = ({ tinNumber, phoneNumber, isShowPhoneNumber = false }: LegalApplicantInfoProps) => {
   const { data, isLoading } = useLegalOrganizationQuery(tinNumber)
 
   if (isLoading) {

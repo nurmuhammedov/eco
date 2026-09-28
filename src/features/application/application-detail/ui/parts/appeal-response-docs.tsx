@@ -1,4 +1,3 @@
-import { ApplicationTypeEnum } from '@/entities/create-application'
 import { useResponseDocs } from '@/features/application/application-detail/hooks/use-response-docs'
 import { RejectAppealModal } from '@/features/application/application-detail/ui/modals/reject-appeal-modal'
 import RejectDocumentModal from '@/features/application/application-detail/ui/modals/reject-document-modal'
@@ -10,7 +9,8 @@ import FileLink from '@/shared/components/common/file-link'
 import { Badge } from '@/shared/components/ui/badge'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { ColumnDef } from '@tanstack/react-table'
-import { formatDate } from 'date-fns'
+import { getDate } from '@/shared/utils/date'
+import type { ApplicationDocument, DocumentSigner } from '../../model/document-types'
 import { Eye, Info } from 'lucide-react'
 import { cn } from '@/shared/lib/utils'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/shared/components/ui/tooltip'
@@ -42,33 +42,36 @@ export const documentTypes = new Map([
 ])
 
 interface Props {
-  appeal_type: (typeof ApplicationTypeEnum)[keyof typeof ApplicationTypeEnum]
+  appeal_type?: string | null
 }
 
 const AppealResponseDocs: React.FC<Props> = ({ appeal_type }) => {
   const [rejectMessage, setRejectMessage] = useState<string>('')
-  const [signers, setSigners] = useState<any[]>([])
+  const [signers, setSigners] = useState<DocumentSigner[]>([])
   const { data, isLoading } = useResponseDocs()
   const { user } = useAuth()
 
-  const columns: ColumnDef<any>[] = [
+  const columns: ColumnDef<ApplicationDocument>[] = [
     {
       accessorKey: 'createdAt',
       header: 'Sana',
-      cell: (cell) => formatDate(cell.row.original.createdAt, 'dd.MM.yyyy'),
+      cell: (cell) => getDate(cell.row.original.createdAt),
     },
     {
       accessorKey: 'documentType',
       header: 'Hujjat nomi',
-      cell: (cell) => documentTypes.get(cell.row.original.documentType),
+      cell: (cell) => {
+        const type = cell.row.original.documentType
+        return type ? documentTypes.get(type) : undefined
+      },
     },
     {
       accessorKey: 'isFullySigned',
       header: 'Imzo holati',
-      cell: (cell: any) => {
-        const currentStatus = cell.row.original?.isFullySigned
-        const currentLabel = signStatuses.get(currentStatus)
-        const signersList = cell.row.original?.signers as any[]
+      cell: (cell) => {
+        const currentStatus = cell.row.original.isFullySigned
+        const currentLabel = currentStatus == null ? undefined : signStatuses.get(currentStatus)
+        const signersList = cell.row.original.signers ?? []
         if (currentLabel) {
           return (
             <div className="flex items-center gap-2">
@@ -99,13 +102,13 @@ const AppealResponseDocs: React.FC<Props> = ({ appeal_type }) => {
       cell: (cell) => {
         const isAgreed = !!cell.row.original?.agreementStatus
         const currentAgreement = cell.row.original?.agreementStatus
-        const currentBadge = APPROVE_STATUSES[currentAgreement]
+        const currentBadge = currentAgreement ? APPROVE_STATUSES[currentAgreement] : undefined
         const message = cell.row.original?.description
         const documentId = cell.row.original?.documentId
 
         const { canAgree } = getAppealPermissions(user?.role, appeal_type, undefined)
 
-        if (canAgree && !isAgreed) {
+        if (canAgree && !isAgreed && documentId) {
           return (
             <div className="flex flex-wrap items-center gap-2">
               <RejectDocumentModal documentId={documentId} label={'Ijro noto‘g‘ri bajarilgan'} />
@@ -151,13 +154,7 @@ const AppealResponseDocs: React.FC<Props> = ({ appeal_type }) => {
 
   return (
     <>
-      <DataTable
-        showNumeration={false}
-        isPaginated
-        isLoading={isLoading}
-        data={data || []}
-        columns={columns as unknown as any}
-      />
+      <DataTable showNumeration={false} isPaginated isLoading={isLoading} data={data || []} columns={columns} />
       <RejectMessageModal setMessage={setRejectMessage} message={rejectMessage} />
       <SignersModal setSigners={setSigners} signers={signers} />
     </>
