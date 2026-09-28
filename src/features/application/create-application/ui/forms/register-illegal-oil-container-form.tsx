@@ -51,8 +51,8 @@ const RegisterIllegalOilContainerForm = ({ onSubmit, isPending = false }: Regist
     handleSubmit,
   } = useRegisterIllegalOilContainer(onSubmit)
 
-  const identity = form.watch('identity' as any)
-  const birthDateString = form.watch('birthDate' as any)
+  const identity = form.watch('identity')
+  const birthDateString = form.watch('birthDate')
   const isLegal = identity?.length === 9
   const isIndividual = identity?.length === 14
 
@@ -73,7 +73,7 @@ const RegisterIllegalOilContainerForm = ({ onSubmit, isPending = false }: Regist
             <div className="3xl:flex 3xl:flex-wrap 4xl:w-4/5 mb-5 grid gap-x-4 gap-y-4 md:grid-cols-2 xl:grid-cols-3">
               <FormField
                 control={form.control}
-                name={'identity' as any}
+                name="identity"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel required>STIR yoki JSHSHIR</FormLabel>
@@ -89,7 +89,7 @@ const RegisterIllegalOilContainerForm = ({ onSubmit, isPending = false }: Regist
                           e.target.value = val
                           if (ownerData) handleClear()
                           if (val.length !== 14) {
-                            form.setValue('birthDate' as any, undefined as any)
+                            form.setValue('birthDate', undefined)
                           }
                           field.onChange(e)
                         }}
@@ -103,7 +103,7 @@ const RegisterIllegalOilContainerForm = ({ onSubmit, isPending = false }: Regist
               {isIndividual && (
                 <FormField
                   control={form.control}
-                  name={'birthDate' as any}
+                  name="birthDate"
                   render={({ field }) => {
                     const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
                     return (
@@ -230,9 +230,9 @@ const RegisterIllegalOilContainerForm = ({ onSubmit, isPending = false }: Regist
                   <FormControl>
                     <Input className="3xl:w-sm w-full" placeholder="Hajmi" {...field} />
                   </FormControl>
-                  {isUpdate && detail?.capacity && /[\u0400-\u04FF]/.test(detail.capacity) && (
+                  {isUpdate && detail?.parameters?.capacity && /[\u0400-\u04FF]/.test(detail.parameters.capacity) && (
                     <FormDescription className="3xl:w-sm w-full wrap-break-word">
-                      Eski qiymat: {detail.capacity}
+                      Eski qiymat: {detail.parameters.capacity}
                     </FormDescription>
                   )}
                   <FormMessage />
@@ -251,7 +251,6 @@ const RegisterIllegalOilContainerForm = ({ onSubmit, isPending = false }: Regist
                     <DatePicker
                       disableStrategy={'after'}
                       value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                      // O‘ZGARISH: Date obyektini stringga o‘tkazamiz
                       onChange={(date) => field.onChange(date ? date.toISOString() : undefined)}
                       placeholder="Sanani tanlang"
                     />
@@ -275,7 +274,7 @@ const RegisterIllegalOilContainerForm = ({ onSubmit, isPending = false }: Regist
                       onValueChange={(value) => {
                         if (value) {
                           field.onChange(value)
-                          form.setValue('districtId', undefined as any)
+                          form.setValue('districtId', undefined)
                         }
                       }}
                       value={field.value?.toString()}
@@ -401,9 +400,7 @@ const RegisterIllegalOilContainerForm = ({ onSubmit, isPending = false }: Regist
                         form={form}
                         name={field.name}
                         accept={[FileTypes.PDF]}
-                        onRemove={() =>
-                          form.setValue('expertiseExpiryDate', undefined as any, { shouldValidate: true })
-                        }
+                        onRemove={() => form.setValue('expertiseExpiryDate', undefined, { shouldValidate: true })}
                       />
                     </FormControl>
                   </div>

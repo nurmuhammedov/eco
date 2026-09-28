@@ -1,4 +1,3 @@
-import { apiClient } from '@/shared/api/api-client'
 import { useLegalOrganizationQuery } from '@/shared/api/dictionaries'
 import { useHazardousFacilityByTinQuery } from '@/shared/api/dictionaries'
 import { invalidateRegistryQueries } from '@/shared/lib/query/invalidate-registry'
@@ -6,11 +5,10 @@ import { z } from 'zod'
 import { useChildEquipmentTypes, useDistrictSelectQuery, useRegionSelectQuery } from '@/shared/api/dictionaries'
 import { getSelectOptions } from '@/shared/lib/get-select-options'
 import { useDetail, useUpdate } from '@/shared/hooks'
-import useAdd from '@/shared/hooks/api/use-add'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { type FormDraft, zodFormResolver } from '@/shared/lib/zod-form-resolver'
 import { useQueryClient } from '@tanstack/react-query'
-import { format } from 'date-fns'
-import { useEffect, useMemo, useState } from 'react'
+import { format, parseISO } from 'date-fns'
+import { useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { toast } from 'sonner'
@@ -20,6 +18,11 @@ import {
   IllegalOilContainerAppealDtoSchema,
   IllegalOilContainerAppealDtoBaseSchema,
 } from '@/entities/create-application'
+import { type OwnerData, useOwnerLookup } from './use-owner-lookup'
+import type { EquipmentDetail } from './equipment-detail'
+import { KEPT_OWNER_BIRTH_DATE, latinOrEmpty } from './edit-values'
+
+type OilContainerDraft = FormDraft<typeof IllegalOilContainerAppealDtoSchema>
 
 export const useRegisterIllegalOilContainer = (
   externalSubmit?: (data: CreateIllegalOilContainerApplicationDTO) => void
@@ -31,17 +34,16 @@ export const useRegisterIllegalOilContainer = (
   const navigate = useNavigate()
   const queryClient = useQueryClient()
 
-  const [manualOwnerData, setManualOwnerData] = useState<any>(null)
-  const [isManualSearchLoading, setIsManualSearchLoading] = useState(false)
+  const ownerLookup = useOwnerLookup()
 
   const formSchema = isUpdate
     ? IllegalOilContainerAppealDtoBaseSchema.extend({
-        // Dates
+        // The picker hands the form an ISO string, the record a `yyyy-MM-dd` one
         nonDestructiveCheckDate: z
-          .date()
+          .string()
           .optional()
           .nullable()
-          .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
+          .transform((value) => (value ? format(parseISO(value), 'yyyy-MM-dd') : null)),
         expertiseExpiryDate: z
           .date()
           .optional()
@@ -93,20 +95,20 @@ export const useRegisterIllegalOilContainer = (
           .nullable()
           .transform((val) => (val ? val : null)),
         birthDate: z
-          .string()
+          .date()
           .optional()
           .nullable()
-          .transform((val) => (val ? val : null)),
+          .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
         servicePeriod: z
           .date()
           .optional()
           .nullable()
           .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
-      }).superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'expertisePath', 'expertiseExpiryDate'))
+      }).superRefine((data, ctx) => checkExpiryDate(data, ctx, 'expertisePath', 'expertiseExpiryDate'))
     : IllegalOilContainerAppealDtoSchema
 
-  const form = useForm<CreateIllegalOilContainerApplicationDTO>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<OilContainerDraft, unknown, CreateIllegalOilContainerApplicationDTO>({
+    resolver: zodFormResolver<OilContainerDraft, CreateIllegalOilContainerApplicationDTO>(formSchema),
     defaultValues: {
       phoneNumber: '',
       hazardousFacilityId: undefined,
@@ -127,22 +129,17 @@ export const useRegisterIllegalOilContainer = (
       installationCertPath: undefined,
       passportPath: undefined,
       servicePeriod: undefined,
-    } as any,
+    },
     mode: 'onChange',
   })
 
-  const { data: detail, isLoading: isDetailLoading } = useDetail<any>(`/equipments/`, id, !!id)
+  const { data: detail, isLoading: isDetailLoading } = useDetail<EquipmentDetail>(`/equipments/`, id, !!id)
 
   const { mutateAsync: updateMutate, isPending: isUpdatePending } = useUpdate('/equipments/oil-container/', id)
 
-  const { mutateAsync: individualMutateAsync, isPending: isIndividualPending } = useAdd<any, any, any>(
-    '/integration/iip/individual'
-  )
-
   const ownerIdentity = (detail?.ownerIdentity ? detail?.ownerIdentity?.toString() : null) || tin
   const regionId = form.watch('regionId')
-  // @ts-ignore
-  const identity = form.watch('identity' as any) as string // Watch identity even if not in type
+  const identity = form.watch('identity')
   const isLegal = identity?.length === 9
 
   const { data: regions } = useRegionSelectQuery()
@@ -151,7 +148,7 @@ export const useRegisterIllegalOilContainer = (
 
   const { data: fetchedOwnerData, isLoading: isOwnerLoading } = useLegalOrganizationQuery(ownerIdentity)
 
-  const currentOwnerData = isUpdate ? fetchedOwnerData : manualOwnerData
+  const currentOwnerData: OwnerData | null | undefined = isUpdate ? fetchedOwnerData : ownerLookup.owner
 
   const { data: hfOptions } = useHazardousFacilityByTinQuery(identity, isLegal && !!currentOwnerData)
 
@@ -159,32 +156,28 @@ export const useRegisterIllegalOilContainer = (
 
   useEffect(() => {
     if (detail && isUpdate) {
-      const getValue = (val: any) => (typeof val === 'string' && /[\u0400-\u04FF]/.test(val) ? '' : val)
-
       form.reset({
-        phoneNumber: detail.phoneNumber || '',
-        // @ts-ignore
+        phoneNumber: '',
         identity: detail.ownerIdentity ? String(detail.ownerIdentity) : '',
-        // @ts-ignore
-        birthDate: isUpdate ? '1900-01-01' : parseDate(detail.birthDate),
+        birthDate: KEPT_OWNER_BIRTH_DATE,
         hazardousFacilityId: detail.hfId,
         childEquipmentId: detail.childEquipmentId ? String(detail.childEquipmentId) : undefined,
         regionId: detail.regionId ? String(detail.regionId) : '',
-        address: getValue(detail.address || ''),
-        location: getValue(detail.location || ''),
-        capacity: getValue(detail.parameters?.capacity || ''),
-        nonDestructiveCheckDate: parseDate(detail.nonDestructiveCheckDate),
+        address: latinOrEmpty(detail.address || ''),
+        location: latinOrEmpty(detail.location || ''),
+        capacity: latinOrEmpty(detail.parameters?.capacity || ''),
+        nonDestructiveCheckDate: detail.nonDestructiveCheckDate ?? undefined,
         manufacturedAt: parseDate(detail.manufacturedAt),
         servicePeriod: parseDate(detail.servicePeriod),
-        labelPath: detail.files?.labelPath?.path,
-        saleContractPath: detail.files?.saleContractPath?.path,
-        equipmentCertPath: detail.files?.equipmentCertPath?.path,
-        assignmentDecreePath: detail.files?.assignmentDecreePath?.path,
-        expertisePath: detail.files?.expertisePath?.path,
+        labelPath: detail.files?.labelPath?.path ?? undefined,
+        saleContractPath: detail.files?.saleContractPath?.path ?? undefined,
+        equipmentCertPath: detail.files?.equipmentCertPath?.path ?? undefined,
+        assignmentDecreePath: detail.files?.assignmentDecreePath?.path ?? undefined,
+        expertisePath: detail.files?.expertisePath?.path ?? undefined,
         expertiseExpiryDate: parseDate(detail.files?.expertisePath?.expiryDate),
-        installationCertPath: detail.files?.installationCertPath?.path,
-        passportPath: detail.files?.passportPath?.path,
-      } as any)
+        installationCertPath: detail.files?.installationCertPath?.path ?? undefined,
+        passportPath: detail.files?.passportPath?.path ?? undefined,
+      })
 
       setTimeout(() => {
         form.setValue('districtId', detail.districtId ? String(detail.districtId) : '')
@@ -193,52 +186,30 @@ export const useRegisterIllegalOilContainer = (
   }, [detail, form, isUpdate])
 
   const handleSearch = () => {
-    // @ts-ignore
     const identity = form.getValues('identity')?.trim()
     const birthDate = form.getValues('birthDate')
 
     if (!identity) return
 
-    if (identity.length === 9) {
-      setIsManualSearchLoading(true)
-      apiClient
-        .post<any>('/integration/iip/legal', { tin: identity })
-        .then((res) => setManualOwnerData(res.data?.data || res.data))
-        .catch(() => setManualOwnerData(null))
-        .finally(() => setIsManualSearchLoading(false))
-    } else if (identity.length === 14 && birthDate) {
-      individualMutateAsync({
-        pin: identity,
-        birthDate: format(birthDate as unknown as Date, 'yyyy-MM-dd'),
-      })
-        .then((res) => setManualOwnerData(res.data?.data || res.data))
-        .catch(() => setManualOwnerData(null))
-    } else {
-      form.trigger(['identity', 'birthDate'] as any)
+    if (!ownerLookup.search(identity, birthDate ? new Date(birthDate) : undefined)) {
+      form.trigger(['identity', 'birthDate'])
     }
   }
 
   const handleClear = () => {
-    setManualOwnerData(null)
-    // @ts-ignore
+    ownerLookup.clear()
     form.setValue('identity', '')
-    // @ts-ignore
     form.setValue('birthDate', undefined)
-    form.setValue('hazardousFacilityId', undefined as any)
+    form.setValue('hazardousFacilityId', undefined)
   }
 
   const handleSubmit = (data: CreateIllegalOilContainerApplicationDTO) => {
-    // @ts-ignore
-    const identity = form.getValues('identity')
-    // @ts-ignore
     const birthDate = form.getValues('birthDate')
-
-    const formattedBirthDate = birthDate ? format(new Date(birthDate), 'yyyy-MM-dd') : undefined
 
     const payload = {
       ...data,
-      identity,
-      birthDate: formattedBirthDate,
+      identity: form.getValues('identity'),
+      birthDate: birthDate ? format(new Date(birthDate), 'yyyy-MM-dd') : undefined,
     }
 
     if (isUpdate) {
@@ -251,7 +222,7 @@ export const useRegisterIllegalOilContainer = (
       })
     } else {
       if (externalSubmit) {
-        externalSubmit(payload as any)
+        externalSubmit(payload)
       }
     }
   }
@@ -271,7 +242,7 @@ export const useRegisterIllegalOilContainer = (
     ownerData: currentOwnerData,
     detail,
     isLoading: isDetailLoading || isOwnerLoading,
-    isSearchLoading: isIndividualPending || isManualSearchLoading,
+    isSearchLoading: ownerLookup.isSearching,
     isSubmitPending: isUpdatePending,
     handleSearch,
     handleClear,
