@@ -13,6 +13,9 @@ export enum UserRoles {
   HR = 'HR', // HR
 }
 
+/** A role as the backend names it: supervisors and controllers are folded into REGIONAL and INSPECTOR on sign-in */
+export type RawUserRole = UserRoles | 'SUPERVISOR' | 'CONTROLLER'
+
 export const UserRoleLabels: Record<UserRoles, string> = {
   [UserRoles.LEGAL]: 'Yuridik shaxs',
   [UserRoles.HEAD]: 'Mas’ul bo‘lim boshlig‘i',

@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { myKpiAPI, SaveResultDTO } from '../api/my-kpi.api'
 import type { KpiTaskDetail } from '@/entities/kpi'
+import { serviceData } from '@/shared/api/services-api-client'
 
 export const MY_KPI_KEYS = {
   task: (year: number, quarter: number) => ['my-kpi-task', year, quarter] as const,
@@ -12,10 +13,7 @@ export const useGetMyKpiTask = (year: number, quarter: number) => {
   return useQuery({
     queryKey: MY_KPI_KEYS.task(year, quarter),
     queryFn: async (): Promise<KpiTaskDetail | null> => {
-      const response = await myKpiAPI.getMyTask({ year, quarter })
-      const payload = response.data as any
-
-      return (payload?.data ?? null) as KpiTaskDetail | null
+      return serviceData<KpiTaskDetail | null>(await myKpiAPI.getMyTask({ year, quarter })) ?? null
     },
     enabled: !!year && !!quarter,
     retry: false,

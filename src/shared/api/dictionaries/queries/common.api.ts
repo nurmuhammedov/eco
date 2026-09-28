@@ -1,6 +1,9 @@
 import { apiClient } from '@/shared/api/api-client'
 import type { ApiResponse, ResponseData } from '@/shared/types'
 
+/** `endpoint/id`, whether or not the endpoint was written with a trailing slash */
+const itemPath = (endpoint: string, id: string | number) => `${endpoint.replace(/\/+$/, '')}/${id}`
+
 export const CommonService = {
   getPaginatedData: async <T>(endpoint: string, params = {}): Promise<ResponseData<T>> => {
     const response = await apiClient.getWithPagination<T>(endpoint, params)
@@ -13,22 +16,22 @@ export const CommonService = {
   },
 
   async updateData<T extends object, TResponse>(endpoint: string, data: T, id: string): Promise<TResponse> {
-    const response = await apiClient.put<TResponse, T>(`${endpoint}/${id}`, data)
+    const response = await apiClient.put<TResponse, T>(itemPath(endpoint, id), data)
     return response.data
   },
 
   async partialUpdateData<T extends object, TResponse>(endpoint: string, data: T, id: string): Promise<TResponse> {
-    const response = await apiClient.patch<TResponse, T>(`${endpoint}/${id}`, data)
+    const response = await apiClient.patch<TResponse, T>(itemPath(endpoint, id), data)
     return response.data
   },
 
   async deleteData(endpoint: string, id: string | number): Promise<void> {
-    const response = await apiClient.delete<void>(`${endpoint}/${id}`)
+    const response = await apiClient.delete<void>(itemPath(endpoint, id))
     return response.data
   },
 
   async getDetail<T>(endpoint: string, id: string, params = {}): Promise<T> {
-    const response = await apiClient.get<ApiResponse<T>>(`${endpoint}/${id}`, params)
+    const response = await apiClient.get<ApiResponse<T>>(itemPath(endpoint, id), params)
     return response.data?.data
   },
 

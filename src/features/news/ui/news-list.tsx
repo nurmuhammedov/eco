@@ -4,11 +4,13 @@ import { Plus } from 'lucide-react'
 import { Button } from '@/shared/components/ui/button'
 import { Badge } from '@/shared/components/ui/badge'
 import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table'
-import { usePaginatedData, useDelete } from '@/shared/hooks'
+import { useCustomSearchParams, usePaginatedData, useDelete } from '@/shared/hooks'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { UserRoles } from '@/shared/types/user'
 import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
 import { getDate } from '@/shared/utils/date'
+import type { Row } from '@tanstack/react-table'
+import type { Announcement } from '../model/types'
 
 export const NewsList: FC = () => {
   const navigate = useNavigate()
@@ -17,20 +19,16 @@ export const NewsList: FC = () => {
 
   const endpoint = isAdmin ? '/announcements/admin' : '/announcements'
 
-  const { data, isLoading, refetch } = usePaginatedData<any>(endpoint, {
-    size: 10,
-    page: 1,
-  })
+  const {
+    paramsObject: { page = 1, size = 10 },
+  } = useCustomSearchParams()
 
-  const { mutate: deleteNews } = useDelete('/announcements/', null, 'Muvaffaqiyatli o‘chirildi')
+  const { data, isLoading } = usePaginatedData<Announcement>(endpoint, { page, size })
 
-  const handleDelete = (id: number) => {
-    deleteNews(id, {
-      onSuccess: () => refetch(),
-    })
-  }
+  // The delete refreshes every announcement list, the admin one included
+  const { mutate: deleteNews } = useDelete('/announcements', null, 'Muvaffaqiyatli o‘chirildi')
 
-  const columns: ExtendedColumnDef<any, any>[] = [
+  const columns: ExtendedColumnDef<Announcement, unknown>[] = [
     {
       header: 'Sana',
       accessorFn: (row) => getDate(row.createdAt),
@@ -44,7 +42,7 @@ export const NewsList: FC = () => {
           {
             header: 'Holati',
             accessorKey: 'isActive',
-            cell: ({ row }: any) => (
+            cell: ({ row }: { row: Row<Announcement> }) => (
               <Badge variant={row.original.isActive ? 'success' : 'error'}>
                 {row.original.isActive ? 'Aktiv' : 'Nofaol'}
               </Badge>
@@ -55,7 +53,7 @@ export const NewsList: FC = () => {
     {
       id: 'actions',
       className: '!w-[1%]',
-      cell: ({ row }: any) => (
+      cell: ({ row }) => (
         <DataTableRowActions
           row={row}
           showView
@@ -63,7 +61,7 @@ export const NewsList: FC = () => {
           showEdit={isAdmin}
           onEdit={() => navigate(`/news/${row.original.id}/edit`)}
           showDelete={isAdmin}
-          onDelete={() => handleDelete(row.original.id)}
+          onDelete={() => deleteNews(row.original.id)}
         />
       ),
     },

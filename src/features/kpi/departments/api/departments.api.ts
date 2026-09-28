@@ -52,7 +52,7 @@ export const departmentsAPI = {
     return servicesApiClient.put<Department>(`${BASE_URL}/${id}`, data)
   },
 
-  delete: (id: string): Promise<ApiResponse<any>> => {
+  delete: (id: string): Promise<ApiResponse<unknown>> => {
     return servicesApiClient.delete(`${BASE_URL}/${id}`)
   },
 }

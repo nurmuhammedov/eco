@@ -12,6 +12,16 @@ import { Skeleton } from '@/shared/components/ui/skeleton'
 import useData from '@/shared/hooks/api/use-data'
 import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 
+/** A card the reward for a confirmed violation report is paid to */
+interface NewPaymentCard {
+  cardNumber: string
+  /** MMYY */
+  expirationDate: string
+  transitAccount: string
+  /** The bank's MFO code */
+  bankInfo: string
+}
+
 export interface PaymentCard {
   id?: string
   cardNumber: string
@@ -90,12 +100,9 @@ export function MyCardsModal({ open, onOpenChange }: Props) {
 
   // Create card
   const { mutate: addCard, isPending } = useMutation({
-    mutationFn: async (payload: any) => {
-      const { data } = await apiClient.post('/plastic-cards', payload)
-      return data
-    },
+    mutationFn: async (card: NewPaymentCard) => (await apiClient.post('/plastic-cards', card)).data,
     onSuccess: () => {
-      invalidateEndpoint(queryClient, '/plastic-cards/my')
+      void invalidateEndpoint(queryClient, '/plastic-cards/my')
       setIsAdding(false)
       setCardNumber('')
       setExpiryDate('')

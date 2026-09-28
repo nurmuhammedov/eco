@@ -1,11 +1,11 @@
 import { apiClient } from '@/shared/api/api-client'
 import { API_ENDPOINTS } from '@/shared/api/endpoints'
 import { ApiResponse } from '@/shared/types'
-import { UserRoles, UserState } from '@/shared/types/user'
+import { type RawUserRole, UserRoles, UserState } from '@/shared/types/user'
 
 export const SESSION_QUERY_KEY = ['me'] as const
 
-type RawUser = Omit<UserState, 'role'> & { role: UserRoles | 'SUPERVISOR' | 'CONTROLLER' }
+type RawUser = Omit<UserState, 'role'> & { role: RawUserRole }
 
 /**
  * The backend reports supervision and control as roles of their own, while the

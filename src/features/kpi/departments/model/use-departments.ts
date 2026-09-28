@@ -7,6 +7,7 @@ import {
   ResponsibleUser,
 } from '../api/departments.api'
 import { toast } from 'sonner'
+import { serviceData } from '@/shared/api/services-api-client'
 
 export const DEPARTMENTS_KEYS = {
   all: ['kpi-departments'] as const,
@@ -17,9 +18,7 @@ export const useGetDepartments = () => {
   return useQuery({
     queryKey: DEPARTMENTS_KEYS.all,
     queryFn: async () => {
-      const response = await departmentsAPI.getAll()
-      const payload = response.data as any
-      return (payload?.data ?? payload) as Department[]
+      return serviceData<Department[]>(await departmentsAPI.getAll())
     },
   })
 }
@@ -28,9 +27,7 @@ export const useGetResponsibleUsers = () => {
   return useQuery({
     queryKey: DEPARTMENTS_KEYS.responsibleUsers,
     queryFn: async () => {
-      const response = await departmentsAPI.getResponsibleUsers()
-      const payload = response.data as any
-      return (payload?.data ?? payload) as ResponsibleUser[]
+      return serviceData<ResponsibleUser[]>(await departmentsAPI.getResponsibleUsers())
     },
   })
 }
@@ -42,7 +39,7 @@ export const useCreateDepartment = () => {
     mutationFn: (data: CreateDepartmentDTO) => departmentsAPI.create(data),
     onSuccess: () => {
       toast.success('Bo‘lim qo‘shildi')
-      queryClient.invalidateQueries({ queryKey: DEPARTMENTS_KEYS.all })
+      return queryClient.invalidateQueries({ queryKey: DEPARTMENTS_KEYS.all })
     },
   })
 }
@@ -54,7 +51,7 @@ export const useUpdateDepartment = () => {
     mutationFn: ({ id, data }: { id: string; data: UpdateDepartmentDTO }) => departmentsAPI.update(id, data),
     onSuccess: () => {
       toast.success('Bo‘lim yangilandi')
-      queryClient.invalidateQueries({ queryKey: DEPARTMENTS_KEYS.all })
+      return queryClient.invalidateQueries({ queryKey: DEPARTMENTS_KEYS.all })
     },
   })
 }
@@ -66,14 +63,11 @@ export const useDeleteDepartment = () => {
     mutationFn: (id: string) => departmentsAPI.delete(id),
     onSuccess: () => {
       toast.success('Bo‘lim o‘chirildi')
-      queryClient.invalidateQueries({ queryKey: DEPARTMENTS_KEYS.all })
+      return queryClient.invalidateQueries({ queryKey: DEPARTMENTS_KEYS.all })
     },
-    onError: (error: any) => {
-      if (error?.status === 422) {
-        toast.error('Bu bo‘limga biriktirilgan vazifalar bor. Avval vazifalarni o‘chiring.')
-      } else {
-        toast.error(error?.message || 'Bo‘limni o‘chirishda xatolik yuz berdi')
-      }
+    // Every failure is already toasted by the services client; this one also says what to do about it
+    onError: (error: { status?: number }) => {
+      if (error.status === 422) toast.error('Bu bo‘limga biriktirilgan vazifalar bor. Avval vazifalarni o‘chiring.')
     },
   })
 }

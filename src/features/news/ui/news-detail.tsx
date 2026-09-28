@@ -4,14 +4,16 @@ import { useParams } from 'react-router-dom'
 import { Calendar, Clock, FileText } from 'lucide-react'
 import { useDetail } from '@/shared/hooks'
 import { getDate } from '@/shared/utils/date'
+import { format } from 'date-fns'
 import { Skeleton } from '@/shared/components/ui/skeleton'
 import { GoBack } from '@/shared/components/common'
 import { Button } from '@/shared/components/ui/button'
+import type { Announcement } from '../model/types'
 
 export const NewsDetail: FC = () => {
   const { id } = useParams<{ id: string }>()
 
-  const { data: news, isLoading } = useDetail<any>('/announcements/', id)
+  const { data: news, isLoading } = useDetail<Announcement>('/announcements', id)
 
   if (isLoading) {
     return (
@@ -64,12 +66,12 @@ export const NewsDetail: FC = () => {
                 <Calendar className="h-4 w-4" />
                 <span>{getDate(news.createdAt)}</span>
               </div>
-              <div className="flex items-center gap-1.5">
-                <Clock className="h-4 w-4" />
-                <span>
-                  {new Date(news.createdAt).toLocaleTimeString('uz-UZ', { hour: '2-digit', minute: '2-digit' })}
-                </span>
-              </div>
+              {news.createdAt && (
+                <div className="flex items-center gap-1.5">
+                  <Clock className="h-4 w-4" />
+                  <span>{format(news.createdAt, 'HH:mm')}</span>
+                </div>
+              )}
             </div>
 
             <h1 className="text-2xl font-bold tracking-tight text-gray-900 md:text-3xl">{news.title}</h1>

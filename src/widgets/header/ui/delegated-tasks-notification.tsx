@@ -1,40 +1,32 @@
 import { ArrowLeftRight, Inbox, Check } from 'lucide-react'
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui/popover'
 import { useAuth } from '@/shared/hooks/use-auth'
-import { UserRoles, UserRoleLabels } from '@/shared/types/user'
-import { useQuery } from '@tanstack/react-query'
-import { apiClient } from '@/shared/api/api-client'
+import { type RawUserRole, UserRoles, UserRoleLabels } from '@/shared/types/user'
+import { useData } from '@/shared/hooks'
 import { API_ENDPOINTS } from '@/shared/api'
 import { useSwitchOtherRole } from '@/entities/auth/model/auth.fetcher'
 import { useSwitchBackRole } from '@/entities/auth/model/auth.fetcher'
 
+/** MyUserDelegationRes: someone whose duties this user has taken on */
+interface MyDelegation {
+  delegatorId: string | null
+  delegatorFullName: string | null
+  delegatorRole: RawUserRole | null
+}
+
+const DELEGATABLE_ROLES = [UserRoles.HEAD, UserRoles.MANAGER, UserRoles.REGIONAL, UserRoles.INSPECTOR]
+
 export const DelegatedTasksNotification = () => {
   const { user } = useAuth()
-  const { mutateAsync: switchOtherRole, isPending } = useSwitchOtherRole()
-  const { mutateAsync: switchBackRole, isPending: isSwitchingBack } = useSwitchBackRole()
+  const { mutate: switchOtherRole, isPending } = useSwitchOtherRole()
+  const { mutate: switchBackRole, isPending: isSwitchingBack } = useSwitchBackRole()
 
-  const allowedRoles = [
-    UserRoles.HEAD,
-    UserRoles.MANAGER,
-    UserRoles.REGIONAL,
-    UserRoles.INSPECTOR,
-    'CONTROLLER',
-    'SUPERVISOR',
-  ]
-
+  // Supervisors and controllers sign in as REGIONAL and INSPECTOR, so the list covers them
+  const isStaff = !!user && DELEGATABLE_ROLES.includes(user.role)
   const isDelegated = !!user?.delegated || !!user?.delegatorId
-  const isEnabled = allowedRoles.includes(user?.role as any) || isDelegated
+  const isEnabled = isStaff || isDelegated
 
-  const { data: delegationData } = useQuery({
-    queryKey: ['user-delegation-me'],
-    queryFn: async () => {
-      const response = await apiClient.get<any>(API_ENDPOINTS.USER_DELEGATION_ME)
-      return response.data?.data || []
-    },
-    enabled: isEnabled,
-  })
-
-  const items = Array.isArray(delegationData) ? delegationData : []
+  const { data: items = [] } = useData<MyDelegation[]>(API_ENDPOINTS.USER_DELEGATION_ME, isEnabled)
   const totalCount = items.length
 
   if (!isEnabled || (totalCount === 0 && !isDelegated)) return null
@@ -67,14 +59,14 @@ export const DelegatedTasksNotification = () => {
         <div className="max-h-[360px] overflow-y-auto">
           {items.length > 0 ? (
             <div className="flex flex-col">
-              {items.map((item: any) => {
+              {items.map((item) => {
                 const isSelected = item.delegatorId === user?.delegatorId
                 return (
                   <button
                     type="button"
                     key={item.delegatorId}
                     disabled={isPending || isSelected}
-                    onClick={() => switchOtherRole(item.delegatorId)}
+                    onClick={() => item.delegatorId && switchOtherRole(item.delegatorId)}
                     className={`relative flex flex-col gap-1 border-b px-4 py-3 text-left transition-colors last:border-0 hover:bg-slate-50 disabled:opacity-50 ${isSelected ? 'bg-green-50/50' : ''}`}
                   >
                     <div className="flex w-full items-center justify-between">
@@ -90,7 +82,7 @@ export const DelegatedTasksNotification = () => {
                         ? 'Inspeksiya boshlig‘i'
                         : item.delegatorRole === 'CONTROLLER'
                           ? 'Inspeksiya inspektori'
-                          : UserRoleLabels[item.delegatorRole as UserRoles] || item.delegatorRole}
+                          : item.delegatorRole && UserRoleLabels[item.delegatorRole]}
                     </span>
                   </button>
                 )

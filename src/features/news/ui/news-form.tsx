@@ -13,6 +13,7 @@ import { GoBack } from '@/shared/components/common'
 
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
+import type { Announcement } from '../model/types'
 
 const newsSchema = z.object({
   title: z.string().trim().min(1),
@@ -36,12 +37,12 @@ export const NewsForm: FC = () => {
     },
   })
 
-  const { data: newsDetail, isLoading: isDetailLoading } = useDetail<any>('/announcements/', id, isEdit)
+  const { data: newsDetail, isLoading: isDetailLoading } = useDetail<Announcement>('/announcements', id, isEdit)
 
-  const { mutate: addNews } = useAdd<NewsFormValues, any, any>('/announcements', 'Xabarnoma muvaffaqiyatli qo‘shildi')
+  const { mutate: addNews } = useAdd<NewsFormValues>('/announcements', 'Xabarnoma muvaffaqiyatli qo‘shildi')
 
-  const { mutate: updateNews } = useUpdate<NewsFormValues, any, any>(
-    '/announcements/',
+  const { mutate: updateNews } = useUpdate<NewsFormValues>(
+    '/announcements',
     id,
     'put',
     'Xabarnoma muvaffaqiyatli tahrirlandi'
@@ -50,8 +51,8 @@ export const NewsForm: FC = () => {
   useEffect(() => {
     if (newsDetail) {
       reset({
-        title: newsDetail.title,
-        content: newsDetail.content,
+        title: newsDetail.title ?? '',
+        content: newsDetail.content ?? '',
         isActive: newsDetail.isActive ?? true,
       })
     }

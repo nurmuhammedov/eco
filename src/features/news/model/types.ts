@@ -1,13 +1,15 @@
+/** AnnouncementDto (`GET /announcements`, `/announcements/{id}`) */
 export interface Announcement {
-  id: number
-  title: string
-  content: string
-  createdAt: string
-  updatedAt: string
-  active: boolean
+  id: string
+  title: string | null
+  content: string | null
+  isActive: boolean | null
+  createdAt: string | null
 }
 
-export interface AnnouncementParams {
-  page?: number
-  size?: number
+/** AnnouncementUpdateDto; a new announcement is created without the flag */
+export interface AnnouncementPayload {
+  title: string
+  content: string
+  isActive: boolean
 }

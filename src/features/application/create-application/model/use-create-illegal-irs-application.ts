@@ -122,7 +122,7 @@ export const useRegisterIllegalIrs = (
     mode: 'onChange',
   })
 
-  const { mutateAsync: updateMutate, isPending: isUpdatePending } = useUpdate('/irs/', id, 'put')
+  const { mutateAsync: updateMutate, isPending: isUpdatePending } = useUpdate('/irs', id, 'put')
 
   const regionId = form.watch('regionId')
   const { data: regions } = useRegionSelectQuery()

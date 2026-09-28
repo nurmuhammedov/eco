@@ -97,7 +97,7 @@ export const useRegisterIllegalHf = (externalSubmit?: (data: RegisterIllegalHfDT
   })
 
   const { data: detail, isLoading: isDetailLoading } = useDetail<HfDetail>(`/hf/`, id, !!id)
-  const { mutateAsync: updateMutate, isPending: isUpdatePending } = useUpdate('/hf/', id, 'put')
+  const { mutateAsync: updateMutate, isPending: isUpdatePending } = useUpdate('/hf', id, 'put')
 
   const ownerIdentity = detail?.legalTin?.toString() || tin
   const regionId = form.watch('regionId')

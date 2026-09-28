@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { servicesApiClient } from '@/shared/api/services-api-client'
+import { serviceData, servicesApiClient } from '@/shared/api/services-api-client'
 import { endpointKey } from '@/shared/lib/query/endpoint-key'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { UserRoles } from '@/shared/types/user'
@@ -28,11 +28,7 @@ export const useKpiAccess = () => {
   const query = useQuery({
     queryKey: endpointKey(ENDPOINT, user?.id),
     queryFn: async () => {
-      const response = await servicesApiClient.get<KpiAccess>(ENDPOINT)
-      // The services API wraps its payload one level deeper than the main one.
-      const payload = response.data as unknown as { data?: KpiAccess }
-
-      return payload?.data ?? (payload as KpiAccess)
+      return serviceData<KpiAccess>(await servicesApiClient.get<KpiAccess>(ENDPOINT))
     },
     enabled,
     staleTime: Infinity,

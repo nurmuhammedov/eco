@@ -137,7 +137,7 @@ export function KpiTaskModal({ isOpen, onClose, editData, defaultYear, defaultQu
     if (isEditing && editData) {
       updateMutation.mutate({ id: editData.id, data: { indicators: cleanedIndicators } }, { onSuccess: onClose })
     } else {
-      createMutation.mutate({ ...values, indicators: cleanedIndicators } as any, { onSuccess: onClose })
+      createMutation.mutate({ ...values, indicators: cleanedIndicators }, { onSuccess: onClose })
     }
   }
 
@@ -226,8 +226,8 @@ export function KpiTaskModal({ isOpen, onClose, editData, defaultYear, defaultQu
                       </FormControl>
                       <SelectContent>
                         {departments
-                          .filter((dept: any) => dept.is_active !== false)
-                          .map((dept: any) => (
+                          .filter((dept) => dept.is_active !== false)
+                          .map((dept) => (
                             <SelectItem key={dept.id} value={dept.id}>
                               {dept.name}
                             </SelectItem>

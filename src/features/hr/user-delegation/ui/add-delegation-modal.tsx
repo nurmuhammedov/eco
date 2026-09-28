@@ -8,6 +8,7 @@ import { format } from 'date-fns'
 import DatePicker from '@/shared/components/ui/datepicker'
 import { InputFile } from '@/shared/components/common/file-upload'
 import { useAdd } from '@/shared/hooks'
+import type { UserDelegationPayload } from '../model/types'
 import { useQueryClient } from '@tanstack/react-query'
 import { Combobox } from '@/shared/components/ui/combobox'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
@@ -15,6 +16,20 @@ import useData from '@/shared/hooks/api/use-data'
 import { useEffect } from 'react'
 import { UserRoleLabels, UserRoles } from '@/shared/types/user'
 import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
+
+/** SelectUserDto: a staff member as the user selects list them */
+interface SelectUser {
+  id: string
+  name: string | null
+  role: UserRoles | null
+  unitName: string | null
+}
+
+const USER_SELECT_ENDPOINTS: Partial<Record<string, string>> = {
+  committee: '/users/committee-users/select',
+  office: '/users/office-users/select',
+  regulator: '/users/regulator-users/select',
+}
 
 export const DelegationReasonLabels: Record<string, string> = {
   ANNUAL_LEAVE: 'Mehnat ta’tili',
@@ -46,7 +61,7 @@ interface AddDelegationModalProps {
 
 export const AddDelegationModal = ({ isOpen, onClose }: AddDelegationModalProps) => {
   const queryClient = useQueryClient()
-  const { mutate: createDelegation, isPending } = useAdd('/user-delegation')
+  const { mutate: createDelegation, isPending } = useAdd<UserDelegationPayload>('/user-delegation')
 
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
@@ -62,44 +77,13 @@ export const AddDelegationModal = ({ isOpen, onClose }: AddDelegationModalProps)
   const employeeType = form.watch('employeeType')
   const delegatorId = form.watch('delegatorId')
 
-  const { data: committeeUsersRes } = useData<any>('/users/committee-users/select', employeeType === 'committee')
-  const usersList = Array.isArray(committeeUsersRes?.data)
-    ? committeeUsersRes.data
-    : Array.isArray(committeeUsersRes)
-      ? committeeUsersRes
-      : []
+  const usersEndpoint = USER_SELECT_ENDPOINTS[employeeType]
+  const { data: users = [] } = useData<SelectUser[]>(usersEndpoint ?? '', !!usersEndpoint)
 
-  const { data: officeUsersRes } = useData<any>('/users/office-users/select', employeeType === 'office')
-  const officeUsersList = Array.isArray(officeUsersRes?.data)
-    ? officeUsersRes.data
-    : Array.isArray(officeUsersRes)
-      ? officeUsersRes
-      : []
-
-  const { data: regulatorUsersRes } = useData<any>('/users/regulator-users/select', employeeType === 'regulator')
-  const regulatorUsersList = Array.isArray(regulatorUsersRes?.data)
-    ? regulatorUsersRes.data
-    : Array.isArray(regulatorUsersRes)
-      ? regulatorUsersRes
-      : []
-
-  const activeList =
-    employeeType === 'committee'
-      ? usersList
-      : employeeType === 'office'
-        ? officeUsersList
-        : employeeType === 'regulator'
-          ? regulatorUsersList
-          : []
-
-  const options = activeList.map((u: any) => {
-    const roleTranslation = u.role && UserRoleLabels[u.role as UserRoles] ? UserRoleLabels[u.role as UserRoles] : ''
-    const unitAndRole = [u.unitName, roleTranslation].filter(Boolean).join(' ')
-    const roleLabel = unitAndRole ? ` (${unitAndRole})` : ''
-    return {
-      id: u.id,
-      name: (u.fullName || u.name || `${u.firstName || ''} ${u.lastName || ''}`.trim() || u.id) + roleLabel,
-    }
+  const options = users.map((user) => {
+    const roleTranslation = user.role ? (UserRoleLabels[user.role] ?? '') : ''
+    const unitAndRole = [user.unitName, roleTranslation].filter(Boolean).join(' ')
+    return { id: user.id, name: `${user.name || user.id}${unitAndRole ? ` (${unitAndRole})` : ''}` }
   })
 
   const getDelegatorOptions = () => {
@@ -109,7 +93,7 @@ export const AddDelegationModal = ({ isOpen, onClose }: AddDelegationModalProps)
 
   const getDelegateeOptions = () => {
     if (!employeeType) return []
-    return options.filter((opt: any) => opt.id !== delegatorId)
+    return options.filter((option) => option.id !== delegatorId)
   }
 
   useEffect(() => {
@@ -117,21 +101,24 @@ export const AddDelegationModal = ({ isOpen, onClose }: AddDelegationModalProps)
     form.setValue('delegateeId', '')
   }, [employeeType, form])
 
-  const onSubmit = (data: FormValues) => {
-    const payload = {
-      ...data,
-      startDate: format(data.startDate, 'yyyy-MM-dd'),
-      endDate: format(data.endDate, 'yyyy-MM-dd'),
-    }
-
-    createDelegation(payload, {
-      onSuccess: () => {
-        invalidateEndpoint(queryClient, '/user-delegation')
-        form.reset()
-        onClose()
+  const onSubmit = ({ delegatorId, delegateeId, startDate, endDate, basisPath, reasonType }: FormValues) =>
+    createDelegation(
+      {
+        delegatorId,
+        delegateeId,
+        basisPath,
+        reasonType,
+        startDate: format(startDate, 'yyyy-MM-dd'),
+        endDate: format(endDate, 'yyyy-MM-dd'),
       },
-    })
-  }
+      {
+        onSuccess: () => {
+          form.reset()
+          onClose()
+          return invalidateEndpoint(queryClient, '/user-delegation')
+        },
+      }
+    )
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>

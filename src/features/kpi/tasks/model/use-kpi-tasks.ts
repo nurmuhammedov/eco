@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { kpiTasksAPI, CreateKpiTaskDTO, UpdateKpiTaskDTO } from '../api/kpi-tasks.api'
 import type { KpiTask, KpiTaskDetail } from '@/entities/kpi'
+import { serviceData } from '@/shared/api/services-api-client'
 
 export const KPI_TASKS_KEYS = {
   all: ['kpi-tasks'] as const,
@@ -9,23 +10,17 @@ export const KPI_TASKS_KEYS = {
   one: (id: string) => ['kpi-task', id] as const,
 }
 
-const unwrap = <T>(response: { data: unknown }): T => {
-  const payload = response.data as any
-
-  return (payload?.data ?? payload) as T
-}
-
 export const useGetKpiTasks = (year: number, quarter: number) =>
   useQuery({
     queryKey: KPI_TASKS_KEYS.list(year, quarter),
-    queryFn: async () => unwrap<KpiTask[]>(await kpiTasksAPI.getAll({ year, quarter })) ?? [],
+    queryFn: async () => serviceData<KpiTask[]>(await kpiTasksAPI.getAll({ year, quarter })) ?? [],
     enabled: !!year && !!quarter,
   })
 
 export const useGetKpiTask = (id: string) =>
   useQuery({
     queryKey: KPI_TASKS_KEYS.one(id),
-    queryFn: async () => unwrap<KpiTaskDetail>(await kpiTasksAPI.getOne(id)),
+    queryFn: async () => serviceData<KpiTaskDetail>(await kpiTasksAPI.getOne(id)),
     enabled: !!id,
   })
 
@@ -40,8 +35,10 @@ const useKpiMutation = <TVariables>(
     mutationFn,
     onSuccess: () => {
       toast.success(successMessage)
-      queryClient.invalidateQueries({ queryKey: KPI_TASKS_KEYS.all })
-      queryClient.invalidateQueries({ queryKey: ['kpi-task'] })
+      return Promise.all([
+        queryClient.invalidateQueries({ queryKey: KPI_TASKS_KEYS.all }),
+        queryClient.invalidateQueries({ queryKey: ['kpi-task'] }),
+      ])
     },
   })
 }

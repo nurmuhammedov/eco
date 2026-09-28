@@ -3,12 +3,13 @@ import { useAuth } from '@/shared/hooks/use-auth'
 import { UserRoles } from '@/shared/types/user'
 import { InquiryStatus } from '@/features/inquiries/model/types'
 import usePaginatedData from '@/shared/hooks/api/use-paginated-data'
+import type { InquiryRow } from '@/features/inquiries/model/inquiry.types'
 
 export interface InquiryNotificationItem {
   id: string
-  registryNumber?: string
-  fullName?: string
-  createdAt?: string
+  registryNumber: string | null
+  fullName: string | null
+  createdAt: string | null
 }
 
 export const useInquiryNotifications = () => {
@@ -19,28 +20,28 @@ export const useInquiryNotifications = () => {
   const isAccountant = user?.role === UserRoles.ACCOUNTANT
   const isEnabled = isRegional || isInspector || isAccountant
 
-  const { data: newInqData, totalElements: newCount } = usePaginatedData<any>(
+  const { data: newInqData, totalElements: newCount } = usePaginatedData<InquiryRow>(
     '/inquiries',
     { status: InquiryStatus.NEW, size: 100, page: 1 },
     isRegional,
     Infinity
   )
 
-  const { data: processInqData, totalElements: processCount } = usePaginatedData<any>(
+  const { data: processInqData, totalElements: processCount } = usePaginatedData<InquiryRow>(
     '/inquiries',
     { status: InquiryStatus.IN_PROCESS, size: 100, page: 1 },
     isInspector,
     Infinity
   )
 
-  const { data: courtInqData, totalElements: courtCount } = usePaginatedData<any>(
+  const { data: courtInqData, totalElements: courtCount } = usePaginatedData<InquiryRow>(
     '/inquiries',
     { status: InquiryStatus.IN_COURT, size: 100, page: 1 },
     isInspector,
     Infinity
   )
 
-  const { data: rewardInqData, totalElements: rewardCount } = usePaginatedData<any>(
+  const { data: rewardInqData, totalElements: rewardCount } = usePaginatedData<InquiryRow>(
     '/inquiries',
     { status: InquiryStatus.REWARD_PAYMENT, size: 100, page: 1 },
     isAccountant,
@@ -48,7 +49,7 @@ export const useInquiryNotifications = () => {
   )
 
   const items = useMemo<InquiryNotificationItem[]>(() => {
-    let list: any[] = []
+    let list: InquiryRow[] = []
     if (isRegional && newInqData?.content) {
       list = [...newInqData.content]
     } else if (isInspector) {
@@ -58,7 +59,9 @@ export const useInquiryNotifications = () => {
       list = [...rewardInqData.content]
     }
 
-    return list.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    return list
+      .sort((a, b) => (b.createdAt ?? '').localeCompare(a.createdAt ?? ''))
+      .map(({ id, registryNumber, fullName, createdAt }) => ({ id, registryNumber, fullName, createdAt }))
   }, [isRegional, isInspector, isAccountant, newInqData, processInqData, courtInqData, rewardInqData])
 
   const totalCount = useMemo(() => {

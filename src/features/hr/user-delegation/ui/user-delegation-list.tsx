@@ -8,17 +8,18 @@ import { TabsLayout } from '@/shared/layouts'
 import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks'
 import { AddDelegationModal, DelegationReasonLabels } from './add-delegation-modal'
 import { Badge } from '@/shared/components/ui/badge'
-import { UserRoles, UserRoleLabels } from '@/shared/types/user'
+import { UserRoleLabels } from '@/shared/types/user'
 import FileLink from '@/shared/components/common/file-link'
 import DeleteConfirmationDialog from '@/shared/components/common/delete-confirm-dialog'
 import { Ban } from 'lucide-react'
 import { useQueryClient } from '@tanstack/react-query'
 import { useUpdate } from '@/shared/hooks'
 import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
+import type { UserDelegation } from '../model/types'
 
-const DeactivateButton = ({ row }: { row: any }) => {
+const DeactivateButton = ({ row }: { row: UserDelegation }) => {
   const queryClient = useQueryClient()
-  const { mutate: deactivate, isPending } = useUpdate<any, any, any>(
+  const { mutate: deactivate, isPending } = useUpdate<object>(
     '/user-delegation',
     `${row.id}/deactivate`,
     'put',
@@ -34,9 +35,7 @@ const DeactivateButton = ({ row }: { row: any }) => {
         deactivate(
           {},
           {
-            onSuccess: () => {
-              invalidateEndpoint(queryClient, '/user-delegation')
-            },
+            onSuccess: () => invalidateEndpoint(queryClient, '/user-delegation'),
           }
         )
       }}
@@ -67,14 +66,14 @@ export function UserDelegationList() {
 
   const [isModalOpen, setIsModalOpen] = useState(false)
 
-  const { data, isLoading } = usePaginatedData<any>('/user-delegation', {
+  const { data, isLoading } = usePaginatedData<UserDelegation>('/user-delegation', {
     page,
     size,
     ...(isActiveStr !== undefined ? { isActive: rawIsActive } : {}),
     ...rest,
   })
 
-  const columns: ExtendedColumnDef<any, any>[] = [
+  const columns: ExtendedColumnDef<UserDelegation, unknown>[] = [
     {
       accessorKey: 'delegatorFullName',
       header: 'Kim tomonidan',
@@ -83,7 +82,7 @@ export function UserDelegationList() {
       cell: ({ row }) => {
         const name = row.original.delegatorFullName
         const role = row.original.delegatorRole
-        const roleLabel = role && UserRoleLabels[role as UserRoles] ? ` (${UserRoleLabels[role as UserRoles]})` : ''
+        const roleLabel = role && UserRoleLabels[role] ? ` (${UserRoleLabels[role]})` : ''
         return `${name || '-'}${roleLabel}`
       },
     },
@@ -95,7 +94,7 @@ export function UserDelegationList() {
       cell: ({ row }) => {
         const name = row.original.delegateeFullName
         const role = row.original.delegateeRole
-        const roleLabel = role && UserRoleLabels[role as UserRoles] ? ` (${UserRoleLabels[role as UserRoles]})` : ''
+        const roleLabel = role && UserRoleLabels[role] ? ` (${UserRoleLabels[role]})` : ''
         return `${name || '-'}${roleLabel}`
       },
     },
