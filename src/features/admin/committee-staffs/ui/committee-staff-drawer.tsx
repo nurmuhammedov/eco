@@ -5,7 +5,6 @@ import { Input } from '@/shared/components/ui/input'
 import { useUIActionLabel } from '@/shared/hooks'
 import { CommitteeStaffView } from './committee-staff-view'
 import { PhoneInput } from '@/shared/components/ui/phone-input'
-import { InputNumber } from '@/shared/components/ui/input-number'
 import { MultiSelect } from '@/shared/components/ui/multi-select'
 import { getSelectOptions } from '@/shared/lib/get-select-options'
 import { BaseDrawer } from '@/shared/components/common/base-drawer'
@@ -72,7 +71,13 @@ export const CommitteeStaffDrawer = () => {
                     <FormItem>
                       <FormLabel required>{t('short.pin')}</FormLabel>
                       <FormControl>
-                        <InputNumber maxLength={14} placeholder="142536945201203" {...field} />
+                        <Input
+                          {...field}
+                          inputMode="numeric"
+                          maxLength={14}
+                          placeholder="12345678901234"
+                          onChange={(e) => field.onChange(e.target.value.replace(/\D/g, ''))}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
