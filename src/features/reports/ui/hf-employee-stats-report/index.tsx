@@ -3,6 +3,7 @@ import { DataTable } from '@/shared/components/common/data-table'
 import { useData } from '@/shared/hooks'
 import { GoBack } from '@/shared/components/common'
 import { cn } from '@/shared/lib/utils'
+import { isCountryTotal } from '../../lib/country-total'
 
 const ReportHfEmployeeStats: React.FC = () => {
   const { data: reportData, isLoading } = useData<any[]>('/reports/hf-employee', true)
@@ -12,8 +13,7 @@ const ReportHfEmployeeStats: React.FC = () => {
 
     return reportData.map((item: any) => ({
       officeName: item.regionName,
-      isSummary:
-        item.regionName?.toLowerCase().includes('bo‘yicha') || item.regionName?.toLowerCase().includes('bo‘yicha'),
+      isSummary: isCountryTotal(item.regionName),
       managerCount: item.managerCount || 0,
       engineerCount: item.engineerCount || 0,
       workerCount: item.workerCount || 0,

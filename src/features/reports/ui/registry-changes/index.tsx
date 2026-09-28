@@ -3,6 +3,7 @@ import { DataTable } from '@/shared/components/common/data-table'
 import { useData } from '@/shared/hooks'
 import { GoBack } from '@/shared/components/common'
 import { cn } from '@/shared/lib/utils'
+import { isCountryTotal } from '../../lib/country-total'
 
 const RegistryChangesReport: React.FC = () => {
   const { data: reportData, isLoading } = useData<any[]>('/reports/change/by-update', true)
@@ -16,8 +17,7 @@ const RegistryChangesReport: React.FC = () => {
 
       return {
         officeName: item.regionName,
-        isSummary:
-          item.regionName?.toLowerCase().includes('bo‘yicha') || item.regionName?.toLowerCase().includes('bo‘yicha'),
+        isSummary: isCountryTotal(item.regionName),
         x: {
           total: hf.allCount || 0,
           entrepreneur: hf.legalCount || 0,

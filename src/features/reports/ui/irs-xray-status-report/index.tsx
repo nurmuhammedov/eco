@@ -8,19 +8,12 @@ import useCustomSearchParams from '@/shared/hooks/api/use-search-params'
 import { useRegionSelectQuery } from '@/shared/api/dictionaries'
 import { cn } from '@/shared/lib/utils'
 import { IrsXrayStatusItem, OrganizationCount } from './types'
+import { isCountryTotal } from '../../lib/country-total'
 
 const ALL = 'ALL'
 
-/**
- * The backend returns the country total as one more row, labelled in prose
- * rather than flagged. Matching the wording is what the neighbouring reports
- * already do, so the same phrasings are accepted here.
- */
-const isSummaryRow = (regionName?: string) => {
-  const name = regionName?.toLowerCase() ?? ''
-
-  return name.includes('bo‘yicha') || name.includes('bo’yicha') || name.includes("bo'yicha") || name === 'jami'
-}
+/** The backend returns the country total as one more row; this report calls it `Jami` */
+const isSummaryRow = (regionName?: string) => isCountryTotal(regionName) || regionName?.trim().toLowerCase() === 'jami'
 
 interface Organizations {
   all: number

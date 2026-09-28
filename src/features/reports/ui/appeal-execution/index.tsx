@@ -4,6 +4,7 @@ import { DataTable } from '@/shared/components/common/data-table'
 import { useData } from '@/shared/hooks'
 import { GoBack } from '@/shared/components/common'
 import { cn } from '@/shared/lib/utils'
+import { isCountryTotal } from '../../lib/country-total'
 
 const AppealExecutionReport: React.FC = () => {
   const { data: reportData, isLoading } = useData<any[]>('/reports/appeal-execution', true)
@@ -13,8 +14,7 @@ const AppealExecutionReport: React.FC = () => {
 
     return reportData.map((item: any) => ({
       ...item,
-      isSummary:
-        item.regionName?.toLowerCase().includes('bo‘yicha') || item.regionName?.toLowerCase().includes('bo‘yicha'),
+      isSummary: isCountryTotal(item.regionName),
     }))
   }, [reportData])
 

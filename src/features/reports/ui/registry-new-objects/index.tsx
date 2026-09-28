@@ -7,6 +7,7 @@ import Filter from '@/shared/components/common/filter'
 import { ExportExcelButton, GoBack } from '@/shared/components/common'
 import { format } from 'date-fns'
 import { ApplicationCategory, APPLICATIONS_DATA, MainApplicationCategory } from '@/entities/create-application'
+import { isCountryTotal } from '../../lib/country-total'
 
 const toCamelCase = (str: string) => {
   if (!str) return ''
@@ -37,7 +38,7 @@ const RegistryNewObjectsReport: React.FC = () => {
 
   const tableData = useMemo(() => {
     if (!inspections) return []
-    const regions = inspections.filter((i) => i?.regionName !== 'Respublika bo‘yicha' && !!i?.regionName)
+    const regions = inspections.filter((i) => !!i?.regionName && !isCountryTotal(i.regionName))
 
     const summaryRow: any = {
       regionName: 'Respublika bo‘yicha',

@@ -14,6 +14,7 @@ import { cn } from '@/shared/lib/utils'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import useCustomSearchParams from '@/shared/hooks/api/use-search-params'
 import { paramText } from '@/shared/lib/url-params'
+import { isCountryTotal } from '../../lib/country-total'
 
 const InquiriesStatusReport: React.FC = () => {
   const { paramsObject, addParams } = useCustomSearchParams()
@@ -54,9 +55,7 @@ const InquiriesStatusReport: React.FC = () => {
       setIsLoading(true)
 
       // Filter out 'Respublika' from region items since we will add a summary row manually
-      const filteredRegions = regionOptions.filter(
-        (r: any) => r.name !== 'Respublika' && r.name !== 'Respublika bo‘yicha' && r.name !== 'Respublika bo‘yicha'
-      )
+      const filteredRegions = regionOptions.filter((r: any) => !isCountryTotal(r.name))
 
       // The rows we want: 1 summary + all regions
       let rowsConfig = [

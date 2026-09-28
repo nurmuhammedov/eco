@@ -10,6 +10,7 @@ import { cn } from '@/shared/lib/utils'
 import { getDefaultYearAndMonthForRiskAnalysis } from '@/shared/utils/date'
 import { RiskStatisticsCards } from '@/entities/risk-analysis/ui/risk-statistics-cards'
 import { paramText } from '@/shared/lib/url-params'
+import { isCountryTotal } from '../../lib/country-total'
 
 const MONTHS = [
   { id: 'JANUARY', name: 'Yanvar' },
@@ -101,8 +102,7 @@ const RiskDateComparisonReport: React.FC = () => {
 
       return {
         regionName: item.regionName,
-        isSummary:
-          item.regionName?.toLowerCase().includes('bo‘yicha') || item.regionName?.toLowerCase().includes('bo‘yicha'),
+        isSummary: isCountryTotal(item.regionName),
         totalCapacity: item.analysisCount ?? 0,
         currentStatusValue: latest ? (latest.currentCount ?? 0) : 0,
         currentLow: latest ? (latest.lowCount ?? 0) : 0,
@@ -267,7 +267,7 @@ const RiskDateComparisonReport: React.FC = () => {
             <SelectContent>
               <SelectItem value="all">Barchasi</SelectItem>
               {regionOptions.map((name: string) => {
-                const isSummary = name.toLowerCase().includes('bo‘yicha') || name.toLowerCase().includes('bo‘yicha')
+                const isSummary = isCountryTotal(name)
                 return (
                   <SelectItem key={name} value={name}>
                     {isSummary ? 'Respublika bo‘yicha' : name}

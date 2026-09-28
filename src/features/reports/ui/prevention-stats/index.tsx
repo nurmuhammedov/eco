@@ -5,6 +5,7 @@ import { useData } from '@/shared/hooks'
 import { GoBack } from '@/shared/components/common'
 import { cn } from '@/shared/lib/utils'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
+import { isCountryTotal } from '../../lib/country-total'
 
 const MONTHS = [
   { value: 'JANUARY', label: 'Yanvar' },
@@ -59,11 +60,7 @@ const PreventionStatsReport: React.FC = () => {
 
   const tableData = useMemo(() => {
     if (!rawData) return []
-    const isSummaryItem = (r: any) =>
-      r.regionId === null ||
-      r.regionName?.toLowerCase() === 'respublika bo‘yicha' ||
-      r.regionName?.toLowerCase() === 'o‘zbekiston respublikasi' ||
-      r.regionName?.toLowerCase().startsWith('respublika b')
+    const isSummaryItem = (r: any) => r.regionId === null || isCountryTotal(r.regionName)
 
     const regions = rawData.filter((r) => !isSummaryItem(r))
     const backendSummary = rawData.find((r) => isSummaryItem(r))

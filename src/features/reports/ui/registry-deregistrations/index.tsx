@@ -12,6 +12,7 @@ import {
   ReportChangeStatus,
   buildChangeReportLink,
 } from '../../model/change-report-link'
+import { isCountryTotal } from '../../lib/country-total'
 
 const BELONG_TYPE_BY_PREFIX: Record<string, ReportChangeBelongType> = {
   x: REPORT_CHANGE_BELONG_TYPE.HF,
@@ -77,8 +78,7 @@ const RegistryDeregistrationsReport: React.FC = () => {
       return {
         officeName: item.regionName,
         regionId: item.regionId,
-        isSummary:
-          item.regionName?.toLowerCase().includes('bo‘yicha') || item.regionName?.toLowerCase().includes('bo‘yicha'),
+        isSummary: isCountryTotal(item.regionName),
         x: {
           total: hf.allCount || 0,
           not_completed: hf.newCount || 0,

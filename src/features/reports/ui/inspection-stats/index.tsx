@@ -7,6 +7,7 @@ import { GoBack } from '@/shared/components/common'
 import { cn } from '@/shared/lib/utils'
 import { useRegionSelectQuery } from '@/shared/api/dictionaries'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
+import { isCountryTotal } from '../../lib/country-total'
 
 const MONTHS = [
   { value: 'JANUARY', label: 'Yanvar' },
@@ -51,13 +52,8 @@ const InspectionStatsReport: React.FC = () => {
 
   const tableData = useMemo(() => {
     if (!rawData) return []
-    const isSummary = (name: string) => {
-      const lower = name?.toLowerCase()
-      return lower === 'respublika' || lower === 'respublika bo‘yicha' || lower === 'respublika bo‘yicha'
-    }
-
-    const regions = rawData.filter((r) => !isSummary(r.regionName))
-    const backendSummary = rawData.find((r) => isSummary(r.regionName))
+    const regions = rawData.filter((r) => !isCountryTotal(r.regionName))
+    const backendSummary = rawData.find((r) => isCountryTotal(r.regionName))
 
     const summaryRow = {
       ...(backendSummary || {}),

@@ -7,6 +7,7 @@ import { useData } from '@/shared/hooks'
 import { ApplicationStatus, AppealStatusDuration } from '@/entities/application'
 import { GoBack } from '@/shared/components/common'
 import { cn } from '@/shared/lib/utils'
+import { isCountryTotal } from '../../lib/country-total'
 
 const STATUS_MAP: Record<string, string> = {
   inNew: ApplicationStatus.NEW,
@@ -67,8 +68,7 @@ const AppealStatusDurationReport: React.FC = () => {
 
     return reportData.map((item: any) => ({
       ...item,
-      isSummary:
-        item.regionName?.toLowerCase().includes('bo‘yicha') || item.regionName?.toLowerCase().includes('bo‘yicha'),
+      isSummary: isCountryTotal(item.regionName),
     }))
   }, [reportData])
 

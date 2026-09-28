@@ -13,6 +13,7 @@ import { useChildEquipmentTypes } from '@/shared/api/dictionaries'
 import { paramText } from '@/shared/lib/url-params'
 import type { ExtendedColumnDef } from '@/shared/components/common/data-table/model/column-def'
 import type { ISearchParams } from '@/shared/types'
+import { isCountryTotal } from '../../lib/country-total'
 
 type Option = OptionItem<string | number>
 
@@ -35,9 +36,6 @@ type StandardTermsRow = TermsRow & {
 const ALL_EQUIPMENTS = APPLICATIONS_DATA.filter(
   (i) => i?.category === ApplicationCategory.EQUIPMENTS && i?.parentId === MainApplicationCategory.REGISTER
 )
-
-/** The backend spells the country total with any of three apostrophes */
-const isCountryTotal = (name?: string) => !!name && (name === 'Respublika' || /^Respublika bo['‘’]yicha$/.test(name))
 
 /** How many organizations own the devices counted in the group it opens */
 const organizationsColumn = (accessorKey: string): ExtendedColumnDef<TermsRow> => ({
