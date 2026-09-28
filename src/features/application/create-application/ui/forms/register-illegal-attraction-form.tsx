@@ -280,7 +280,7 @@ const RegisterIllegalAttractionForm = ({ onSubmit, isPending = false }: Register
                       onValueChange={(value) => {
                         if (value) {
                           field.onChange(value)
-                          form.setValue('parkId', null as any)
+                          form.setValue('parkId', null)
                         }
                       }}
                       value={String(field.value || '')}
@@ -461,7 +461,7 @@ const RegisterIllegalAttractionForm = ({ onSubmit, isPending = false }: Register
                         name={field.name}
                         accept={[FileTypes.PDF]}
                         onRemove={() =>
-                          form.setValue('seasonalInspectionExpiryDate', undefined as any, { shouldValidate: true })
+                          form.setValue('seasonalInspectionExpiryDate', undefined, { shouldValidate: true })
                         }
                       />
                     </FormControl>
@@ -510,7 +510,7 @@ const RegisterIllegalAttractionForm = ({ onSubmit, isPending = false }: Register
                         name={field.name}
                         accept={[FileTypes.PDF]}
                         onRemove={() =>
-                          form.setValue('seasonalReadinessActExpiryDate', undefined as any, { shouldValidate: true })
+                          form.setValue('seasonalReadinessActExpiryDate', undefined, { shouldValidate: true })
                         }
                       />
                     </FormControl>
@@ -567,7 +567,7 @@ const RegisterIllegalAttractionForm = ({ onSubmit, isPending = false }: Register
                         name={field.name}
                         accept={[FileTypes.PDF]}
                         onRemove={() =>
-                          form.setValue('employeeSafetyKnowledgeExpiryDate', undefined as any, { shouldValidate: true })
+                          form.setValue('employeeSafetyKnowledgeExpiryDate', undefined, { shouldValidate: true })
                         }
                       />
                     </FormControl>
@@ -612,9 +612,7 @@ const RegisterIllegalAttractionForm = ({ onSubmit, isPending = false }: Register
                         form={form}
                         name={field.name}
                         accept={[FileTypes.PDF]}
-                        onRemove={() =>
-                          form.setValue('usageRightsExpiryDate', undefined as any, { shouldValidate: true })
-                        }
+                        onRemove={() => form.setValue('usageRightsExpiryDate', undefined, { shouldValidate: true })}
                       />
                     </FormControl>
                   </div>

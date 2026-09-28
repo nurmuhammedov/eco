@@ -1,6 +1,7 @@
 import { AttractionAppealDtoSchema, CreateAttractionApplicationDTO } from '@/entities/create-application'
 import { useChildEquipmentTypes, useDistrictSelectQuery, useRegionSelectQuery } from '@/shared/api/dictionaries'
 import useData from '@/shared/hooks/api/use-data'
+import type { OptionItem } from '@/shared/types'
 import { getSelectOptions } from '@/shared/lib/get-select-options'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMemo } from 'react'
@@ -55,7 +56,7 @@ export const useCreateAttractionApplication = () => {
 
   const { data: attractionNames } = useChildEquipmentTypes('ATTRACTION')
 
-  const { data: attractionSorts } = useData<any[]>(`/child-equipment-sorts/select`, !!childEquipmentId, {
+  const { data: attractionSorts } = useData<OptionItem<number>[]>(`/child-equipment-sorts/select`, !!childEquipmentId, {
     childEquipmentId,
   })
 

@@ -18,7 +18,7 @@ import { useForm } from 'react-hook-form'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { toast } from 'sonner'
 import { z } from 'zod'
-import { useOwnerLookup } from './use-owner-lookup'
+import { type OwnerData, useOwnerLookup } from './use-owner-lookup'
 import { EquipmentDetail, KEPT_OWNER_BIRTH_DATE, latinOrEmpty } from './equipment-detail'
 
 export const useRegisterIllegalHeatPipeline = (externalSubmit?: (data: RegisterIllegalHeatPipelineDTO) => void) => {
@@ -196,7 +196,7 @@ export const useRegisterIllegalHeatPipeline = (externalSubmit?: (data: RegisterI
 
   const { data: fetchedOwnerData, isLoading: isOwnerLoading } = useLegalOrganizationQuery(ownerIdentity)
 
-  const currentOwnerData = isUpdate ? fetchedOwnerData : ownerLookup.owner
+  const currentOwnerData: OwnerData | null | undefined = isUpdate ? fetchedOwnerData : ownerLookup.owner
 
   const { data: hfOptions } = useHazardousFacilityByTinQuery(identity, isLegal && !!currentOwnerData)
 

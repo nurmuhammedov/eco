@@ -21,6 +21,7 @@ export interface EquipmentDetail {
   servicePeriod: string | null
   acceptedAt: string | null
   nonDestructiveCheckDate: string | null
+  riskLevel: 'I' | 'II' | 'III' | 'IV' | null
   partialCheckDate: string | null
   nextPartialCheckDate: string | null
   fullCheckDate: string | null

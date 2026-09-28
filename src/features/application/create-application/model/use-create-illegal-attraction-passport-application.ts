@@ -1,4 +1,3 @@
-import { apiClient } from '@/shared/api/api-client'
 import { useLegalOrganizationQuery } from '@/shared/api/dictionaries'
 import { invalidateRegistryQueries } from '@/shared/lib/query/invalidate-registry'
 import {
@@ -10,15 +9,17 @@ import { useChildEquipmentTypes, useDistrictSelectQuery, useRegionSelectQuery } 
 import { getSelectOptions } from '@/shared/lib/get-select-options'
 import { useDetail, useUpdate } from '@/shared/hooks'
 import useData from '@/shared/hooks/api/use-data'
-import useAdd from '@/shared/hooks/api/use-add'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { type FormDraft, zodFormResolver } from '@/shared/lib/zod-form-resolver'
 import { useQueryClient } from '@tanstack/react-query'
 import { format } from 'date-fns'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { toast } from 'sonner'
 import { z } from 'zod'
+import type { OptionItem } from '@/shared/types'
+import { type OwnerData, useOwnerLookup } from './use-owner-lookup'
+import { EquipmentDetail, KEPT_OWNER_BIRTH_DATE, latinOrEmpty } from './equipment-detail'
 
 export const useRegisterIllegalAttraction = (externalSubmit?: (data: RegisterIllegalAttractionDTO) => void) => {
   const { type, id } = useParams<{ type: string; id: string }>()
@@ -28,8 +29,7 @@ export const useRegisterIllegalAttraction = (externalSubmit?: (data: RegisterIll
   const navigate = useNavigate()
   const queryClient = useQueryClient()
 
-  const [manualOwnerData, setManualOwnerData] = useState<any>(null)
-  const [isManualSearchLoading, setIsManualSearchLoading] = useState(false)
+  const ownerLookup = useOwnerLookup()
 
   const formSchema = isUpdate
     ? RegisterIllegalAttractionBaseSchema.extend({
@@ -39,10 +39,10 @@ export const useRegisterIllegalAttraction = (externalSubmit?: (data: RegisterIll
           .nullable()
           .transform((val) => (val ? val : null)),
         birthDate: z
-          .string()
+          .date()
           .optional()
           .nullable()
-          .transform((val) => (val ? val : null)),
+          .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
         passportPath: z
           .string()
           .optional()
@@ -121,8 +121,10 @@ export const useRegisterIllegalAttraction = (externalSubmit?: (data: RegisterIll
       })
     : RegisterIllegalAttractionSchema
 
-  const form = useForm<RegisterIllegalAttractionDTO>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<FormDraft<typeof RegisterIllegalAttractionSchema>, unknown, RegisterIllegalAttractionDTO>({
+    resolver: zodFormResolver<FormDraft<typeof RegisterIllegalAttractionSchema>, RegisterIllegalAttractionDTO>(
+      formSchema
+    ),
     defaultValues: {
       phoneNumber: '',
       identity: '',
@@ -162,13 +164,9 @@ export const useRegisterIllegalAttraction = (externalSubmit?: (data: RegisterIll
     mode: 'onChange',
   })
 
-  const { data: detail, isLoading: isDetailLoading } = useDetail<any>(`/equipments/`, id, !!id)
+  const { data: detail, isLoading: isDetailLoading } = useDetail<EquipmentDetail>(`/equipments/`, id, !!id)
 
   const { mutateAsync: updateMutate, isPending: isUpdatePending } = useUpdate('/equipments/attraction/', id)
-
-  const { mutateAsync: individualMutateAsync, isPending: isIndividualPending } = useAdd<any, any, any>(
-    '/integration/iip/individual'
-  )
 
   const ownerIdentity = (detail?.ownerIdentity ? detail?.ownerIdentity?.toString() : null) || tin
   const regionId = form.watch('regionId')?.toString()
@@ -177,57 +175,55 @@ export const useRegisterIllegalAttraction = (externalSubmit?: (data: RegisterIll
   const { data: regions } = useRegionSelectQuery()
   const { data: districts } = useDistrictSelectQuery(regionId)
   const { data: attractionNames } = useChildEquipmentTypes('ATTRACTION')
-  const { data: attractionSorts } = useData<any[]>(`/child-equipment-sorts/select`, !!childEquipmentId, {
+  const { data: attractionSorts } = useData<OptionItem<number>[]>(`/child-equipment-sorts/select`, !!childEquipmentId, {
     childEquipmentId,
   })
 
   const { data: fetchedOwnerData, isLoading: isOwnerLoading } = useLegalOrganizationQuery(ownerIdentity)
 
-  const currentOwnerData = isUpdate ? fetchedOwnerData : manualOwnerData
+  const currentOwnerData: OwnerData | null | undefined = isUpdate ? fetchedOwnerData : ownerLookup.owner
 
   const parseDate = (dateString?: string | null) => (dateString ? new Date(dateString) : undefined)
 
   useEffect(() => {
     if (detail && isUpdate) {
-      const getValue = (val: any) => (typeof val === 'string' && /[\u0400-\u04FF]/.test(val) ? '' : val)
-
       form.reset({
-        phoneNumber: detail.phoneNumber || '',
+        phoneNumber: '',
         identity: detail.ownerIdentity ? String(detail.ownerIdentity) : '',
-        birthDate: isUpdate ? '1900-01-01' : parseDate(detail.birthDate),
-        attractionName: getValue(detail.attractionName || ''),
-        childEquipmentId: detail.childEquipmentId,
-        childEquipmentSortId: detail.childEquipmentSortId,
-        factory: getValue(detail.factory || ''),
+        birthDate: KEPT_OWNER_BIRTH_DATE,
+        attractionName: latinOrEmpty(detail.attractionName || ''),
+        childEquipmentId: detail.childEquipmentId ?? undefined,
+        childEquipmentSortId: detail.childEquipmentSortId ?? undefined,
+        factory: latinOrEmpty(detail.factory || ''),
         manufacturedAt: parseDate(detail.manufacturedAt),
         acceptedAt: parseDate(detail.acceptedAt),
         servicePeriod: parseDate(detail.servicePeriod),
-        factoryNumber: getValue(detail.factoryNumber || ''),
+        factoryNumber: latinOrEmpty(detail.factoryNumber || ''),
         country: detail.country || '',
         regionId: detail.regionId ? String(detail.regionId) : '',
-        address: getValue(detail.address || ''),
-        location: getValue(detail.location || ''),
+        address: latinOrEmpty(detail.address || ''),
+        location: latinOrEmpty(detail.location || ''),
         riskLevel: detail.riskLevel || undefined,
 
-        passportPath: detail.files?.passportPath?.path,
-        labelPath: detail.files?.labelPath?.path,
-        conformityCertPath: detail.files?.conformityCertPath?.path,
-        technicalJournalPath: detail.files?.technicalJournalPath?.path,
-        servicePlanPath: detail.files?.servicePlanPath?.path,
-        technicalManualPath: detail.files?.technicalManualPath?.path,
-        seasonalInspectionPath: detail.files?.seasonalInspectionPath?.path,
+        passportPath: detail.files?.passportPath?.path ?? undefined,
+        labelPath: detail.files?.labelPath?.path ?? undefined,
+        conformityCertPath: detail.files?.conformityCertPath?.path ?? undefined,
+        technicalJournalPath: detail.files?.technicalJournalPath?.path ?? undefined,
+        servicePlanPath: detail.files?.servicePlanPath?.path ?? undefined,
+        technicalManualPath: detail.files?.technicalManualPath?.path ?? undefined,
+        seasonalInspectionPath: detail.files?.seasonalInspectionPath?.path ?? undefined,
         seasonalInspectionExpiryDate: parseDate(detail.files?.seasonalInspectionPath?.expiryDate),
-        seasonalReadinessActPath: detail.files?.seasonalReadinessActPath?.path,
+        seasonalReadinessActPath: detail.files?.seasonalReadinessActPath?.path ?? undefined,
         seasonalReadinessActExpiryDate: parseDate(detail.files?.seasonalReadinessActPath?.expiryDate),
-        technicalReadinessActPath: detail.files?.technicalReadinessActPath?.path,
-        employeeSafetyKnowledgePath: detail.files?.employeeSafetyKnowledgePath?.path,
+        technicalReadinessActPath: detail.files?.technicalReadinessActPath?.path ?? undefined,
+        employeeSafetyKnowledgePath: detail.files?.employeeSafetyKnowledgePath?.path ?? undefined,
         employeeSafetyKnowledgeExpiryDate: parseDate(detail.files?.employeeSafetyKnowledgePath?.expiryDate),
-        usageRightsPath: detail.files?.usageRightsPath?.path,
+        usageRightsPath: detail.files?.usageRightsPath?.path ?? undefined,
         usageRightsExpiryDate: parseDate(detail.files?.usageRightsPath?.expiryDate),
-        preservationActPath: detail.files?.preservationActPath?.path,
-        cctvInstallationPath: detail.files?.cctvInstallationPath?.path,
-        qrPath: detail.files?.qrPath?.path,
-      } as any)
+        preservationActPath: detail.files?.preservationActPath?.path ?? undefined,
+        cctvInstallationPath: detail.files?.cctvInstallationPath?.path ?? undefined,
+        qrPath: detail.files?.qrPath?.path ?? undefined,
+      })
 
       setTimeout(() => {
         form.setValue('districtId', detail.districtId ? detail.districtId : '')
@@ -237,33 +233,18 @@ export const useRegisterIllegalAttraction = (externalSubmit?: (data: RegisterIll
 
   const handleSearch = () => {
     const identity = form.getValues('identity')?.trim()
-    const birthDate = form.getValues('birthDate')
 
     if (!identity) return
 
-    if (identity.length === 9) {
-      setIsManualSearchLoading(true)
-      apiClient
-        .post<any>('/integration/iip/legal', { tin: identity })
-        .then((res) => setManualOwnerData(res.data?.data || res.data))
-        .catch(() => setManualOwnerData(null))
-        .finally(() => setIsManualSearchLoading(false))
-    } else if (identity.length === 14 && birthDate) {
-      individualMutateAsync({
-        pin: identity,
-        birthDate: format(birthDate as unknown as Date, 'yyyy-MM-dd'),
-      })
-        .then((res) => setManualOwnerData(res.data?.data || res.data))
-        .catch(() => setManualOwnerData(null))
-    } else {
+    if (!ownerLookup.search(identity, form.getValues('birthDate'))) {
       form.trigger(['identity', 'birthDate'])
     }
   }
 
   const handleClear = () => {
-    setManualOwnerData(null)
+    ownerLookup.clear()
     form.setValue('identity', '')
-    form.setValue('birthDate', undefined as any)
+    form.setValue('birthDate', undefined)
   }
 
   const handleSubmit = (data: RegisterIllegalAttractionDTO) => {
@@ -310,7 +291,7 @@ export const useRegisterIllegalAttraction = (externalSubmit?: (data: RegisterIll
     ownerData: currentOwnerData,
     detail,
     isLoading: isDetailLoading || isOwnerLoading,
-    isSearchLoading: isIndividualPending || isManualSearchLoading,
+    isSearchLoading: ownerLookup.isSearching,
     isSubmitPending: isUpdatePending,
     handleSearch,
     handleClear,

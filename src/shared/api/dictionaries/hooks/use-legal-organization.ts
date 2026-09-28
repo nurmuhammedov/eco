@@ -1,15 +1,16 @@
 import useDetail from '@/shared/hooks/api/use-detail'
 
+/** UserViewByProfile: an organisation's profile in this system */
 export interface LegalOrganization {
+  id?: string
   identity?: string | number
   name?: string
+  legalForm?: string
+  legalOwnershipType?: string
   directorName?: string
   address?: string
   phoneNumber?: string
-  regionId?: number
-  districtId?: number
   isActive?: boolean
-  [key: string]: unknown
 }
 
 /**

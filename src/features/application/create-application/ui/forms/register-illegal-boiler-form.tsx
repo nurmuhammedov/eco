@@ -88,7 +88,7 @@ const RegisterIllegalBoilerForm = ({ onSubmit, isPending = false }: RegisterIlle
                           e.target.value = val
                           if (ownerData) handleClear()
                           if (val.length !== 14) {
-                            form.setValue('birthDate', undefined as any)
+                            form.setValue('birthDate', undefined)
                           }
                           field.onChange(e)
                         }}
@@ -529,9 +529,7 @@ const RegisterIllegalBoilerForm = ({ onSubmit, isPending = false }: RegisterIlle
                         form={form}
                         name={field.name}
                         accept={[FileTypes.PDF]}
-                        onRemove={() =>
-                          form.setValue('expertiseExpiryDate', undefined as any, { shouldValidate: true })
-                        }
+                        onRemove={() => form.setValue('expertiseExpiryDate', undefined, { shouldValidate: true })}
                       />
                     </FormControl>
                   </div>
