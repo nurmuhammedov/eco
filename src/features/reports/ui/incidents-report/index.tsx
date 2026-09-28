@@ -4,48 +4,51 @@ import { useData } from '@/shared/hooks'
 import { GoBack } from '@/shared/components/common'
 import { cn } from '@/shared/lib/utils'
 import useCustomSearchParams from '@/shared/hooks/api/use-search-params'
+import type { ExtendedColumnDef } from '@/shared/components/common/data-table/model/column-def'
+
+type RegionOption = { id: number; name: string }
+
+const mockRow = (officeName: string, isSummary = false) => {
+  const getRandom = (max: number) => Math.floor(Math.random() * max)
+
+  return {
+    officeName,
+    isSummary,
+    total: 10 + getRandom(30),
+    new: getRandom(5),
+    orderCreated: getRandom(10),
+    inProcess: getRandom(10),
+    completed: getRandom(10),
+    economicDamage: 50 + getRandom(500),
+  }
+}
+
+type Row = ReturnType<typeof mockRow>
 
 const IncidentsReport: React.FC = () => {
   const { paramsObject } = useCustomSearchParams()
-  const { data: regionsData, isLoading: regionsLoading } = useData<any[]>('/regions/select', true, {
+  const { data: regionsData, isLoading: regionsLoading } = useData<RegionOption[]>('/regions/select', true, {
     ...paramsObject,
   })
 
   const tableData = React.useMemo(() => {
     if (!regionsData) return []
 
-    const mockRow = (officeName: string, isSummary = false) => {
-      const getRandom = (max: number) => Math.floor(Math.random() * max)
-
-      return {
-        officeName,
-        isSummary,
-        total: 10 + getRandom(30),
-        new: getRandom(5),
-        orderCreated: getRandom(10),
-        inProcess: getRandom(10),
-        completed: getRandom(10),
-        economicDamage: 50 + getRandom(500),
-      }
-    }
-
     const summaryRow = mockRow('Respublika bo‘yicha', true)
-    const filteredRegions = regionsData.filter(
-      (r) => !r.nameUz?.toLowerCase().includes('respublika') && !r.name?.toLowerCase().includes('respublika')
-    )
-    const list = filteredRegions.map((r) => mockRow(r.nameUz || r.name))
+    const filteredRegions = regionsData.filter((r) => !r.name.toLowerCase().includes('respublika'))
+    const list = filteredRegions.map((r) => mockRow(r.name))
 
     return [summaryRow, ...list]
   }, [regionsData])
 
-  const columns = [
+  const columns: ExtendedColumnDef<Row, number>[] = [
     {
       header: 'Hududlar',
       accessorKey: 'officeName',
       id: 'officeName',
       minSize: 200,
       className: 'sticky left-0 z-20 border-r shadow-[1px_0_0_0_rgba(0,0,0,0.1)]',
-      cell: ({ row }: any) => {
+      cell: ({ row }) => {
         const value = row.original.officeName
         const isRespublika = value?.toLowerCase().includes('respublika')
         return (
@@ -60,53 +63,41 @@ const IncidentsReport: React.FC = () => {
       columns: [
         {
           header: 'Umumiy',
-          accessorFn: (row: any) => row.total,
+          accessorFn: (row) => row.total,
           className: 'text-center font-semibold text-slate-900',
-          cell: ({ row, getValue }: any) => (
-            <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
-          ),
+          cell: ({ row, getValue }) => <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>,
         },
         {
           header: 'Yangi',
-          accessorFn: (row: any) => row.new,
+          accessorFn: (row) => row.new,
           className: 'text-center font-medium',
-          cell: ({ row, getValue }: any) => (
-            <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
-          ),
+          cell: ({ row, getValue }) => <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>,
         },
         {
           header: 'Buyruq shakillangan',
-          accessorFn: (row: any) => row.orderCreated,
+          accessorFn: (row) => row.orderCreated,
           className: 'text-center',
-          cell: ({ row, getValue }: any) => (
-            <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
-          ),
+          cell: ({ row, getValue }) => <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>,
         },
         {
           header: 'Jarayonda',
-          accessorFn: (row: any) => row.inProcess,
+          accessorFn: (row) => row.inProcess,
           className: 'text-center',
-          cell: ({ row, getValue }: any) => (
-            <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
-          ),
+          cell: ({ row, getValue }) => <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>,
         },
         {
           header: 'Yakunlangan',
-          accessorFn: (row: any) => row.completed,
+          accessorFn: (row) => row.completed,
           className: 'text-center',
-          cell: ({ row, getValue }: any) => (
-            <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
-          ),
+          cell: ({ row, getValue }) => <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>,
         },
       ],
     },
     {
       header: 'Avariyadan ko‘rilgan iqtisodiy zarar',
-      accessorFn: (row: any) => row.economicDamage,
+      accessorFn: (row) => row.economicDamage,
       className: 'text-center font-bold',
-      cell: ({ row, getValue }: any) => (
-        <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()} mln.</span>
-      ),
+      cell: ({ row, getValue }) => <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()} mln.</span>,
     },
   ]
 
@@ -118,7 +109,7 @@ const IncidentsReport: React.FC = () => {
 
       <div className="flex-1 overflow-hidden rounded-md border bg-white shadow-sm">
         <DataTable
-          columns={columns as any}
+          columns={columns}
           data={tableData}
           isLoading={regionsLoading}
           isPaginated={false}

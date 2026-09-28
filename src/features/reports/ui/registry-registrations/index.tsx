@@ -5,65 +5,68 @@ import { GoBack } from '@/shared/components/common'
 import { cn } from '@/shared/lib/utils'
 import Filter from '@/shared/components/common/filter'
 import useCustomSearchParams from '@/shared/hooks/api/use-search-params'
+import type { ExtendedColumnDef } from '@/shared/components/common/data-table/model/column-def'
+
+type RegionOption = { id: number; name: string }
+
+const mockRow = (officeName: string, isSummary = false) => {
+  const getRandom = (max: number) => Math.floor(Math.random() * max)
+  const generateGroup = () => {
+    const total = 10 + getRandom(20)
+    const completed = getRandom(total / 2)
+    const inProcess = getRandom(total / 3)
+    const notCompleted = total - completed - inProcess
+
+    return {
+      total,
+      not_completed: notCompleted,
+      in_process: inProcess,
+      completed,
+    }
+  }
+
+  return {
+    officeName,
+    isSummary,
+    x: generateGroup(),
+    q: generateGroup(),
+  }
+}
+
+type Row = ReturnType<typeof mockRow>
+
+type GroupKey = 'x' | 'q'
 
 const RegistryRegistrationsReport: React.FC = () => {
   const { paramsObject } = useCustomSearchParams()
-  const { data: regionsData, isLoading: regionsLoading } = useData<any[]>('/regions/select', true, {
+  const { data: regionsData, isLoading: regionsLoading } = useData<RegionOption[]>('/regions/select', true, {
     ...paramsObject,
   })
 
   const tableData = useMemo(() => {
     if (!regionsData) return []
 
-    const mockRow = (officeName: string, isSummary = false) => {
-      const getRandom = (max: number) => Math.floor(Math.random() * max)
-      const generateGroup = () => {
-        const total = 10 + getRandom(20)
-        const completed = getRandom(total / 2)
-        const inProcess = getRandom(total / 3)
-        const notCompleted = total - completed - inProcess
-
-        return {
-          total,
-          not_completed: notCompleted,
-          in_process: inProcess,
-          completed,
-        }
-      }
-
-      return {
-        officeName,
-        isSummary,
-        x: generateGroup(),
-        q: generateGroup(),
-      }
-    }
-
     const summaryRow = mockRow('Respublika bo‘yicha', true)
-    const filteredRegions = regionsData.filter(
-      (r) => !r.nameUz?.toLowerCase().includes('respublika') && !r.name?.toLowerCase().includes('respublika')
-    )
-    const list = filteredRegions.map((r) => mockRow(r.nameUz || r.name))
+    const filteredRegions = regionsData.filter((r) => !r.name.toLowerCase().includes('respublika'))
+    const list = filteredRegions.map((r) => mockRow(r.name))
 
     return [summaryRow, ...list]
   }, [regionsData])
 
-  const createGroup = (prefix: string, header: string) => ({
+  const createGroup = (prefix: GroupKey, header: string): ExtendedColumnDef<Row, number> => ({
     header,
     columns: [
       {
         header: 'Umumiy',
-        accessorFn: (row: any) => row[prefix].total || 0,
+        accessorFn: (row) => row[prefix].total || 0,
         className: 'text-center font-semibold text-slate-900',
-        cell: ({ row, getValue }: any) => (
-          <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
-        ),
+        cell: ({ row, getValue }) => <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>,
       },
       {
         header: 'Amal bajarilmaganlar',
-        accessorFn: (row: any) => row[prefix].not_completed || 0,
+        accessorFn: (row) => row[prefix].not_completed || 0,
         className: 'text-center',
-        cell: ({ row, getValue }: any) => (
+        cell: ({ row, getValue }) => (
           <span className={row.original.isSummary ? 'font-bold underline decoration-red-500/30' : ''}>
             {getValue()}
           </span>
@@ -71,17 +74,15 @@ const RegistryRegistrationsReport: React.FC = () => {
       },
       {
         header: 'Jarayonda',
-        accessorFn: (row: any) => row[prefix].in_process || 0,
+        accessorFn: (row) => row[prefix].in_process || 0,
         className: 'text-center',
-        cell: ({ row, getValue }: any) => (
-          <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
-        ),
+        cell: ({ row, getValue }) => <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>,
       },
       {
         header: 'Yakunlandi',
-        accessorFn: (row: any) => row[prefix].completed || 0,
+        accessorFn: (row) => row[prefix].completed || 0,
         className: 'text-center',
-        cell: ({ row, getValue }: any) => (
+        cell: ({ row, getValue }) => (
           <span className={row.original.isSummary ? 'font-bold underline decoration-emerald-500/30' : ''}>
             {getValue()}
           </span>
@@ -90,14 +91,14 @@ const RegistryRegistrationsReport: React.FC = () => {
     ],
   })
 
-  const columns = [
+  const columns: ExtendedColumnDef<Row, number>[] = [
     {
       header: 'Hududiy boshqarma/bo‘limlar',
       accessorKey: 'officeName',
       id: 'officeName',
       minSize: 200,
       className: 'sticky left-0 z-20 border-r shadow-[1px_0_0_0_rgba(0,0,0,0.1)]',
-      cell: ({ row }: any) => {
+      cell: ({ row }) => {
         const value = row.original.officeName
         const isRespublika = value?.toLowerCase().includes('respublika')
         return (
@@ -122,7 +123,7 @@ const RegistryRegistrationsReport: React.FC = () => {
 
       <div className="flex-1 overflow-hidden rounded-md border bg-white shadow-sm">
         <DataTable
-          columns={columns as any}
+          columns={columns}
           data={tableData}
           isLoading={regionsLoading}
           isPaginated={false}

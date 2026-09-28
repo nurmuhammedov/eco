@@ -4,58 +4,61 @@ import { useData } from '@/shared/hooks'
 import { GoBack } from '@/shared/components/common'
 import { cn } from '@/shared/lib/utils'
 import useCustomSearchParams from '@/shared/hooks/api/use-search-params'
+import type { ExtendedColumnDef } from '@/shared/components/common/data-table/model/column-def'
+
+type RegionOption = { id: number; name: string }
+
+const mockRow = (officeName: string, isSummary = false) => {
+  const getRandom = (max: number) => Math.floor(Math.random() * max)
+
+  const victimsCount = getRandom(20)
+  const death = getRandom(victimsCount / 3)
+  const heavy = getRandom((victimsCount - death) / 2)
+  const light = victimsCount - death - heavy
+  const group = getRandom(5)
+
+  return {
+    officeName,
+    isSummary,
+    total: 20 + getRandom(50),
+    new: getRandom(10),
+    orderCreated: getRandom(15),
+    inProcess: getRandom(15),
+    completed: getRandom(20),
+    victimsCount,
+    light,
+    heavy,
+    death,
+    group,
+  }
+}
+
+type Row = ReturnType<typeof mockRow>
 
 const AccidentsReport: React.FC = () => {
   const { paramsObject } = useCustomSearchParams()
-  const { data: regionsData, isLoading: regionsLoading } = useData<any[]>('/regions/select', true, {
+  const { data: regionsData, isLoading: regionsLoading } = useData<RegionOption[]>('/regions/select', true, {
     ...paramsObject,
   })
 
   const tableData = React.useMemo(() => {
     if (!regionsData) return []
 
-    const mockRow = (officeName: string, isSummary = false) => {
-      const getRandom = (max: number) => Math.floor(Math.random() * max)
-
-      const victimsCount = getRandom(20)
-      const death = getRandom(victimsCount / 3)
-      const heavy = getRandom((victimsCount - death) / 2)
-      const light = victimsCount - death - heavy
-      const group = getRandom(5)
-
-      return {
-        officeName,
-        isSummary,
-        total: 20 + getRandom(50),
-        new: getRandom(10),
-        orderCreated: getRandom(15),
-        inProcess: getRandom(15),
-        completed: getRandom(20),
-        victimsCount,
-        light,
-        heavy,
-        death,
-        group,
-      }
-    }
-
     const summaryRow = mockRow('Respublika bo‘yicha', true)
-    const filteredRegions = regionsData.filter(
-      (r) => !r.nameUz?.toLowerCase().includes('respublika') && !r.name?.toLowerCase().includes('respublika')
-    )
-    const list = filteredRegions.map((r) => mockRow(r.nameUz || r.name))
+    const filteredRegions = regionsData.filter((r) => !r.name.toLowerCase().includes('respublika'))
+    const list = filteredRegions.map((r) => mockRow(r.name))
 
     return [summaryRow, ...list]
   }, [regionsData])
 
-  const columns = [
+  const columns: ExtendedColumnDef<Row, number>[] = [
     {
       header: 'Hududlar',
       accessorKey: 'officeName',
       id: 'officeName',
       minSize: 200,
       className: 'sticky left-0 z-20 border-r shadow-[1px_0_0_0_rgba(0,0,0,0.1)]',
-      cell: ({ row }: any) => {
+      cell: ({ row }) => {
         const value = row.original.officeName
         const isRespublika = value?.toLowerCase().includes('respublika')
         return (
@@ -70,41 +73,33 @@ const AccidentsReport: React.FC = () => {
       columns: [
         {
           header: 'Umumiy',
-          accessorFn: (row: any) => row.total,
+          accessorFn: (row) => row.total,
           className: 'text-center font-semibold text-slate-900',
-          cell: ({ row, getValue }: any) => (
-            <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
-          ),
+          cell: ({ row, getValue }) => <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>,
         },
         {
           header: 'Yangi',
-          accessorFn: (row: any) => row.new,
+          accessorFn: (row) => row.new,
           className: 'text-center',
-          cell: ({ row, getValue }: any) => (
-            <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
-          ),
+          cell: ({ row, getValue }) => <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>,
         },
         {
           header: 'Buyruq shakillangan',
-          accessorFn: (row: any) => row.orderCreated,
+          accessorFn: (row) => row.orderCreated,
           className: 'text-center',
-          cell: ({ row, getValue }: any) => (
-            <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
-          ),
+          cell: ({ row, getValue }) => <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>,
         },
         {
           header: 'Jarayonda',
-          accessorFn: (row: any) => row.inProcess,
+          accessorFn: (row) => row.inProcess,
           className: 'text-center',
-          cell: ({ row, getValue }: any) => (
-            <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
-          ),
+          cell: ({ row, getValue }) => <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>,
         },
         {
           header: 'Yakunlangan',
-          accessorFn: (row: any) => row.completed,
+          accessorFn: (row) => row.completed,
           className: 'text-center',
-          cell: ({ row, getValue }: any) => (
+          cell: ({ row, getValue }) => (
             <span className={row.original.isSummary ? 'font-bold font-medium' : ''}>{getValue()}</span>
           ),
         },
@@ -115,43 +110,35 @@ const AccidentsReport: React.FC = () => {
       columns: [
         {
           header: 'Jabrlanuvchilar soni',
-          accessorFn: (row: any) => row.victimsCount,
+          accessorFn: (row) => row.victimsCount,
           className: 'text-center font-bold text-slate-900',
-          cell: ({ row, getValue }: any) => (
-            <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
-          ),
+          cell: ({ row, getValue }) => <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>,
         },
         {
           header: 'Yengil',
-          accessorFn: (row: any) => row.light,
+          accessorFn: (row) => row.light,
           className: 'text-center',
-          cell: ({ row, getValue }: any) => (
-            <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
-          ),
+          cell: ({ row, getValue }) => <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>,
         },
         {
           header: 'Og‘ir',
-          accessorFn: (row: any) => row.heavy,
+          accessorFn: (row) => row.heavy,
           className: 'text-center',
-          cell: ({ row, getValue }: any) => (
-            <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
-          ),
+          cell: ({ row, getValue }) => <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>,
         },
         {
           header: 'O‘lim',
-          accessorFn: (row: any) => row.death,
+          accessorFn: (row) => row.death,
           className: 'text-center',
-          cell: ({ row, getValue }: any) => (
+          cell: ({ row, getValue }) => (
             <span className={row.original.isSummary ? 'font-bold font-medium' : ''}>{getValue()}</span>
           ),
         },
         {
           header: 'Guruhiy',
-          accessorFn: (row: any) => row.group,
+          accessorFn: (row) => row.group,
           className: 'text-center',
-          cell: ({ row, getValue }: any) => (
-            <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>
-          ),
+          cell: ({ row, getValue }) => <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>,
         },
       ],
     },
@@ -165,7 +152,7 @@ const AccidentsReport: React.FC = () => {
 
       <div className="flex-1 overflow-hidden rounded-md border bg-white shadow-sm">
         <DataTable
-          columns={columns as any}
+          columns={columns}
           data={tableData}
           isLoading={regionsLoading}
           isPaginated={false}
