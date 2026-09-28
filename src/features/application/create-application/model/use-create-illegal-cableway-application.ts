@@ -15,8 +15,8 @@ import { z } from 'zod'
 import { type OwnerData, useOwnerLookup } from './use-owner-lookup'
 import type { EquipmentDetail } from './equipment-detail'
 import { KEPT_OWNER_BIRTH_DATE, latinOrEmpty } from './edit-values'
+import { requireCitizenBirthDate } from '@/entities/create-application'
 import {
-  cablewayRefinement,
   RegisterIllegalCablewayBaseSchema,
   RegisterIllegalCablewayDTO,
   RegisterIllegalCablewaySchema,
@@ -126,7 +126,7 @@ export const useRegisterIllegalCableway = (externalSubmit?: (data: RegisterIlleg
           .optional()
           .nullable()
           .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
-      }).superRefine(cablewayRefinement)
+      }).superRefine(requireCitizenBirthDate)
     : RegisterIllegalCablewaySchema
 
   const form = useForm<FormDraft<typeof RegisterIllegalCablewaySchema>, unknown, RegisterIllegalCablewayDTO>({

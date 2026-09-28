@@ -45,6 +45,6 @@ const __OilContainerAppealDtoSchema = z.object({
   servicePeriod: z.date().transform((date) => format(date, 'yyyy-MM-dd')),
 })
 
-export const OilContainerAppealDtoSchema = __OilContainerAppealDtoSchema.superRefine((data: any, ctx: any) =>
+export const OilContainerAppealDtoSchema = __OilContainerAppealDtoSchema.superRefine((data, ctx) =>
   checkExpiryDate(data, ctx, 'expertisePath', 'expertiseExpiryDate')
 )

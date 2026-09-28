@@ -61,6 +61,6 @@ const __CraneAppealDtoSchema = z.object({
   servicePeriod: z.date().transform((date) => format(date, 'yyyy-MM-dd')),
 })
 
-export const CraneAppealDtoSchema = __CraneAppealDtoSchema.superRefine((data: any, ctx: any) =>
+export const CraneAppealDtoSchema = __CraneAppealDtoSchema.superRefine((data, ctx) =>
   checkExpiryDate(data, ctx, 'expertisePath', 'expertiseExpiryDate')
 )

@@ -2,7 +2,7 @@ import { useLegalOrganizationQuery } from '@/shared/api/dictionaries'
 import { useHazardousFacilityByTinQuery } from '@/shared/api/dictionaries'
 import { invalidateRegistryQueries } from '@/shared/lib/query/invalidate-registry'
 import {
-  hoistRefinement,
+  requireCitizenBirthDate,
   RegisterIllegalHoistBaseSchema,
   RegisterIllegalHoistDTO,
   RegisterIllegalHoistSchema,
@@ -116,7 +116,7 @@ export const useRegisterIllegalHoist = (externalSubmit?: (data: RegisterIllegalH
           .optional()
           .nullable()
           .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
-      }).superRefine(hoistRefinement)
+      }).superRefine(requireCitizenBirthDate)
     : RegisterIllegalHoistSchema
 
   const form = useForm<FormDraft<typeof RegisterIllegalHoistSchema>, unknown, RegisterIllegalHoistDTO>({

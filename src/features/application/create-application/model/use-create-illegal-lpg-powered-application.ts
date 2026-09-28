@@ -2,7 +2,7 @@ import { useLegalOrganizationQuery } from '@/shared/api/dictionaries'
 import { useHazardousFacilityByTinQuery } from '@/shared/api/dictionaries'
 import { invalidateRegistryQueries } from '@/shared/lib/query/invalidate-registry'
 import {
-  lpgPoweredRefinement,
+  requireCitizenBirthDate,
   RegisterIllegalLpgPoweredBaseSchema,
   RegisterIllegalLpgPoweredDTO,
   RegisterIllegalLpgPoweredSchema,
@@ -131,7 +131,7 @@ export const useRegisterIllegalLpgPowered = (externalSubmit?: (data: RegisterIll
           .optional()
           .nullable()
           .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
-      }).superRefine(lpgPoweredRefinement)
+      }).superRefine(requireCitizenBirthDate)
     : RegisterIllegalLpgPoweredSchema
 
   const form = useForm<FormDraft<typeof RegisterIllegalLpgPoweredSchema>, unknown, RegisterIllegalLpgPoweredDTO>({

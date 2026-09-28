@@ -3,6 +3,7 @@ import { USER_PATTERNS } from '@/shared/constants/custom-patterns'
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 import { format } from 'date-fns'
 import { z } from 'zod'
+import { requireCitizenBirthDate } from './owner-refinement'
 
 export const RegisterIllegalEscalatorBaseSchema = z.object({
   phoneNumber: z
@@ -60,22 +61,10 @@ export const RegisterIllegalEscalatorBaseSchema = z.object({
   servicePeriod: z.date().transform((date) => format(date, 'yyyy-MM-dd')),
 })
 
-export const escalatorRefinement = (data: any, ctx: z.RefinementCtx) => {
-  if (data.identity && data.identity.length === 14) {
-    if (!data.birthDate) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: FORM_ERROR_MESSAGES.required,
-        path: ['birthDate'],
-      })
-    }
-  }
-}
-
-const __RegisterIllegalEscalatorSchema = RegisterIllegalEscalatorBaseSchema.superRefine(escalatorRefinement)
+const __RegisterIllegalEscalatorSchema = RegisterIllegalEscalatorBaseSchema.superRefine(requireCitizenBirthDate)
 
 export type RegisterIllegalEscalatorDTO = z.infer<typeof RegisterIllegalEscalatorSchema>
 
-export const RegisterIllegalEscalatorSchema = __RegisterIllegalEscalatorSchema.superRefine((data: any, ctx: any) =>
+export const RegisterIllegalEscalatorSchema = __RegisterIllegalEscalatorSchema.superRefine((data, ctx) =>
   checkExpiryDate(data, ctx, 'expertisePath', 'expertiseExpiryDate')
 )

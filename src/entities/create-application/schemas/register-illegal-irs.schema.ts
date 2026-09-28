@@ -4,6 +4,7 @@ import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 import { checkExpiryDate } from '@/shared/lib/zod-helpers'
 import { format } from 'date-fns'
 import { z } from 'zod'
+import { requireCitizenBirthDate } from './owner-refinement'
 
 export const RegisterIllegalIrsBaseSchema = z.object({
   phoneNumber: z
@@ -83,22 +84,10 @@ export const RegisterIllegalIrsBaseSchema = z.object({
   address: z.string().trim().min(1),
 })
 
-export const irsRefinement = (data: any, ctx: z.RefinementCtx) => {
-  if (data.identity && data.identity.length === 14) {
-    if (!data.birthDate) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: FORM_ERROR_MESSAGES.required,
-        path: ['birthDate'],
-      })
-    }
-  }
-}
-
-export const RegisterIllegalIrsSchema = RegisterIllegalIrsBaseSchema.superRefine(irsRefinement)
-  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'file1Path', 'file1ExpiryDate'))
-  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'file2Path', 'file2ExpiryDate'))
-  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'file5Path', 'file5ExpiryDate'))
-  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'file15Path', 'file15ExpiryDate'))
+export const RegisterIllegalIrsSchema = RegisterIllegalIrsBaseSchema.superRefine(requireCitizenBirthDate)
+  .superRefine((data, ctx) => checkExpiryDate(data, ctx, 'file1Path', 'file1ExpiryDate'))
+  .superRefine((data, ctx) => checkExpiryDate(data, ctx, 'file2Path', 'file2ExpiryDate'))
+  .superRefine((data, ctx) => checkExpiryDate(data, ctx, 'file5Path', 'file5ExpiryDate'))
+  .superRefine((data, ctx) => checkExpiryDate(data, ctx, 'file15Path', 'file15ExpiryDate'))
 
 export type RegisterIllegalIrsDTO = z.infer<typeof RegisterIllegalIrsSchema>

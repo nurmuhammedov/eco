@@ -2,7 +2,7 @@ import { useLegalOrganizationQuery } from '@/shared/api/dictionaries'
 import { useHazardousFacilityByTinQuery } from '@/shared/api/dictionaries'
 import { invalidateRegistryQueries } from '@/shared/lib/query/invalidate-registry'
 import {
-  craneRefinement,
+  requireCitizenBirthDate,
   RegisterIllegalCraneBaseSchema,
   RegisterIllegalCraneDTO,
   RegisterIllegalCraneSchema,
@@ -131,7 +131,7 @@ export const useRegisterIllegalCrane = (externalSubmit?: (data: RegisterIllegalC
           .optional()
           .nullable()
           .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
-      }).superRefine(craneRefinement)
+      }).superRefine(requireCitizenBirthDate)
     : RegisterIllegalCraneSchema
 
   const form = useForm<FormDraft<typeof RegisterIllegalCraneSchema>, unknown, RegisterIllegalCraneDTO>({

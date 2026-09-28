@@ -2,7 +2,7 @@ import { useLegalOrganizationQuery } from '@/shared/api/dictionaries'
 import { useHazardousFacilityByTinQuery } from '@/shared/api/dictionaries'
 import { invalidateRegistryQueries } from '@/shared/lib/query/invalidate-registry'
 import {
-  heatPipelineRefinement,
+  requireCitizenBirthDate,
   RegisterIllegalHeatPipelineBaseSchema,
   RegisterIllegalHeatPipelineDTO,
   RegisterIllegalHeatPipelineSchema,
@@ -136,7 +136,7 @@ export const useRegisterIllegalHeatPipeline = (externalSubmit?: (data: RegisterI
           .optional()
           .nullable()
           .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
-      }).superRefine(heatPipelineRefinement)
+      }).superRefine(requireCitizenBirthDate)
     : RegisterIllegalHeatPipelineSchema
 
   const form = useForm<FormDraft<typeof RegisterIllegalHeatPipelineSchema>, unknown, RegisterIllegalHeatPipelineDTO>({

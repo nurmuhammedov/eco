@@ -68,13 +68,9 @@ const __AttractionAppealDtoSchema = z.object({
 })
 
 export const AttractionAppealDtoSchema = __AttractionAppealDtoSchema
-  .superRefine((data: any, ctx: any) =>
-    checkExpiryDate(data, ctx, 'seasonalInspectionPath', 'seasonalInspectionExpiryDate')
-  )
-  .superRefine((data: any, ctx: any) =>
-    checkExpiryDate(data, ctx, 'seasonalReadinessActPath', 'seasonalReadinessActExpiryDate')
-  )
-  .superRefine((data: any, ctx: any) =>
+  .superRefine((data, ctx) => checkExpiryDate(data, ctx, 'seasonalInspectionPath', 'seasonalInspectionExpiryDate'))
+  .superRefine((data, ctx) => checkExpiryDate(data, ctx, 'seasonalReadinessActPath', 'seasonalReadinessActExpiryDate'))
+  .superRefine((data, ctx) =>
     checkExpiryDate(data, ctx, 'employeeSafetyKnowledgePath', 'employeeSafetyKnowledgeExpiryDate')
   )
-  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'usageRightsPath', 'usageRightsExpiryDate'))
+  .superRefine((data, ctx) => checkExpiryDate(data, ctx, 'usageRightsPath', 'usageRightsExpiryDate'))

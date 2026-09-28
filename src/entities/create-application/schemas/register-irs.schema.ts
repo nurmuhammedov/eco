@@ -74,7 +74,7 @@ const __IrsAppealDtoSchema = z.object({
 })
 
 export const IrsAppealDtoSchema = __IrsAppealDtoSchema
-  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'file2Path', 'file2ExpiryDate'))
-  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'file5Path', 'file5ExpiryDate'))
-  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'file15Path', 'file15ExpiryDate'))
-  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'file18Path', 'file18ExpiryDate'))
+  .superRefine((data, ctx) => checkExpiryDate(data, ctx, 'file2Path', 'file2ExpiryDate'))
+  .superRefine((data, ctx) => checkExpiryDate(data, ctx, 'file5Path', 'file5ExpiryDate'))
+  .superRefine((data, ctx) => checkExpiryDate(data, ctx, 'file15Path', 'file15ExpiryDate'))
+  .superRefine((data, ctx) => checkExpiryDate(data, ctx, 'file18Path', 'file18ExpiryDate'))

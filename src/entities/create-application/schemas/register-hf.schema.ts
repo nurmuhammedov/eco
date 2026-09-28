@@ -53,7 +53,14 @@ const __HFAppealDtoSchema = z.object({
  * different field. Multi-sector means at least two - one category would be the
  * single-sector case wearing the wrong label.
  */
-export const checkCategoryMode = (data: any, ctx: z.RefinementCtx) => {
+export const checkCategoryMode = (
+  data: {
+    categoryMode?: (typeof HF_CATEGORY_MODES)[number]
+    categoryId?: string
+    multiCategoryIds?: (string | number)[]
+  },
+  ctx: z.RefinementCtx
+) => {
   if (data.categoryMode === 'MULTI') {
     if (!data.multiCategoryIds || data.multiCategoryIds.length < 2) {
       ctx.addIssue({

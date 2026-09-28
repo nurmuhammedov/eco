@@ -4,7 +4,7 @@ import {
   RegisterIllegalXrayBaseSchema,
   RegisterIllegalXrayDTO,
   RegisterIllegalXraySchema,
-  xrayRefinement,
+  requireCitizenBirthDate,
 } from '@/entities/create-application'
 import { stateService } from '@/entities/create-application/types/enums'
 import { useDistrictSelectQuery, useRegionSelectQuery } from '@/shared/api/dictionaries'
@@ -96,7 +96,7 @@ export const useRegisterIllegalXray = (
           .optional()
           .nullable()
           .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
-      }).superRefine(xrayRefinement)
+      }).superRefine(requireCitizenBirthDate)
     : isDataNull
       ? requireProfileFiles(RegisterIllegalXraySchema, PROFILE_FILE_FIELDS)
       : RegisterIllegalXraySchema

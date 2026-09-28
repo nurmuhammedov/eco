@@ -55,8 +55,8 @@ const __XrayAppealDtoSchema = z.object({
 })
 
 export const XrayAppealDtoSchema = __XrayAppealDtoSchema
-  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'file5Path', 'file5ExpiryDate'))
-  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'file7Path', 'file7ExpiryDate'))
-  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'file9Path', 'file9ExpiryDate'))
-  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'file14Path', 'file14ExpiryDate'))
-  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'file8Path', 'file8ExpiryDate'))
+  .superRefine((data, ctx) => checkExpiryDate(data, ctx, 'file5Path', 'file5ExpiryDate'))
+  .superRefine((data, ctx) => checkExpiryDate(data, ctx, 'file7Path', 'file7ExpiryDate'))
+  .superRefine((data, ctx) => checkExpiryDate(data, ctx, 'file9Path', 'file9ExpiryDate'))
+  .superRefine((data, ctx) => checkExpiryDate(data, ctx, 'file14Path', 'file14ExpiryDate'))
+  .superRefine((data, ctx) => checkExpiryDate(data, ctx, 'file8Path', 'file8ExpiryDate'))

@@ -3,6 +3,7 @@ import { USER_PATTERNS } from '@/shared/constants/custom-patterns'
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 import { format } from 'date-fns'
 import { z } from 'zod'
+import { requireCitizenBirthDate } from './owner-refinement'
 
 export const RegisterIllegalCablewayBaseSchema = z.object({
   phoneNumber: z
@@ -58,22 +59,10 @@ export const RegisterIllegalCablewayBaseSchema = z.object({
   servicePeriod: z.date().transform((date) => format(date, 'yyyy-MM-dd')),
 })
 
-export const cablewayRefinement = (data: any, ctx: z.RefinementCtx) => {
-  if (data.identity && data.identity.length === 14) {
-    if (!data.birthDate) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: FORM_ERROR_MESSAGES.required,
-        path: ['birthDate'],
-      })
-    }
-  }
-}
-
-const __RegisterIllegalCablewaySchema = RegisterIllegalCablewayBaseSchema.superRefine(cablewayRefinement)
+const __RegisterIllegalCablewaySchema = RegisterIllegalCablewayBaseSchema.superRefine(requireCitizenBirthDate)
 
 export type RegisterIllegalCablewayDTO = z.infer<typeof RegisterIllegalCablewaySchema>
 
-export const RegisterIllegalCablewaySchema = __RegisterIllegalCablewaySchema.superRefine((data: any, ctx: any) =>
+export const RegisterIllegalCablewaySchema = __RegisterIllegalCablewaySchema.superRefine((data, ctx) =>
   checkExpiryDate(data, ctx, 'expertisePath', 'expertiseExpiryDate')
 )

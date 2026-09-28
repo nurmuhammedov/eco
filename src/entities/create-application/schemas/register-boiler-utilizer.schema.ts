@@ -65,6 +65,6 @@ const __BoilerUtilizerAppealDtoSchema = z.object({
   servicePeriod: z.date().transform((date) => format(date, 'yyyy-MM-dd')),
 })
 
-export const BoilerUtilizerAppealDtoSchema = __BoilerUtilizerAppealDtoSchema.superRefine((data: any, ctx: any) =>
+export const BoilerUtilizerAppealDtoSchema = __BoilerUtilizerAppealDtoSchema.superRefine((data, ctx) =>
   checkExpiryDate(data, ctx, 'expertisePath', 'expertiseExpiryDate')
 )

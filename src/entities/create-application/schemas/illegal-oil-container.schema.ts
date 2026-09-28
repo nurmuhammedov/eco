@@ -56,6 +56,6 @@ export const IllegalOilContainerAppealDtoBaseSchema = z.object({
   servicePeriod: z.date().transform((date) => format(date, 'yyyy-MM-dd')),
 })
 
-export const IllegalOilContainerAppealDtoSchema = IllegalOilContainerAppealDtoBaseSchema.superRefine(
-  (data: any, ctx: any) => checkExpiryDate(data, ctx, 'expertisePath', 'expertiseExpiryDate')
+export const IllegalOilContainerAppealDtoSchema = IllegalOilContainerAppealDtoBaseSchema.superRefine((data, ctx) =>
+  checkExpiryDate(data, ctx, 'expertisePath', 'expertiseExpiryDate')
 )

@@ -71,5 +71,5 @@ const __PipelineAppealDtoSchema = z.object({
 })
 
 export const PipelineAppealDtoSchema = __PipelineAppealDtoSchema
-  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'equipmentCertPath', 'equipmentCertExpiryDate'))
-  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'expertisePath', 'expertiseExpiryDate'))
+  .superRefine((data, ctx) => checkExpiryDate(data, ctx, 'equipmentCertPath', 'equipmentCertExpiryDate'))
+  .superRefine((data, ctx) => checkExpiryDate(data, ctx, 'expertisePath', 'expertiseExpiryDate'))

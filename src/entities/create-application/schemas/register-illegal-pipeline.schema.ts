@@ -3,6 +3,7 @@ import { USER_PATTERNS } from '@/shared/constants/custom-patterns'
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 import { format } from 'date-fns'
 import { z } from 'zod'
+import { requireCitizenBirthDate } from './owner-refinement'
 
 export const RegisterIllegalPipelineBaseSchema = z.object({
   phoneNumber: z
@@ -77,22 +78,10 @@ export const RegisterIllegalPipelineBaseSchema = z.object({
   servicePeriod: z.date().transform((date) => format(date, 'yyyy-MM-dd')),
 })
 
-export const pipelineRefinement = (data: any, ctx: z.RefinementCtx) => {
-  if (data.identity && data.identity.length === 14) {
-    if (!data.birthDate) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: FORM_ERROR_MESSAGES.required,
-        path: ['birthDate'],
-      })
-    }
-  }
-}
-
-const __RegisterIllegalPipelineSchema = RegisterIllegalPipelineBaseSchema.superRefine(pipelineRefinement)
+const __RegisterIllegalPipelineSchema = RegisterIllegalPipelineBaseSchema.superRefine(requireCitizenBirthDate)
 
 export type RegisterIllegalPipelineDTO = z.infer<typeof RegisterIllegalPipelineSchema>
 
 export const RegisterIllegalPipelineSchema = __RegisterIllegalPipelineSchema
-  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'equipmentCertPath', 'equipmentCertExpiryDate'))
-  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'expertisePath', 'expertiseExpiryDate'))
+  .superRefine((data, ctx) => checkExpiryDate(data, ctx, 'equipmentCertPath', 'equipmentCertExpiryDate'))
+  .superRefine((data, ctx) => checkExpiryDate(data, ctx, 'expertisePath', 'expertiseExpiryDate'))

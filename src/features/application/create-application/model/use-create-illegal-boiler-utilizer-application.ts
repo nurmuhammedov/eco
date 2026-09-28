@@ -2,7 +2,7 @@ import { useLegalOrganizationQuery } from '@/shared/api/dictionaries'
 import { useHazardousFacilityByTinQuery } from '@/shared/api/dictionaries'
 import { invalidateRegistryQueries } from '@/shared/lib/query/invalidate-registry'
 import {
-  boilerUtilizerRefinement,
+  requireCitizenBirthDate,
   RegisterIllegalBoilerUtilizerBaseSchema,
   RegisterIllegalBoilerUtilizerDTO,
   RegisterIllegalBoilerUtilizerSchema,
@@ -131,7 +131,7 @@ export const useRegisterIllegalBoilerUtilizer = (externalSubmit?: (data: Registe
           .optional()
           .nullable()
           .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
-      }).superRefine(boilerUtilizerRefinement)
+      }).superRefine(requireCitizenBirthDate)
     : RegisterIllegalBoilerUtilizerSchema
 
   const form = useForm<

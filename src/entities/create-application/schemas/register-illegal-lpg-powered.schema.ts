@@ -3,6 +3,7 @@ import { USER_PATTERNS } from '@/shared/constants/custom-patterns'
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 import { format } from 'date-fns'
 import { z } from 'zod'
+import { requireCitizenBirthDate } from './owner-refinement'
 
 export const RegisterIllegalLpgPoweredBaseSchema = z.object({
   phoneNumber: z
@@ -69,22 +70,10 @@ export const RegisterIllegalLpgPoweredBaseSchema = z.object({
   servicePeriod: z.date().transform((date) => format(date, 'yyyy-MM-dd')),
 })
 
-export const lpgPoweredRefinement = (data: any, ctx: z.RefinementCtx) => {
-  if (data.identity && data.identity.length === 14) {
-    if (!data.birthDate) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: FORM_ERROR_MESSAGES.required,
-        path: ['birthDate'],
-      })
-    }
-  }
-}
-
-const __RegisterIllegalLpgPoweredSchema = RegisterIllegalLpgPoweredBaseSchema.superRefine(lpgPoweredRefinement)
+const __RegisterIllegalLpgPoweredSchema = RegisterIllegalLpgPoweredBaseSchema.superRefine(requireCitizenBirthDate)
 
 export type RegisterIllegalLpgPoweredDTO = z.infer<typeof RegisterIllegalLpgPoweredSchema>
 
 export const RegisterIllegalLpgPoweredSchema = __RegisterIllegalLpgPoweredSchema
-  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'expertisePath', 'expertiseExpiryDate'))
-  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'equipmentCertPath', 'equipmentCertExpiryDate'))
+  .superRefine((data, ctx) => checkExpiryDate(data, ctx, 'expertisePath', 'expertiseExpiryDate'))
+  .superRefine((data, ctx) => checkExpiryDate(data, ctx, 'equipmentCertPath', 'equipmentCertExpiryDate'))

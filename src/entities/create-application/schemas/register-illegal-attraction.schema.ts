@@ -3,6 +3,7 @@ import { USER_PATTERNS } from '@/shared/constants/custom-patterns'
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 import { format } from 'date-fns'
 import { z } from 'zod'
+import { requireCitizenBirthDate } from './owner-refinement'
 
 export const RegisterIllegalAttractionBaseSchema = z.object({
   phoneNumber: z
@@ -74,30 +75,14 @@ export const RegisterIllegalAttractionBaseSchema = z.object({
   filesBuilt: z.boolean().default(false).optional(),
 })
 
-export const attractionRefinement = (data: any, ctx: z.RefinementCtx) => {
-  if (data.identity && data.identity.length === 14) {
-    if (!data.birthDate) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: FORM_ERROR_MESSAGES.required,
-        path: ['birthDate'],
-      })
-    }
-  }
-}
-
-const __RegisterIllegalAttractionSchema = RegisterIllegalAttractionBaseSchema.superRefine(attractionRefinement)
+const __RegisterIllegalAttractionSchema = RegisterIllegalAttractionBaseSchema.superRefine(requireCitizenBirthDate)
 
 export type RegisterIllegalAttractionDTO = z.infer<typeof RegisterIllegalAttractionSchema>
 
 export const RegisterIllegalAttractionSchema = __RegisterIllegalAttractionSchema
-  .superRefine((data: any, ctx: any) =>
-    checkExpiryDate(data, ctx, 'seasonalInspectionPath', 'seasonalInspectionExpiryDate')
-  )
-  .superRefine((data: any, ctx: any) =>
-    checkExpiryDate(data, ctx, 'seasonalReadinessActPath', 'seasonalReadinessActExpiryDate')
-  )
-  .superRefine((data: any, ctx: any) =>
+  .superRefine((data, ctx) => checkExpiryDate(data, ctx, 'seasonalInspectionPath', 'seasonalInspectionExpiryDate'))
+  .superRefine((data, ctx) => checkExpiryDate(data, ctx, 'seasonalReadinessActPath', 'seasonalReadinessActExpiryDate'))
+  .superRefine((data, ctx) =>
     checkExpiryDate(data, ctx, 'employeeSafetyKnowledgePath', 'employeeSafetyKnowledgeExpiryDate')
   )
-  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'usageRightsPath', 'usageRightsExpiryDate'))
+  .superRefine((data, ctx) => checkExpiryDate(data, ctx, 'usageRightsPath', 'usageRightsExpiryDate'))

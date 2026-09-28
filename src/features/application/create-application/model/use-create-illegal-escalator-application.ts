@@ -2,7 +2,7 @@ import { useLegalOrganizationQuery } from '@/shared/api/dictionaries'
 import { useHazardousFacilityByTinQuery } from '@/shared/api/dictionaries'
 import { invalidateRegistryQueries } from '@/shared/lib/query/invalidate-registry'
 import {
-  escalatorRefinement,
+  requireCitizenBirthDate,
   RegisterIllegalEscalatorBaseSchema,
   RegisterIllegalEscalatorDTO,
   RegisterIllegalEscalatorSchema,
@@ -117,7 +117,7 @@ export const useRegisterIllegalEscalator = (externalSubmit?: (data: RegisterIlle
           .optional()
           .nullable()
           .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
-      }).superRefine(escalatorRefinement)
+      }).superRefine(requireCitizenBirthDate)
     : RegisterIllegalEscalatorSchema
 
   const form = useForm<FormDraft<typeof RegisterIllegalEscalatorSchema>, unknown, RegisterIllegalEscalatorDTO>({

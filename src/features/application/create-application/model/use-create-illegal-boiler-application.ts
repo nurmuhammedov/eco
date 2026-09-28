@@ -15,8 +15,8 @@ import { z } from 'zod'
 import { type OwnerData, useOwnerLookup } from './use-owner-lookup'
 import type { EquipmentDetail } from './equipment-detail'
 import { KEPT_OWNER_BIRTH_DATE, latinOrEmpty } from './edit-values'
+import { requireCitizenBirthDate } from '@/entities/create-application'
 import {
-  boilerRefinement,
   RegisterIllegalBoilerBaseSchema,
   RegisterIllegalBoilerDTO,
   RegisterIllegalBoilerSchema,
@@ -136,7 +136,7 @@ export const useRegisterIllegalBoiler = (externalSubmit?: (data: RegisterIllegal
           .optional()
           .nullable()
           .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
-      }).superRefine(boilerRefinement)
+      }).superRefine(requireCitizenBirthDate)
     : RegisterIllegalBoilerSchema
 
   const form = useForm<FormDraft<typeof RegisterIllegalBoilerSchema>, unknown, RegisterIllegalBoilerDTO>({

@@ -65,6 +65,6 @@ const __HeatPipelineAppealDtoSchema = z.object({
   servicePeriod: z.date().transform((date) => format(date, 'yyyy-MM-dd')),
 })
 
-export const HeatPipelineAppealDtoSchema = __HeatPipelineAppealDtoSchema.superRefine((data: any, ctx: any) =>
+export const HeatPipelineAppealDtoSchema = __HeatPipelineAppealDtoSchema.superRefine((data, ctx) =>
   checkExpiryDate(data, ctx, 'expertisePath', 'expertiseExpiryDate')
 )

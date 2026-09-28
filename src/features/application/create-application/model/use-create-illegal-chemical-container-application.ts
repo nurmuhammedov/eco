@@ -2,7 +2,7 @@ import { useLegalOrganizationQuery } from '@/shared/api/dictionaries'
 import { useHazardousFacilityByTinQuery } from '@/shared/api/dictionaries'
 import { invalidateRegistryQueries } from '@/shared/lib/query/invalidate-registry'
 import {
-  chemicalContainerRefinement,
+  requireCitizenBirthDate,
   RegisterIllegalChemicalContainerBaseSchema,
   RegisterIllegalChemicalContainerDTO,
   RegisterIllegalChemicalContainerSchema,
@@ -138,7 +138,7 @@ export const useRegisterIllegalChemicalContainer = (
           .optional()
           .nullable()
           .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
-      }).superRefine(chemicalContainerRefinement)
+      }).superRefine(requireCitizenBirthDate)
     : RegisterIllegalChemicalContainerSchema
 
   const form = useForm<

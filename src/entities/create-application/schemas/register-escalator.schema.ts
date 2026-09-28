@@ -53,6 +53,6 @@ const __EscalatorAppealDtoSchema = z.object({
   nextFullCheckDate: z.date().transform((date) => format(date, 'yyyy-MM-dd')),
 })
 
-export const EscalatorAppealDtoSchema = __EscalatorAppealDtoSchema.superRefine((data: any, ctx: any) =>
+export const EscalatorAppealDtoSchema = __EscalatorAppealDtoSchema.superRefine((data, ctx) =>
   checkExpiryDate(data, ctx, 'expertisePath', 'expertiseExpiryDate')
 )

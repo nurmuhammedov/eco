@@ -58,6 +58,6 @@ const __HoistAppealDtoSchema = z.object({
   servicePeriod: z.date().transform((date) => format(date, 'yyyy-MM-dd')),
 })
 
-export const HoistAppealDtoSchema = __HoistAppealDtoSchema.superRefine((data: any, ctx: any) =>
+export const HoistAppealDtoSchema = __HoistAppealDtoSchema.superRefine((data, ctx) =>
   checkExpiryDate(data, ctx, 'expertisePath', 'expertiseExpiryDate')
 )

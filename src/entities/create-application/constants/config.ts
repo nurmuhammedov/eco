@@ -1,7 +1,13 @@
 import { API_ENDPOINTS } from '@/shared/api'
 import { ApplicationTypeEnum } from '../types/enums'
 
-export const applicationConfigs: Record<string, any> = {
+/** Where an application type's document is drafted and where the signed one is sent */
+interface ApplicationEndpoints {
+  submitEndpoint: string
+  pdfEndpoint: string
+}
+
+export const applicationConfigs: Partial<Record<ApplicationTypeEnum, ApplicationEndpoints>> = {
   [ApplicationTypeEnum.REGISTER_HF]: {
     submitEndpoint: API_ENDPOINTS.APPEAL_HF_CREATE,
     pdfEndpoint: API_ENDPOINTS.APPEAL_HF_PDF_GENERATION,

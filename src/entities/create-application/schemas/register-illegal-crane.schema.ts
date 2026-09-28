@@ -3,6 +3,7 @@ import { USER_PATTERNS } from '@/shared/constants/custom-patterns'
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 import { format } from 'date-fns'
 import { z } from 'zod'
+import { requireCitizenBirthDate } from './owner-refinement'
 
 export const RegisterIllegalCraneBaseSchema = z.object({
   phoneNumber: z
@@ -73,22 +74,10 @@ export const RegisterIllegalCraneBaseSchema = z.object({
   servicePeriod: z.date().transform((date) => format(date, 'yyyy-MM-dd')),
 })
 
-export const craneRefinement = (data: any, ctx: z.RefinementCtx) => {
-  if (data.identity && data.identity.length === 14) {
-    if (!data.birthDate) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: FORM_ERROR_MESSAGES.required,
-        path: ['birthDate'],
-      })
-    }
-  }
-}
-
-const __RegisterIllegalCraneSchema = RegisterIllegalCraneBaseSchema.superRefine(craneRefinement)
+const __RegisterIllegalCraneSchema = RegisterIllegalCraneBaseSchema.superRefine(requireCitizenBirthDate)
 
 export type RegisterIllegalCraneDTO = z.infer<typeof RegisterIllegalCraneSchema>
 
-export const RegisterIllegalCraneSchema = __RegisterIllegalCraneSchema.superRefine((data: any, ctx: any) =>
+export const RegisterIllegalCraneSchema = __RegisterIllegalCraneSchema.superRefine((data, ctx) =>
   checkExpiryDate(data, ctx, 'expertisePath', 'expertiseExpiryDate')
 )

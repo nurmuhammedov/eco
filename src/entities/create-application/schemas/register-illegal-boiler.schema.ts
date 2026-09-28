@@ -3,6 +3,7 @@ import { USER_PATTERNS } from '@/shared/constants/custom-patterns'
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 import { format } from 'date-fns'
 import { z } from 'zod'
+import { requireCitizenBirthDate } from './owner-refinement'
 
 export const RegisterIllegalBoilerBaseSchema = z.object({
   phoneNumber: z
@@ -68,22 +69,10 @@ export const RegisterIllegalBoilerBaseSchema = z.object({
   servicePeriod: z.date().transform((date) => format(date, 'yyyy-MM-dd')),
 })
 
-export const boilerRefinement = (data: any, ctx: z.RefinementCtx) => {
-  if (data.identity && data.identity.length === 14) {
-    if (!data.birthDate) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: FORM_ERROR_MESSAGES.required,
-        path: ['birthDate'],
-      })
-    }
-  }
-}
-
-const __RegisterIllegalBoilerSchema = RegisterIllegalBoilerBaseSchema.superRefine(boilerRefinement)
+const __RegisterIllegalBoilerSchema = RegisterIllegalBoilerBaseSchema.superRefine(requireCitizenBirthDate)
 
 export type RegisterIllegalBoilerDTO = z.infer<typeof RegisterIllegalBoilerSchema>
 
-export const RegisterIllegalBoilerSchema = __RegisterIllegalBoilerSchema.superRefine((data: any, ctx: any) =>
+export const RegisterIllegalBoilerSchema = __RegisterIllegalBoilerSchema.superRefine((data, ctx) =>
   checkExpiryDate(data, ctx, 'expertisePath', 'expertiseExpiryDate')
 )

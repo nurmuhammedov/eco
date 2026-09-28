@@ -12,7 +12,7 @@ import { useForm } from 'react-hook-form'
 import { useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { toast } from 'sonner'
 import { z } from 'zod'
-import { irsRefinement, RegisterIllegalIrsBaseSchema } from '@/entities/create-application'
+import { requireCitizenBirthDate, RegisterIllegalIrsBaseSchema } from '@/entities/create-application'
 import {
   RegisterIllegalIrsDTO,
   RegisterIllegalIrsSchema,
@@ -73,7 +73,7 @@ export const useRegisterIllegalIrs = (
           .optional()
           .nullable()
           .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
-      }).superRefine(irsRefinement)
+      }).superRefine(requireCitizenBirthDate)
     : isDataNull
       ? requireProfileFiles(RegisterIllegalIrsSchema, PROFILE_FILE_FIELDS)
       : RegisterIllegalIrsSchema

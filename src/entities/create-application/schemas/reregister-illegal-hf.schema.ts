@@ -81,6 +81,6 @@ const __ReRegisterIllegalHFSchema = z.object({
 })
 
 export const ReRegisterIllegalHFSchema = __ReRegisterIllegalHFSchema
-  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'insurancePolicyPath', 'insurancePolicyExpiryDate'))
-  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'licensePath', 'licenseExpiryDate'))
-  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'permitPath', 'permitExpiryDate'))
+  .superRefine((data, ctx) => checkExpiryDate(data, ctx, 'insurancePolicyPath', 'insurancePolicyExpiryDate'))
+  .superRefine((data, ctx) => checkExpiryDate(data, ctx, 'licensePath', 'licenseExpiryDate'))
+  .superRefine((data, ctx) => checkExpiryDate(data, ctx, 'permitPath', 'permitExpiryDate'))

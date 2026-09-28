@@ -57,6 +57,6 @@ const __LpgPoweredAppealDtoSchema = z.object({
   servicePeriod: z.date().transform((date) => format(date, 'yyyy-MM-dd')),
 })
 
-export const LpgPoweredAppealDtoSchema = __LpgPoweredAppealDtoSchema.superRefine((data: any, ctx: any) =>
+export const LpgPoweredAppealDtoSchema = __LpgPoweredAppealDtoSchema.superRefine((data, ctx) =>
   checkExpiryDate(data, ctx, 'expertisePath', 'expertiseExpiryDate')
 )

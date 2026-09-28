@@ -3,6 +3,7 @@ import { USER_PATTERNS } from '@/shared/constants/custom-patterns'
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 import { format } from 'date-fns'
 import { z } from 'zod'
+import { requireCitizenBirthDate } from './owner-refinement'
 
 export const RegisterIllegalXrayBaseSchema = z.object({
   phoneNumber: z
@@ -71,25 +72,13 @@ export const RegisterIllegalXrayBaseSchema = z.object({
     .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
 })
 
-export const xrayRefinement = (data: any, ctx: z.RefinementCtx) => {
-  if (data.identity && data.identity.length === 14) {
-    if (!data.birthDate) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: FORM_ERROR_MESSAGES.required,
-        path: ['birthDate'],
-      })
-    }
-  }
-}
-
-const __RegisterIllegalXraySchema = RegisterIllegalXrayBaseSchema.superRefine(xrayRefinement)
+const __RegisterIllegalXraySchema = RegisterIllegalXrayBaseSchema.superRefine(requireCitizenBirthDate)
 
 export type RegisterIllegalXrayDTO = z.infer<typeof RegisterIllegalXraySchema>
 
 export const RegisterIllegalXraySchema = __RegisterIllegalXraySchema
-  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'file5Path', 'file5ExpiryDate'))
-  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'file7Path', 'file7ExpiryDate'))
-  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'file9Path', 'file9ExpiryDate'))
-  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'file14Path', 'file14ExpiryDate'))
-  .superRefine((data: any, ctx: any) => checkExpiryDate(data, ctx, 'file8Path', 'file8ExpiryDate'))
+  .superRefine((data, ctx) => checkExpiryDate(data, ctx, 'file5Path', 'file5ExpiryDate'))
+  .superRefine((data, ctx) => checkExpiryDate(data, ctx, 'file7Path', 'file7ExpiryDate'))
+  .superRefine((data, ctx) => checkExpiryDate(data, ctx, 'file9Path', 'file9ExpiryDate'))
+  .superRefine((data, ctx) => checkExpiryDate(data, ctx, 'file14Path', 'file14ExpiryDate'))
+  .superRefine((data, ctx) => checkExpiryDate(data, ctx, 'file8Path', 'file8ExpiryDate'))
