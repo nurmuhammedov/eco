@@ -45,7 +45,7 @@ export const useRegisterIllegalXray = (
   const navigate = useNavigate()
   const queryClient = useQueryClient()
 
-  const ownerLookup = useOwnerLookup()
+  const ownerLookup = useOwnerLookup({ type: 'XRAY' })
 
   const { data: detail, isLoading: isDetailLoading } = useDetail<XrayDetail>(`/xrays`, id, !!id)
   const ownerIdentity = detail?.legalTin?.toString() || tin
