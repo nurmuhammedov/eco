@@ -8,6 +8,7 @@ import { useData } from '@/shared/hooks'
 import useCustomSearchParams from '@/shared/hooks/api/use-search-params'
 import { useHazardousFacilityCategoryDictionarySelect } from '@/shared/api/dictionaries'
 import { cn } from '@/shared/lib/utils'
+import type { ExtendedColumnDef } from '@/shared/components/common/data-table/model/column-def'
 
 interface Row {
   regionId: number | null
@@ -50,7 +51,7 @@ const InspectionHfCategoryReport: React.FC = () => {
     ]
   }, [data])
 
-  const columns = useMemo(
+  const columns = useMemo<ExtendedColumnDef<Row, number>[]>(
     () => [
       {
         header: 'Hududlar',
@@ -58,7 +59,7 @@ const InspectionHfCategoryReport: React.FC = () => {
         id: 'regionName',
         minSize: 220,
         className: 'sticky left-0 z-20 border-r shadow-[1px_0_0_0_rgba(0,0,0,0.1)]',
-        cell: ({ row }: any) => (
+        cell: ({ row }) => (
           <span className={cn(row.original.regionId === null && 'font-bold')}>{row.original.regionName}</span>
         ),
       },
@@ -66,7 +67,7 @@ const InspectionHfCategoryReport: React.FC = () => {
         header: 'O‘tkazilgan tekshiruvlar',
         accessorKey: 'totalCount',
         className: 'text-center',
-        cell: ({ row }: any) => <Count row={row.original} value={row.original.totalCount} />,
+        cell: ({ row }) => <Count row={row.original} value={row.original.totalCount} />,
       },
       {
         header: 'shundan',
@@ -76,13 +77,13 @@ const InspectionHfCategoryReport: React.FC = () => {
             header: 'xavf tahlili asosida',
             accessorKey: 'riskBasedCount',
             className: 'text-center',
-            cell: ({ row }: any) => <Count row={row.original} value={row.original.riskBasedCount} />,
+            cell: ({ row }) => <Count row={row.original} value={row.original.riskBasedCount} />,
           },
           {
             header: 'boshqa turdagi',
             accessorKey: 'otherCount',
             className: 'text-center',
-            cell: ({ row }: any) => <Count row={row.original} value={row.original.otherCount} />,
+            cell: ({ row }) => <Count row={row.original} value={row.original.otherCount} />,
           },
         ],
       },
@@ -133,7 +134,7 @@ const InspectionHfCategoryReport: React.FC = () => {
 
       <div className="flex-1 overflow-hidden rounded-md border bg-white shadow-sm">
         <DataTable
-          columns={columns as any}
+          columns={columns}
           data={tableData}
           isLoading={isLoading}
           isPaginated={false}

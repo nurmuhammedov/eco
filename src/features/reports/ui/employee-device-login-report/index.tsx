@@ -7,6 +7,18 @@ import { Badge } from '@/shared/components/ui/badge'
 import { API_ENDPOINTS } from '@/shared/api/endpoints'
 import { useRegionSelectQuery } from '@/shared/api/dictionaries'
 import { format } from 'date-fns'
+import type { ExtendedColumnDef } from '@/shared/components/common/data-table/model/column-def'
+
+/** UserLoginReportDto */
+interface UserLoginRow {
+  fullName: string
+  regionName: string
+  lastLoginTime: string | null
+  lastDeviceType: string | null
+  lastBrowser: string | null
+  lastOs: string | null
+  lastIpAddress: string | null
+}
 
 const DAYS_AGO_OPTIONS = [
   { value: '0', label: 'Kirganiga 5 kungacha bo‘lganlar' },
@@ -20,13 +32,13 @@ const EmployeeDeviceLoginReport: React.FC = () => {
   const { addParams, paramsObject } = useCustomSearchParams()
   const { data: regionsData } = useRegionSelectQuery()
 
-  const { data, isLoading } = usePaginatedData<any>(API_ENDPOINTS.REPORTS_USER_LOGIN, {
+  const { data, isLoading } = usePaginatedData<UserLoginRow>(API_ENDPOINTS.REPORTS_USER_LOGIN, {
     ...paramsObject,
     size: paramsObject.size || 20,
     page: paramsObject.page || 1,
   })
 
-  const columns: any = useMemo(
+  const columns = useMemo<ExtendedColumnDef<UserLoginRow>[]>(
     () => [
       {
         header: 'F.I.SH.',
@@ -47,8 +59,8 @@ const EmployeeDeviceLoginReport: React.FC = () => {
         accessorKey: 'lastLoginTime',
         id: 'lastLoginTime',
         className: 'whitespace-nowrap font-mono',
-        cell: ({ getValue }: any) => {
-          const val = getValue()
+        cell: ({ getValue }) => {
+          const val = getValue<string | null>()
           return val ? format(new Date(val), 'dd.MM.yyyy HH:mm') : '-'
         },
       },
@@ -56,8 +68,8 @@ const EmployeeDeviceLoginReport: React.FC = () => {
         header: 'Qurilma turi',
         accessorKey: 'lastDeviceType',
         id: 'lastDeviceType',
-        cell: ({ getValue }: any) => {
-          const val = getValue()
+        cell: ({ getValue }) => {
+          const val = getValue<string | null>()
           if (!val) return '-'
           const isPhone = val.toLowerCase().includes('phone') || val.toLowerCase().includes('android')
           const isTablet = val.toLowerCase().includes('ipad')
@@ -104,7 +116,7 @@ const EmployeeDeviceLoginReport: React.FC = () => {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">Barcha hududlar</SelectItem>
-              {regionsData?.map((r: any) => (
+              {regionsData?.map((r) => (
                 <SelectItem key={r.id} value={String(r.id)}>
                   {r.name}
                 </SelectItem>

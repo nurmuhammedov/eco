@@ -8,15 +8,33 @@ import { ApplicationStatus, AppealStatusDuration } from '@/entities/application'
 import { GoBack } from '@/shared/components/common'
 import { cn } from '@/shared/lib/utils'
 import { isCountryTotal } from '../../lib/country-total'
+import type { ExtendedColumnDef } from '@/shared/components/common/data-table/model/column-def'
 
-const STATUS_MAP: Record<string, string> = {
+/** AppealStatusDurationByReport */
+interface DurationCounts {
+  upTo5Days: number
+  from6To15Days: number
+  over15Days: number
+  total: number
+}
+
+type StatusKey = 'inNew' | 'inProcess' | 'inAgreement' | 'inApproval'
+
+type DurationKey = Exclude<keyof DurationCounts, 'total'>
+
+/** ReportByAppealStatusDuration */
+type RegionDurations = { regionName: string; regionId: number | null } & Record<StatusKey, DurationCounts | null>
+
+type Row = RegionDurations & { isSummary: boolean }
+
+const STATUS_MAP: Record<StatusKey, ApplicationStatus> = {
   inNew: ApplicationStatus.NEW,
   inProcess: ApplicationStatus.IN_PROCESS,
   inAgreement: ApplicationStatus.IN_AGREEMENT,
   inApproval: ApplicationStatus.IN_APPROVAL,
 }
 
-const DURATION_MAP: Record<string, string> = {
+const DURATION_MAP: Record<DurationKey, AppealStatusDuration> = {
   upTo5Days: AppealStatusDuration.UP_TO_5_DAYS,
   from6To15Days: AppealStatusDuration.FROM_6_TO_15_DAYS,
   over15Days: AppealStatusDuration.OVER_15_DAYS,
@@ -61,32 +79,29 @@ const CountCell = ({
 
 const AppealStatusDurationReport: React.FC = () => {
   const navigate = useNavigate()
-  const { data: reportData, isLoading } = useData<any[]>('/reports/appeal-status/duration', true)
+  const { data: reportData, isLoading } = useData<RegionDurations[]>('/reports/appeal-status/duration', true)
 
   const tableData = useMemo(() => {
-    if (!reportData || !Array.isArray(reportData)) return []
+    if (!reportData) return []
 
-    return reportData.map((item: any) => ({
-      ...item,
-      isSummary: isCountryTotal(item.regionName),
-    }))
+    return reportData.map(
+      (item): Row => ({
+        ...item,
+        isSummary: isCountryTotal(item.regionName),
+      })
+    )
   }, [reportData])
 
-  const handleNavigate = (row: any, prefix: string, durationKey?: string) => {
-    const status = STATUS_MAP[prefix]
-    const regionId = row.isSummary ? undefined : row.regionId || row.id
-    const statusDuration = durationKey ? DURATION_MAP[durationKey] : undefined
-
-    const params: any = {}
-    if (status) params.status = status
-    if (regionId) params.regionId = regionId
-    if (statusDuration) params.statusDuration = statusDuration
+  const handleNavigate = (row: Row, prefix: StatusKey, durationKey?: DurationKey) => {
+    const params: Record<string, string> = { status: STATUS_MAP[prefix] }
+    if (!row.isSummary && row.regionId) params.regionId = String(row.regionId)
+    if (durationKey) params.statusDuration = DURATION_MAP[durationKey]
 
     const searchParams = new URLSearchParams(params)
     navigate(`/applications?${searchParams.toString()}`)
   }
 
-  const createGroup = (prefix: string, header: string) => ({
+  const createGroup = (prefix: StatusKey, header: string): ExtendedColumnDef<Row, number> => ({
     header,
     columns: (
       [
@@ -95,30 +110,35 @@ const AppealStatusDurationReport: React.FC = () => {
         ['over15Days', '15 kundan ortiq', 'text-red-500'],
         ['total', 'Jami', undefined],
       ] as const
-    ).map(([key, label, tone]) => ({
-      id: `${prefix}_${key}`,
-      header: label,
-      accessorFn: (row: any) => row[prefix]?.[key] || 0,
-      className: cn('text-center whitespace-nowrap', key === 'total' && 'bg-slate-50/30 font-semibold text-slate-900'),
-      cell: ({ row, getValue }: any) => (
-        <CountCell
-          value={getValue()}
-          isSummary={row.original.isSummary}
-          tone={tone}
-          onOpen={() => handleNavigate(row.original, prefix, key === 'total' ? undefined : key)}
-        />
-      ),
-    })),
+    ).map(
+      ([key, label, tone]): ExtendedColumnDef<Row, number> => ({
+        id: `${prefix}_${key}`,
+        header: label,
+        accessorFn: (row) => row[prefix]?.[key] || 0,
+        className: cn(
+          'text-center whitespace-nowrap',
+          key === 'total' && 'bg-slate-50/30 font-semibold text-slate-900'
+        ),
+        cell: ({ row, getValue }) => (
+          <CountCell
+            value={getValue()}
+            isSummary={row.original.isSummary}
+            tone={tone}
+            onOpen={() => handleNavigate(row.original, prefix, key === 'total' ? undefined : key)}
+          />
+        ),
+      })
+    ),
   })
 
-  const columns = [
+  const columns: ExtendedColumnDef<Row, number>[] = [
     {
       header: 'Hududiy boshqarma/bo‘limlar',
       accessorKey: 'regionName',
       id: 'regionName',
       minSize: 200,
       className: 'sticky left-0 z-20 border-r shadow-[1px_0_0_0_rgba(0,0,0,0.1)]',
-      cell: ({ row }: any) => {
+      cell: ({ row }) => {
         const value = row.original.regionName
         const isSummary = row.original.isSummary
         return <span className={cn(isSummary ? 'font-bold text-gray-900' : 'text-gray-700')}>{value}</span>
@@ -138,7 +158,7 @@ const AppealStatusDurationReport: React.FC = () => {
 
       <div className="flex-1 overflow-hidden rounded-md border bg-white shadow-sm">
         <DataTable
-          columns={columns as any}
+          columns={columns}
           data={tableData}
           isLoading={isLoading}
           isPaginated={false}

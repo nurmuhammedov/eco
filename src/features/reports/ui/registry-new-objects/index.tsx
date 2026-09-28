@@ -2,12 +2,19 @@ import useCustomSearchParams from '@/shared/hooks/api/use-search-params'
 import React, { useMemo } from 'react'
 import { DataTable } from '@/shared/components/common/data-table'
 import { useData } from '@/shared/hooks'
-import { ColumnDef } from '@tanstack/react-table'
 import Filter from '@/shared/components/common/filter'
 import { ExportExcelButton, GoBack } from '@/shared/components/common'
 import { format } from 'date-fns'
 import { ApplicationCategory, APPLICATIONS_DATA, MainApplicationCategory } from '@/entities/create-application'
 import { isCountryTotal } from '../../lib/country-total'
+import type { ExtendedColumnDef } from '@/shared/components/common/data-table/model/column-def'
+
+type CountKey = `${string}Count`
+
+/** ReportRegistryCountByRegionAndPeriod: a present and a period count per object kind */
+type RegionCounts = { regionName: string } & Record<CountKey, number>
+
+type Row = RegionCounts & { isSummary?: boolean }
 
 const toCamelCase = (str: string) => {
   if (!str) return ''
@@ -32,7 +39,7 @@ const DoubleValueCell = ({
 
 const RegistryNewObjectsReport: React.FC = () => {
   const { paramsObject } = useCustomSearchParams()
-  const { data: inspections, isLoading } = useData<any[]>('/reports/registry/present-and-period', true, {
+  const { data: inspections, isLoading } = useData<RegionCounts[]>('/reports/registry/present-and-period', true, {
     ...paramsObject,
   })
 
@@ -40,7 +47,7 @@ const RegistryNewObjectsReport: React.FC = () => {
     if (!inspections) return []
     const regions = inspections.filter((i) => !!i?.regionName && !isCountryTotal(i.regionName))
 
-    const summaryRow: any = {
+    const summaryRow: Row = {
       regionName: 'Respublika bo‘yicha',
       isSummary: true,
       hfPresentCount: 0,
@@ -74,8 +81,8 @@ const RegistryNewObjectsReport: React.FC = () => {
         let baseKey = toCamelCase(String(i.equipmentType || ''))
         if (baseKey === 'cableway') baseKey = 'cableWay'
 
-        const presentKey = `${baseKey}PresentCount`
-        const periodKey = `${baseKey}PeriodCount`
+        const presentKey: CountKey = `${baseKey}PresentCount`
+        const periodKey: CountKey = `${baseKey}PeriodCount`
 
         summaryRow[presentKey] += row[presentKey] || 0
         summaryRow[periodKey] += row[periodKey] || 0
@@ -85,7 +92,7 @@ const RegistryNewObjectsReport: React.FC = () => {
     return [summaryRow, ...regions]
   }, [inspections])
 
-  const columns = useMemo<ColumnDef<any>[]>(
+  const columns = useMemo<ExtendedColumnDef<Row>[]>(
     () => [
       {
         header: 'Hududlar',
@@ -99,7 +106,7 @@ const RegistryNewObjectsReport: React.FC = () => {
       },
       {
         header: 'XICHO',
-        cell: ({ row }: any) => (
+        cell: ({ row }) => (
           <DoubleValueCell
             present={row.original['hfPresentCount']}
             period={row.original['hfPeriodCount']}
@@ -116,19 +123,19 @@ const RegistryNewObjectsReport: React.FC = () => {
           id: i?.equipmentType ?? '',
           name: i?.name ?? '',
         }))
-        .map((i) => {
+        .map((i): ExtendedColumnDef<Row> => {
           let baseKey = toCamelCase(String(i.id))
 
           if (baseKey === 'cableway') {
             baseKey = 'cableWay'
           }
 
-          const presentKey = `${baseKey}PresentCount`
-          const periodKey = `${baseKey}PeriodCount`
+          const presentKey: CountKey = `${baseKey}PresentCount`
+          const periodKey: CountKey = `${baseKey}PeriodCount`
 
           return {
             header: i?.name || '',
-            cell: ({ row }: any) => (
+            cell: ({ row }) => (
               <DoubleValueCell
                 present={row.original[presentKey]}
                 period={row.original[periodKey]}

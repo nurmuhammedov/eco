@@ -1,24 +1,37 @@
 import React, { useMemo } from 'react'
-import { ColumnDef } from '@tanstack/react-table'
 import { DataTable } from '@/shared/components/common/data-table'
 import { useData } from '@/shared/hooks'
 import { GoBack } from '@/shared/components/common'
 import { cn } from '@/shared/lib/utils'
 import { isCountryTotal } from '../../lib/country-total'
+import type { ExtendedColumnDef } from '@/shared/components/common/data-table/model/column-def'
+
+/** ReportByAppealExecution */
+interface RegionExecution {
+  regionName: string
+  upTo15Days: number
+  from16To30Days: number
+  over30Days: number
+  total: number
+}
+
+type Row = RegionExecution & { isSummary: boolean }
 
 const AppealExecutionReport: React.FC = () => {
-  const { data: reportData, isLoading } = useData<any[]>('/reports/appeal-execution', true)
+  const { data: reportData, isLoading } = useData<RegionExecution[]>('/reports/appeal-execution', true)
 
   const tableData = useMemo(() => {
-    if (!reportData || !Array.isArray(reportData)) return []
+    if (!reportData) return []
 
-    return reportData.map((item: any) => ({
-      ...item,
-      isSummary: isCountryTotal(item.regionName),
-    }))
+    return reportData.map(
+      (item): Row => ({
+        ...item,
+        isSummary: isCountryTotal(item.regionName),
+      })
+    )
   }, [reportData])
 
-  const columns = useMemo<ColumnDef<any>[]>(
+  const columns = useMemo<ExtendedColumnDef<Row, number>[]>(
     () => [
       {
         header: 'Hududiy boshqarma/bo‘limlar',
@@ -26,7 +39,7 @@ const AppealExecutionReport: React.FC = () => {
         id: 'regionName',
         minSize: 250,
         className: 'sticky left-0 z-20 border-r shadow-[1px_0_0_0_rgba(0,0,0,0.1)]',
-        cell: ({ row }: any) => {
+        cell: ({ row }) => {
           const value = row.original.regionName
           const isSummary = row.original.isSummary
           return <span className={cn(isSummary ? 'font-bold text-gray-900' : 'text-gray-700')}>{value}</span>
@@ -36,7 +49,7 @@ const AppealExecutionReport: React.FC = () => {
         header: '15 kungacha',
         accessorKey: 'upTo15Days',
         className: 'text-center',
-        cell: ({ row, getValue }: any) => (
+        cell: ({ row, getValue }) => (
           <span className={cn(row.original.isSummary ? 'font-bold' : '')}>{getValue() || 0}</span>
         ),
       },
@@ -44,7 +57,7 @@ const AppealExecutionReport: React.FC = () => {
         header: '16-30 kun',
         accessorKey: 'from16To30Days',
         className: 'text-center',
-        cell: ({ row, getValue }: any) => (
+        cell: ({ row, getValue }) => (
           <span className={cn(row.original.isSummary ? 'font-bold' : '')}>{getValue() || 0}</span>
         ),
       },
@@ -52,7 +65,7 @@ const AppealExecutionReport: React.FC = () => {
         header: '30 kundan ortiq',
         accessorKey: 'over30Days',
         className: 'text-center',
-        cell: ({ row, getValue }: any) => (
+        cell: ({ row, getValue }) => (
           <span className={cn(row.original.isSummary ? 'font-bold text-red-600' : 'text-red-500')}>
             {getValue() || 0}
           </span>
@@ -62,7 +75,7 @@ const AppealExecutionReport: React.FC = () => {
         header: 'Jami',
         accessorKey: 'total',
         className: 'text-center font-bold text-slate-900 bg-slate-50/50',
-        cell: ({ row, getValue }: any) => (
+        cell: ({ row, getValue }) => (
           <span className={cn(row.original.isSummary ? 'font-bold' : '')}>{getValue() || 0}</span>
         ),
       },
