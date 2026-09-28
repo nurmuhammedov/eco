@@ -8,12 +8,14 @@ import { Badge } from '@/shared/components/ui/badge'
 import { useData } from '@/shared/hooks'
 import { Skeleton } from '@/shared/components/ui/skeleton'
 import { EmptyValue } from '@/shared/components/common/empty-value'
+import type { DocumentSigner } from '@/entities/document'
+import type { InspectionDetail, PostalMailStatus } from '@/entities/inspection/model/inspection.types'
 
-const InspectionMainInfo = ({ inspectionData }: any) => {
-  const [signers, setSigners] = useState<any[]>([])
+const InspectionMainInfo = ({ inspectionData }: { inspectionData?: InspectionDetail }) => {
+  const [signers, setSigners] = useState<DocumentSigner[]>([])
   const startDate = inspectionData?.startDate
   const year = startDate ? new Date(startDate).getFullYear() : new Date().getFullYear()
-  const { data, isLoading } = useData<any>(
+  const { data, isLoading } = useData<PostalMailStatus>(
     `/integration/postal-mail/${inspectionData?.notificationLetterId}`,
     !!inspectionData &&
       !!inspectionData?.notificationLetterStatus &&
@@ -21,7 +23,7 @@ const InspectionMainInfo = ({ inspectionData }: any) => {
       inspectionData?.notificationLetterStatus !== 'RECEIVED_BY_CLIENT'
   )
 
-  const { data: programs } = useData<any>(`/programs/by-year`, !!year, {
+  const { data: programs } = useData<{ path?: string | null }>(`/programs/by-year`, !!year, {
     year,
   })
 
@@ -41,7 +43,7 @@ const InspectionMainInfo = ({ inspectionData }: any) => {
         title="Tekshiruv sanasi:"
         value={getDate(inspectionData?.startDate) + ' - ' + getDate(inspectionData?.endDate)}
       />
-      {inspectionData?.inspectors?.map((item: any, idx: number) => {
+      {inspectionData?.inspectors?.map((item, idx) => {
         return <DetailRow key={item.id} title={`Tekshiruvchi inspektor ${idx + 1}:`} value={item?.name} />
       })}
       <DetailRow

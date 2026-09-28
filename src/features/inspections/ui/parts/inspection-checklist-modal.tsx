@@ -4,6 +4,7 @@ import { cn } from '@/shared/lib/utils'
 import { useFieldArray, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
+import type { ChecklistAnswerDto } from '../../model/inspection-checklist.schema'
 import { Button } from '@/shared/components/ui/button'
 import { Checkbox } from '@/shared/components/ui/checkbox'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
@@ -108,7 +109,13 @@ const schema = z
 
 type FormValues = z.infer<typeof schema>
 
-const AttachInspectorModal = ({ items = [], resultId }: any) => {
+interface InspectionActModalProps {
+  /** The checklist's answers, sent along with the act */
+  items?: ChecklistAnswerDto[]
+  resultId: string
+}
+
+const InspectionChecklistModal = ({ items = [], resultId }: InspectionActModalProps) => {
   const {
     addParams,
     removeParams,
@@ -574,4 +581,4 @@ const AttachInspectorModal = ({ items = [], resultId }: any) => {
   )
 }
 
-export default AttachInspectorModal
+export default InspectionChecklistModal

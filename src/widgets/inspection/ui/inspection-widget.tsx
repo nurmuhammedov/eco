@@ -7,6 +7,8 @@ import {
   OtherInspectionTabStatus,
   defaultCountDto,
 } from '@/entities/inspection/model/inspection-status'
+import type { ISearchParams, UrlParamValue } from '@/shared/types'
+import type { Inspection } from '@/entities/inspection/model/inspection.types'
 import { OtherInspectionList } from '@/features/inspections/ui/other-inspection-list'
 import { TenDaysDecreeList } from '@/features/inspections/ten-days-decree/ui/ten-days-decree-list'
 import { CreateOtherInspectionModal } from '@/features/inspections/ui/parts/create-other-inspection-modal'
@@ -39,7 +41,7 @@ const BelongTypeTabsTrigger = ({
 }: {
   value: string
   label: string
-  queryParams: any
+  queryParams: ISearchParams
   type: string
 }) => {
   const { data: countObject = defaultCountDto } = useData<CountDto>('/inspections/count', true, {
@@ -58,7 +60,17 @@ const BelongTypeTabsTrigger = ({
   )
 }
 
-const Cards = ({ onTabChange, regionId, year, month, type, belongType }: any) => {
+interface CardsProps {
+  onTabChange: (regionId: string) => void
+  /** Straight from the address bar, as the counts are asked for with them */
+  regionId?: UrlParamValue
+  year: UrlParamValue
+  month: UrlParamValue
+  type: string
+  belongType: string
+}
+
+const Cards = ({ onTabChange, regionId, year, month, type, belongType }: CardsProps) => {
   const { data: regions = [] } = useData<{ id: number; name: string }[]>('/regions/select')
   const { data: regionCounts = [] } = useData<RegionCountDto[]>('/inspections/count/by-region', true, {
     year,
@@ -187,7 +199,7 @@ export const InspectionWidget = ({ type }: { type?: 'RISK_BASED' | 'OTHER' }) =>
     type: inspectionType,
   })
 
-  const { totalElements: newUnnotifiedCount } = usePaginatedData<any>(
+  const { totalElements: newUnnotifiedCount } = usePaginatedData<Inspection>(
     '/inspections',
     {
       ...queryParams,
@@ -200,7 +212,7 @@ export const InspectionWidget = ({ type }: { type?: 'RISK_BASED' | 'OTHER' }) =>
     inspectionType === 'RISK_BASED' && !isInspector && !isLegal
   )
 
-  const { totalElements: newNotifiedCount } = usePaginatedData<any>(
+  const { totalElements: newNotifiedCount } = usePaginatedData<Inspection>(
     '/inspections',
     {
       ...queryParams,

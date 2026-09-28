@@ -10,7 +10,7 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { UserRoles } from '@/shared/types/user'
 import { useDistrictSelectQuery } from '@/shared/api/dictionaries'
-import { format } from 'date-fns'
+import { getDate } from '@/shared/utils/date'
 import { getDefaultYearAndMonthForInspections } from '@/shared/utils/date'
 import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
 import { paramText } from '@/shared/lib/url-params'
@@ -63,17 +63,17 @@ export const InspectionList: React.FC = () => {
     status !== InspectionStatus.TEN_DAYS
   )
 
-  const handleView = (row: any) => {
+  const handleView = (row: Inspection) => {
     const params = new URLSearchParams({
       inspectionId: String(row.id ?? ''),
       tin: String(row.tin ?? ''),
       name: String(row.legalName ?? ''),
-      year: String(row.year || year || new Date().getFullYear()),
+      year: String(year || new Date().getFullYear()),
     })
     navigate(`/inspections/info?${params.toString()}`)
   }
 
-  const columns: ExtendedColumnDef<any, any>[] = [
+  const columns: ExtendedColumnDef<Inspection>[] = [
     {
       header: 'Tashkilot nomi',
       accessorKey: 'legalName',
@@ -96,9 +96,9 @@ export const InspectionList: React.FC = () => {
       filterKey: isRegional || isInspector ? '' : 'legalDistrictId',
       filterType: 'select',
       filterOptions:
-        districts?.map((i: any) => ({
+        districts?.map((i) => ({
           ...i,
-          id: i?.id?.toString(),
+          id: String(i.id),
         })) || [],
     },
     {
@@ -112,15 +112,7 @@ export const InspectionList: React.FC = () => {
       accessorKey: 'actDate',
       filterKey: 'actDate',
       filterType: 'date',
-      cell: ({ row }) => {
-        const val = row.original.actDate
-        if (!val) return '-'
-        try {
-          return format(new Date(val), 'dd.MM.yyyy')
-        } catch {
-          return val
-        }
-      },
+      cell: ({ row }) => getDate(row.original.actDate) || '-',
     },
     {
       id: 'actions',
@@ -139,7 +131,7 @@ export const InspectionList: React.FC = () => {
         isPaginated
         showFilters={true}
         data={inspections || []}
-        columns={columns as unknown as any}
+        columns={columns}
         isLoading={isLoading}
         pageCount={totalPages}
         className="flex-1"

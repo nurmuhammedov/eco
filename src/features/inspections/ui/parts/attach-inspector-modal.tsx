@@ -31,6 +31,10 @@ import { apiConfig } from '@/shared/api/constants'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { UserRoles } from '@/shared/types/user'
 import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
+import { getErrorMessage } from '@/shared/lib/error-message'
+import type { ApiResponse } from '@/shared/types/api'
+import type { InspectionObject } from '@/entities/inspection/model/inspection.types'
+import type { ChecklistCategoryOption } from '@/entities/admin/inspection/category-types/model/category-type.types'
 
 const schema = z.object({
   inspectorIdList: z.array(z.string()).min(1, FORM_ERROR_MESSAGES.required),
@@ -45,13 +49,17 @@ const schema = z.object({
   ),
 })
 
-const AttachInspectorModal = ({ data = [] }: any) => {
+/** What the decree is signed for: the inspectors, how long, and each object's checklist */
+type DecreePayload = z.infer<typeof schema> & { inspectionId: string }
+
+const AttachInspectorModal = ({ data = [] }: { data?: InspectionObject[] }) => {
   const [isShow, setIsShow] = useState(false)
   const [isCodeLoading, setIsCodeLoading] = useState(false)
-  const [formData, setFormData] = useState<any>(null)
+  const [formData, setFormData] = useState<DecreePayload | null>(null)
   const {
     paramsObject: { inspectionId: id = '' },
   } = useCustomSearchParams()
+  const inspectionId = String(id)
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const { user } = useAuth()
@@ -61,7 +69,7 @@ const AttachInspectorModal = ({ data = [] }: any) => {
     resolver: zodResolver(schema),
     defaultValues: {
       duration: isHead ? 'ONE_DAY' : undefined,
-      checklistDtoList: data.map((item: any) => ({
+      checklistDtoList: data.map((item) => ({
         resultIdForObject: item.id,
         checklistCategoryIdList: [],
         specialCode: '',
@@ -78,13 +86,10 @@ const AttachInspectorModal = ({ data = [] }: any) => {
   const filteredCategoryTypes = useMemo(() => {
     if (!categoryTypes) return {}
 
-    return data.reduce(
-      (acc: any, obj: any) => {
-        acc[obj.id] = categoryTypes.filter((ct: any) => ct.type === obj.belongType)
-        return acc
-      },
-      {} as Record<string, any[]>
-    )
+    return data.reduce<Record<string, ChecklistCategoryOption[]>>((acc, obj) => {
+      acc[obj.id] = categoryTypes.filter((ct) => ct.type === obj.belongType)
+      return acc
+    }, {})
   }, [categoryTypes, data])
 
   const {
@@ -110,7 +115,7 @@ const AttachInspectorModal = ({ data = [] }: any) => {
         dto: formData,
         filePath: documentUrl,
       }),
-    onSuccess: (response: any) => {
+    onSuccess: (response) => {
       if (response && response.success) {
         handleCloseModal()
         toast.success('Muvaffaqiyatli yuborildi!')
@@ -118,8 +123,8 @@ const AttachInspectorModal = ({ data = [] }: any) => {
         invalidateEndpoint(queryClient, '/inspections')
       }
     },
-    onError: (e: any) => {
-      toast.error(e.message || 'Xatolik yuz berdi!')
+    onError: (e) => {
+      toast.error(getErrorMessage(e, 'Xatolik yuz berdi!'))
     },
   })
 
@@ -134,7 +139,9 @@ const AttachInspectorModal = ({ data = [] }: any) => {
 
     setIsCodeLoading(true)
     try {
-      const response = await apiClient.get<any>(`/integration/ombudsman/${riskAnalysisId}`)
+      const response = await apiClient.get<ApiResponse<{ requestDocNumber?: string } | null>>(
+        `/integration/ombudsman/${riskAnalysisId}`
+      )
       const code = response.data?.data?.requestDocNumber || ''
       if (!code) {
         toast.error('Ushbu xavf tahlil natijasida tekshiruv yaratilmagan!')
@@ -150,7 +157,7 @@ const AttachInspectorModal = ({ data = [] }: any) => {
 
   function onSubmit(values: z.infer<typeof schema>) {
     const data = {
-      inspectionId: id,
+      inspectionId,
       inspectorIdList: values.inspectorIdList,
       checklistDtoList: values.checklistDtoList,
       duration: values.duration,
@@ -250,7 +257,7 @@ const AttachInspectorModal = ({ data = [] }: any) => {
                               <FormControl>
                                 <MultiSelect
                                   {...field}
-                                  options={(filteredCategoryTypes[data[index].id] || []).map((ct: any) => ({
+                                  options={(filteredCategoryTypes[data[index].id] || []).map((ct) => ({
                                     name: ct.name,
                                     id: ct.id,
                                   }))}

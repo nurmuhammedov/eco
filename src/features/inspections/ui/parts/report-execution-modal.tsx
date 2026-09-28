@@ -27,7 +27,6 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui/
 import { Textarea } from '@/shared/components/ui/textarea'
 import { useAcceptExecutionReport } from '@/features/inspections/hooks/use-accept-execution-report'
 import { useRejectExecutionReport } from '@/features/inspections/hooks/use-reject-execution-report'
-import { toast } from 'sonner'
 
 export const executionReportStatuses = new Map([
   ['ACCEPTED', { label: 'Qabul qilindi', variant: 'success' }],
@@ -40,19 +39,20 @@ const schema = z.object({
 })
 
 interface Props {
-  id: any
+  /** The checklist item; the dialog is open while there is one */
+  id: string | null
   description: string
   closeModal: () => void
 }
 
-const RejectExecution: FC<{ id: any }> = ({ id }) => {
+const RejectExecution: FC<{ id: string }> = ({ id }) => {
   const { mutate: rejectReport } = useRejectExecutionReport()
 
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
   })
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: z.infer<typeof schema>) => {
     rejectReport({ id, data })
   }
 
@@ -98,8 +98,8 @@ const ReportExecutionModal: FC<Props> = ({ id, closeModal, description }) => {
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
   })
-  const { data = [], isLoading } = useExecutionList(id)
-  const { mutateAsync, isPending } = useAddFileToExecution(id)
+  const { data = [], isLoading } = useExecutionList(id ?? undefined)
+  const { mutateAsync, isPending } = useAddFileToExecution(id ?? '')
   const { mutateAsync: acceptReport } = useAcceptExecutionReport()
 
   function onSubmit(data: z.infer<typeof schema>) {
@@ -121,7 +121,7 @@ const ReportExecutionModal: FC<Props> = ({ id, closeModal, description }) => {
         ) : (
           <>
             <div>
-              {data?.map((item: any) => {
+              {data?.map((item) => {
                 const currentBadge = executionReportStatuses.get(item?.status || 'UPLOADED')
 
                 return (
@@ -138,16 +138,10 @@ const ReportExecutionModal: FC<Props> = ({ id, closeModal, description }) => {
                     <div className="w-[120px] text-center text-sm text-neutral-500">{getDate(item?.uploadDate)}</div>
                     {user?.role === UserRoles.INSPECTOR && !item?.status && (
                       <div className="flex gap-1.5">
-                        <Button
-                          onClick={() => {
-                            acceptReport(item?.id).then(() => toast.success('Muvaffaqiyatli saqlandi!'))
-                          }}
-                          size="sm"
-                          variant="success"
-                        >
+                        <Button onClick={() => acceptReport(item.id)} size="sm" variant="success">
                           Qabul qilish
                         </Button>
-                        <RejectExecution id={item?.id} />
+                        <RejectExecution id={item.id} />
                       </div>
                     )}
                     {!!item?.rejectedReason && (

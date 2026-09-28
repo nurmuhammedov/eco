@@ -5,18 +5,18 @@ import { Button } from '@/shared/components/ui/button'
 import { Eye } from 'lucide-react'
 import { DataTable } from '@/shared/components/common/data-table'
 import { useNavigate } from 'react-router-dom'
-import { formatDate } from 'date-fns'
+import { getDate } from '@/shared/utils/date'
+import type { InspectionRiskAnalysis } from '@/entities/inspection/model/inspection.types'
 
 const ObjectsList = () => {
   const { paramsObject } = useCustomSearchParams()
   const { data, isLoading } = useObjectListByPagination()
   const navigate = useNavigate()
 
-  const columns: ColumnDef<any>[] = [
+  const columns: ColumnDef<InspectionRiskAnalysis>[] = [
     {
       header: 'Xavf tahlil davri',
-      cell: ({ row }) =>
-        `${formatDate(row.original.startDate, 'dd.MM.yyyy')} - ${formatDate(row.original.endDate, 'dd.MM.yyyy')}`,
+      cell: ({ row }) => `${getDate(row.original.startDate)} - ${getDate(row.original.endDate)}`,
     },
     {
       header: 'Nomi',
@@ -56,7 +56,7 @@ const ObjectsList = () => {
 
   return (
     <div>
-      <DataTable isPaginated data={data || []} columns={columns as unknown as any} isLoading={isLoading} />
+      <DataTable isPaginated data={data || []} columns={columns} isLoading={isLoading} />
     </div>
   )
 }

@@ -20,6 +20,16 @@ import AppealMainInfo from '@/features/application/application-detail/ui/parts/a
 import { Skeleton } from '@/shared/components/ui/skeleton'
 import { useEffect, useState } from 'react'
 import { paramText } from '@/shared/lib/url-params'
+import type { AppealInfoData } from '@/entities/application'
+import type { ApiResponse } from '@/shared/types/api'
+import type {
+  InspectionObjectType,
+  InspectionResult,
+  OtherInspectionDetail,
+} from '@/entities/inspection/model/inspection.types'
+
+/** The order the object kinds are listed in when the inspectors are assigned */
+const OBJECT_TYPE_ORDER: InspectionObjectType[] = ['HF', 'ELEVATOR', 'ATTRACTION', 'IRS', 'XRAY', 'LPG_POWERED']
 
 const InspectionDetail = () => {
   const {
@@ -35,7 +45,7 @@ const InspectionDetail = () => {
 
   const { data: inspectionData, isLoading: isInspectionLoading } = useInspectionDetail()
 
-  const { data: otherDetail, isLoading: isOtherDetailLoading } = useData<any>(
+  const { data: otherDetail, isLoading: isOtherDetailLoading } = useData<OtherInspectionDetail>(
     `/inspections/other/${inspectionId}`,
     isOther && !!inspectionId
   )
@@ -52,13 +62,13 @@ const InspectionDetail = () => {
     queryKey: endpointKey(belongEndpoint, belongId),
     enabled: isOther && !!belongId && !!belongType,
     queryFn: async () => {
-      const { data } = await apiClient.get<any>(`${belongEndpoint}/${belongId}`)
+      const { data } = await apiClient.get<ApiResponse<AppealInfoData>>(`${belongEndpoint}/${belongId}`)
       return data.data
     },
   })
 
   const { data } = useObjectList(!isOther)
-  const { data: accordions = [], isLoading: isAccordionsLoading } = useData<any[]>(
+  const { data: accordions = [], isLoading: isAccordionsLoading } = useData<InspectionResult[]>(
     '/inspection-results',
     !!inspectionId,
     {
@@ -66,14 +76,7 @@ const InspectionDetail = () => {
     }
   )
 
-  const typesList = [
-    ...(data && data?.HF && Array.isArray(data?.HF) ? data.HF : []),
-    ...(data && data?.ELEVATOR && Array.isArray(data?.ELEVATOR) ? data.ELEVATOR : []),
-    ...(data && data?.ATTRACTION && Array.isArray(data?.ATTRACTION) ? data.ATTRACTION : []),
-    ...(data && data?.IRS && Array.isArray(data?.IRS) ? data.IRS : []),
-    ...(data && data?.XRAY && Array.isArray(data?.XRAY) ? data.XRAY : []),
-    ...(data && data?.LPG_POWERED && Array.isArray(data?.LPG_POWERED) ? data.LPG_POWERED : []),
-  ]
+  const typesList = OBJECT_TYPE_ORDER.flatMap((type) => data?.[type] ?? [])
 
   const [openSections, setOpenSections] = useState<string[]>([
     'org_info',
@@ -86,7 +89,7 @@ const InspectionDetail = () => {
     if (!accordions?.length) return
     setOpenSections((current) => {
       const missing = accordions
-        .map((item: any) => `inspection_results-${item?.id}`)
+        .map((item) => `inspection_results-${item.id}`)
         .filter((section: string) => !current.includes(section))
       return missing.length > 0 ? [...current, ...missing] : current
     })
@@ -166,7 +169,7 @@ const InspectionDetail = () => {
           </div>
         ) : (
           accordions?.length > 0 &&
-          accordions?.map((item: any) => (
+          accordions?.map((item) => (
             <DetailCardAccordion.Item
               key={item.id}
               value={`inspection_results-${item?.id}`}

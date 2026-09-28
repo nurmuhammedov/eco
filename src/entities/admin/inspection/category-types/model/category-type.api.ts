@@ -3,6 +3,7 @@ import { apiClient } from '@/shared/api/api-client'
 import { ApiResponse } from '@/shared/types/api'
 import {
   CategoryTypeResponse,
+  ChecklistCategoryOption,
   CreateCategoryTypeDTO,
   FilterCategoryTypeDTO,
   UpdateCategoryTypeDTO,
@@ -22,12 +23,11 @@ export const inspectionCategoryTypeAPI = {
     )
     return data.data
   },
-  fetchCategoryTypeSelect: async (params: any) => {
-    const { data } = await apiClient.get<ApiResponse<any>>(`${API_ENDPOINTS.INSPECTION_CATEGORY_TYPES}/select`, params)
-    return data.data
-  },
-  fetchCategoryTypeMetaSelect: async () => {
-    const { data } = await apiClient.get<ApiResponse<any>>(`/metadata/checklist/inspection/categories`)
+  fetchCategoryTypeSelect: async (params: { type?: string }) => {
+    const { data } = await apiClient.get<ApiResponse<ChecklistCategoryOption[]>>(
+      `${API_ENDPOINTS.INSPECTION_CATEGORY_TYPES}/select`,
+      params
+    )
     return data.data
   },
   createCategoryType: async (dto: CreateCategoryTypeDTO) => {

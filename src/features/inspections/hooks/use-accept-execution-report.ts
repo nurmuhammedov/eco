@@ -7,11 +7,12 @@ export function useAcceptExecutionReport() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (id) => inspectionsApi.acceptInspectionReport(id),
+    mutationFn: (id: string) => inspectionsApi.acceptInspectionReport(id),
     onSuccess: () => {
       toast.success('Muvaffaqiyatli saqlandi!')
       invalidateEndpoint(queryClient, '/inspections').catch((err) => console.error(err))
       invalidateEndpoint(queryClient, '/inspection-checklists').catch((err) => console.error(err))
+      invalidateEndpoint(queryClient, '/inspection-executions').catch((err) => console.error(err))
     },
   })
 }

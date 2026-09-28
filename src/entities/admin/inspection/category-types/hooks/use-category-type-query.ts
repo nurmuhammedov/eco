@@ -29,11 +29,3 @@ export const useCategoryTypeQuery = (
     ...options,
   })
 }
-
-export const useCategoryTypesSelectQuery = () => {
-  return useQuery({
-    staleTime: getTime(1, 'week'),
-    queryFn: () => categoryTypeAPI.fetchCategoryTypeMetaSelect(),
-    queryKey: ['meta-category-types-select'],
-  })
-}

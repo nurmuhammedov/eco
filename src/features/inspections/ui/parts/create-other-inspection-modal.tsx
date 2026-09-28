@@ -37,6 +37,20 @@ import { UserRoles } from '@/shared/types/user'
 import { useOfficeSelectQuery } from '@/shared/api/dictionaries'
 import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 
+/** OtherInspectionDecreeDto: what the decree for an unscheduled inspection is drawn up from */
+interface OtherInspectionDecree {
+  startDate: string
+  endDate: string
+  noticeType: 'NOTIFIED' | 'AFTER_24_HOURS'
+  hfId: string
+  inspectorIdList: string[]
+  checklistCategoryIdList: number[]
+  basisPathList: string[]
+  programPath: string
+  /** Only the chairman picks the office */
+  officeId?: number
+}
+
 export const CreateOtherInspectionModal = () => {
   const { t } = useTranslation()
   const [isOpen, setIsOpen] = useState(false)
@@ -120,7 +134,7 @@ export const CreateOtherInspectionModal = () => {
     handleCloseModal,
     handleCreateApplication,
     submitApplicationMetaData,
-  } = useEimzo({
+  } = useEimzo<OtherInspectionDecree>({
     pdfEndpoint: '/inspections/decree/other/generate-pdf',
     submitEndpoint: '/inspections/decree/other',
     invalidates: '/inspections/other',
@@ -133,7 +147,7 @@ export const CreateOtherInspectionModal = () => {
   })
 
   const onSubmit = (values: FormValues) => {
-    const payload: any = {
+    const payload: OtherInspectionDecree = {
       startDate: formatDate(values.startDate, 'yyyy-MM-dd'),
       endDate: formatDate(values.endDate, 'yyyy-MM-dd'),
       noticeType: values.noticeType,
@@ -180,7 +194,7 @@ export const CreateOtherInspectionModal = () => {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            {officeSelect?.map((item: any) => (
+                            {officeSelect?.map((item) => (
                               <SelectItem key={item.id} value={item.id.toString()}>
                                 {item.name}
                               </SelectItem>
@@ -230,7 +244,7 @@ export const CreateOtherInspectionModal = () => {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            {hfOptions?.map((item: any) => (
+                            {hfOptions?.map((item) => (
                               <SelectItem key={item.id} value={item.id}>
                                 {item.name}
                               </SelectItem>
@@ -345,7 +359,7 @@ export const CreateOtherInspectionModal = () => {
                       <FormLabel required>Kategoriya tanlang</FormLabel>
                       <FormControl>
                         <MultiSelect
-                          options={(categoryOptions || []).map((c: any) => ({ id: c.id, name: c.name }))}
+                          options={(categoryOptions || []).map((c) => ({ id: c.id, name: c.name }))}
                           value={field.value}
                           onChange={field.onChange}
                           placeholder={t('select')}

@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { apiClient } from '@/shared/api/api-client'
 import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
+import { getErrorMessage } from '@/shared/lib/error-message'
 
 interface NotifyLegalPayload {
   resultId: string
@@ -26,7 +27,7 @@ export const useNotifyLegalToSignAct = () =>
     mutationFn: ({ resultId, url }: NotifyLegalPayload) =>
       apiClient.post(`/inspection-results/${resultId}/notify-sign`, { url }),
     onSuccess: () => toast.success('Yuridik shaxsga dalolatnomani imzolash uchun bildirishnoma yuborildi'),
-    onError: (error: any) => toast.error(error?.message || 'Bildirishnoma yuborilmadi', { richColors: true }),
+    onError: (error) => toast.error(getErrorMessage(error, 'Bildirishnoma yuborilmadi'), { richColors: true }),
   })
 
 export const useLegalSignAct = (onSuccess?: () => void) => {
@@ -44,6 +45,6 @@ export const useLegalSignAct = (onSuccess?: () => void) => {
       invalidateEndpoint(queryClient, '/inspection-results')
       onSuccess?.()
     },
-    onError: (error: any) => toast.error(error?.message || 'Dalolatnomani imzolashda xatolik', { richColors: true }),
+    onError: (error) => toast.error(getErrorMessage(error, 'Dalolatnomani imzolashda xatolik'), { richColors: true }),
   })
 }

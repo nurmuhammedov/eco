@@ -1,7 +1,6 @@
 import { useAuth } from '@/shared/hooks/use-auth'
 import { DataTable } from '@/shared/components/common/data-table'
 import { ColumnDef } from '@tanstack/react-table'
-import { format, formatDate } from 'date-fns'
 import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
 import InspectionChecklistForm, { answerOptions } from '@/features/inspections/ui/parts/inspection-checklist-form'
 import { InspectionStatus, InspectionSubMenuStatus } from '@/entities/inspection/model/inspection-status'
@@ -24,6 +23,30 @@ import ReportUploadModal from './report-upload-modal'
 import FamiliarizationReportUploadModal from './familiarization-report-upload-modal'
 import { useTranslation } from 'react-i18next'
 import OmbudsmanCodeModal from './ombudsman-code-modal'
+import type { DocumentSigner, SignedDocument } from '@/entities/document'
+import type {
+  InspectionChecklistCategory,
+  InspectionChecklistItem,
+  InspectionResultStatus,
+} from '@/entities/inspection/model/inspection.types'
+import { paramText } from '@/shared/lib/url-params'
+
+type ChecklistTab = 'questions' | 'eliminated' | 'not_eliminated'
+type IssueFilter = 'all' | 'positive' | 'negative'
+
+/** One checked object of the inspection: its checklist, act and the files around them */
+interface InspectionReportsProps {
+  resultId: string
+  status?: InspectionResultStatus | null
+  specialCode?: string | null
+  acknowledgementPath?: string | null
+  additionalFilePath?: string | null
+  signedActPath?: string | null
+  explanationLetterPath?: string | null
+  reportPath?: string | null
+  familiarizationReportPath?: string | null
+  act?: SignedDocument | null
+}
 
 const InspectionReports = ({
   status,
@@ -36,24 +59,24 @@ const InspectionReports = ({
   act,
   resultId,
   specialCode,
-}: any) => {
+}: InspectionReportsProps) => {
   const { t } = useTranslation()
   const { user } = useAuth()
-  const [currentTab, setCurrentTab] = useState<'questions' | 'eliminated' | 'not_eliminated'>('questions')
-  const [tabulation, setTabulation] = useState<'all' | 'positive' | 'negative'>('all')
-  const [id, setId] = useState<any>(null)
+  const [currentTab, setCurrentTab] = useState<ChecklistTab>('questions')
+  const [tabulation, setTabulation] = useState<IssueFilter>('all')
+  const [id, setId] = useState<string | null>(null)
   const [inspectionTitle, setInspectionTitle] = useState<string>('')
-  const [signers, setSigners] = useState<any[]>([])
+  const [signers, setSigners] = useState<DocumentSigner[]>([])
   const [isActSignOpen, setIsActSignOpen] = useState(false)
-  const {
-    paramsObject: { inspectionType = 'risk_based', signResultId = '' },
-  } = useCustomSearchParams()
+  const { paramsObject } = useCustomSearchParams()
+  const inspectionType = paramText(paramsObject.inspectionType, 'risk_based')
+  const signResultId = paramText(paramsObject.signResultId)
 
   const isLegal = user?.role === UserRoles.LEGAL
   const canNotifyLegal =
     (user?.role === UserRoles.INSPECTOR || user?.role === UserRoles.MANAGER) &&
     status === InspectionSubMenuStatus.COMPLETED
-  const isSignedByMe = Boolean(act?.signers?.some((signer: any) => signer?.signerUserId === user?.id))
+  const isSignedByMe = Boolean(act?.signers?.some((signer) => signer.signerUserId === user?.id))
 
   const notifyLegal = useNotifyLegalToSignAct()
   const legalSign = useLegalSignAct(() => setIsActSignOpen(false))
@@ -64,7 +87,7 @@ const InspectionReports = ({
     }
   }, [isLegal, act, isSignedByMe, signResultId, resultId])
 
-  const { data: categories = [] } = useData<any[]>(
+  const { data: categories = [] } = useData<InspectionChecklistCategory[]>(
     `/inspection-checklists`,
     !!resultId,
     {
@@ -76,92 +99,89 @@ const InspectionReports = ({
     6000
   )
 
-  const columns: ColumnDef<any>[] = [
-    ...(currentTab == 'eliminated'
+  const answerColumn: ColumnDef<InspectionChecklistItem> = {
+    accessorKey: 'answer',
+    header: 'Javob',
+    cell: ({ row }) => answerOptions.find((i) => i.value === row.original.answer)?.labelKey || '',
+  }
+
+  const issueColumns: ColumnDef<InspectionChecklistItem>[] = [
+    {
+      accessorKey: 'question',
+      header: 'Aniqlangan kamchilik',
+    },
+    {
+      accessorKey: 'corrective',
+      header: 'Chora-tadbir',
+    },
+    {
+      accessorKey: 'deadline',
+      size: 100,
+      header: 'Bartaraf etish muddati',
+      cell: ({ row }) => getDate(row.original.deadline),
+    },
+    {
+      id: 'eliminated',
+      header: 'Holati',
+      cell: ({ row }) => (
+        <div className="flex items-center gap-2">
+          {row.original.status == 'NEGATIVE' ? (
+            <Badge variant="info">Yangi</Badge>
+          ) : row.original.status == 'UPLOADED' ? (
+            <Badge variant="warning">Fayl yuklangan</Badge>
+          ) : row.original.status == 'REJECTED' ? (
+            <Badge variant="error">Rad etilgan</Badge>
+          ) : row.original.status == 'ACCEPTED' ? (
+            <Badge variant="success">Qabul qilindi</Badge>
+          ) : null}
+          <Button
+            onClick={() => {
+              setId(row.original.id)
+              setInspectionTitle(row.original.question || '')
+            }}
+            variant="outline"
+            size="iconSm"
+          >
+            <Eye />
+          </Button>
+        </div>
+      ),
+    },
+  ]
+
+  const questionColumns: ColumnDef<InspectionChecklistItem>[] = [
+    {
+      accessorKey: 'question',
+      size: 300,
+      header: 'Savol',
+    },
+    ...(status == InspectionSubMenuStatus.COMPLETED
       ? [
-          {
-            accessorKey: 'question',
-            header: 'Aniqlangan kamchilik',
-          },
-          {
-            accessorKey: 'corrective',
-            header: 'Chora-tadbir',
-          },
+          answerColumn,
           {
             accessorKey: 'deadline',
             size: 100,
             header: 'Bartaraf etish muddati',
-            cell: ({ row }: any) => format(new Date(row.original?.deadline), 'dd.MM.yyyy'),
-          },
+            cell: ({ row }) => getDate(row.original.deadline),
+          } satisfies ColumnDef<InspectionChecklistItem>,
           {
-            accessorKey: 'eliminated',
-            header: 'Holati',
-            cell: ({ row }: any) => (
-              <div className="flex items-center gap-2">
-                {row.original?.status == 'NEGATIVE' ? (
-                  <Badge variant="info">{user?.role == UserRoles.LEGAL ? 'Yangi' : 'Yangi'}</Badge>
-                ) : row.original?.status == 'UPLOADED' ? (
-                  <Badge variant="warning">Fayl yuklangan</Badge>
-                ) : row.original?.status == 'REJECTED' ? (
-                  <Badge variant="error">Rad etilgan</Badge>
-                ) : row.original?.status == 'ACCEPTED' ? (
-                  <Badge variant="success">Qabul qilindi</Badge>
-                ) : null}
-                <Button
-                  onClick={() => {
-                    setId(row.original?.id)
-                    setInspectionTitle(row?.original?.question || '')
-                  }}
-                  variant="outline"
-                  size="iconSm"
-                >
-                  <Eye />
-                </Button>
-              </div>
-            ),
-          },
+            accessorKey: 'corrective',
+            header: 'Chora-tadbir matni',
+          } satisfies ColumnDef<InspectionChecklistItem>,
         ]
-      : currentTab == 'questions'
-        ? [
-            {
-              accessorKey: 'question',
-              size: 300,
-              header: 'Savol',
-            },
-            ...(status == InspectionSubMenuStatus.COMPLETED
-              ? [
-                  {
-                    accessorKey: 'answer',
-                    header: 'Javob',
-                    cell: ({ row }: any) =>
-                      answerOptions?.find((i) => i?.value == row.original?.answer)?.labelKey || '',
-                  },
-                  {
-                    accessorKey: 'deadline',
-                    size: 100,
-                    header: 'Bartaraf etish muddati',
-                    cell: (cell: any) =>
-                      cell.row.original.deadline ? formatDate(cell.row.original.deadline, 'dd.MM.yyyy') : '',
-                  },
-                  {
-                    accessorKey: 'corrective',
-                    header: 'Chora-tadbir matni',
-                  },
-                ]
-              : []),
-          ]
-        : [
-            {
-              accessorKey: 'question',
-              header: 'Savol',
-            },
-            {
-              accessorKey: 'answer',
-              header: 'Javob',
-              cell: ({ row }: any) => answerOptions?.find((i) => i?.value == row.original?.answer)?.labelKey || '',
-            },
-          ]),
+      : []),
   ]
+
+  const resolvedColumns: ColumnDef<InspectionChecklistItem>[] = [
+    {
+      accessorKey: 'question',
+      header: 'Savol',
+    },
+    answerColumn,
+  ]
+
+  const columns =
+    currentTab == 'eliminated' ? issueColumns : currentTab == 'questions' ? questionColumns : resolvedColumns
 
   return (
     <div>
@@ -205,7 +225,7 @@ const InspectionReports = ({
       </div>
 
       <div className="mt-4 flex items-center justify-between">
-        <Tabs value={currentTab} onValueChange={(val) => setCurrentTab(val as any)}>
+        <Tabs value={currentTab} onValueChange={(val) => setCurrentTab(val as ChecklistTab)}>
           <TabsList className="bg-neutral-250">
             <TabsTrigger value="questions">Tekshiruv savolnoma</TabsTrigger>
             <TabsTrigger value="eliminated">Kamchilik aniqlandi</TabsTrigger>
@@ -216,7 +236,7 @@ const InspectionReports = ({
 
       <div className="my-3">
         {currentTab == 'eliminated' && (
-          <Tabs value={tabulation} onValueChange={(val) => setTabulation(val as any)}>
+          <Tabs value={tabulation} onValueChange={(val) => setTabulation(val as IssueFilter)}>
             <TabsList className="bg-neutral-250">
               <TabsTrigger value="all">Barchasi</TabsTrigger>
               <TabsTrigger value="negative">Bartaraf etilmadi</TabsTrigger>
@@ -341,7 +361,7 @@ const InspectionReports = ({
                             <button
                               type="button"
                               className="flex shrink-0 cursor-pointer items-center gap-1 text-xs font-medium whitespace-nowrap text-blue-600 transition-colors hover:text-blue-700 hover:underline"
-                              onClick={() => setSigners(act?.signers)}
+                              onClick={() => setSigners(act?.signers ?? [])}
                             >
                               <Eye size="14" /> Imzolagan shaxslar
                             </button>
@@ -542,7 +562,7 @@ const InspectionReports = ({
 
                 {act && <SignersModal setSigners={setSigners} signers={signers} />}
 
-                {categories?.map((category: any) => (
+                {categories?.map((category) => (
                   <div key={category.inspectionCategoryId} className="mb-4 rounded-xl border bg-white p-4 shadow-sm">
                     <h3 className="mb-4 text-lg font-semibold text-slate-800">{category.categoryName}</h3>
                     <DataTable isLoading={false} columns={columns} data={category.checklists || []} />
@@ -579,14 +599,11 @@ const InspectionReports = ({
           title="Dalolatnomani imzolash"
           description="Dalolatnoma mazmuni bilan tanishib chiqing va elektron raqamli imzo bilan tasdiqlang."
           secondaryLabel="Yopish"
-          submitApplicationMetaData={(sign) =>
-            legalSign.mutate({
-              resultId,
-              sign,
-              filePath: act?.path,
-              documentId: act?.documentId,
-            })
-          }
+          submitApplicationMetaData={(sign) => {
+            if (act?.path && act.documentId) {
+              legalSign.mutate({ resultId, sign, filePath: act.path, documentId: act.documentId })
+            }
+          }}
         />
       )}
     </div>

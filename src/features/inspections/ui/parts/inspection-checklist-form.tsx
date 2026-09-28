@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
-import { Control, Controller, UseFormReturn, useFieldArray, useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { Control, Controller, type FieldPath, UseFormReturn, useFieldArray, useForm } from 'react-hook-form'
+import { zodFormResolver } from '@/shared/lib/zod-form-resolver'
+import type { InspectionChecklistCategory } from '@/entities/inspection/model/inspection.types'
 import { z } from 'zod'
 import { format as formatDateFn } from 'date-fns'
 import { useQueryClient } from '@tanstack/react-query'
@@ -14,7 +15,7 @@ import { Textarea } from '@/shared/components/ui/textarea'
 import InspectionChecklistModal from '@/features/inspections/ui/parts/inspection-checklist-modal'
 import AcknowledgementUploadModal from '@/features/inspections/ui/parts/acknowledgement-upload-modal'
 import { useAdd, useCustomSearchParams } from '@/shared/hooks'
-import { ChecklistAnswerStatus } from '../../model/inspection-checklist.schema'
+import { type ChecklistAnswerDto, ChecklistAnswerStatus } from '../../model/inspection-checklist.schema'
 import { Badge } from '@/shared/components/ui/badge'
 import FileLink from '@/shared/components/common/file-link'
 import { UserRoles } from '@/shared/types/user'
@@ -95,6 +96,11 @@ const formSchema = z.object({
 })
 
 type FormValues = z.infer<typeof formSchema>
+/** The form while it is filled in: a question has no answer until one is picked */
+type ChecklistItemDraft = Omit<z.input<typeof itemSchema>, 'answer'> & { answer?: ChecklistAnswerStatus }
+type ChecklistDraft = {
+  categories: (Omit<z.input<typeof categorySchema>, 'items'> & { items: ChecklistItemDraft[] })[]
+}
 
 export const answerOptions = [
   { value: ChecklistAnswerStatus.POSITIVE, labelKey: 'Bajarilgan' },
@@ -102,24 +108,8 @@ export const answerOptions = [
   { value: ChecklistAnswerStatus.UNRELATED, labelKey: 'Tatbiq etilmaydi' },
 ]
 
-type CategoryProps = {
-  inspectionCategoryId: string
-  categoryName: string
-  checklists: {
-    id: string
-    orderNumber: number
-    question: string
-    answer?: string | null
-    corrective?: string | null
-    deadline?: string | null
-    inspectionCategoryId?: string
-    basisPath?: string | null
-    description?: string | null
-  }[]
-}
-
 interface Props {
-  categories: CategoryProps[]
+  categories: InspectionChecklistCategory[]
   resultId: string
   acknowledgementPath?: string | null
   additionalFilePath?: string | null
@@ -137,16 +127,16 @@ const InspectionChecklistForm = ({ categories = [], resultId, acknowledgementPat
   const { user } = useAuth()
   const disabled = !acknowledgementPath
 
-  const defaultValues: FormValues = useMemo(
+  const defaultValues: ChecklistDraft = useMemo(
     () => ({
       categories: categories.map((cat) => ({
-        inspectionCategoryId: cat.inspectionCategoryId || cat.checklists?.[0]?.inspectionCategoryId || '',
+        inspectionCategoryId: cat.inspectionCategoryId || '',
         categoryName: cat.categoryName || '',
         items: (cat.checklists || []).map((it) => ({
           id: it.id,
-          question: it.question,
-          orderNumber: it.orderNumber,
-          answer: (it.answer as ChecklistAnswerStatus) ?? undefined,
+          question: it.question ?? '',
+          orderNumber: it.orderNumber ?? 0,
+          answer: it.answer ? ChecklistAnswerStatus[it.answer] : undefined,
           corrective:
             it.corrective ||
             (it.answer !== 'POSITIVE' ? it.description || `Chora tadbir bandi - ${it.question}` : '') ||
@@ -160,8 +150,8 @@ const InspectionChecklistForm = ({ categories = [], resultId, acknowledgementPat
     [categories]
   )
 
-  const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<ChecklistDraft, unknown, FormValues>({
+    resolver: zodFormResolver<ChecklistDraft, FormValues>(formSchema),
     defaultValues,
     mode: 'onSubmit',
   })
@@ -171,8 +161,8 @@ const InspectionChecklistForm = ({ categories = [], resultId, acknowledgementPat
     name: 'categories',
   })
 
-  const buildDtoListFromValues = (values: FormValues) => {
-    const dtoList: any[] = []
+  const buildDtoListFromValues = (values: ChecklistDraft) => {
+    const dtoList: ChecklistAnswerDto[] = []
     values.categories.forEach((cat) => {
       cat.items.forEach((it) => {
         if (it.answer) {
@@ -198,7 +188,7 @@ const InspectionChecklistForm = ({ categories = [], resultId, acknowledgementPat
   const handleTempSave = () => {
     const values = form.getValues()
     let hasChecklistError = false
-    let firstErrorPath: any = null
+    let firstErrorPath: FieldPath<ChecklistDraft> | null = null
 
     values.categories.forEach((cat, catIndex) => {
       cat.items.forEach((item, itemIndex) => {
@@ -428,7 +418,7 @@ const InspectionChecklistForm = ({ categories = [], resultId, acknowledgementPat
             <h3 className="mb-4 text-lg font-semibold">{form.getValues(`categories.${catIndex}.categoryName`)}</h3>
             <CategoryItemsList
               control={form.control}
-              form={form as any}
+              form={form}
               catIndex={catIndex}
               items={catField.items}
               disabled={disabled || (!additionalFilePath && inspectionType === 'other')}
@@ -487,10 +477,10 @@ const CategoryItemsList = ({
   items,
   disabled,
 }: {
-  control: Control<FormValues>
-  form: UseFormReturn<FormValues>
+  control: Control<ChecklistDraft, unknown, FormValues>
+  form: UseFormReturn<ChecklistDraft, unknown, FormValues>
   catIndex: number
-  items: FormValues['categories'][0]['items']
+  items: ChecklistDraft['categories'][number]['items']
   disabled?: boolean
 }) => {
   return (
@@ -561,8 +551,8 @@ const CategoryItemsList = ({
                               <FormLabel required>Asoslovchi hujjat (PDF/Rasm)</FormLabel>
                               <FormControl>
                                 <InputFile
-                                  form={form as any}
-                                  name={field.name as any}
+                                  form={form}
+                                  name={field.name}
                                   accept={[FileTypes.PDF, FileTypes.IMAGE]}
                                   uploadEndpoint="/attachments/inspection-answers"
                                   showPreview

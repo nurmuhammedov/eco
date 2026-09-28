@@ -7,9 +7,10 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
 import { useTranslation } from 'react-i18next'
-import { format } from 'date-fns'
+import { getDate } from '@/shared/utils/date'
 import { Badge } from '@/shared/components/ui/badge'
 import { OtherInspectionTabStatus } from '@/entities/inspection/model/inspection-status'
+import type { OtherInspection } from '@/entities/inspection/model/inspection.types'
 import { getDefaultYearAndMonthForInspections } from '@/shared/utils/date'
 
 export const OtherInspectionList: React.FC = () => {
@@ -26,7 +27,7 @@ export const OtherInspectionList: React.FC = () => {
     data: inspections,
     isLoading,
     totalPages,
-  } = usePaginatedData<any>('/inspections/other', {
+  } = usePaginatedData<OtherInspection>('/inspections/other', {
     ...paramsObject,
     tab: undefined,
     regionId: paramsObject.regionId === 'ALL' ? '' : paramsObject.regionId,
@@ -37,12 +38,12 @@ export const OtherInspectionList: React.FC = () => {
     status: status === OtherInspectionTabStatus.ALL ? undefined : status,
   })
 
-  const handleView = (row: any) => {
+  const handleView = (row: OtherInspection) => {
     const params = new URLSearchParams({
       inspectionId: String(row.id ?? ''),
       tin: String(row.legalTin ?? ''),
       name: String(row.legalName ?? ''),
-      year: String(row.year || year || new Date().getFullYear()),
+      year: String(year || new Date().getFullYear()),
       inspectionType: 'other',
     })
     navigate(`/inspections/info?${params.toString()}`)
@@ -57,21 +58,13 @@ export const OtherInspectionList: React.FC = () => {
     CODE_ATTACHED: { variant: 'success', key: 'inspections.other.tabs.CODE_ATTACHED' },
   }
 
-  const columns: ExtendedColumnDef<any, any>[] = [
+  const columns: ExtendedColumnDef<OtherInspection>[] = [
     {
       header: t('inspections.other.columns.date'),
       accessorKey: 'startDate',
       filterKey: 'startDate',
       filterType: 'date',
-      cell: ({ row }) => {
-        const val = row.original.startDate
-        if (!val) return '-'
-        try {
-          return format(new Date(val), 'dd.MM.yyyy')
-        } catch {
-          return val
-        }
-      },
+      cell: ({ row }) => getDate(row.original.startDate) || '-',
     },
     {
       header: t('inspections.other.columns.type'),
@@ -112,7 +105,7 @@ export const OtherInspectionList: React.FC = () => {
       accessorKey: 'status',
       cell: ({ row }) => {
         const s = row.original.status
-        const cfg = statusConfig[s]
+        const cfg = s ? statusConfig[s] : undefined
         if (!cfg) return <Badge variant="default">{s}</Badge>
         return <Badge variant={cfg.variant}>{t(cfg.key)}</Badge>
       },
@@ -134,7 +127,7 @@ export const OtherInspectionList: React.FC = () => {
         isPaginated
         showFilters={true}
         data={inspections || []}
-        columns={columns as unknown as any}
+        columns={columns}
         isLoading={isLoading}
         pageCount={totalPages}
         className="flex-1"
