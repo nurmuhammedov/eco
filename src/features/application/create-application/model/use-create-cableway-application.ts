@@ -8,15 +8,17 @@ import {
 } from '@/shared/api/dictionaries'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { getSelectOptions } from '@/shared/lib/get-select-options'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { type FormDraft, zodFormResolver } from '@/shared/lib/zod-form-resolver'
 import { useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 
 export const useCreateCablewayApplication = () => {
   const { user } = useAuth()
 
-  const form = useForm<CreateCablewayApplicationDTO>({
-    resolver: zodResolver(CablewayAppealDtoSchema),
+  const form = useForm<FormDraft<typeof CablewayAppealDtoSchema>, unknown, CreateCablewayApplicationDTO>({
+    resolver: zodFormResolver<FormDraft<typeof CablewayAppealDtoSchema>, CreateCablewayApplicationDTO>(
+      CablewayAppealDtoSchema
+    ),
     defaultValues: {
       phoneNumber: '',
       hazardousFacilityId: undefined,

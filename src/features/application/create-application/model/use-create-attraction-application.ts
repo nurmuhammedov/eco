@@ -3,13 +3,15 @@ import { useChildEquipmentTypes, useDistrictSelectQuery, useRegionSelectQuery } 
 import useData from '@/shared/hooks/api/use-data'
 import type { OptionItem } from '@/shared/types'
 import { getSelectOptions } from '@/shared/lib/get-select-options'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { type FormDraft, zodFormResolver } from '@/shared/lib/zod-form-resolver'
 import { useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 
 export const useCreateAttractionApplication = () => {
-  const form = useForm<CreateAttractionApplicationDTO>({
-    resolver: zodResolver(AttractionAppealDtoSchema),
+  const form = useForm<FormDraft<typeof AttractionAppealDtoSchema>, unknown, CreateAttractionApplicationDTO>({
+    resolver: zodFormResolver<FormDraft<typeof AttractionAppealDtoSchema>, CreateAttractionApplicationDTO>(
+      AttractionAppealDtoSchema
+    ),
     defaultValues: {
       phoneNumber: '',
       attractionName: '',

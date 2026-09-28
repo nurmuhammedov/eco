@@ -8,15 +8,17 @@ import {
 } from '@/shared/api/dictionaries'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { getSelectOptions } from '@/shared/lib/get-select-options'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { type FormDraft, zodFormResolver } from '@/shared/lib/zod-form-resolver'
 import { useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 
 export const useCreateOilContainerApplication = () => {
   const { user } = useAuth()
 
-  const form = useForm<CreateOilContainerApplicationDTO>({
-    resolver: zodResolver(OilContainerAppealDtoSchema),
+  const form = useForm<FormDraft<typeof OilContainerAppealDtoSchema>, unknown, CreateOilContainerApplicationDTO>({
+    resolver: zodFormResolver<FormDraft<typeof OilContainerAppealDtoSchema>, CreateOilContainerApplicationDTO>(
+      OilContainerAppealDtoSchema
+    ),
     defaultValues: {
       phoneNumber: '',
       hazardousFacilityId: undefined,

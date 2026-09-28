@@ -5,7 +5,7 @@ import {
 } from '@/entities/create-application'
 import { useDistrictSelectQuery, useRegionSelectQuery } from '@/shared/api/dictionaries'
 import { getSelectOptions } from '@/shared/lib/get-select-options'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { type FormDraft, zodFormResolver } from '@/shared/lib/zod-form-resolver'
 import { useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 
@@ -17,8 +17,10 @@ export const ACCREDITATION_APPEAL_TITLES: Partial<Record<ApplicationTypeEnum, st
 }
 
 export const useCreateAccreditationApplication = (appealType: ApplicationTypeEnum) => {
-  const form = useForm<RegisterAccreditationDTO>({
-    resolver: zodResolver(RegisterAccreditationSchema),
+  const form = useForm<FormDraft<typeof RegisterAccreditationSchema>, unknown, RegisterAccreditationDTO>({
+    resolver: zodFormResolver<FormDraft<typeof RegisterAccreditationSchema>, RegisterAccreditationDTO>(
+      RegisterAccreditationSchema
+    ),
     defaultValues: {
       appealType,
       activityRegionId: '',

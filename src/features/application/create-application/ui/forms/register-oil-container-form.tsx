@@ -168,7 +168,7 @@ const RegisterOilContainerForm = ({ onSubmit }: RegisterOilContainerFormProps) =
                       onValueChange={(value) => {
                         if (value) {
                           field.onChange(value)
-                          form.setValue('districtId', undefined as any)
+                          form.setValue('districtId', undefined)
                         }
                       }}
                       value={field.value?.toString()}
@@ -309,9 +309,7 @@ const RegisterOilContainerForm = ({ onSubmit }: RegisterOilContainerFormProps) =
                         form={form}
                         name={field.name}
                         accept={[FileTypes.PDF]}
-                        onRemove={() =>
-                          form.setValue('expertiseExpiryDate', undefined as any, { shouldValidate: true })
-                        }
+                        onRemove={() => form.setValue('expertiseExpiryDate', undefined, { shouldValidate: true })}
                       />
                     </FormControl>
                   </div>

@@ -35,10 +35,6 @@ export const CreateApplicationForm = ({
     applicationType: type!,
   })
 
-  const handleFormSubmit = (data: any) => {
-    handleCreateApplication(data)
-  }
-
   if (!isValidApplicationType(type!)) {
     return (
       <div className="error-container">
@@ -67,7 +63,7 @@ export const CreateApplicationForm = ({
 
   return (
     <Suspense fallback={<AppealFormSkeleton />}>
-      <div className="pb-4">{FormComponent && <FormComponent onSubmit={handleFormSubmit} />}</div>
+      <div className="pb-4">{FormComponent && <FormComponent onSubmit={handleCreateApplication} />}</div>
       <ApplicationModal
         error={error}
         isOpen={isModalOpen}

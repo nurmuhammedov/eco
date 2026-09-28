@@ -8,14 +8,16 @@ import {
 } from '@/shared/api/dictionaries'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { getSelectOptions } from '@/shared/lib/get-select-options'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { type FormDraft, zodFormResolver } from '@/shared/lib/zod-form-resolver'
 import { useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 
 export const useCreateContainerApplication = () => {
   const { user } = useAuth()
-  const form = useForm<CreateContainerApplicationDTO>({
-    resolver: zodResolver(ContainerAppealDtoSchema),
+  const form = useForm<FormDraft<typeof ContainerAppealDtoSchema>, unknown, CreateContainerApplicationDTO>({
+    resolver: zodFormResolver<FormDraft<typeof ContainerAppealDtoSchema>, CreateContainerApplicationDTO>(
+      ContainerAppealDtoSchema
+    ),
     defaultValues: {
       phoneNumber: '',
       hazardousFacilityId: undefined,

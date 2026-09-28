@@ -11,8 +11,15 @@ import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/comp
 
 import { useParams } from 'react-router-dom'
 
+/** What the application sends: the ids as numbers, an email left empty as null */
+type AccreditationPayload = Omit<RegisterAccreditationDTO, 'activityRegionId' | 'activityDistrictId' | 'email'> & {
+  activityRegionId: number
+  activityDistrictId: number
+  email: string | null
+}
+
 interface RegisterAccreditationFormProps {
-  onSubmit: (data: any) => void
+  onSubmit: (data: AccreditationPayload) => void
 }
 
 const ATTACHMENTS: { name: keyof RegisterAccreditationDTO; label: string }[] = [

@@ -8,15 +8,17 @@ import {
 } from '@/shared/api/dictionaries'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { getSelectOptions } from '@/shared/lib/get-select-options'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { type FormDraft, zodFormResolver } from '@/shared/lib/zod-form-resolver'
 import { useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 
 export const useCreatePipelineApplication = () => {
   const { user } = useAuth()
 
-  const form = useForm<CreatePipelineApplicationDTO>({
-    resolver: zodResolver(PipelineAppealDtoSchema),
+  const form = useForm<FormDraft<typeof PipelineAppealDtoSchema>, unknown, CreatePipelineApplicationDTO>({
+    resolver: zodFormResolver<FormDraft<typeof PipelineAppealDtoSchema>, CreatePipelineApplicationDTO>(
+      PipelineAppealDtoSchema
+    ),
     defaultValues: {
       phoneNumber: '',
       hazardousFacilityId: undefined,

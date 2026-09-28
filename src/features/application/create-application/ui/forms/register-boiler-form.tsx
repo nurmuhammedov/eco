@@ -428,9 +428,7 @@ const RegisterBoilerForm = ({ onSubmit }: RegisterBoilerFormProps) => {
                         form={form}
                         name={field.name}
                         accept={[FileTypes.PDF]}
-                        onRemove={() =>
-                          form.setValue('expertiseExpiryDate', undefined as any, { shouldValidate: true })
-                        }
+                        onRemove={() => form.setValue('expertiseExpiryDate', undefined, { shouldValidate: true })}
                       />
                     </FormControl>
                   </div>

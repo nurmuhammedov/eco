@@ -1,8 +1,9 @@
 import { ApplicationTypeEnum } from '@/entities/create-application'
 import { ComponentType, lazy, LazyExoticComponent } from 'react'
+import type { ApplicationPayload } from './use-application-creation'
 
 export interface FormComponentProps {
-  onSubmit: (data: any) => void
+  onSubmit: (data: ApplicationPayload) => void
 }
 
 const formComponentsMap: Record<string, LazyExoticComponent<ComponentType<FormComponentProps>>> = {
