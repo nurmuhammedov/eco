@@ -1,23 +1,10 @@
 import { useQuery } from '@tanstack/react-query'
 import { apiClient } from '@/shared/api/api-client'
+import type { DecreeSigner, DecreeSignersParams } from '../model/types'
 import { DECREE_SIGNERS_KEYS } from './keys'
 
-interface DecreeSignersParams {
-  page?: number
-  size?: number
-  belongType?: string
-}
-
-export const useDecreeSigners = (params: DecreeSignersParams) => {
-  return useQuery({
+export const useDecreeSigners = (params: DecreeSignersParams) =>
+  useQuery({
     queryKey: DECREE_SIGNERS_KEYS.list(params),
-    queryFn: async () => {
-      const response = await apiClient.get<any>('/decree-signers', params as any)
-      const data = response.data?.data
-      return {
-        content: data?.content || [],
-        page: data?.page || {},
-      }
-    },
+    queryFn: async () => (await apiClient.getWithPagination<DecreeSigner>('/decree-signers', params)).data,
   })
-}

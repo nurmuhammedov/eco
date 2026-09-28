@@ -1,62 +1,7 @@
-import { API_ENDPOINTS } from '@/shared/api/endpoints'
-import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 import { regionAPI } from '../model/region.api'
 import { regionKeys } from '../model/region.query-keys'
-import { type RegionResponse } from '../model/region.types'
-import type { ResponseData } from '@/shared/types/api'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { API_ENDPOINTS } from '@/shared/api/endpoints'
+import { useSliceMutation } from '@/shared/lib/query/use-slice-mutation'
 
-export const useDeleteRegion = () => {
-  const queryClient = useQueryClient()
-
-  return useMutation({
-    mutationFn: regionAPI.deleteRegion,
-
-    onMutate: async (regionId: number) => {
-      // Cancel in-flight queries
-      await queryClient.cancelQueries({
-        queryKey: regionKeys.list('region'),
-      })
-      await queryClient.cancelQueries({
-        queryKey: regionKeys.detail('region', regionId),
-      })
-
-      // Capture current state for rollback
-      const previousRegionsList = queryClient.getQueryData<ResponseData<RegionResponse>>(regionKeys.list('region'))
-      const previousRegionDetail = queryClient.getQueryData<RegionResponse>(regionKeys.detail('region', regionId))
-
-      // Optimistically remove from lists
-      if (previousRegionsList) {
-        queryClient.setQueryData(regionKeys.list('region'), {
-          ...previousRegionsList,
-          content: previousRegionsList.content.filter((district) => district.id !== regionId),
-        })
-      }
-
-      // Remove from detail cache
-      queryClient.removeQueries({
-        queryKey: regionKeys.detail('region', regionId),
-      })
-
-      return { previousRegionsList, previousRegionDetail }
-    },
-
-    onSuccess: () => {
-      // The whole slice: lists, details and the selects that read the same data
-      queryClient.invalidateQueries({ queryKey: regionKeys.root() })
-      invalidateEndpoint(queryClient, API_ENDPOINTS.REGIONS)
-    },
-
-    onError: (_err, regionId, context) => {
-      // Restore detail cache if it existed
-      if (context?.previousRegionDetail) {
-        queryClient.setQueryData(regionKeys.detail('region', regionId), context.previousRegionDetail)
-      }
-
-      // Restore list cache
-      if (context?.previousRegionsList) {
-        queryClient.setQueryData(regionKeys.list('region'), context.previousRegionsList)
-      }
-    },
-  })
-}
+export const useDeleteRegion = () =>
+  useSliceMutation(regionAPI.deleteRegion, regionKeys.root(), [API_ENDPOINTS.REGIONS])

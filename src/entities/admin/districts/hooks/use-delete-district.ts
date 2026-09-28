@@ -1,66 +1,7 @@
-import { API_ENDPOINTS } from '@/shared/api/endpoints'
-import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
-import type { ResponseData } from '@/shared/types/api'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { districtAPI } from '../model/district.api'
 import { districtKeys } from '../model/district.query-keys'
-import { DistrictResponse } from '../model/district.types'
+import { API_ENDPOINTS } from '@/shared/api/endpoints'
+import { useSliceMutation } from '@/shared/lib/query/use-slice-mutation'
 
-export const useDeleteDistrict = () => {
-  const queryClient = useQueryClient()
-
-  return useMutation({
-    mutationFn: districtAPI.deleteDistrict,
-
-    onMutate: async (districtId: number) => {
-      // Cancel in-flight queries
-      await queryClient.cancelQueries({
-        queryKey: districtKeys.list('district'),
-      })
-      await queryClient.cancelQueries({
-        queryKey: districtKeys.detail('district', districtId),
-      })
-
-      // Capture current state for rollback
-      const previousDistrictsList = queryClient.getQueryData<ResponseData<DistrictResponse>>(
-        districtKeys.list('district')
-      )
-      const previousDistrictDetail = queryClient.getQueryData<DistrictResponse>(
-        districtKeys.detail('district', districtId)
-      )
-
-      // Optimistically remove from lists
-      if (previousDistrictsList) {
-        queryClient.setQueryData(districtKeys.list('district'), {
-          ...previousDistrictsList,
-          content: previousDistrictsList.content.filter((district) => district.id !== districtId),
-        })
-      }
-
-      // Remove from detail cache
-      queryClient.removeQueries({
-        queryKey: districtKeys.detail('district', districtId),
-      })
-
-      return { previousDistrictsList, previousDistrictDetail }
-    },
-
-    onSuccess: () => {
-      // The whole slice: lists, details and the selects that read the same data
-      queryClient.invalidateQueries({ queryKey: districtKeys.root() })
-      invalidateEndpoint(queryClient, API_ENDPOINTS.DISTRICTS)
-    },
-
-    onError: (_err, districtId, context) => {
-      // Restore detail cache if it existed
-      if (context?.previousDistrictDetail) {
-        queryClient.setQueryData(districtKeys.detail('district', districtId), context.previousDistrictDetail)
-      }
-
-      // Restore list cache
-      if (context?.previousDistrictsList) {
-        queryClient.setQueryData(districtKeys.list('district'), context.previousDistrictsList)
-      }
-    },
-  })
-}
+export const useDeleteDistrict = () =>
+  useSliceMutation(districtAPI.deleteDistrict, districtKeys.root(), [API_ENDPOINTS.DISTRICTS])

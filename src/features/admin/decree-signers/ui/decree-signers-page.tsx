@@ -4,8 +4,9 @@ import { Button } from '@/shared/components/ui/button'
 import { Plus, Trash2 } from 'lucide-react'
 import { DataTable } from '@/shared/components/common/data-table/data-table'
 import { useCustomSearchParams } from '@/shared/hooks'
+import { paramOneOf } from '@/shared/lib/url-params'
 import { ColumnDef } from '@tanstack/react-table'
-import { DecreeSigner } from '@/entities/admin/decree-signers/model/types'
+import type { DecreeBelongType, DecreeSigner } from '@/entities/admin/decree-signers/model/types'
 import { useDecreeSigners } from '@/entities/admin/decree-signers/api/queries'
 import { useDeleteDecreeSigner } from '@/entities/admin/decree-signers/api/mutations'
 import { AddDecreeSignerModal } from './add-decree-signer-modal'
@@ -23,21 +24,20 @@ import {
 const DecreeSignersPage = () => {
   const [modalOpen, setModalOpen] = useState(false)
   const { paramsObject, addParams } = useCustomSearchParams()
-  const { page = 1, size = 10, tab = 'IRS_XRAY' } = paramsObject
+  const { page = 1, size = 10 } = paramsObject
+  const tab = paramOneOf(paramsObject.tab, ['IRS_XRAY', 'OTHER', 'DECLARATION'], 'IRS_XRAY')
 
-  // Hozirda backend declaration uchun alohida tipga ega emas, shuning uchun OTHER ishlatiladi
-  // Ammo kelajakda API o‘zgarsa, bu yerni to‘g‘irlash oson bo‘ladi
-  const queryBelongType: any = tab === 'DECLARATION' ? 'OTHER' : tab
+  // The backend has no separate kind for declarations yet; they are signed by the OTHER signers
+  const belongType: DecreeBelongType = tab === 'DECLARATION' ? 'OTHER' : tab
 
   const { data: signersData, isLoading } = useDecreeSigners({
-    belongType: queryBelongType,
+    belongType,
     page: Number(page),
     size: Number(size),
   })
 
-  // Delete logic
   const { mutate: deleteSigner } = useDeleteDecreeSigner()
-  const [deleteId, setDeleteId] = useState<string | null>(null)
+  const [deleteId, setDeleteId] = useState<number | null>(null)
 
   const columns: ColumnDef<DecreeSigner>[] = [
     {
@@ -81,7 +81,7 @@ const DecreeSignersPage = () => {
   return (
     <div className="flex h-full flex-col gap-2 overflow-hidden">
       <Tabs
-        value={tab as string}
+        value={tab}
         onValueChange={(val) => addParams({ tab: val })}
         className="flex w-full flex-1 flex-col overflow-hidden"
       >

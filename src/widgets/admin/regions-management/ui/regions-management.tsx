@@ -12,11 +12,7 @@ const RegionsManagement = () => {
 
   return (
     <div className="flex h-full flex-col gap-2 overflow-hidden">
-      <Tabs
-        className="flex flex-1 flex-col overflow-hidden"
-        defaultValue={activeTab}
-        onValueChange={(value: any) => handleChangeTab(value)}
-      >
+      <Tabs className="flex flex-1 flex-col overflow-hidden" defaultValue={activeTab} onValueChange={handleChangeTab}>
         <div className="flex items-center justify-between">
           <TabsList className="w-max">
             <TabsTrigger value="regions">{t('regions')}</TabsTrigger>

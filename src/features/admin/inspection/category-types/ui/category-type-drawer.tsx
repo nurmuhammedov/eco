@@ -30,7 +30,7 @@ export const CategoryTypeDrawer = () => {
       onSubmit={form.handleSubmit(onSubmit)}
     >
       {mode === UIModeEnum.VIEW ? (
-        <CategoryTypeView data={categoryTypeData as any} />
+        <CategoryTypeView data={categoryTypeData} />
       ) : (
         <Form {...form}>
           <div className="space-y-4">
@@ -39,7 +39,7 @@ export const CategoryTypeDrawer = () => {
             ) : (
               <Fragment>
                 <FormField
-                  name="category"
+                  name="type"
                   control={form.control}
                   render={({ field }) => (
                     <FormItem>
@@ -65,7 +65,7 @@ export const CategoryTypeDrawer = () => {
                   )}
                 />
                 <FormField
-                  name="type"
+                  name="name"
                   control={form.control}
                   render={({ field }) => (
                     <FormItem>

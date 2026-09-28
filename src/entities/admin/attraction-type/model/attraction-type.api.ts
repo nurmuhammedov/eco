@@ -1,11 +1,12 @@
 import { apiClient } from '@/shared/api/api-client'
+import type { RequestParams } from '@/shared/api/create-api-client'
 import { ApiResponse } from '@/shared/types'
 import { AttractionTypeResponse, CreateAttractionTypeDTO, UpdateAttractionTypeDTO } from './attraction-type.types'
 
 const API_ENDPOINT = '/child-equipment-sorts'
 
 export const attractionTypeAPI = {
-  getAll: (params: any) => apiClient.getWithPagination<AttractionTypeResponse>(API_ENDPOINT, params),
+  getAll: (params: RequestParams) => apiClient.getWithPagination<AttractionTypeResponse>(API_ENDPOINT, params),
   getById: (id: number) =>
     apiClient.get<
       ApiResponse<{

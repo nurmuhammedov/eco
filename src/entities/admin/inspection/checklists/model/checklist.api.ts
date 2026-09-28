@@ -12,15 +12,14 @@ export const inspectionChecklistAPI = {
     const { data } = await apiClient.get<ApiResponse<ChecklistResponse>>(`${API_ENDPOINTS.INSPECTION_CHECKLISTS}/${id}`)
     return data.data
   },
-  fetchCategoryTypeSelect: async () => {
-    const { data } = await apiClient.get<ApiResponse<any>>(`${API_ENDPOINTS.INSPECTION_CATEGORY_TYPES}/select`)
-    return data.data
-  },
   createChecklist: async (dto: CreateChecklistDTO) => {
-    return await apiClient.post<ChecklistResponse, CreateChecklistDTO>(API_ENDPOINTS.INSPECTION_CHECKLISTS, dto)
+    return await apiClient.post<unknown, CreateChecklistDTO>(API_ENDPOINTS.INSPECTION_CHECKLISTS, dto)
   },
-  updateChecklist: async (dto: UpdateChecklistDTO) => {
-    const response = await apiClient.put<UpdateChecklistDTO>(`${API_ENDPOINTS.INSPECTION_CHECKLISTS}/${dto.id}`, dto)
+  updateChecklist: async ({ id, ...dto }: UpdateChecklistDTO) => {
+    const response = await apiClient.put<unknown, CreateChecklistDTO>(
+      `${API_ENDPOINTS.INSPECTION_CHECKLISTS}/${id}`,
+      dto
+    )
     if (!response.success) throw new Error(response.message)
     return response
   },

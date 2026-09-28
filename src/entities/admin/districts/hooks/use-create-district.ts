@@ -1,59 +1,7 @@
-import { API_ENDPOINTS } from '@/shared/api/endpoints'
-import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
-import type { ResponseData } from '@/shared/types/api'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { CreateDistrictDTO, DistrictResponse } from '../model/district.types'
 import { districtAPI } from '../model/district.api'
 import { districtKeys } from '../model/district.query-keys'
+import { API_ENDPOINTS } from '@/shared/api/endpoints'
+import { useSliceMutation } from '@/shared/lib/query/use-slice-mutation'
 
-export const useCreateDistrict = () => {
-  const queryClient = useQueryClient()
-
-  return useMutation({
-    mutationFn: districtAPI.createDistrict,
-
-    onMutate: async (newDistrictData: CreateDistrictDTO) => {
-      // Cancel in-flight queries
-      await queryClient.cancelQueries({
-        queryKey: districtKeys.list('district'),
-      })
-
-      // Capture current state for rollback
-      const previousDistrictsList = queryClient.getQueryData<ResponseData<DistrictResponse>>(
-        districtKeys.list('district')
-      )
-
-      if (previousDistrictsList) {
-        // Create a temporary district with fake ID
-        const temporaryRegion: CreateDistrictDTO & { id: number } = {
-          ...newDistrictData,
-          id: -Date.now(), // Temporary negative ID to identify new items
-        }
-
-        // Add to the list
-        queryClient.setQueryData(districtKeys.list('district'), {
-          ...previousDistrictsList,
-          content: [...previousDistrictsList.content, temporaryRegion],
-        })
-      }
-
-      return { previousDistrictsList }
-    },
-
-    onSuccess: (createdDistrict) => {
-      // The whole slice: lists, details and the selects that read the same data
-      queryClient.invalidateQueries({ queryKey: districtKeys.root() })
-      invalidateEndpoint(queryClient, API_ENDPOINTS.DISTRICTS)
-
-      // Add the newly created district to cache
-      queryClient.setQueryData(districtKeys.detail('district', createdDistrict.data.id!), createdDistrict)
-    },
-
-    onError: (_err, _newDistrict, context) => {
-      // Revert optimistic updates on error
-      if (context?.previousDistrictsList) {
-        queryClient.setQueryData(districtKeys.list('district'), context.previousDistrictsList)
-      }
-    },
-  })
-}
+export const useCreateDistrict = () =>
+  useSliceMutation(districtAPI.createDistrict, districtKeys.root(), [API_ENDPOINTS.DISTRICTS])

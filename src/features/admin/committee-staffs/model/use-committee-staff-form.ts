@@ -1,25 +1,25 @@
 import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { UseQueryResult } from '@tanstack/react-query'
 import { UserRoles } from '@/shared/types/user'
 import { useCallback, useEffect, useMemo } from 'react'
 import { useTranslatedObject } from '@/shared/hooks'
 import { getSelectOptions } from '@/shared/lib/get-select-options'
 import { useDepartmentSelectQuery } from '@/shared/api/dictionaries'
 import { useCommitteeStaffsDrawer } from '@/shared/hooks/entity-hooks'
+import { zodFormResolver } from '@/shared/lib/zod-form-resolver'
+import type { z } from 'zod'
 
 import {
-  CommitteeStaffResponse,
+  type CommitteeStaffPayload,
   useCommitteeStaffQuery,
   useCreateCommitteeStaff,
   useUpdateCommitteeStaff,
 } from '@/entities/admin/committee-staffs'
 import {
-  type CreateCommitteeStaffDTO,
-  schemas,
-  type UpdateCommitteeStaffDTO,
+  type CommitteeStaffFormValues,
+  committeeStaffSchema,
 } from '@/entities/admin/committee-staffs/model/committee-staffs.schema'
-import { format, parseISO } from 'date-fns'
+
+type CommitteeStaffValues = z.output<typeof committeeStaffSchema>
 
 const PERMISSIONS = {
   HF: 'HF',
@@ -45,7 +45,7 @@ const PERMISSIONS = {
   KPI: 'KPI',
 }
 
-const DEFAULT_FORM_VALUES: Partial<CreateCommitteeStaffDTO> = {
+const DEFAULT_FORM_VALUES: CommitteeStaffFormValues = {
   pin: '',
   fullName: '',
   position: '',
@@ -72,82 +72,52 @@ export function useCommitteeStaffForm() {
   const departmentOptions = useMemo(() => getSelectOptions(departmentSelect || []), [departmentSelect])
   const committeeStaffId = useMemo(() => (data?.id ? data?.id : ''), [data])
 
-  const form = useForm<CreateCommitteeStaffDTO>({
-    resolver: zodResolver(isCreate ? schemas.create : (schemas.update as any)),
-    defaultValues: DEFAULT_FORM_VALUES as CreateCommitteeStaffDTO,
+  const form = useForm<CommitteeStaffFormValues, unknown, CommitteeStaffValues>({
+    resolver: zodFormResolver<CommitteeStaffFormValues, CommitteeStaffValues>(committeeStaffSchema),
+    defaultValues: DEFAULT_FORM_VALUES,
     mode: 'onChange',
   })
 
-  const { mutateAsync: createCommitteeStaff, isPending: isCreating } = useCreateCommitteeStaff()
-  const { mutateAsync: updateCommitteeStaff, isPending: isUpdating } = useUpdateCommitteeStaff()
+  const { mutate: createCommitteeStaff, isPending: isCreating } = useCreateCommitteeStaff()
+  const { mutate: updateCommitteeStaff, isPending: isUpdating } = useUpdateCommitteeStaff()
 
-  const { data: fetchByIdData, isLoading } = useCommitteeStaffQuery(
-    committeeStaffId
-  ) as UseQueryResult<CommitteeStaffResponse>
+  const { data: fetchByIdData, isLoading } = useCommitteeStaffQuery(committeeStaffId)
+
+  // The detail names the department by id only; the select knows its name
+  const departmentName = departmentSelect?.find((department) => department.id === fetchByIdData?.departmentId)?.name
 
   useEffect(() => {
     if (fetchByIdData && !isCreate) {
-      const valuesToReset = {
-        pin: fetchByIdData.pin,
-        role: fetchByIdData.role,
-        fullName: fetchByIdData.fullName,
-        position: fetchByIdData.position,
-        phoneNumber: fetchByIdData.phoneNumber,
-        departmentId: String(fetchByIdData.departmentId),
-        directions: Array.isArray(fetchByIdData.directions) ? fetchByIdData.directions : [],
-        birthDate: fetchByIdData.birthDate ? parseISO(fetchByIdData.birthDate as any) : undefined,
-      }
-
-      form.reset(valuesToReset as any)
+      form.reset({
+        pin: fetchByIdData.pin?.toString() ?? '',
+        role: fetchByIdData.role ?? UserRoles.HEAD,
+        fullName: fetchByIdData.fullName ?? '',
+        position: fetchByIdData.position ?? '',
+        phoneNumber: fetchByIdData.phoneNumber ?? '',
+        departmentId: fetchByIdData.departmentId?.toString() ?? '',
+        directions: fetchByIdData.directions ?? [],
+      })
     }
   }, [fetchByIdData, isCreate, form])
 
   const handleClose = useCallback(() => {
-    form.reset(DEFAULT_FORM_VALUES as any)
+    form.reset(DEFAULT_FORM_VALUES)
     onClose()
   }, [form, onClose])
 
   const handleSubmit = useCallback(
-    async (formData: CreateCommitteeStaffDTO | UpdateCommitteeStaffDTO): Promise<boolean> => {
-      try {
-        if (isCreate) {
-          const createData = formData as CreateCommitteeStaffDTO
-          const dataToSend = {
-            ...createData,
-            birthDate: format(createData.birthDate, 'yyyy-MM-dd'),
-          }
-          const response = await createCommitteeStaff(dataToSend as any)
-          if (response.success) handleClose()
-        } else {
-          const updateData = formData as UpdateCommitteeStaffDTO
-
-          const formattedBirthDate =
-            updateData.birthDate instanceof Date ? format(updateData.birthDate, 'yyyy-MM-dd') : undefined
-
-          const directions = Array.isArray(updateData.directions) ? updateData.directions : []
-
-          const dataToSend = {
-            ...updateData,
-            birthDate: formattedBirthDate,
-            directions,
-          }
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          const { id, ...restOfData } = dataToSend
-
-          const payload = {
-            ...restOfData,
-            id: committeeStaffId,
-            birthDate: updateData.birthDate,
-          }
-
-          const response = await updateCommitteeStaff(payload as any)
-          if (response.success) handleClose()
-        }
-        return true
-      } catch (error) {
-        console.error('[useCommitteeStaffForm] Submission error:', error)
-        return false
+    ({ pin, departmentId, fullName, position, role, directions, phoneNumber }: CommitteeStaffValues) => {
+      const staff: CommitteeStaffPayload = {
+        pin: Number(pin),
+        departmentId: Number(departmentId),
+        fullName,
+        position,
+        role,
+        directions,
+        phoneNumber,
       }
+      if (isCreate) createCommitteeStaff(staff, { onSuccess: handleClose })
+      else updateCommitteeStaff({ ...staff, id: committeeStaffId }, { onSuccess: handleClose })
     },
     [isCreate, committeeStaffId, createCommitteeStaff, updateCommitteeStaff, handleClose]
   )
@@ -159,6 +129,7 @@ export function useCommitteeStaffForm() {
     isCreate,
     isPending,
     fetchByIdData,
+    departmentName,
     userRoleOptions,
     departmentOptions,
     userPermissionOptions,

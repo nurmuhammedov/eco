@@ -13,11 +13,6 @@ export const equipmentAPI = {
     const { data } = await apiClient.get<ApiResponse<EquipmentResponse>>(`${API_ENDPOINTS.CHILD_EQUIPMENTS}/${id}`)
     return data.data
   },
-  list: async () => {
-    const { data } = await apiClient.get<ApiResponse<any>>(`${API_ENDPOINTS.REGIONS_SELECT}`)
-
-    return data.data
-  },
   create: async (district: CreateEquipmentDTO) => {
     return await apiClient.post<EquipmentResponse, CreateEquipmentDTO>(API_ENDPOINTS.CHILD_EQUIPMENTS, district)
   },

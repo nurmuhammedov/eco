@@ -2,12 +2,12 @@ import { Description } from '@/shared/components/common/description'
 import { CategoryType, Checklist, useDeleteChecklist } from '@/entities/admin/inspection'
 import { inspectionCategoryOptions } from '@/entities/admin/inspection/shared/static-options/inspection-category-options'
 import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table'
-import { ColumnDef } from '@tanstack/react-table'
+import type { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
 import { useChecklistDrawer } from '@/shared/hooks/entity-hooks'
 import { UIModeEnum } from '@/shared/types'
 
 interface CategoryTypeViewProps {
-  data: CategoryType | null
+  data?: CategoryType | null
   checklistsData?: Checklist[]
   isChecklistsLoading?: boolean
 }
@@ -23,14 +23,14 @@ export const CategoryTypeView = ({ data, checklistsData = [], isChecklistsLoadin
   const onEdit = (id: number) => onOpen(UIModeEnum.EDIT, { id })
   const onDelete = (id: number) => deleteItem.mutate(id)
 
-  const columns: ColumnDef<Checklist>[] = [
+  const columns: ExtendedColumnDef<Checklist>[] = [
     {
       accessorKey: 'orderNumber',
       header: 'Navbat raqami',
       size: 100,
       className: 'text-center',
       headerClassName: 'text-center',
-    } as any,
+    },
     { accessorKey: 'question', header: 'Savol' },
     { accessorKey: 'negative', header: 'Yo‘q belgilanganda matn' },
     { accessorKey: 'corrective', header: 'Chora-tadbir matni' },
@@ -41,8 +41,8 @@ export const CategoryTypeView = ({ data, checklistsData = [], isChecklistsLoadin
           showEdit
           showDelete
           row={row}
-          onEdit={(row) => onEdit(row.original.id!)}
-          onDelete={(row) => onDelete(row.original.id!)}
+          onEdit={(row) => onEdit(row.original.id)}
+          onDelete={(row) => onDelete(row.original.id)}
         />
       ),
     },

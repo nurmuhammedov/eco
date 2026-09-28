@@ -1,3 +1,5 @@
+import type { SearchParamValue } from '@/shared/types/api'
+
 export interface Park {
   id: number
   name: string
@@ -21,11 +23,10 @@ export interface UpdateParkDTO extends CreateParkDTO {
   id: number
 }
 
-export interface FilterParkDTO {
-  [key: string]: any
+export type FilterParkDTO = {
   name?: string
   regionId?: number
   districtId?: number
   page?: number
   size?: number
-}
+} & Record<string, SearchParamValue>

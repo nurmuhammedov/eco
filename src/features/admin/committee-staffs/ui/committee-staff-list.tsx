@@ -56,7 +56,7 @@ export function CommitteeStaffList() {
       minSize: 100,
       accessorKey: 'enabled',
       header: t('status'),
-      cell: ({ row }) => getUserStatusDisplay(row.original.enabled, t),
+      cell: ({ row }) => getUserStatusDisplay(!!row.original.enabled, t),
     },
     {
       minSize: 180,

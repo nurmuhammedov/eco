@@ -4,16 +4,15 @@ import { useCallback, useEffect, useMemo } from 'react'
 import { useCategoryTypeDrawer } from '@/shared/hooks/entity-hooks'
 import {
   categoryTypeSchema,
-  CreateCategoryTypeDTO,
-  UpdateCategoryTypeDTO,
+  type CreateCategoryTypeDTO,
   useCategoryTypeQuery,
   useCreateCategoryType,
   useUpdateCategoryType,
-} from '@/entities/admin/inspection/'
+} from '@/entities/admin/inspection'
 
 const DEFAULT_VALUES: CreateCategoryTypeDTO = {
-  category: '',
   type: '',
+  name: '',
 }
 
 export function useCategoryTypeForm() {
@@ -26,15 +25,15 @@ export function useCategoryTypeForm() {
     mode: 'onChange',
   })
 
-  const { mutateAsync: createItem, isPending: isCreating } = useCreateCategoryType()
-  const { mutateAsync: updateItem, isPending: isUpdating } = useUpdateCategoryType()
+  const { mutate: createItem, isPending: isCreating } = useCreateCategoryType()
+  const { mutate: updateItem, isPending: isUpdating } = useUpdateCategoryType()
   const { data: categoryTypeData, isLoading } = useCategoryTypeQuery(categoryTypeId)
 
   useEffect(() => {
     if (categoryTypeData && !isCreate) {
       form.reset({
-        category: categoryTypeData?.type,
-        type: categoryTypeData?.name,
+        type: categoryTypeData.type ?? '',
+        name: categoryTypeData.name ?? '',
       })
     }
   }, [categoryTypeData, isCreate, form])
@@ -45,25 +44,9 @@ export function useCategoryTypeForm() {
   }, [form, onClose])
 
   const handleSubmit = useCallback(
-    async (formData: any): Promise<boolean> => {
-      try {
-        const response = isCreate
-          ? await createItem({ type: formData?.category, name: formData?.type } as unknown as CreateCategoryTypeDTO)
-          : await updateItem({
-              id: categoryTypeId,
-              type: formData?.category,
-              name: formData?.type,
-            } as UpdateCategoryTypeDTO)
-
-        if (response.success) {
-          handleClose()
-          return true
-        }
-        return false
-      } catch (error) {
-        console.error('[useCategoryTypeForm] Submission error:', error)
-        return false
-      }
+    (values: CreateCategoryTypeDTO) => {
+      if (isCreate) createItem(values, { onSuccess: handleClose })
+      else updateItem({ ...values, id: categoryTypeId }, { onSuccess: handleClose })
     },
     [isCreate, categoryTypeId, createItem, updateItem, handleClose]
   )

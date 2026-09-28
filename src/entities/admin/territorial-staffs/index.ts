@@ -1,7 +1,7 @@
 export * from './model/territorial-staffs.api'
 export * from './model/territorial-staffs.types'
 export * from './hooks/use-territorial-staffs-query'
-export { territorialStaffSchema, schemas } from './model/territorial-staffs.schema'
+export { territorialStaffSchema, type TerritorialStaffFormValues } from './model/territorial-staffs.schema'
 export { territorialStaffKeys } from './model/territorial-staffs.query-keys'
 export { useCreateTerritorialStaff } from './hooks/use-create-territorial-staffs'
 export { useUpdateTerritorialStaff } from './hooks/use-update-territorial-staffs'

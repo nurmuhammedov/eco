@@ -1,59 +1,7 @@
-import { API_ENDPOINTS } from '@/shared/api/endpoints'
-import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
-import type { ResponseData } from '@/shared/types/api'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { centralApparatusAPI } from '../model/central-apparatus.api'
 import { centralApparatusKeys } from '../model/central-apparatus.query-keys'
-import { CentralApparatusResponse, CreateCentralApparatusDTO } from '../model/central-apparatus.types'
+import { API_ENDPOINTS } from '@/shared/api/endpoints'
+import { useSliceMutation } from '@/shared/lib/query/use-slice-mutation'
 
-export const useCreateCentralApparatus = () => {
-  const queryClient = useQueryClient()
-
-  return useMutation({
-    mutationFn: centralApparatusAPI.create,
-
-    onMutate: async (newData: CreateCentralApparatusDTO) => {
-      // Cancel in-flight queries
-      await queryClient.cancelQueries({
-        queryKey: centralApparatusKeys.list('central-apparatus'),
-      })
-
-      // Capture current state for rollback
-      const previousList = queryClient.getQueryData<ResponseData<CentralApparatusResponse>>(
-        centralApparatusKeys.list('central-apparatus')
-      )
-
-      if (previousList) {
-        // Create a temporary central-apparatus with fake ID
-        const temporaryData: CreateCentralApparatusDTO & { id: number } = {
-          ...newData,
-          id: -Date.now(), // Temporary negative ID to identify new items
-        }
-
-        // Add to the list
-        queryClient.setQueryData(centralApparatusKeys.list('central-apparatus'), {
-          ...previousList,
-          content: [...previousList.content, temporaryData],
-        })
-      }
-
-      return { previousList }
-    },
-
-    onSuccess: (createdData) => {
-      // The whole slice: lists, details and the selects that read the same data
-      queryClient.invalidateQueries({ queryKey: centralApparatusKeys.root() })
-      invalidateEndpoint(queryClient, API_ENDPOINTS.DEPARTMENTS)
-
-      // Add the newly created central-apparatus to cache
-      queryClient.setQueryData(centralApparatusKeys.detail('central-apparatus', createdData.data.id!), createdData)
-    },
-
-    onError: (_err, _newData, context) => {
-      // Revert optimistic updates on error
-      if (context?.previousList) {
-        queryClient.setQueryData(centralApparatusKeys.list('central-apparatus'), context.previousList)
-      }
-    },
-  })
-}
+export const useCreateCentralApparatus = () =>
+  useSliceMutation(centralApparatusAPI.create, centralApparatusKeys.root(), [API_ENDPOINTS.DEPARTMENTS])

@@ -6,8 +6,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { useCreateDecreeSigner } from '@/entities/admin/decree-signers/api/mutations'
-import { apiClient } from '@/shared/api/api-client'
-import { useQuery } from '@tanstack/react-query'
+import { useData } from '@/shared/hooks'
+import type { OptionItem } from '@/shared/types/general'
 
 const schema = z.object({
   userId: z.string(),
@@ -25,28 +25,18 @@ export const AddDecreeSignerModal = ({ open, onOpenChange }: AddDecreeSignerModa
     form.reset()
   })
 
-  // Foydalanuvchilarni olish
-  const { data: users, isLoading: isUsersLoading } = useQuery({
-    queryKey: ['committee-users-select'],
-    queryFn: async () => {
-      const response = await apiClient.get<{ data: any[] }>('/users/committee-users/select')
-      return response.data?.data || []
-    },
-    enabled: open,
-  })
+  const { data: users, isLoading: isUsersLoading } = useData<OptionItem<string>[]>(
+    '/users/committee-users/select',
+    open
+  )
 
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
   })
 
-  const onSubmit = (values: z.infer<typeof schema>) => {
-    const payload = { ...values }
-    // Backend hozircha DECLARATION ni qabul qilmaydi, shuning uchun OTHER ga o‘giramiz
-    if (payload.belongType === 'DECLARATION') {
-      payload.belongType = 'OTHER'
-    }
-    createSigner(payload as any)
-  }
+  // The backend has no separate kind for declarations yet; their signers are OTHER signers
+  const onSubmit = ({ userId, belongType }: z.infer<typeof schema>) =>
+    createSigner({ userId, belongType: belongType === 'DECLARATION' ? 'OTHER' : belongType })
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -69,7 +59,7 @@ export const AddDecreeSignerModal = ({ open, onOpenChange }: AddDecreeSignerModa
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {users?.map((user: any) => (
+                      {users?.map((user) => (
                         <SelectItem key={user.id} value={user.id}>
                           {user.name}
                         </SelectItem>

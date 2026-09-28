@@ -1,9 +1,10 @@
 import { useQuery } from '@tanstack/react-query'
 import { attractionTypeAPI } from '../model/attraction-type.api'
+import type { RequestParams } from '@/shared/api/create-api-client'
 
 const ATTRACTION_TYPE_QUERY_KEY = 'attraction-type'
 
-export const useAttractionTypeList = (params: any) => {
+export const useAttractionTypeList = (params: RequestParams) => {
   return useQuery({
     queryKey: [ATTRACTION_TYPE_QUERY_KEY, 'list', params],
     queryFn: () => attractionTypeAPI.getAll(params),

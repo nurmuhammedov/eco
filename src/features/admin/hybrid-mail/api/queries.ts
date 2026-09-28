@@ -1,9 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { apiClient } from '@/shared/api/api-client'
+import type { ApiResponse } from '@/shared/types/api'
 import { toast } from 'sonner'
 
 const QUERY_KEY = ['hybrid-mail-status']
 
+/** MailSwitchDto: whether letters go out through the hybrid mail service */
 interface HybridMailStatus {
   status: boolean
 }
@@ -12,7 +14,7 @@ export const useGetHybridMailStatus = () => {
   return useQuery({
     queryKey: QUERY_KEY,
     queryFn: async () => {
-      const response = await apiClient.get<any>('/mail-switch')
+      const response = await apiClient.get<ApiResponse<HybridMailStatus>>('/mail-switch')
       return response.data.data
     },
   })
@@ -28,17 +30,13 @@ export const useUpdateHybridMailStatus = () => {
     },
     onMutate: async (newData) => {
       await queryClient.cancelQueries({ queryKey: QUERY_KEY })
-      const previousStatus = queryClient.getQueryData(QUERY_KEY)
-      queryClient.setQueryData(QUERY_KEY, (old: any) => ({ ...old, status: newData.status }))
+      const previousStatus = queryClient.getQueryData<HybridMailStatus>(QUERY_KEY)
+      queryClient.setQueryData<HybridMailStatus>(QUERY_KEY, { status: newData.status })
       return { previousStatus }
     },
-    onError: (_err, _newTodo, context: any) => {
-      queryClient.setQueryData(QUERY_KEY, context?.previousStatus)
-      toast.error('Xatolik yuz berdi')
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: QUERY_KEY })
-    },
+    // The request has already shown its error toast; only the switch goes back
+    onError: (_error, _status, context) => queryClient.setQueryData(QUERY_KEY, context?.previousStatus),
+    onSettled: () => queryClient.invalidateQueries({ queryKey: QUERY_KEY }),
     onSuccess: () => {
       toast.success('Muvaffaqiyatli saqlandi')
     },

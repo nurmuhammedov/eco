@@ -25,7 +25,7 @@ export default function CategoryTypeViewPage() {
   const handleAddChecklist = () => {
     onOpen(UIModeEnum.CREATE, {
       categoryTypeId: categoryType?.id,
-      category: categoryType?.type,
+      category: categoryType?.type ?? undefined,
       orderNumber: (maxOrderNumber + 1).toString(),
     })
   }

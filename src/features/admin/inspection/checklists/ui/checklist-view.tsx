@@ -2,16 +2,16 @@ import { Description } from '@/shared/components/common/description'
 import { Checklist } from '@/entities/admin/inspection'
 import { inspectionCategoryOptions } from '@/entities/admin/inspection/shared/static-options/inspection-category-options'
 
-export const ChecklistView = ({ data }: { data: Checklist | null }) => {
+export const ChecklistView = ({ data }: { data?: Checklist | null }) => {
   if (!data) return null
 
   return (
     <Description>
       <Description.Item key="category" label="Kategoriya">
-        {inspectionCategoryOptions?.find((i) => i?.id == data?.category)?.name || ''}
+        {inspectionCategoryOptions.find((option) => option.id === data.category)?.name || ''}
       </Description.Item>
-      <Description.Item key="categoryTypeName" label="Tekshiruv turi">
-        {data?.categoryTypeName}
+      <Description.Item key="categoryName" label="Tekshiruv turi">
+        {data.categoryName}
       </Description.Item>
       <Description.Item key="orderNumber" label="Navbat raqami">
         {data?.orderNumber}

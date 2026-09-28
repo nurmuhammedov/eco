@@ -1,13 +1,16 @@
 import { ApiResponse } from '@/shared/types/api'
 import { API_ENDPOINTS } from '@/shared/api'
 import { apiClient } from '@/shared/api/api-client'
-import { CommitteeStaffResponse, type FilterCommitteeStaffDTO } from './committee-staffs.types'
-
-import type { CreateCommitteeStaffDTO, UpdateCommitteeStaffDTO } from './committee-staffs.schema'
+import type {
+  CommitteeStaffPayload,
+  CommitteeStaffResponse,
+  CommitteeStaffTableItem,
+  FilterCommitteeStaffDTO,
+} from './committee-staffs.types'
 
 export const committeeStaffAPI = {
   list: async (params: FilterCommitteeStaffDTO) => {
-    const { data } = await apiClient.getWithPagination<CommitteeStaffResponse>(API_ENDPOINTS.COMMITTEE_USERS, params)
+    const { data } = await apiClient.getWithPagination<CommitteeStaffTableItem>(API_ENDPOINTS.COMMITTEE_USERS, params)
     return data || []
   },
 
@@ -15,16 +18,13 @@ export const committeeStaffAPI = {
     const { data } = await apiClient.get<ApiResponse<CommitteeStaffResponse>>(`${API_ENDPOINTS.USERS}/${id}`)
     return data.data
   },
-  create: async (district: CreateCommitteeStaffDTO) => {
-    return await apiClient.post<CommitteeStaffResponse, CreateCommitteeStaffDTO>(
-      API_ENDPOINTS.COMMITTEE_USERS,
-      district
-    )
+  create: async (staff: CommitteeStaffPayload) => {
+    return await apiClient.post<unknown, CommitteeStaffPayload>(API_ENDPOINTS.COMMITTEE_USERS, staff)
   },
-  update: async (district: UpdateCommitteeStaffDTO) => {
-    const response = await apiClient.put<UpdateCommitteeStaffDTO>(
-      `${API_ENDPOINTS.COMMITTEE_USERS}/${district.id}`,
-      district
+  update: async ({ id, ...staff }: CommitteeStaffPayload & { id: string }) => {
+    const response = await apiClient.put<unknown, CommitteeStaffPayload>(
+      `${API_ENDPOINTS.COMMITTEE_USERS}/${id}`,
+      staff
     )
 
     if (!response.success) {

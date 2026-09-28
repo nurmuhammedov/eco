@@ -16,8 +16,7 @@ import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/comp
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
 import { Button } from '@/shared/components/ui/button'
 import DatePicker from '@/shared/components/ui/datepicker'
-import { apiClient } from '@/shared/api/api-client'
-import { format } from 'date-fns'
+import { lookupCitizen } from '@/shared/api/citizen-lookup'
 
 export const CommitteeStaffDrawer = () => {
   const { t } = useTranslation('common')
@@ -31,6 +30,7 @@ export const CommitteeStaffDrawer = () => {
     isPending,
     isFetching,
     fetchByIdData,
+    departmentName,
     userRoleOptions,
     departmentOptions,
     userPermissionOptions,
@@ -38,8 +38,15 @@ export const CommitteeStaffDrawer = () => {
 
   const roleOptions = getSelectOptions(userRoleOptions)
 
-  const pin = form.getValues('pin')
-  const birthDate = form.getValues('birthDate')
+  const [pin, birthDate] = form.watch(['pin', 'birthDate'])
+
+  const searchName = async () => {
+    if (!pin || !birthDate) return
+    setIsLoading(true)
+    const citizen = await lookupCitizen(pin, birthDate)
+    setIsLoading(false)
+    if (citizen?.fullName) form.setValue('fullName', citizen.fullName, { shouldValidate: true })
+  }
 
   return (
     <BaseDrawer
@@ -52,7 +59,7 @@ export const CommitteeStaffDrawer = () => {
       onSubmit={form.handleSubmit(onSubmit)}
     >
       {mode === UIModeEnum.VIEW ? (
-        <CommitteeStaffView data={fetchByIdData as any} />
+        <CommitteeStaffView data={fetchByIdData} departmentName={departmentName} />
       ) : (
         <Form {...form}>
           <div className="space-y-4">
@@ -96,25 +103,7 @@ export const CommitteeStaffDrawer = () => {
                     type="button"
                     disabled={!pin || !birthDate}
                     loading={isLoading}
-                    onClick={() => {
-                      if (pin && birthDate) {
-                        const d = format(birthDate, 'yyyy-MM-dd')
-                        setIsLoading(true)
-                        apiClient
-                          .post<{ data: { fullName: string } }>('/integration/iip/individual', {
-                            pin,
-                            birthDate: d,
-                          })
-                          .then((res) => {
-                            if (res?.data?.data?.fullName) {
-                              form.setValue('fullName', res?.data?.data?.fullName)
-                            }
-                          })
-                          .finally(() => {
-                            setIsLoading(false)
-                          })
-                      }
-                    }}
+                    onClick={() => void searchName()}
                   >
                     Qidirish
                   </Button>

@@ -16,8 +16,7 @@ import { Select, SelectContent, SelectTrigger, SelectValue } from '@/shared/comp
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
 import DatePicker from '@/shared/components/ui/datepicker'
 import { Button } from '@/shared/components/ui/button'
-import { format } from 'date-fns'
-import { apiClient } from '@/shared/api/api-client'
+import { lookupCitizen } from '@/shared/api/citizen-lookup'
 
 export const TerritorialStaffDrawer = () => {
   const { t } = useTranslation('common')
@@ -32,6 +31,7 @@ export const TerritorialStaffDrawer = () => {
     isPending,
     isFetching,
     fetchByIdData,
+    officeName,
     userRoleOptions,
     departmentOptions,
     userPermissionOptions,
@@ -39,8 +39,15 @@ export const TerritorialStaffDrawer = () => {
 
   const roleOptions = getSelectOptions(userRoleOptions)
 
-  const pin = form.getValues('pin')
-  const birthDate = form.getValues('birthDate')
+  const [pin, birthDate] = form.watch(['pin', 'birthDate'])
+
+  const searchName = async () => {
+    if (!pin || !birthDate) return
+    setIsLoading(true)
+    const citizen = await lookupCitizen(pin, birthDate)
+    setIsLoading(false)
+    if (citizen?.fullName) form.setValue('fullName', citizen.fullName, { shouldValidate: true })
+  }
 
   return (
     <BaseDrawer
@@ -53,7 +60,7 @@ export const TerritorialStaffDrawer = () => {
       onSubmit={form.handleSubmit(onSubmit)}
     >
       {mode === UIModeEnum.VIEW ? (
-        <TerritorialStaffView data={fetchByIdData as any} />
+        <TerritorialStaffView data={fetchByIdData} officeName={officeName} />
       ) : (
         <Form {...form}>
           <div className="space-y-4">
@@ -81,7 +88,7 @@ export const TerritorialStaffDrawer = () => {
                       <FormLabel required>Tug‘ilgan sana</FormLabel>
                       <FormControl>
                         <DatePicker
-                          value={field.value}
+                          value={field.value ?? undefined}
                           onChange={field.onChange}
                           disableStrategy="after"
                           placeholder="Sanani tanlang"
@@ -97,25 +104,7 @@ export const TerritorialStaffDrawer = () => {
                     type="button"
                     disabled={!pin || !birthDate}
                     loading={isLoading}
-                    onClick={() => {
-                      if (pin && birthDate) {
-                        const d = format(birthDate, 'yyyy-MM-dd')
-                        setIsLoading(true)
-                        apiClient
-                          .post<{ data: { fullName: string } }>('/integration/iip/individual', {
-                            pin,
-                            birthDate: d,
-                          })
-                          .then((res) => {
-                            if (res?.data?.data?.fullName) {
-                              form.setValue('fullName', res?.data?.data?.fullName)
-                            }
-                          })
-                          .finally(() => {
-                            setIsLoading(false)
-                          })
-                      }
-                    }}
+                    onClick={() => void searchName()}
                   >
                     Qidirish
                   </Button>

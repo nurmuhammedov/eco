@@ -4,8 +4,8 @@ import { useCallback, useEffect, useMemo } from 'react'
 import { useChecklistDrawer } from '@/shared/hooks/entity-hooks'
 import {
   checklistSchema,
-  CreateChecklistDTO,
-  UpdateChecklistDTO,
+  type ChecklistFormValues,
+  type CreateChecklistDTO,
   useChecklistQuery,
   useCreateChecklist,
   useUpdateChecklist,
@@ -14,7 +14,7 @@ import { useCategoryTypeSelectQuery } from '@/entities/admin/inspection/category
 import { useQueryClient } from '@tanstack/react-query'
 import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 
-const DEFAULT_VALUES: CreateChecklistDTO = {
+const DEFAULT_VALUES: ChecklistFormValues = {
   category: '',
   categoryTypeId: '',
   orderNumber: '',
@@ -27,7 +27,7 @@ export function useChecklistForm() {
   const { data, onClose, isCreate } = useChecklistDrawer()
   const checklistId = useMemo(() => (data?.id ? data.id : 0), [data])
 
-  const form = useForm<CreateChecklistDTO>({
+  const form = useForm<ChecklistFormValues>({
     resolver: zodResolver(checklistSchema),
     defaultValues: DEFAULT_VALUES,
     mode: 'onBlur',
@@ -35,20 +35,20 @@ export function useChecklistForm() {
 
   const queryClient = useQueryClient()
 
-  const { data: categoryTypes } = useCategoryTypeSelectQuery(form?.watch('category'))
-  const { mutateAsync: createItem, isPending: isCreating } = useCreateChecklist()
-  const { mutateAsync: updateItem, isPending: isUpdating } = useUpdateChecklist()
+  const { data: categoryTypes } = useCategoryTypeSelectQuery(form.watch('category'))
+  const { mutate: createItem, isPending: isCreating } = useCreateChecklist()
+  const { mutate: updateItem, isPending: isUpdating } = useUpdateChecklist()
   const { data: checklistData, isLoading } = useChecklistQuery(checklistId)
 
   useEffect(() => {
     if (checklistData && !isCreate) {
       form.reset({
-        categoryTypeId: checklistData.categoryTypeId?.toString(),
-        corrective: checklistData.corrective,
-        orderNumber: checklistData.orderNumber,
-        negative: checklistData.negative,
-        question: checklistData.question,
-        category: checklistData.category?.toString(),
+        categoryTypeId: checklistData.categoryId?.toString() ?? '',
+        corrective: checklistData.corrective ?? '',
+        orderNumber: checklistData.orderNumber?.toString() ?? '',
+        negative: checklistData.negative ?? '',
+        question: checklistData.question ?? '',
+        category: checklistData.category ?? '',
       })
     } else if (isCreate && data) {
       form.reset({
@@ -66,29 +66,22 @@ export function useChecklistForm() {
   }, [form, onClose])
 
   const handleSubmit = useCallback(
-    async (formData: CreateChecklistDTO): Promise<boolean> => {
-      try {
-        const payload = {
-          ...formData,
-          categoryId: Number(formData?.categoryTypeId) || undefined,
-        }
-
-        const response = isCreate
-          ? await createItem(payload as CreateChecklistDTO)
-          : await updateItem({ id: checklistId, ...payload } as UpdateChecklistDTO)
-
-        if (response.success) {
-          handleClose()
-          if (payload.categoryId) {
-            void invalidateEndpoint(queryClient, `/checklists/by-category/${payload.categoryId}`)
-          }
-          return true
-        }
-        return false
-      } catch (error) {
-        console.error('[useChecklistForm] Submission error:', error)
-        return false
+    ({ categoryTypeId, orderNumber, question, negative, corrective }: ChecklistFormValues) => {
+      const categoryId = Number(categoryTypeId)
+      const checklist: CreateChecklistDTO = {
+        categoryId,
+        orderNumber: Number(orderNumber),
+        question,
+        negative,
+        corrective,
       }
+      const onSuccess = () => {
+        handleClose()
+        void invalidateEndpoint(queryClient, `/checklists/by-category/${categoryId}`)
+      }
+
+      if (isCreate) createItem(checklist, { onSuccess })
+      else updateItem({ ...checklist, id: checklistId }, { onSuccess })
     },
     [isCreate, checklistId, createItem, updateItem, handleClose, queryClient]
   )

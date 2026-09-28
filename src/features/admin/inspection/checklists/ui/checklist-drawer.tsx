@@ -33,7 +33,7 @@ export const ChecklistDrawer = () => {
       onSubmit={form.handleSubmit(onSubmit)}
     >
       {mode === UIModeEnum.VIEW ? (
-        <ChecklistView data={checklistData as any} />
+        <ChecklistView data={checklistData} />
       ) : (
         <Form {...form}>
           <div className="space-y-4">

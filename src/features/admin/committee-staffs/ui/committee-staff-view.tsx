@@ -3,7 +3,13 @@ import { Description } from '@/shared/components/common/description'
 import { CommitteeStaffResponse } from '@/entities/admin/committee-staffs'
 import { formatPhoneNumber, getUserRoleDisplay, getUserStatusDisplay } from '@/shared/lib'
 
-export const CommitteeStaffView = ({ data }: { data: CommitteeStaffResponse | null }) => {
+export const CommitteeStaffView = ({
+  data,
+  departmentName,
+}: {
+  data?: CommitteeStaffResponse | null
+  departmentName?: string
+}) => {
   const { t } = useTranslation('common')
 
   if (!data) return null
@@ -26,7 +32,7 @@ export const CommitteeStaffView = ({ data }: { data: CommitteeStaffResponse | nu
         {data?.pin}
       </Description.Item>
       <Description.Item key="department" label={t('committee_division_department')}>
-        {data?.department}
+        {departmentName}
       </Description.Item>
       <Description.Item key="status" label={t('status')}>
         {getUserStatusDisplay(!!data?.enabled, t)}

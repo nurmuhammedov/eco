@@ -1,26 +1,8 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { parkAPI } from '../model/park.api'
 import { parkKeys } from '../model/park.query-keys'
+import { useSliceMutation } from '@/shared/lib/query/use-slice-mutation'
 
-export const useUpdatePark = () => {
-  const queryClient = useQueryClient()
+// The selects in the equipment forms read the same slice, so they refresh with the list
+export const useUpdatePark = () => useSliceMutation(parkAPI.updatePark, parkKeys.all)
 
-  return useMutation({
-    mutationFn: parkAPI.updatePark,
-    onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: parkKeys.lists() })
-      queryClient.invalidateQueries({ queryKey: parkKeys.detail(variables.id) })
-    },
-  })
-}
-
-export const useDeletePark = () => {
-  const queryClient = useQueryClient()
-
-  return useMutation({
-    mutationFn: parkAPI.deletePark,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: parkKeys.lists() })
-    },
-  })
-}
+export const useDeletePark = () => useSliceMutation(parkAPI.deletePark, parkKeys.all)

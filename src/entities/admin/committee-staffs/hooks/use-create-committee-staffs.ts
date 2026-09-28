@@ -1,57 +1,5 @@
-import type { ResponseData } from '@/shared/types/api'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { committeeStaffAPI } from '../model/committee-staffs.api'
 import { committeeStaffKeys } from '../model/committee-staffs.query-keys'
-import { CommitteeStaffResponse } from '../model/committee-staffs.types'
-import { CreateCommitteeStaffDTO } from '../model/committee-staffs.schema'
+import { useSliceMutation } from '@/shared/lib/query/use-slice-mutation'
 
-export const useCreateCommitteeStaff = () => {
-  const queryClient = useQueryClient()
-
-  return useMutation({
-    mutationFn: committeeStaffAPI.create,
-
-    onMutate: async (newData: CreateCommitteeStaffDTO) => {
-      // Cancel in-flight queries
-      await queryClient.cancelQueries({
-        queryKey: committeeStaffKeys.list('committee-staff'),
-      })
-
-      // Capture current state for rollback
-      const previousList = queryClient.getQueryData<ResponseData<CommitteeStaffResponse>>(
-        committeeStaffKeys.list('committee-staff')
-      )
-
-      if (previousList) {
-        // Create a temporary committee-staff with fake ID
-        const temporaryData: CreateCommitteeStaffDTO & { id: number } = {
-          ...newData,
-          id: -Date.now(), // Temporary negative ID to identify new items
-        }
-
-        // Add to the list
-        queryClient.setQueryData(committeeStaffKeys.list('committee-staff'), {
-          ...previousList,
-          content: [...previousList.content, temporaryData],
-        })
-      }
-
-      return { previousList }
-    },
-
-    onSuccess: (createdData) => {
-      // The whole slice: lists, details and the selects that read the same data
-      queryClient.invalidateQueries({ queryKey: committeeStaffKeys.root() })
-
-      // Add the newly created committee-staff to cache
-      queryClient.setQueryData(committeeStaffKeys.detail('committee-staff', createdData.data.id), createdData)
-    },
-
-    onError: (_err, _newData, context) => {
-      // Revert optimistic updates on error
-      if (context?.previousList) {
-        queryClient.setQueryData(committeeStaffKeys.list('committee-staff'), context.previousList)
-      }
-    },
-  })
-}
+export const useCreateCommitteeStaff = () => useSliceMutation(committeeStaffAPI.create, committeeStaffKeys.root())

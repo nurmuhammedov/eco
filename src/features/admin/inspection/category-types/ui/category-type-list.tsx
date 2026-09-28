@@ -35,9 +35,9 @@ export function CategoryTypeList() {
           showEdit
           showDelete
           row={row}
-          onEdit={(row) => onEdit(row.original.id!)}
-          onDelete={(row) => onDelete(row.original.id!)}
-          onView={(row) => onView(row.original.id!)}
+          onEdit={(row) => onEdit(row.original.id)}
+          onDelete={(row) => onDelete(row.original.id)}
+          onView={(row) => onView(row.original.id)}
         />
       ),
     },

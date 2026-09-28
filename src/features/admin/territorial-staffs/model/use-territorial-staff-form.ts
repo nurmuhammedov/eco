@@ -1,27 +1,29 @@
 import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
 import { Direction, UserRoles } from '@/shared/types/user'
 import { useCallback, useEffect, useMemo } from 'react'
 import { useTranslatedObject } from '@/shared/hooks'
 import { useOfficeSelectQuery } from '@/shared/api/dictionaries'
 import { getSelectOptions } from '@/shared/lib/get-select-options'
 import { useTerritorialStaffsDrawer } from '@/shared/hooks/entity-hooks'
+import { zodFormResolver } from '@/shared/lib/zod-form-resolver'
+import type { z } from 'zod'
 import {
-  CreateTerritorialStaffDTO,
-  schemas,
-  UpdateTerritorialStaffDTO,
+  type TerritorialStaffFormValues,
+  type TerritorialStaffPayload,
+  territorialStaffSchema,
   useCreateTerritorialStaff,
   useTerritorialStaffQuery,
   useUpdateTerritorialStaff,
 } from '@/entities/admin/territorial-staffs'
-import { parseISO } from 'date-fns'
 
-const DEFAULT_FORM_VALUES: CreateTerritorialStaffDTO = {
+type TerritorialStaffValues = z.output<typeof territorialStaffSchema>
+
+const DEFAULT_FORM_VALUES: TerritorialStaffFormValues = {
   pin: '',
   fullName: '',
   officeId: '',
   position: '',
-  birthDate: undefined as unknown as Date,
+  birthDate: undefined,
   directions: [],
   phoneNumber: '',
   role: UserRoles.REGIONAL,
@@ -46,39 +48,34 @@ export function useTerritorialStaffForm() {
 
   const territorialStaffId = useMemo(() => (data?.id ? data?.id : ''), [data])
 
-  const form = useForm<CreateTerritorialStaffDTO>({
-    resolver: zodResolver(isCreate ? schemas.create : (schemas.update as any)),
+  const form = useForm<TerritorialStaffFormValues, unknown, TerritorialStaffValues>({
+    resolver: zodFormResolver<TerritorialStaffFormValues, TerritorialStaffValues>(territorialStaffSchema),
     defaultValues: DEFAULT_FORM_VALUES,
     mode: 'onChange',
   })
 
-  const { mutateAsync: createTerritorialStaff, isPending: isCreating } = useCreateTerritorialStaff()
+  const { mutate: createTerritorialStaff, isPending: isCreating } = useCreateTerritorialStaff()
 
-  const { mutateAsync: updateTerritorialStaff, isPending: isUpdating } = useUpdateTerritorialStaff()
+  const { mutate: updateTerritorialStaff, isPending: isUpdating } = useUpdateTerritorialStaff()
 
   const { data: fetchByIdData, isLoading } = useTerritorialStaffQuery(territorialStaffId)
+
+  // The detail names the office by id only; the select knows its name
+  const officeName = officeSelect?.find((office) => office.id === fetchByIdData?.officeId)?.name
 
   useEffect(() => {
     if (fetchByIdData && !isCreate) {
       form.reset({
-        id: fetchByIdData.id,
-        pin: String(fetchByIdData.pin),
-        role: fetchByIdData.role,
-        fullName: fetchByIdData.fullName,
-        position: fetchByIdData.position,
-        directions: fetchByIdData.directions,
-        birthDate: fetchByIdData.birthDate ? parseISO(fetchByIdData.birthDate as unknown as string) : undefined,
-        phoneNumber: fetchByIdData.phoneNumber,
-        officeId: String(fetchByIdData.officeId),
-      } as any)
+        pin: fetchByIdData.pin?.toString() ?? '',
+        role: fetchByIdData.role ?? UserRoles.REGIONAL,
+        fullName: fetchByIdData.fullName ?? '',
+        position: fetchByIdData.position ?? '',
+        directions: fetchByIdData.directions ?? [],
+        phoneNumber: fetchByIdData.phoneNumber ?? '',
+        officeId: fetchByIdData.officeId?.toString() ?? '',
+      })
     }
   }, [fetchByIdData, isCreate, form])
-
-  useEffect(() => {
-    if (Object.keys(form.formState.errors).length > 0) {
-      console.error('[TerritorialStaffForm] Validation Errors:', form.formState.errors)
-    }
-  }, [form.formState.errors])
 
   const handleClose = useCallback(() => {
     form.reset(DEFAULT_FORM_VALUES)
@@ -86,30 +83,18 @@ export function useTerritorialStaffForm() {
   }, [form, onClose])
 
   const handleSubmit = useCallback(
-    async (formData: CreateTerritorialStaffDTO): Promise<boolean> => {
-      try {
-        if (isCreate) {
-          const response = await createTerritorialStaff(formData)
-          if (response.success) {
-            handleClose()
-            return true
-          }
-        } else {
-          const response = await updateTerritorialStaff({
-            ...formData,
-            id: territorialStaffId,
-          } as UpdateTerritorialStaffDTO)
-          if (response.success) {
-            handleClose()
-            return true
-          }
-        }
-
-        return false
-      } catch (error) {
-        console.error('[useTerritorialStaffForm] Submission error:', error)
-        return false
+    ({ pin, officeId, fullName, position, role, directions, phoneNumber }: TerritorialStaffValues) => {
+      const staff: TerritorialStaffPayload = {
+        pin: Number(pin),
+        officeId: Number(officeId),
+        fullName,
+        position,
+        role,
+        directions,
+        phoneNumber,
       }
+      if (isCreate) createTerritorialStaff(staff, { onSuccess: handleClose })
+      else updateTerritorialStaff({ ...staff, id: territorialStaffId }, { onSuccess: handleClose })
     },
     [isCreate, territorialStaffId, createTerritorialStaff, updateTerritorialStaff, handleClose]
   )
@@ -121,6 +106,7 @@ export function useTerritorialStaffForm() {
     isCreate,
     isPending,
     fetchByIdData,
+    officeName,
     userRoleOptions,
     departmentOptions,
     userPermissionOptions,

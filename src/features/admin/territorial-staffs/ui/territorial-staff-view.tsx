@@ -3,7 +3,13 @@ import { Description } from '@/shared/components/common/description'
 import { formatPhoneNumber, getUserRoleDisplay, getUserStatusDisplay } from '@/shared/lib'
 import { TerritorialStaffResponse } from '@/entities/admin/territorial-staffs'
 
-export const TerritorialStaffView = ({ data }: { data: TerritorialStaffResponse | null }) => {
+export const TerritorialStaffView = ({
+  data,
+  officeName,
+}: {
+  data?: TerritorialStaffResponse | null
+  officeName?: string
+}) => {
   const { t } = useTranslation('common')
 
   if (!data) return null
@@ -26,7 +32,7 @@ export const TerritorialStaffView = ({ data }: { data: TerritorialStaffResponse 
         {data?.pin}
       </Description.Item>
       <Description.Item key="office" label={t('territorial_department_name')}>
-        {data?.office}
+        {officeName}
       </Description.Item>
       <Description.Item key="status" label={t('status')}>
         {getUserStatusDisplay(!!data?.enabled, t)}

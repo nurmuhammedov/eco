@@ -1,4 +1,3 @@
-import { getErrorMessage } from '@/shared/lib/error-message'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useEffect } from 'react'
@@ -47,27 +46,22 @@ export const useParksForm = ({ onSuccess, initialData }: UseParksFormProps) => {
     }
   }, [initialData, form])
 
-  const onSubmit = async (values: ParkSchemaType) => {
-    const payload = {
+  const onSubmit = (values: ParkSchemaType) => {
+    const park = {
       ...values,
       regionId: Number(values.regionId),
       districtId: Number(values.districtId),
       location: values.location || null,
     }
-
-    try {
-      if (initialData) {
-        await updatePark.mutateAsync({ ...payload, id: initialData.id })
-        toast.success(t('park_updated_successfully'))
-      } else {
-        await createPark.mutateAsync(payload as any)
-        toast.success(t('park_created_successfully'))
-      }
+    const done = (message: string) => () => {
+      toast.success(message)
       form.reset()
       onSuccess()
-    } catch (error) {
-      toast.error(getErrorMessage(error, t('something_went_wrong')))
     }
+
+    if (initialData)
+      updatePark.mutate({ ...park, id: initialData.id }, { onSuccess: done(t('park_updated_successfully')) })
+    else createPark.mutate(park, { onSuccess: done(t('park_created_successfully')) })
   }
 
   return {

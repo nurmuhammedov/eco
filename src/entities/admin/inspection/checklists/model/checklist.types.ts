@@ -1,8 +1,33 @@
-import { z } from 'zod'
-import { checklistSchemas } from './checklist.schema'
+import type { z } from 'zod'
+import type { SearchParamValue } from '@/shared/types/api'
+import type { ChecklistCategoryType } from '../../category-types/model/category-type.types'
+import type { checklistSchema } from './checklist.schema'
 
-export type Checklist = z.infer<typeof checklistSchemas.single>
-export type ChecklistResponse = z.infer<typeof checklistSchemas.single>
-export type CreateChecklistDTO = z.infer<typeof checklistSchemas.create>
-export type UpdateChecklistDTO = z.infer<typeof checklistSchemas.update>
-export type FilterChecklistDTO = z.infer<typeof checklistSchemas.filter>
+/** ChecklistResById (`GET /checklists/{id}`, `/checklists/by-category/{id}`) */
+export interface Checklist {
+  id: number
+  category: ChecklistCategoryType | null
+  categoryId: number | null
+  categoryName: string | null
+  orderNumber: number | null
+  question: string | null
+  negative: string | null
+  corrective: string | null
+}
+
+export type ChecklistResponse = Checklist
+
+export type ChecklistFormValues = z.infer<typeof checklistSchema>
+
+/** ChecklistDto */
+export interface CreateChecklistDTO {
+  categoryId: number
+  orderNumber: number
+  question: string
+  negative: string
+  corrective: string
+}
+
+export type UpdateChecklistDTO = CreateChecklistDTO & { id: number }
+
+export type FilterChecklistDTO = { page?: number; size?: number } & Record<string, SearchParamValue>
