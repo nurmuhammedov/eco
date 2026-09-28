@@ -1,35 +1,32 @@
 import { useParams } from 'react-router-dom'
 import { Card, CardContent } from '@/shared/components/ui/card'
 import useDetail from '@/shared/hooks/api/use-detail'
-import { DetailCardAccordion } from '@/shared/components/common/detail-card'
+import { DetailCardAccordion, DetailPageSkeleton } from '@/shared/components/common/detail-card'
 import DetailRow from '@/shared/components/common/detail-row'
-import { ExpertiseTypeOptions } from '@/entities/expertise/model/constants'
+import { ExpertiseTypeEnum, ExpertiseTypeOptions } from '@/entities/expertise/model/constants'
 import { getDate } from '@/shared/utils/date'
 import { Badge } from '@/shared/components/ui/badge'
 import FileLink from '@/shared/components/common/file-link'
+import { useLegalOrganizationQuery } from '@/shared/api/dictionaries'
+import type { ConclusionDetail as ConclusionDetailData } from '@/entities/expertise/model/conclusion.types'
 
-export const DetailConclusion = () => {
+interface ConclusionDetailProps {
+  /** A declaration brought over from paper also carries the declaration's own number and date */
+  isOld?: boolean
+}
+
+export const ConclusionDetail = ({ isOld }: ConclusionDetailProps) => {
   const { id } = useParams()
 
-  const { detail, isFetching } = useDetail<any>('/conclusions', id, !!id)
-  const { detail: legalData, isFetching: fetchingData } = useDetail<any>(
-    '/users/legal/',
-    detail?.legalTin,
-    !!detail?.legalTin
-  )
-  const { detail: customerData, isFetching: fetchingCustomerData } = useDetail<any>(
-    '/users/legal/',
-    detail?.customerTin,
-    !!detail?.customerTin
-  )
+  const { detail, isFetching } = useDetail<ConclusionDetailData>('/conclusions', id, !!id)
+  const { detail: legalData, isFetching: fetchingData } = useLegalOrganizationQuery(detail?.legalTin)
+  const { detail: customerData, isFetching: fetchingCustomerData } = useLegalOrganizationQuery(detail?.customerTin)
 
   if (isFetching || fetchingData || fetchingCustomerData) {
     return (
-      <Card className="mt-4">
-        <CardContent>
-          <p className="p-4 text-center">Yuklanmoqda...</p>
-        </CardContent>
-      </Card>
+      <div className="mt-4">
+        <DetailPageSkeleton sections={4} />
+      </div>
     )
   }
 
@@ -79,7 +76,7 @@ export const DetailConclusion = () => {
           <div className="flex flex-col py-1">
             <DetailRow
               title="Ekspertiza xulosasi turi:"
-              value={ExpertiseTypeOptions?.find((i) => i?.value == detail?.type)?.label || '-'}
+              value={ExpertiseTypeOptions.find((option) => option.value === detail.type)?.label || '-'}
             />
             <DetailRow title="Ekspertiza obyekti nomi:" value={detail?.expertiseName || '-'} />
             <DetailRow title="Ekspertiza xulosasi reyestr raqami:" value={detail?.registryNumber || '-'} />
@@ -121,8 +118,17 @@ export const DetailConclusion = () => {
               title="Ekspertiza xulosasi:"
               value={detail?.filePath ? <FileLink url={detail?.filePath} /> : '-'}
             />
-            {detail?.type === 'XD' && (
+            {detail.type === ExpertiseTypeEnum.XD && (
               <>
+                {isOld && (
+                  <>
+                    <DetailRow title="Deklaratsiya ro‘yxat raqami:" value={detail.declarationRegistryNumber || '-'} />
+                    <DetailRow
+                      title="Deklaratsiya ro‘yxatga olingan sana:"
+                      value={detail.declarationRegistrationDate ? getDate(detail.declarationRegistrationDate) : '-'}
+                    />
+                  </>
+                )}
                 <DetailRow
                   title="Deklaratsiya fayli:"
                   value={detail?.declarationFilePath ? <FileLink url={detail?.declarationFilePath} /> : 'Mavjud emas'}

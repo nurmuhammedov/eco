@@ -6,9 +6,10 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { createExpertiseApplication } from '@/entities/expertise/api/expertise.api'
-import { AddExpertiseFormValues } from '@/entities/expertise/model/expertise.types'
+import type { AddExpertiseFormValues } from '@/entities/expertise/model/expertise.types'
 import { addExpertiseSchema } from '@/entities/expertise/model/expertise.schema'
 import { ExpertiseTypeEnum, ExpertiseTypeOptions } from '@/entities/expertise/model/constants'
+import { toConclusionPayload } from '../model/conclusion-payload'
 import { Button } from '@/shared/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
@@ -16,7 +17,6 @@ import { Input } from '@/shared/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { useDistrictSelectQuery, useRegionSelectQuery } from '@/shared/api/dictionaries'
 import { PhoneInput } from '@/shared/components/ui/phone-input'
-import { cleanParams } from '@/shared/lib'
 import { useNavigate } from 'react-router-dom'
 import { Textarea } from '@/shared/components/ui/textarea'
 import DetailRow from '@/shared/components/common/detail-row'
@@ -90,18 +90,11 @@ export const AddConclusion = () => {
     if (!selectedHf) return
 
     form.setValue('objectName', selectedHf.name || '')
-    form.setValue(
-      'regionId',
-      selectedHf.regionId ? (selectedHf.regionId.toString() as unknown as string) : (undefined as unknown as string)
-    )
-    form.setValue(
-      'districtId',
-      selectedHf.districtId ? (selectedHf.districtId.toString() as unknown as string) : (undefined as unknown as string)
-    )
+    form.setValue('regionId', selectedHf.regionId?.toString() ?? '')
+    form.setValue('districtId', selectedHf.districtId?.toString() ?? '')
     form.setValue('address', selectedHf.address || '')
   }, [selectedHf, form])
 
-  // Qidirish
   const handleSearch = () => {
     if (stir.length === 9) {
       setSearchedStir(stir)
@@ -110,30 +103,13 @@ export const AddConclusion = () => {
     }
   }
 
-  // Tozalash
   const handleClearSearch = () => {
     setStir('')
     setSearchedStir(null)
     form.reset()
   }
 
-  // Formani yuborish
-  const onSubmit = (data: AddExpertiseFormValues) => {
-    const payload: any = {
-      ...data,
-      customerTin: data.customerTin ? Number(data.customerTin) : undefined,
-      regionId: data.regionId ? Number(data.regionId) : undefined,
-      districtId: data.districtId ? Number(data.districtId) : undefined,
-    }
-
-    if (payload.type !== ExpertiseTypeEnum.XD) {
-      delete payload.declarationFilePath
-      delete payload.calculationLetterPath
-      delete payload.informationNotePath
-    }
-
-    mutate(cleanParams(payload))
-  }
+  const onSubmit = (values: AddExpertiseFormValues) => mutate(toConclusionPayload(values))
 
   const hasLegalInfo = !!legalInfo && !isLegalInfoError
 
@@ -265,7 +241,7 @@ export const AddConclusion = () => {
                         <Select
                           onValueChange={(value) => {
                             field.onChange(value)
-                            form.setValue('districtId', undefined as unknown as string)
+                            form.setValue('districtId', '')
                           }}
                           value={field.value}
                           disabled={isRegionLoading || !!selectedHf?.regionId}
@@ -276,8 +252,8 @@ export const AddConclusion = () => {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            {regions?.map((region: any) => (
-                              <SelectItem key={region.id} value={region.id?.toString()}>
+                            {regions?.map((region) => (
+                              <SelectItem key={region.id} value={region.id.toString()}>
                                 {region.name}
                               </SelectItem>
                             ))}
@@ -310,8 +286,8 @@ export const AddConclusion = () => {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            {districts?.map((district: any) => (
-                              <SelectItem key={district.id} value={district.id?.toString()}>
+                            {districts?.map((district) => (
+                              <SelectItem key={district.id} value={district.id.toString()}>
                                 {district.name}
                               </SelectItem>
                             ))}
@@ -361,14 +337,7 @@ export const AddConclusion = () => {
                         <Select
                           value={field.value}
                           onValueChange={(value) => {
-                            if (value) {
-                              field.onChange(value)
-                              if ((value as unknown as ExpertiseTypeEnum) !== ExpertiseTypeEnum.XD) {
-                                form.setValue('declarationFilePath', undefined as unknown as string)
-                                form.setValue('calculationLetterPath', undefined as unknown as string)
-                                form.setValue('informationNotePath', undefined as unknown as string)
-                              }
-                            }
+                            if (value) field.onChange(value)
                           }}
                         >
                           <FormControl>

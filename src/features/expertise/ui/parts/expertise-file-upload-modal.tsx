@@ -13,13 +13,19 @@ import { useAdd } from '@/shared/hooks'
 import { useQueryClient } from '@tanstack/react-query'
 import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 
+/** ConclusionFileDto */
+interface ConclusionFilePayload {
+  filePath: string
+  result: boolean
+}
+
 const schema = z.object({
   paramValue: z.string({ message: FORM_ERROR_MESSAGES.required }).min(1, FORM_ERROR_MESSAGES.required),
   result: z.enum(['true', 'false']),
 })
 
 interface Props {
-  id: any
+  id: string | null
   closeModal: () => void
   title?: string
 }
@@ -28,9 +34,9 @@ const FileUploadModal: FC<Props> = ({ id, closeModal, title = 'Xulosa faylini yu
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
   })
-  const qc = useQueryClient()
+  const queryClient = useQueryClient()
 
-  const { mutateAsync, isPending } = useAdd(`/conclusions/${id}/file`)
+  const { mutate, isPending } = useAdd<ConclusionFilePayload>(`/conclusions/${id}/file`)
 
   const handleModalChange = (isOpen: boolean) => {
     if (!isOpen) {
@@ -45,10 +51,12 @@ const FileUploadModal: FC<Props> = ({ id, closeModal, title = 'Xulosa faylini yu
       result: data.result === 'true',
     }
 
-    mutateAsync(payload).then(async () => {
-      form.reset()
-      closeModal()
-      await invalidateEndpoint(qc, '/conclusions')
+    mutate(payload, {
+      onSuccess: () => {
+        form.reset()
+        closeModal()
+        void invalidateEndpoint(queryClient, '/conclusions')
+      },
     })
   }
 

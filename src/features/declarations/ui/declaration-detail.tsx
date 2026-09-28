@@ -1,30 +1,34 @@
 import { Link, useParams } from 'react-router-dom'
 import { Card, CardContent } from '@/shared/components/ui/card'
 import useDetail from '@/shared/hooks/api/use-detail'
-import { DetailCardAccordion } from '@/shared/components/common/detail-card'
+import { DetailCardAccordion, DetailPageSkeleton } from '@/shared/components/common/detail-card'
 import DetailRow from '@/shared/components/common/detail-row'
 import { getDate } from '@/shared/utils/date'
 import FileLink from '@/shared/components/common/file-link'
 import LegalApplicantInfo from '@/features/application/application-detail/ui/parts/legal-applicant-info'
 import { ApplicationStatusBadge } from '@/entities/application/ui/application-status-badge'
+import { ApplicationStatus } from '@/entities/application'
+import type { DeclarationDetail as DeclarationDetailData } from '@/entities/declarations/model/declaration.types'
 
 interface DeclarationDetailProps {
-  detailData?: any
+  detailData?: DeclarationDetailData
 }
 
 export const DeclarationDetail = ({ detailData }: DeclarationDetailProps) => {
   const { id } = useParams()
-  const { detail: fetchedDetail, isFetching } = useDetail<any>('/declarations', id, !detailData && !!id)
+  const { detail: fetchedDetail, isFetching } = useDetail<DeclarationDetailData>(
+    '/declarations',
+    id,
+    !detailData && !!id
+  )
 
   const detail = detailData || fetchedDetail
 
   if (isFetching && !detail) {
     return (
-      <Card className="mt-4">
-        <CardContent>
-          <p className="p-4 text-center">Yuklanmoqda...</p>
-        </CardContent>
-      </Card>
+      <div className="mt-4">
+        <DetailPageSkeleton sections={3} />
+      </div>
     )
   }
 
@@ -56,14 +60,14 @@ export const DeclarationDetail = ({ detailData }: DeclarationDetailProps) => {
             <DetailRow title="Yaratilgan sana:" value={detail?.createdAt ? getDate(detail?.createdAt) : '-'} />
             <DetailRow
               title="Holat:"
-              value={detail?.status ? <ApplicationStatusBadge status={detail.status} /> : '-'}
+              value={detail.status ? <ApplicationStatusBadge status={ApplicationStatus[detail.status]} /> : '-'}
             />
             <DetailRow
               title="XICHOlar:"
               value={
                 <div className="flex flex-col gap-1">
-                  {detail?.hfIds && detail.hfIds.length > 0
-                    ? detail.hfIds.map((hfId: string, index: number) => (
+                  {detail.hfIds?.length
+                    ? detail.hfIds.map((hfId, index) => (
                         <div key={hfId}>
                           <Link to={`/register/hf/${hfId}`} className="font-medium text-blue-600">
                             XICHO {index + 1}

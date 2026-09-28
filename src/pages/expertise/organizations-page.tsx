@@ -2,6 +2,7 @@ import { ExpertiseTable } from '@/features/expertise/ui/expertise-table'
 import { ExpertiseTabKey, ExpertiseTabs } from '@/features/expertise/ui/expertise-tabs'
 import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks'
 import { paramOneOf } from '@/shared/lib/url-params'
+import type { AccreditationRow } from '@/entities/expertise/model/conclusion.types'
 
 const OrganizationsPage = () => {
   const { paramsObject, addParams } = useCustomSearchParams()
@@ -11,7 +12,7 @@ const OrganizationsPage = () => {
     addParams({ status: tabKey, page: '1' })
   }
 
-  const { data: allData } = usePaginatedData<any>(
+  const { data: allData } = usePaginatedData<AccreditationRow>(
     '/accreditations',
     {
       page: 1,
@@ -21,7 +22,7 @@ const OrganizationsPage = () => {
     60000
   )
 
-  const { data: activeData } = usePaginatedData<any>(
+  const { data: activeData } = usePaginatedData<AccreditationRow>(
     '/accreditations',
     {
       page: 1,
@@ -32,7 +33,7 @@ const OrganizationsPage = () => {
     60000
   )
 
-  const { data: expiringSoonData } = usePaginatedData<any>(
+  const { data: expiringSoonData } = usePaginatedData<AccreditationRow>(
     '/accreditations',
     {
       page: 1,
@@ -43,7 +44,7 @@ const OrganizationsPage = () => {
     60000
   )
 
-  const { data: expiredData } = usePaginatedData<any>(
+  const { data: expiredData } = usePaginatedData<AccreditationRow>(
     '/accreditations',
     {
       page: 1,

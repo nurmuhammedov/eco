@@ -5,27 +5,27 @@ import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-ta
 import FileLink from '@/shared/components/common/file-link'
 
 import { useNavigate } from 'react-router-dom'
-import { Button } from '@/shared/components/ui/button'
 import { UserRoles } from '@/shared/types/user'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { ApplicationStatusBadge } from '@/entities/application/ui/application-status-badge'
 import { ApplicationStatus } from '@/entities/application'
+import type { DeclarationRow } from '@/entities/declarations/model/declaration.types'
 
 export const DeclarationsTable = () => {
   const navigate = useNavigate()
   const { user } = useAuth()
   const {
-    paramsObject: { page = 1, size = 10, ...rest },
+    paramsObject: { page = 1, size = 10, status, ...rest },
   } = useCustomSearchParams()
 
-  const queryParams: Record<string, any> = { page, size, ...rest }
-  if (queryParams.status === 'ALL') {
-    delete queryParams.status
-  }
+  const { data = [], isLoading } = usePaginatedData<DeclarationRow>('/declarations', {
+    page,
+    size,
+    ...rest,
+    status: status === 'ALL' ? undefined : status,
+  })
 
-  const { data = [], isLoading } = usePaginatedData<any>('/declarations', queryParams)
-
-  const columns: ExtendedColumnDef<any, any>[] = [
+  const columns: ExtendedColumnDef<DeclarationRow, unknown>[] = [
     {
       accessorKey: 'registryNumber',
       header: 'Ro‘yxatga olish raqami',
@@ -37,10 +37,7 @@ export const DeclarationsTable = () => {
       header: 'XICHOlar reyestr raqamlari',
       filterKey: 'hfRegistryNumber',
       filterType: 'search',
-      cell: ({ row }: any) => {
-        const numbers = row.original.hfRegistryNumbers
-        return numbers && numbers.length > 0 ? numbers.join(', ') : '-'
-      },
+      cell: ({ row }) => row.original.hfRegistryNumbers?.join(', ') || '-',
     },
     {
       accessorKey: 'expertName',
@@ -82,51 +79,36 @@ export const DeclarationsTable = () => {
     {
       accessorKey: 'status',
       header: 'Holati',
-      cell: ({ row }: any) => {
-        return row.original.status ? <ApplicationStatusBadge status={row.original.status as ApplicationStatus} /> : '-'
-      },
+      cell: ({ row }) =>
+        row.original.status ? <ApplicationStatusBadge status={ApplicationStatus[row.original.status]} /> : '-',
     },
     {
       header: 'Deklaratsiya',
-      cell: ({ row }: any) => <FileLink url={row.original.declarationPath} />,
+      cell: ({ row }) => <FileLink url={row.original.declarationPath} />,
     },
     {
       header: 'Axborotnoma',
-      cell: ({ row }: any) => <FileLink url={row.original.infoLetterPath} />,
+      cell: ({ row }) => <FileLink url={row.original.infoLetterPath} />,
     },
     {
       header: 'Hisob-kitob tushuntirish xati',
-      cell: ({ row }: any) => <FileLink url={row.original.explanatoryNotePath} />,
+      cell: ({ row }) => <FileLink url={row.original.explanatoryNotePath} />,
     },
-    ...(user?.role === UserRoles.MANAGER
-      ? [
-          {
-            id: 'approve',
-            header: 'Amallar',
-            cell: () => {
-              if (rest?.status === 'IN_PROGRESS') {
-                return <Button>Tasdiqlash</Button>
-              }
-              return null
-            },
-          },
-        ]
-      : []),
     {
       id: 'actions',
       size: 50,
-      cell: ({ row }: any) => {
+      cell: ({ row }) => {
         const canEdit =
-          user?.role === UserRoles.LEGAL && user?.id === row?.original?.createdBy && row.original.status === 'CANCELED'
+          user?.role === UserRoles.LEGAL && user?.id === row.original.createdBy && row.original.status === 'CANCELED'
 
         return (
           <div className="flex gap-2">
             <DataTableRowActions
               row={row}
               showView
-              onView={(row: any) => navigate(`detail/${row.original.id!}`)}
+              onView={(row) => navigate(`detail/${row.original.id}`)}
               showEdit={canEdit}
-              onEdit={(row: any) => navigate(`edit/${row.original.id!}`)}
+              onEdit={(row) => navigate(`edit/${row.original.id}`)}
             />
           </div>
         )

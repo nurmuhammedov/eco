@@ -9,6 +9,8 @@ import { useAuth } from '@/shared/hooks/use-auth'
 import { Alert, AlertDescription } from '@/shared/components/ui/alert'
 import { TabsLayout } from '@/shared/layouts'
 import { paramOneOf, paramText } from '@/shared/lib/url-params'
+import type { ConclusionCount } from '@/entities/expertise/model/conclusion.types'
+import { AccreditationStatus } from '@/entities/expertise/model/constants'
 
 const ExpertiseWidget = () => {
   const { paramsObject, addParams } = useCustomSearchParams()
@@ -20,8 +22,8 @@ const ExpertiseWidget = () => {
     addParams({ tab: tabKey }, 'page')
   }
 
-  const { data } = useData<any>('/conclusions/count')
-  const { data: status } = useData<any>('/accreditations/status', user?.role === UserRoles.LEGAL)
+  const { data } = useData<ConclusionCount>('/conclusions/count')
+  const { data: status } = useData<AccreditationStatus>('/accreditations/status', user?.role === UserRoles.LEGAL)
 
   const tabCounts = {
     [TabKey.ALL]: data?.allCount ?? 0,
@@ -36,11 +38,11 @@ const ExpertiseWidget = () => {
     navigate('/accreditations/add')
   }
 
-  const isStopped = status === 'STOPPED'
-  const isExpired = status === 'EXPIRED'
-  const isExpiringSoon = status === 'EXPIRING_SOON'
+  const isStopped = status === AccreditationStatus.STOPPED
+  const isExpired = status === AccreditationStatus.EXPIRED
+  const isExpiringSoon = status === AccreditationStatus.EXPIRING_SOON
 
-  const showAddButton = status === 'ACTIVE' || isExpiringSoon
+  const showAddButton = status === AccreditationStatus.ACTIVE || isExpiringSoon
 
   return (
     <div className="flex h-full flex-col gap-2 overflow-hidden">

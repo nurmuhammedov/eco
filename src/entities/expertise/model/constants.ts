@@ -6,6 +6,15 @@ export enum ExpertiseTypeEnum {
   IX = 'IX',
 }
 
+/** AccreditationStatus: a legal entity without an accreditation files declarations as their own customer */
+export enum AccreditationStatus {
+  ACTIVE = 'ACTIVE',
+  EXPIRED = 'EXPIRED',
+  EXPIRING_SOON = 'EXPIRING_SOON',
+  STOPPED = 'STOPPED',
+  NOT_PERMITTED = 'NOT_PERMITTED',
+}
+
 export const ExpertiseTypeOptions = [
   {
     value: ExpertiseTypeEnum.LH,

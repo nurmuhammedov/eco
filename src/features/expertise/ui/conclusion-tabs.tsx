@@ -71,7 +71,7 @@ export const ConclusionTabs = ({ activeTab, onTabChange, counts }: PermitTabsPro
                   )}
                 </div>
               </CardTitle>
-              <span className={cn(!isActive && 'text-muted-foreground')}>{tabIcons[tab.key as unknown as TabKey]}</span>
+              <span className={cn(!isActive && 'text-muted-foreground')}>{tabIcons[tab.key]}</span>
             </CardHeader>
             <CardContent className="p-0 px-4 pt-1 pb-1">
               <div className="text-2xl font-bold">{counts?.[tab.key] || 0}</div>

@@ -4,7 +4,9 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { addExpertiseSchema } from '@/entities/expertise/model/expertise.schema'
-import { AddExpertiseFormValues } from '@/entities/expertise/model/expertise.types'
+import type { AddExpertiseFormValues } from '@/entities/expertise/model/expertise.types'
+import type { ConclusionDetail, ConclusionPayload } from '@/entities/expertise/model/conclusion.types'
+import { toConclusionPayload } from '../model/conclusion-payload'
 import { ExpertiseTypeEnum, ExpertiseTypeOptions } from '@/entities/expertise/model/constants'
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card'
 import { Button } from '@/shared/components/ui/button'
@@ -19,12 +21,13 @@ import { UserRoles } from '@/shared/types/user'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { InputFile } from '@/shared/components/common/file-upload/ui/file-upload'
 import { FileTypes } from '@/shared/components/common/file-upload/model/file-types'
+import FormSkeleton from '@/shared/components/common/form-skeleton/ui'
 
 export const UpdateConclusion = () => {
   const { id } = useParams()
   const { user } = useAuth()
   const navigate = useNavigate()
-  const { detail: conclusion, isFetching } = useDetail<any>('/conclusions', id, !!id)
+  const { detail: conclusion, isFetching } = useDetail<ConclusionDetail>('/conclusions', id, !!id)
 
   const form = useForm<AddExpertiseFormValues>({
     resolver: zodResolver(addExpertiseSchema),
@@ -36,12 +39,7 @@ export const UpdateConclusion = () => {
     },
   })
 
-  const { mutateAsync, isPending } = useUpdate<AddExpertiseFormValues, any, any>(
-    '/conclusions',
-    id,
-    'put',
-    'Muvaffaqiyatli yangilandi!'
-  )
+  const { mutate, isPending } = useUpdate<ConclusionPayload>('/conclusions', id, 'put', 'Muvaffaqiyatli yangilandi!')
 
   const customerTin = form.watch('customerTin')
   const { data: hfOptions } = useHazardousFacilityByTinQuery(customerTin, customerTin?.length === 9)
@@ -55,41 +53,30 @@ export const UpdateConclusion = () => {
   useEffect(() => {
     if (conclusion) {
       form.reset({
-        ...conclusion,
-        customerTin: conclusion?.customerTin?.toString(),
-        type: conclusion.type?.toString() as unknown as ExpertiseTypeEnum,
-        expertiseName: conclusion?.expertiseName,
-        regionId: conclusion?.regionId?.toString(),
-        districtId: conclusion?.districtId?.toString(),
-        declarationFilePath: conclusion?.declarationFilePath || '',
-        calculationLetterPath: conclusion?.calculationLetterPath || '',
-        informationNotePath: conclusion?.informationNotePath || '',
+        customerTin: conclusion.customerTin?.toString() ?? '',
+        customerPhoneNumber: conclusion.customerPhoneNumber ?? '',
+        hfId: conclusion.hfId,
+        type: conclusion.type ?? undefined,
+        objectName: conclusion.objectName ?? '',
+        regionId: conclusion.regionId?.toString() ?? '',
+        districtId: conclusion.districtId?.toString() ?? '',
+        address: conclusion.address ?? '',
+        expertiseName: conclusion.expertiseName ?? '',
+        declarationFilePath: conclusion.declarationFilePath ?? '',
+        calculationLetterPath: conclusion.calculationLetterPath ?? '',
+        informationNotePath: conclusion.informationNotePath ?? '',
       })
     }
   }, [conclusion, form])
 
-  const onSubmit = (data: AddExpertiseFormValues) => {
-    const payload: any = {
-      ...data,
-      customerTin: data.customerTin ? Number(data.customerTin) : undefined,
-      regionId: data.regionId ? Number(data.regionId) : undefined,
-      districtId: data.districtId ? Number(data.districtId) : undefined,
-    }
-
-    if (payload.type !== ExpertiseTypeEnum.XD) {
-      delete payload.declarationFilePath
-      delete payload.calculationLetterPath
-      delete payload.informationNotePath
-    }
-
-    mutateAsync(payload).then(() => navigate(-1))
-  }
+  const onSubmit = (values: AddExpertiseFormValues) =>
+    mutate(toConclusionPayload(values), { onSuccess: () => navigate(-1) })
 
   if (isFetching) {
     return (
       <Card className="mt-4">
-        <CardContent>
-          <p className="p-4 text-center">Yuklanmoqda...</p>
+        <CardContent className="grid grid-cols-1 gap-4 pt-6 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+          <FormSkeleton length={10} />
         </CardContent>
       </Card>
     )
@@ -191,11 +178,11 @@ export const UpdateConclusion = () => {
                     <FormLabel required>Viloyat</FormLabel>
                     <Select
                       onValueChange={(value) => {
-                        if (value) {
-                          field.onChange(value)
-                        }
+                        if (!value) return
+                        field.onChange(value)
+                        form.setValue('districtId', '')
                       }}
-                      value={field.value?.toString()}
+                      value={field.value}
                     >
                       <FormControl>
                         <SelectTrigger>
@@ -203,8 +190,8 @@ export const UpdateConclusion = () => {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {regions?.map((region: any) => (
-                          <SelectItem key={region.id} value={region.id?.toString()}>
+                        {regions?.map((region) => (
+                          <SelectItem key={region.id} value={region.id.toString()}>
                             {region.name}
                           </SelectItem>
                         ))}
@@ -236,8 +223,8 @@ export const UpdateConclusion = () => {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {districts?.map((district: any) => (
-                          <SelectItem key={district.id} value={district.id?.toString()}>
+                        {districts?.map((district) => (
+                          <SelectItem key={district.id} value={district.id.toString()}>
                             {district.name}
                           </SelectItem>
                         ))}
@@ -285,14 +272,7 @@ export const UpdateConclusion = () => {
                       {...field}
                       value={field.value}
                       onValueChange={(value) => {
-                        if (value) {
-                          field.onChange(value)
-                          if ((value as unknown as ExpertiseTypeEnum) !== ExpertiseTypeEnum.XD) {
-                            form.setValue('declarationFilePath', undefined as unknown as string)
-                            form.setValue('calculationLetterPath', undefined as unknown as string)
-                            form.setValue('informationNotePath', undefined as unknown as string)
-                          }
-                        }
+                        if (value) field.onChange(value)
                       }}
                     >
                       <FormControl>
@@ -302,7 +282,7 @@ export const UpdateConclusion = () => {
                       </FormControl>
                       <SelectContent>
                         {ExpertiseTypeOptions.map((option) => (
-                          <SelectItem key={option.value} value={option.value?.toString()}>
+                          <SelectItem key={option.value} value={option.value}>
                             {option.label}
                           </SelectItem>
                         ))}

@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { format } from 'date-fns'
 import { ExpertiseTypeEnum } from './constants'
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 import { USER_PATTERNS } from '@/shared/constants/custom-patterns'
@@ -17,8 +18,8 @@ export const addOldExpertiseSchema = z.object({
     .nullable(),
   type: z.nativeEnum(ExpertiseTypeEnum),
   objectName: z.string().min(1),
-  regionId: z.string(),
-  districtId: z.string(),
+  regionId: z.string().min(1),
+  districtId: z.string().min(1),
   expertiseName: z.string().min(1).max(500),
   address: z.string().min(1),
   conclusionFilePath: z.string().min(1),
@@ -27,8 +28,8 @@ export const addOldExpertiseSchema = z.object({
   informationNotePath: z.string().min(1),
   conclusionRegistryNumber: z.string().min(1),
   declarationRegistryNumber: z.string().min(1),
-  declarationRegistrationDate: z.date(),
-  conclusionRegistrationDate: z.date(),
+  declarationRegistrationDate: z.date().transform((date) => format(date, 'yyyy-MM-dd')),
+  conclusionRegistrationDate: z.date().transform((date) => format(date, 'yyyy-MM-dd')),
 })
 
 export const addExpertiseSchema = z
@@ -49,8 +50,8 @@ export const addExpertiseSchema = z
 
     type: z.nativeEnum(ExpertiseTypeEnum),
     objectName: z.string().min(1),
-    regionId: z.string(),
-    districtId: z.string(),
+    regionId: z.string().min(1),
+    districtId: z.string().min(1),
     expertiseName: z.string().min(1).max(500),
     address: z.string().min(1),
     declarationFilePath: z.string().optional(),

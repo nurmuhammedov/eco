@@ -8,6 +8,8 @@ import { useCustomSearchParams, useData, usePaginatedData } from '@/shared/hooks
 import { Alert, AlertDescription } from '@/shared/components/ui/alert'
 import { DeclarationTabKey, DeclarationTabs } from '@/features/declarations/ui/declaration-tabs'
 import { paramText } from '@/shared/lib/url-params'
+import type { DeclarationRow } from '@/entities/declarations/model/declaration.types'
+import { AccreditationStatus } from '@/entities/expertise/model/constants'
 
 const DeclarationsWidget = () => {
   const { user } = useAuth()
@@ -22,29 +24,32 @@ const DeclarationsWidget = () => {
   const { paramsObject, addParams } = useCustomSearchParams()
   const tabStatus = paramText(paramsObject.status, 'ALL')
 
-  const { totalElements: allCount } = usePaginatedData<any>('/declarations', { page: 1, size: 1 })
-  const { totalElements: inProcessCount } = usePaginatedData<any>('/declarations', {
+  const { totalElements: allCount } = usePaginatedData<DeclarationRow>('/declarations', { page: 1, size: 1 })
+  const { totalElements: inProcessCount } = usePaginatedData<DeclarationRow>('/declarations', {
     page: 1,
     size: 1,
     status: 'IN_PROCESS',
   })
-  const { totalElements: completedCount } = usePaginatedData<any>('/declarations', {
+  const { totalElements: completedCount } = usePaginatedData<DeclarationRow>('/declarations', {
     page: 1,
     size: 1,
     status: 'COMPLETED',
   })
-  const { totalElements: rejectedCount } = usePaginatedData<any>('/declarations', {
+  const { totalElements: rejectedCount } = usePaginatedData<DeclarationRow>('/declarations', {
     page: 1,
     size: 1,
     status: 'REJECTED',
   })
-  const { totalElements: canceledCount } = usePaginatedData<any>('/declarations', {
+  const { totalElements: canceledCount } = usePaginatedData<DeclarationRow>('/declarations', {
     page: 1,
     size: 1,
     status: 'CANCELED',
   })
 
-  const { data: status = 'NOT_PERMITTED' } = useData<any>('/accreditations/status', canAdd)
+  const { data: status = AccreditationStatus.NOT_PERMITTED } = useData<AccreditationStatus>(
+    '/accreditations/status',
+    canAdd
+  )
 
   const counts: Record<string, number> = {
     [DeclarationTabKey.ALL]: Number(allCount) || 0,
@@ -54,11 +59,12 @@ const DeclarationsWidget = () => {
     [DeclarationTabKey.CANCELED]: Number(canceledCount) || 0,
   }
 
-  const isStopped = status === 'STOPPED'
-  const isExpired = status === 'EXPIRED'
-  const isExpiringSoon = status === 'EXPIRING_SOON'
+  const isStopped = status === AccreditationStatus.STOPPED
+  const isExpired = status === AccreditationStatus.EXPIRED
+  const isExpiringSoon = status === AccreditationStatus.EXPIRING_SOON
 
-  const showAddButton = status === 'ACTIVE' || status === 'NOT_PERMITTED' || isExpiringSoon
+  const showAddButton =
+    status === AccreditationStatus.ACTIVE || status === AccreditationStatus.NOT_PERMITTED || isExpiringSoon
 
   return (
     <div className="flex h-full flex-col gap-2 overflow-hidden">

@@ -2,11 +2,11 @@ import { useLegalInfoByTinQuery } from '@/shared/api/dictionaries'
 import { useHazardousFacilityByTinQuery } from '@/shared/api/dictionaries'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { zodFormResolver } from '@/shared/lib/zod-form-resolver'
 import { useMutation } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { createOldExpertiseApplication } from '@/entities/expertise/api/expertise.api'
-import { AddOldExpertiseFormValues } from '@/entities/expertise/model/expertise.types'
+import type { AddOldExpertiseFormDraft, AddOldExpertiseFormValues } from '@/entities/expertise/model/expertise.types'
 import { addOldExpertiseSchema } from '@/entities/expertise/model/expertise.schema'
 import DatePicker from '@/shared/components/ui/datepicker'
 import { ExpertiseTypeEnum, ExpertiseTypeOptions } from '@/entities/expertise/model/constants'
@@ -17,7 +17,6 @@ import { Input } from '@/shared/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { useDistrictSelectQuery, useRegionSelectQuery } from '@/shared/api/dictionaries'
 import { PhoneInput } from '@/shared/components/ui/phone-input'
-import { cleanParams } from '@/shared/lib'
 import { useNavigate } from 'react-router-dom'
 import { Textarea } from '@/shared/components/ui/textarea'
 import DetailRow from '@/shared/components/common/detail-row'
@@ -28,8 +27,8 @@ export const AddOldConclusion = () => {
   const [stir, setStir] = useState('')
   const [searchedStir, setSearchedStir] = useState<string | null>(null)
   const navigate = useNavigate()
-  const form = useForm<AddOldExpertiseFormValues>({
-    resolver: zodResolver(addOldExpertiseSchema),
+  const form = useForm<AddOldExpertiseFormDraft, unknown, AddOldExpertiseFormValues>({
+    resolver: zodFormResolver<AddOldExpertiseFormDraft, AddOldExpertiseFormValues>(addOldExpertiseSchema),
     mode: 'onChange',
     defaultValues: {
       customerTin: '',
@@ -96,18 +95,11 @@ export const AddOldConclusion = () => {
     if (!selectedHf) return
 
     form.setValue('objectName', selectedHf.name || '')
-    form.setValue(
-      'regionId',
-      selectedHf.regionId ? (selectedHf.regionId.toString() as unknown as string) : (undefined as unknown as string)
-    )
-    form.setValue(
-      'districtId',
-      selectedHf.districtId ? (selectedHf.districtId.toString() as unknown as string) : (undefined as unknown as string)
-    )
+    form.setValue('regionId', selectedHf.regionId?.toString() ?? '')
+    form.setValue('districtId', selectedHf.districtId?.toString() ?? '')
     form.setValue('address', selectedHf.address || '')
   }, [selectedHf, form])
 
-  // Qidirish
   const handleSearch = () => {
     if (stir.length === 9) {
       setSearchedStir(stir)
@@ -116,24 +108,19 @@ export const AddOldConclusion = () => {
     }
   }
 
-  // Tozalash
   const handleClearSearch = () => {
     setStir('')
     setSearchedStir(null)
     form.reset()
   }
 
-  // Formani yuborish
-  const onSubmit = (data: AddOldExpertiseFormValues) => {
-    const payload: any = {
-      ...data,
-      customerTin: data.customerTin ? Number(data.customerTin) : undefined,
-      regionId: data.regionId ? Number(data.regionId) : undefined,
-      districtId: data.districtId ? Number(data.districtId) : undefined,
-    }
-
-    mutate(cleanParams(payload))
-  }
+  const onSubmit = ({ customerTin, regionId, districtId, ...values }: AddOldExpertiseFormValues) =>
+    mutate({
+      ...values,
+      customerTin: Number(customerTin),
+      regionId: Number(regionId),
+      districtId: Number(districtId),
+    })
 
   const hasLegalInfo = !!legalInfo && !isLegalInfoError
 
@@ -265,7 +252,7 @@ export const AddOldConclusion = () => {
                         <Select
                           onValueChange={(value) => {
                             field.onChange(value)
-                            form.setValue('districtId', undefined as unknown as string)
+                            form.setValue('districtId', '')
                           }}
                           value={field.value}
                           disabled={isRegionLoading || !!selectedHf?.regionId}
@@ -276,8 +263,8 @@ export const AddOldConclusion = () => {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            {regions?.map((region: any) => (
-                              <SelectItem key={region.id} value={region.id?.toString()}>
+                            {regions?.map((region) => (
+                              <SelectItem key={region.id} value={region.id.toString()}>
                                 {region.name}
                               </SelectItem>
                             ))}
@@ -310,8 +297,8 @@ export const AddOldConclusion = () => {
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            {districts?.map((district: any) => (
-                              <SelectItem key={district.id} value={district.id?.toString()}>
+                            {districts?.map((district) => (
+                              <SelectItem key={district.id} value={district.id.toString()}>
                                 {district.name}
                               </SelectItem>
                             ))}

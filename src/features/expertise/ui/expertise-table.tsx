@@ -3,19 +3,38 @@ import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks'
 import { formatDate } from 'date-fns'
 import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
 import { Badge } from '@/shared/components/ui/badge'
+import type { AccreditationRow } from '@/entities/expertise/model/conclusion.types'
+import { AccreditationStatus } from '@/entities/expertise/model/constants'
+import type { ReactNode } from 'react'
+
+const STATUS_BADGES: Record<AccreditationStatus, ReactNode> = {
+  [AccreditationStatus.ACTIVE]: <Badge variant="success">Aktiv</Badge>,
+  [AccreditationStatus.EXPIRED]: <Badge variant="error">Muddati o‘tgan</Badge>,
+  [AccreditationStatus.STOPPED]: <Badge variant="error">To‘xtatilgan</Badge>,
+  [AccreditationStatus.EXPIRING_SOON]: (
+    <Badge variant="warning" className="whitespace-nowrap">
+      Muddati yaqinlashayotgan
+    </Badge>
+  ),
+  [AccreditationStatus.NOT_PERMITTED]: (
+    <Badge variant="error" className="whitespace-nowrap">
+      Ruxsat etilmagan
+    </Badge>
+  ),
+}
 
 export const ExpertiseTable = () => {
   const {
     paramsObject: { page = 1, size = 10, status = 'ALL', ...rest },
   } = useCustomSearchParams()
-  const { data = [], isLoading } = usePaginatedData<any>('/accreditations', {
+  const { data = [], isLoading } = usePaginatedData<AccreditationRow>('/accreditations', {
     page: page,
     size: size,
     status: status == 'ALL' ? '' : status,
     ...rest,
   })
 
-  const columns: ExtendedColumnDef<any, any>[] = [
+  const columns: ExtendedColumnDef<AccreditationRow, unknown>[] = [
     {
       accessorKey: 'legalName',
       header: 'Tashkilot nomi',
@@ -56,20 +75,7 @@ export const ExpertiseTable = () => {
       accessorKey: 'status',
       header: 'Holati',
       className: '!w-[1%]',
-      cell: ({ row }) =>
-        row.original.status == 'ACTIVE' ? (
-          <Badge variant="success">Aktiv</Badge>
-        ) : row.original.status == 'EXPIRED' ? (
-          <Badge variant="error">Muddati o‘tgan</Badge>
-        ) : row.original.status == 'STOPPED' ? (
-          <Badge variant="error">To‘xtatilgan</Badge>
-        ) : row.original.status == 'EXPIRING_SOON' ? (
-          <Badge variant="warning" className="whitespace-nowrap">
-            Muddati yaqinlashayotgan
-          </Badge>
-        ) : row.original.status == 'CANCELLED' ? (
-          <Badge variant="error">Bekor qilingan</Badge>
-        ) : null,
+      cell: ({ row }) => (row.original.status ? STATUS_BADGES[row.original.status] : null),
     },
   ]
 

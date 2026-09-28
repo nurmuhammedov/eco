@@ -4,13 +4,14 @@ import { LegalDeclarationForm } from './legal-declaration-form'
 import { ExpertDeclarationForm } from './expert-declaration-form'
 import { Loader } from '@/shared/components/common'
 import { useAuth } from '@/shared/hooks/use-auth'
-import useData from '../../../shared/hooks/api/use-data'
-import { AccreditationStatus } from '@/entities/declarations/model/declaration.types'
+import useData from '@/shared/hooks/api/use-data'
+import { AccreditationStatus } from '@/entities/expertise/model/constants'
 import { UserRoles } from '@/shared/types/user'
+import type { DeclarationDetail } from '@/entities/declarations/model/declaration.types'
 
 export const EditDeclaration = () => {
   const { id } = useParams()
-  const { detail: declaration, isFetching } = useDetail<any>('/declarations', id, !!id)
+  const { detail: declaration, isFetching } = useDetail<DeclarationDetail>('/declarations', id, !!id)
 
   const { user } = useAuth()
   const { data: accreditationStatus, isLoading } = useData<AccreditationStatus>(

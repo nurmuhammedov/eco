@@ -1,6 +1,6 @@
 import { useAuth } from '@/shared/hooks/use-auth'
 import useData from '@/shared/hooks/api/use-data'
-import { AccreditationStatus } from '@/entities/declarations/model/declaration.types'
+import { AccreditationStatus } from '@/entities/expertise/model/constants'
 import { UserRoles } from '@/shared/types/user'
 import { ExpertDeclarationForm } from './expert-declaration-form'
 import { LegalDeclarationForm } from './legal-declaration-form'

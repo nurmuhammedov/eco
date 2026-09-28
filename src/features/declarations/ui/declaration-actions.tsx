@@ -12,10 +12,16 @@ import {
 } from '@/shared/components/ui/dialog'
 import { Textarea } from '@/shared/components/ui/textarea'
 import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
+import type { DeclarationStatus } from '@/entities/declarations/model/declaration.types'
+
+/** DeclarationRejectOrCancelDto */
+interface DeclarationReason {
+  description: string
+}
 
 interface DeclarationActionsProps {
   id: string
-  status: string
+  status?: DeclarationStatus | null
 }
 
 export const DeclarationActions = ({ id, status }: DeclarationActionsProps) => {
@@ -30,19 +36,19 @@ export const DeclarationActions = ({ id, status }: DeclarationActionsProps) => {
     mutate: confirm,
     isPending: isConfirming,
     isSuccess: isConfirmSuccess,
-  } = useAdd<any, any, any>(`/declarations/${id}/confirm`, 'Deklaratsiya tasdiqlandi!')
+  } = useAdd<object>(`/declarations/${id}/confirm`, 'Deklaratsiya tasdiqlandi!')
 
   const {
     mutate: reject,
     isPending: isRejecting,
     isSuccess: isRejectSuccess,
-  } = useAdd<{ description: string }, any, any>(`/declarations/${id}/reject`, 'Deklaratsiya rad etildi!')
+  } = useAdd<DeclarationReason>(`/declarations/${id}/reject`, 'Deklaratsiya rad etildi!')
 
   const {
     mutate: cancel,
     isPending: isCanceling,
     isSuccess: isCancelSuccess,
-  } = useAdd<{ description: string }, any, any>(`/declarations/${id}/cancel`, 'Deklaratsiya qaytarildi!')
+  } = useAdd<DeclarationReason>(`/declarations/${id}/cancel`, 'Deklaratsiya qaytarildi!')
 
   useEffect(() => {
     if (isConfirmSuccess || isRejectSuccess || isCancelSuccess) {

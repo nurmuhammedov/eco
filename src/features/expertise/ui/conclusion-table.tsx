@@ -11,15 +11,16 @@ import FileLink from '@/shared/components/common/file-link'
 import { UserRoles } from '@/shared/types/user'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { UploadCloud } from 'lucide-react'
+import type { ConclusionRow } from '@/entities/expertise/model/conclusion.types'
 
 export const ConclusionsTable = () => {
   const {
     paramsObject: { page = 1, size = 10, tab = 'ALL', periodType = 'CURRENT', ...rest },
   } = useCustomSearchParams()
   const { user } = useAuth()
-  const [id, setId] = useState<any>(null)
+  const [uploadId, setUploadId] = useState<string | null>(null)
   const navigate = useNavigate()
-  const { data = [], isLoading } = usePaginatedData<any>('/conclusions', {
+  const { data = [], isLoading } = usePaginatedData<ConclusionRow>('/conclusions', {
     page: page,
     size: size,
     type: tab == 'ALL' ? null : tab,
@@ -27,7 +28,9 @@ export const ConclusionsTable = () => {
     ...rest,
   })
 
-  const columns: ExtendedColumnDef<any, any>[] = [
+  const isOld = tab === 'XD' && periodType === 'OLD'
+
+  const columns: ExtendedColumnDef<ConclusionRow, unknown>[] = [
     {
       accessorKey: 'legalName',
       header: 'Ekspert tashkiloti nomi',
@@ -87,9 +90,9 @@ export const ConclusionsTable = () => {
       header: 'Holati',
       className: '!w-[1%]',
       cell: ({ row }) =>
-        row.original.processStatus == 'COMPLETED' ? (
+        row.original.processStatus === 'COMPLETED' ? (
           <Badge variant="success">Yakunlangan</Badge>
-        ) : row.original.processStatus == 'NEW' ? (
+        ) : row.original.processStatus === 'NEW' ? (
           <Badge variant="info">Yangi</Badge>
         ) : null,
     },
@@ -109,15 +112,13 @@ export const ConclusionsTable = () => {
     {
       header: 'Xulosa fayli',
       minSize: 200,
-      cell: ({ row }: any) => (
+      cell: ({ row }) => (
         <div>
-          {row.original?.processStatus == 'COMPLETED' && row.original.filePath ? (
+          {row.original.processStatus === 'COMPLETED' && row.original.filePath ? (
             <FileLink url={row.original.filePath} />
           ) : user?.role == UserRoles.LEGAL ? (
             <Button
-              onClick={() => {
-                setId(row.original?.id)
-              }}
+              onClick={() => setUploadId(row.original.id)}
               variant="outline"
               size="sm"
               className="border-blue-500 text-blue-500 transition-colors hover:bg-blue-50 hover:text-blue-600"
@@ -132,22 +133,17 @@ export const ConclusionsTable = () => {
     {
       id: 'actions',
       size: 50,
-      cell: ({ row }: any) => {
-        const isOld = tab === 'XD' && periodType === 'OLD'
-        return (
-          <div className="flex gap-2">
-            <DataTableRowActions
-              showEdit={row.original?.processStatus != 'COMPLETED' && user?.role == UserRoles.LEGAL && !isOld}
-              row={row}
-              showView
-              onEdit={(row: any) => !isOld && navigate(`edit/${row.original.id!}`)}
-              onView={(row: any) =>
-                isOld ? navigate(`old/detail/${row.original.id!}`) : navigate(`detail/${row.original.id!}`)
-              }
-            />
-          </div>
-        )
-      },
+      cell: ({ row }) => (
+        <div className="flex gap-2">
+          <DataTableRowActions
+            showEdit={row.original.processStatus !== 'COMPLETED' && user?.role === UserRoles.LEGAL && !isOld}
+            row={row}
+            showView
+            onEdit={(row) => !isOld && navigate(`edit/${row.original.id}`)}
+            onView={(row) => navigate(isOld ? `old/detail/${row.original.id}` : `detail/${row.original.id}`)}
+          />
+        </div>
+      ),
     },
   ]
 
@@ -162,14 +158,7 @@ export const ConclusionsTable = () => {
         isLoading={isLoading}
         className="flex-1"
       />
-      {user?.role == UserRoles.LEGAL && (
-        <ExpertiseFileUploadModal
-          id={id}
-          closeModal={() => {
-            setId(null)
-          }}
-        />
-      )}
+      {user?.role == UserRoles.LEGAL && <ExpertiseFileUploadModal id={uploadId} closeModal={() => setUploadId(null)} />}
     </div>
   )
 }

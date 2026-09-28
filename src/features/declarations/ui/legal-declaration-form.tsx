@@ -7,7 +7,6 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
 import { MultiSelect } from '@/shared/components/ui/multi-select'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
-import { cleanParams } from '@/shared/lib'
 import { InputFile } from '@/shared/components/common/file-upload'
 import { FileTypes } from '@/shared/components/common/file-upload/model/file-types'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -15,10 +14,15 @@ import { useAuth } from '@/shared/hooks/use-auth'
 import useData from '@/shared/hooks/api/use-data'
 import useAdd from '@/shared/hooks/api/use-add'
 import { useUpdate } from '@/shared/hooks'
-import { CreateDeclarationFormValues, createDeclarationSchema } from '@/entities/declarations/model/declaration.types'
+import {
+  type DeclarationDetail,
+  type LegalDeclarationFormValues,
+  legalDeclarationSchema,
+} from '@/entities/declarations/model/declaration.types'
+import type { ActiveExpert, ConclusionOption } from '@/entities/expertise/model/conclusion.types'
 
 interface LegalDeclarationFormProps {
-  initialData?: any
+  initialData?: DeclarationDetail
   isEdit?: boolean
 }
 
@@ -28,39 +32,24 @@ export const LegalDeclarationForm = ({ initialData, isEdit }: LegalDeclarationFo
   const navigate = useNavigate()
   const userTin = user?.tinOrPin?.toString()
 
-  const form = useForm<CreateDeclarationFormValues>({
-    resolver: zodResolver(createDeclarationSchema),
+  const form = useForm<LegalDeclarationFormValues>({
+    resolver: zodResolver(legalDeclarationSchema),
     mode: 'onChange',
     defaultValues: {
-      expertId: undefined,
-      customerTin: 'userTin',
-      hfIds: [],
-      conclusionId: undefined,
-      declarationPath: undefined,
-      infoLetterPath: undefined,
-      explanatoryNotePath: undefined,
+      expertId: initialData?.expertId ?? undefined,
+      hfIds: initialData?.hfIds ?? [],
+      conclusionId: initialData?.conclusionId ?? undefined,
+      declarationPath: initialData?.declarationPath ?? undefined,
+      infoLetterPath: initialData?.infoLetterPath ?? undefined,
+      explanatoryNotePath: initialData?.explanatoryNotePath ?? undefined,
     },
   })
 
-  useEffect(() => {
-    if (initialData) {
-      form.reset({
-        customerTin: initialData.customerTin?.toString() || '',
-        expertId: initialData.expertId,
-        hfIds: initialData.hfIds || [],
-        conclusionId: initialData.conclusionId,
-        declarationPath: initialData.declarationPath,
-        infoLetterPath: initialData.infoLetterPath,
-        explanatoryNotePath: initialData.explanatoryNotePath,
-      })
-    }
-  }, [initialData, form])
-
-  const { data: activeExperts } = useData<any[]>('/accreditations/active')
+  const { data: activeExperts } = useData<ActiveExpert[]>('/accreditations/active')
 
   const { data: hfOptions, isFetching: isHfLoading } = useHazardousFacilityByTinQuery(userTin)
 
-  const { data: conclusionOptions, isFetching: isConclusionsLoading } = useData<any[]>(
+  const { data: conclusionOptions, isFetching: isConclusionsLoading } = useData<ConclusionOption[]>(
     '/conclusions/select',
     !!userTin,
     { customerTin: userTin }
@@ -70,18 +59,13 @@ export const LegalDeclarationForm = ({ initialData, isEdit }: LegalDeclarationFo
     mutate: createMutate,
     isPending: isCreating,
     isSuccess: isCreateSuccess,
-  } = useAdd<CreateDeclarationFormValues, any, any>('/declarations/by-legal')
+  } = useAdd<LegalDeclarationFormValues>('/declarations/by-legal')
 
   const {
     mutate: updateMutate,
     isPending: isUpdating,
     isSuccess: isUpdateSuccess,
-  } = useUpdate<CreateDeclarationFormValues, any, any>(
-    '/declarations/by-legal',
-    id,
-    'put',
-    'Muvaffaqiyatli yangilandi!'
-  )
+  } = useUpdate<LegalDeclarationFormValues>('/declarations/by-legal', id, 'put', 'Muvaffaqiyatli yangilandi!')
 
   const isSubmitting = isCreating || isUpdating
   const isSuccess = isCreateSuccess || isUpdateSuccess
@@ -92,12 +76,9 @@ export const LegalDeclarationForm = ({ initialData, isEdit }: LegalDeclarationFo
     }
   }, [isSuccess, navigate])
 
-  const onSubmit = (data: CreateDeclarationFormValues) => {
-    if (isEdit) {
-      updateMutate(cleanParams({ ...data }) as any)
-    } else {
-      createMutate(cleanParams({ ...data }) as any)
-    }
+  const onSubmit = (values: LegalDeclarationFormValues) => {
+    if (isEdit) updateMutate(values)
+    else createMutate(values)
   }
 
   return (
@@ -123,7 +104,7 @@ export const LegalDeclarationForm = ({ initialData, isEdit }: LegalDeclarationFo
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {activeExperts?.map((expert: any) => (
+                          {activeExperts?.map((expert) => (
                             <SelectItem key={expert.id} value={expert.id.toString()}>
                               {expert.legalName}
                             </SelectItem>
@@ -156,7 +137,7 @@ export const LegalDeclarationForm = ({ initialData, isEdit }: LegalDeclarationFo
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {conclusionOptions?.map((option: any) => (
+                          {conclusionOptions?.map((option) => (
                             <SelectItem key={option.id} value={option.id}>
                               {option.registryNumber || 'Noma’lum xulosa'}
                             </SelectItem>
@@ -177,7 +158,7 @@ export const LegalDeclarationForm = ({ initialData, isEdit }: LegalDeclarationFo
                       <FormControl>
                         <MultiSelect
                           options={
-                            hfOptions?.map((opt: any) => ({
+                            hfOptions?.map((opt) => ({
                               id: opt.id,
                               name: `${opt.registryNumber || 'N/A'} - ${opt.name}`,
                             })) || []

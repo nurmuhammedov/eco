@@ -2,14 +2,19 @@ import { useHazardousFacilityByTinQuery, useLegalInfoByTinQuery } from '@/shared
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { CreateDeclarationFormValues, createDeclarationSchema } from '@/entities/declarations/model/declaration.types'
+import {
+  type DeclarationDetail,
+  type ExpertDeclarationFormValues,
+  type ExpertDeclarationPayload,
+  expertDeclarationSchema,
+} from '@/entities/declarations/model/declaration.types'
+import type { ConclusionOption } from '@/entities/expertise/model/conclusion.types'
 import { Button } from '@/shared/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
 import { Input } from '@/shared/components/ui/input'
 import { MultiSelect } from '@/shared/components/ui/multi-select'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
-import { cleanParams } from '@/shared/lib'
 import { InputFile } from '@/shared/components/common/file-upload'
 import { FileTypes } from '@/shared/components/common/file-upload/model/file-types'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -20,7 +25,7 @@ import { useUpdate } from '@/shared/hooks'
 import { toast } from 'sonner'
 
 interface ExpertDeclarationFormProps {
-  initialData?: any
+  initialData?: DeclarationDetail
   isEdit?: boolean
 }
 
@@ -30,16 +35,16 @@ export const ExpertDeclarationForm = ({ initialData, isEdit }: ExpertDeclaration
   const [searchedStir, setSearchedStir] = useState<string | null>(initialData?.customerTin?.toString() || null)
   const navigate = useNavigate()
 
-  const form = useForm<CreateDeclarationFormValues>({
-    resolver: zodResolver(createDeclarationSchema),
+  const form = useForm<ExpertDeclarationFormValues>({
+    resolver: zodResolver(expertDeclarationSchema),
     mode: 'onChange',
     defaultValues: {
       customerTin: initialData?.customerTin?.toString() || '',
       hfIds: initialData?.hfIds || [],
-      conclusionId: initialData?.conclusionId,
-      declarationPath: initialData?.declarationPath,
-      infoLetterPath: initialData?.infoLetterPath,
-      explanatoryNotePath: initialData?.explanatoryNotePath,
+      conclusionId: initialData?.conclusionId ?? undefined,
+      declarationPath: initialData?.declarationPath ?? undefined,
+      infoLetterPath: initialData?.infoLetterPath ?? undefined,
+      explanatoryNotePath: initialData?.explanatoryNotePath ?? undefined,
     },
   })
 
@@ -51,7 +56,7 @@ export const ExpertDeclarationForm = ({ initialData, isEdit }: ExpertDeclaration
 
   const { data: hfOptions, isFetching: isHfLoading } = useHazardousFacilityByTinQuery(searchedStir)
 
-  const { data: conclusionOptions, isFetching: isConclusionsLoading } = useData<any[]>(
+  const { data: conclusionOptions, isFetching: isConclusionsLoading } = useData<ConclusionOption[]>(
     '/conclusions/select',
     !!searchedStir,
     { customerTin: searchedStir }
@@ -61,18 +66,13 @@ export const ExpertDeclarationForm = ({ initialData, isEdit }: ExpertDeclaration
     mutate: createMutate,
     isPending: isCreating,
     isSuccess: isCreateSuccess,
-  } = useAdd<CreateDeclarationFormValues, any, any>('/declarations/by-expert')
+  } = useAdd<ExpertDeclarationPayload>('/declarations/by-expert')
 
   const {
     mutate: updateMutate,
     isPending: isUpdating,
     isSuccess: isUpdateSuccess,
-  } = useUpdate<CreateDeclarationFormValues, any, any>(
-    '/declarations/by-expert',
-    id,
-    'put',
-    'Muvaffaqiyatli yangilandi!'
-  )
+  } = useUpdate<ExpertDeclarationPayload>('/declarations/by-expert', id, 'put', 'Muvaffaqiyatli yangilandi!')
 
   const isSubmitting = isCreating || isUpdating
   const isSuccess = isCreateSuccess || isUpdateSuccess
@@ -103,12 +103,10 @@ export const ExpertDeclarationForm = ({ initialData, isEdit }: ExpertDeclaration
     form.reset()
   }
 
-  const onSubmit = (data: CreateDeclarationFormValues) => {
-    if (isEdit) {
-      updateMutate(cleanParams({ ...data }) as any)
-    } else {
-      createMutate(cleanParams({ ...data }) as any)
-    }
+  const onSubmit = ({ customerTin, ...values }: ExpertDeclarationFormValues) => {
+    const payload = { ...values, customerTin: Number(customerTin) }
+    if (isEdit) updateMutate(payload)
+    else createMutate(payload)
   }
 
   const hasLegalInfo = !!legalInfo && !isLegalInfoError
@@ -206,7 +204,7 @@ export const ExpertDeclarationForm = ({ initialData, isEdit }: ExpertDeclaration
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              {conclusionOptions?.map((option: any) => (
+                              {conclusionOptions?.map((option) => (
                                 <SelectItem key={option.id} value={option.id}>
                                   {option.registryNumber || 'Noma’lum xulosa'}
                                 </SelectItem>
@@ -227,7 +225,7 @@ export const ExpertDeclarationForm = ({ initialData, isEdit }: ExpertDeclaration
                           <FormControl>
                             <MultiSelect
                               options={
-                                hfOptions?.map((opt: any) => ({
+                                hfOptions?.map((opt) => ({
                                   id: opt.id,
                                   name: `${opt.registryNumber || 'N/A'} - ${opt.name}`,
                                 })) || []
