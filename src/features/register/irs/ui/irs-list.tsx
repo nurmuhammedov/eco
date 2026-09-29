@@ -1,5 +1,6 @@
 import { IrsCategory, IrsUsageType } from '@/entities/create-application'
 import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table'
+import { canUpdateRegistryType } from '@/features/register/model/can-update-registry'
 import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks'
 import { getDate } from '@/shared/utils/date'
 import { useNavigate } from 'react-router-dom'
@@ -188,6 +189,7 @@ export const IrsList = ({ isArchive, radiationProfileId, hideTabs }: IrsListProp
           onView={(row) => handleViewApplication(row.original.id)}
           showEdit={
             !isArchive &&
+            canUpdateRegistryType('IRS', user?.role) &&
             (user?.role === UserRoles.MANAGER || user?.role === UserRoles.LEGAL || user?.isController) &&
             currentValid === 'true'
           }
@@ -198,11 +200,12 @@ export const IrsList = ({ isArchive, radiationProfileId, hideTabs }: IrsListProp
   ]
 
   const canManageOrgs =
-    user?.role === UserRoles.LEGAL ||
-    user?.role === UserRoles.MANAGER ||
-    user?.role === UserRoles.HEAD ||
-    user?.isSupervisor ||
-    user?.isController
+    canUpdateRegistryType('IRS', user?.role) &&
+    (user?.role === UserRoles.LEGAL ||
+      user?.role === UserRoles.MANAGER ||
+      user?.role === UserRoles.HEAD ||
+      user?.isSupervisor ||
+      user?.isController)
 
   const orgColumns: ExtendedColumnDef<IrsRow, unknown>[] = [
     {

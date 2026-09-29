@@ -1,4 +1,5 @@
 import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table'
+import { canUpdateRegistryType } from '@/features/register/model/can-update-registry'
 import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks'
 import { getDate } from '@/shared/utils/date'
 import { useNavigate } from 'react-router-dom'
@@ -148,6 +149,7 @@ export const XrayList = ({ isArchive, radiationProfileId, hideTabs }: XrayListPr
           onView={(row) => handleViewApplication(row.original.id)}
           showEdit={
             !isArchive &&
+            canUpdateRegistryType('XRAY', user?.role) &&
             (user?.role === UserRoles.MANAGER || user?.role === UserRoles.LEGAL || user?.isController) &&
             ['ACTIVE', 'EXPIRED', 'NO_DATE'].includes(currentStatus)
           }
@@ -158,11 +160,12 @@ export const XrayList = ({ isArchive, radiationProfileId, hideTabs }: XrayListPr
   ]
 
   const canManageOrgs =
-    user?.role === UserRoles.LEGAL ||
-    user?.role === UserRoles.MANAGER ||
-    user?.role === UserRoles.HEAD ||
-    user?.isSupervisor ||
-    user?.isController
+    canUpdateRegistryType('XRAY', user?.role) &&
+    (user?.role === UserRoles.LEGAL ||
+      user?.role === UserRoles.MANAGER ||
+      user?.role === UserRoles.HEAD ||
+      user?.isSupervisor ||
+      user?.isController)
 
   const orgColumns: ExtendedColumnDef<XrayRow, unknown>[] = [
     {
