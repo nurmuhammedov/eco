@@ -51,7 +51,7 @@ export { CardForm } from './ui/application-form-card'
 export { ApplicationIcons } from './lib/application-icons'
 export { getApplicationByType } from './lib/get-application-by-type'
 export { getApplicationTitle, getAppealTypeFilterOptions, isKnownAppealType } from './lib/get-application-title'
-export { getApplicationAccess, isApplicationDisabled } from './lib/application-access'
+export { getApplicationAccess, isApplicationDisabled, isCategoryClosed } from './lib/application-access'
 export { useApplicationFormConstants } from './constants/form-constants'
 
 //mutations

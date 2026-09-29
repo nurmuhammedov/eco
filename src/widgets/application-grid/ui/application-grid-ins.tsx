@@ -55,8 +55,8 @@ export const ApplicationsGridIns: React.FC = () => {
 
   return (
     <TabsLayout
-      activeTab={activeTab}
-      defaultValue={activeTab}
+      activeTab={activeTab ?? ''}
+      defaultValue={activeTab ?? undefined}
       classNameTabList="px-4 py-6"
       tabs={
         user?.role == UserRoles.INDIVIDUAL

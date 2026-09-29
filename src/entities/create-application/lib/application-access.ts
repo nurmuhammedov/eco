@@ -24,11 +24,18 @@ const CATEGORIES_BY_ROLE: Partial<Record<UserRoles, ApplicationCategory[]>> = {
 }
 
 /** Whole categories closed for now; drop one from the list to open it again */
-const CLOSED_CATEGORIES: ApplicationCategory[] = [ApplicationCategory.EQUIPMENTS]
+const CLOSED_CATEGORIES: ApplicationCategory[] = [
+  ApplicationCategory.EQUIPMENTS,
+  ApplicationCategory.IRS,
+  ApplicationCategory.XRAY,
+]
+
+/** A closed category keeps its tab out of the application grid */
+export const isCategoryClosed = (category: ApplicationCategory): boolean => CLOSED_CATEGORIES.includes(category)
 
 /** Temporarily unavailable: shown as such in the grid */
 export const isCardDisabled = (item: ApplicationCardItem): boolean =>
-  !!item.disabled || (!!item.category && CLOSED_CATEGORIES.includes(item.category))
+  !!item.disabled || (!!item.category && isCategoryClosed(item.category))
 
 /** Temporarily unavailable, both in the grid and by direct URL */
 export const isApplicationDisabled = (type: ApplicationTypeEnum): boolean =>

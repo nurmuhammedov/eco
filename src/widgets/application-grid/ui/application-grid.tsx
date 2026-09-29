@@ -7,14 +7,37 @@ import {
   ACCREDITATION_APPLICATION_CATEGORY,
   APPLICATION_CATEGORIES,
   ApplicationCategory,
+  isCategoryClosed,
 } from '@/entities/create-application'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { UserRoles } from '@/shared/types/user'
 
+const roleTabs = (role?: UserRoles) =>
+  role == UserRoles.INDIVIDUAL
+    ? [
+        {
+          id: ApplicationCategory.EQUIPMENTS,
+          name: 'Xavfli obyektlar va qurilmalar',
+        },
+      ]
+    : role == UserRoles.INSPECTOR
+      ? [
+          {
+            id: ApplicationCategory.ILLEGAL_HF,
+            name: 'XICHO',
+          },
+        ]
+      : role == UserRoles.LEGAL
+        ? [...APPLICATION_CATEGORIES, ACCREDITATION_APPLICATION_CATEGORY]
+        : APPLICATION_CATEGORIES
+
 export const ApplicationsGrid: React.FC = () => {
-  const { activeTab, mainCards, selectedMainCard, handleMainCardSelect, handleChangeTab, displayedSubCards } =
-    useApplicationGrid()
   const { user } = useAuth()
+  const tabs = useMemo(() => roleTabs(user?.role).filter((tab) => !isCategoryClosed(tab.id)), [user?.role])
+  const openTabs = useMemo(() => tabs.map((tab) => tab.id), [tabs])
+
+  const { activeTab, mainCards, selectedMainCard, handleMainCardSelect, handleChangeTab, displayedSubCards } =
+    useApplicationGrid(openTabs)
 
   const hasMainCards = useMemo(() => mainCards.length > 0, [mainCards])
   const hasSubCards = useMemo(() => displayedSubCards.length > 0, [displayedSubCards])
@@ -57,30 +80,20 @@ export const ApplicationsGrid: React.FC = () => {
 
   SubApplication.displayName = 'SubApplication'
 
+  if (tabs.length === 0) {
+    return (
+      <div className="py-12 text-center">
+        <p className="text-slate-500">Ariza yuborish vaqtincha to‘xtatilgan</p>
+      </div>
+    )
+  }
+
   return (
     <TabsLayout
-      activeTab={activeTab}
-      defaultValue={activeTab}
+      activeTab={activeTab ?? ''}
+      defaultValue={activeTab ?? undefined}
       classNameTabList="px-4 py-6"
-      tabs={
-        user?.role == UserRoles.INDIVIDUAL
-          ? [
-              {
-                id: ApplicationCategory.EQUIPMENTS,
-                name: 'Xavfli obyektlar va qurilmalar',
-              },
-            ]
-          : user?.role == UserRoles.INSPECTOR
-            ? [
-                {
-                  id: ApplicationCategory.ILLEGAL_HF,
-                  name: 'XICHO',
-                },
-              ]
-            : user?.role == UserRoles.LEGAL
-              ? [...APPLICATION_CATEGORIES, ACCREDITATION_APPLICATION_CATEGORY]
-              : APPLICATION_CATEGORIES
-      }
+      tabs={tabs}
       classNameTrigger="text-base mx-0.5"
       className="3xl:font-semibold font-medium"
       onTabChange={(value) => handleChangeTab(value as ApplicationCategory)}

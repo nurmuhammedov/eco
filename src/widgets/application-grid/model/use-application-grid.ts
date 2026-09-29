@@ -9,7 +9,8 @@ import { useCallback, useMemo } from 'react'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { UserRoles } from '@/shared/types/user'
 
-export function useApplicationGrid() {
+/** `openTabs`, when given, are the only tabs that can be active; a closed one asked for falls back to the first */
+export function useApplicationGrid(openTabs?: ApplicationCategory[]) {
   const { user } = useAuth()
 
   const { filters, setFilters } = useFilters({
@@ -25,10 +26,11 @@ export function useApplicationGrid() {
     ),
   })
 
-  const activeTab = useMemo<ApplicationCategory>(
-    () => filters['active-application-tab'] as ApplicationCategory,
-    [filters]
-  )
+  const activeTab = useMemo<ApplicationCategory | null>(() => {
+    const requested = filters['active-application-tab'] as ApplicationCategory
+    if (!openTabs || openTabs.includes(requested)) return requested
+    return openTabs[0] ?? null
+  }, [filters, openTabs])
 
   const selectedMainCard = useMemo<MainApplicationCategory | null>(
     () => filters['selected-main-card'] as MainApplicationCategory | null,
