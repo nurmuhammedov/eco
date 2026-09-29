@@ -1,5 +1,6 @@
 import { ApplicationCardItem } from '../types/types'
 import { ApplicationIcons } from '../lib/application-icons'
+import { isCardDisabled } from '../lib/application-access'
 import { ApplicationTypeEnum } from '../types/enums'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -66,7 +67,7 @@ const AnimatedButton = ({
 }
 
 function ApplicationCard({ application, btnTitle }: ApplicationCardProps) {
-  const isDisabled = !!application.disabled
+  const isDisabled = isCardDisabled(application)
 
   return (
     <div

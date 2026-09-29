@@ -1,6 +1,7 @@
 import { UserRoles } from '@/shared/types/user'
 import { APPLICATIONS_DATA } from '../constants/constants'
 import { ApplicationCategory, ApplicationTypeEnum } from '../types/enums'
+import type { ApplicationCardItem } from '../types/types'
 
 /**
  * Which application categories a role may submit.
@@ -22,9 +23,16 @@ const CATEGORIES_BY_ROLE: Partial<Record<UserRoles, ApplicationCategory[]>> = {
   [UserRoles.MANAGER]: [ApplicationCategory.ILLEGAL_IRS, ApplicationCategory.ILLEGAL_XRAY],
 }
 
+/** Whole categories closed for now; drop one from the list to open it again */
+const CLOSED_CATEGORIES: ApplicationCategory[] = [ApplicationCategory.EQUIPMENTS]
+
+/** Temporarily unavailable: shown as such in the grid */
+export const isCardDisabled = (item: ApplicationCardItem): boolean =>
+  !!item.disabled || (!!item.category && CLOSED_CATEGORIES.includes(item.category))
+
 /** Temporarily unavailable, both in the grid and by direct URL */
 export const isApplicationDisabled = (type: ApplicationTypeEnum): boolean =>
-  APPLICATIONS_DATA.some((item) => item.type === type && item.disabled)
+  APPLICATIONS_DATA.some((item) => item.type === type && isCardDisabled(item))
 
 export type ApplicationAccess = 'allowed' | 'disabled' | 'forbidden'
 
