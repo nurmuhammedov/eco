@@ -24,7 +24,7 @@ export type CalcType = 'PLAN' | 'PENALTY'
 // ─── Schema ──────────────────────────────────────────────────────────────────
 const indicatorSchema = z
   .object({
-    name: z.string().min(1),
+    name: z.string().min(1).max(1000),
     calculation_type: z.enum(['PLAN', 'PENALTY']),
     target: z.coerce.number().min(0),
     penalty_per_unit: z.coerce.number().min(0.01).max(100).optional().nullable(),
@@ -292,7 +292,7 @@ export function KpiTaskModal({ isOpen, onClose, editData, defaultYear, defaultQu
                       render={({ field }) => (
                         <FormItem>
                           <FormControl>
-                            <Input placeholder="Indikator nomi" {...field} />
+                            <Input placeholder="Indikator nomi" maxLength={1000} {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
