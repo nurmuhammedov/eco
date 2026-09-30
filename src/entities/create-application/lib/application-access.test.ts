@@ -20,7 +20,13 @@ describe('getApplicationAccess', () => {
 
   it('leaves the inspectors’ and managers’ own registrations open', () => {
     expect(getApplicationAccess(ApplicationTypeEnum.ILLEGAL_REGISTER_BOILER, UserRoles.INSPECTOR)).toBe('allowed')
+    expect(getApplicationAccess(ApplicationTypeEnum.ILLEGAL_REGISTER_CRANE, UserRoles.INSPECTOR)).toBe('allowed')
+    expect(getApplicationAccess(ApplicationTypeEnum.ILLEGAL_REGISTER_ATTRACTION, UserRoles.INSPECTOR)).toBe('allowed')
     expect(getApplicationAccess(ApplicationTypeEnum.ILLEGAL_REGISTER_IRS, UserRoles.MANAGER)).toBe('allowed')
+  })
+
+  it('keeps the inspectors’ HF registration closed', () => {
+    expect(getApplicationAccess(ApplicationTypeEnum.ILLEGAL_REGISTER_HF, UserRoles.INSPECTOR)).toBe('disabled')
   })
 
   it('does not judge an edit of an existing record', () => {

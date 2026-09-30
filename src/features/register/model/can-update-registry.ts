@@ -4,7 +4,7 @@ import { UserRoles } from '@/shared/types/user'
  * Registry records an inspector may not edit directly - the change has to go
  * through a request instead.
  */
-const INSPECTOR_LOCKED_TYPES = ['HF', 'ATTRACTION', 'CRANE', 'AUTO_CRANE']
+const INSPECTOR_LOCKED_TYPES = ['HF']
 
 /** Organisations and citizens may edit only these of their records for now */
 const OWNER_ROLES = [UserRoles.LEGAL, UserRoles.INDIVIDUAL]
