@@ -23,6 +23,7 @@ import {
   CRANE_EXCLUDED_CHILD_IDS,
   CRANE_TAB_CHILD_ID,
   buildRegisterQuery,
+  pinnedChildIds,
 } from '@/features/register/model/build-register-query'
 import { REPORT_KEYS, RESET_KEYS } from '@/features/register/model/report-drill-down'
 import { RegisterActiveTab } from '@/features/register/model/register-tabs'
@@ -75,8 +76,9 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
   const activityType = paramText(paramsObject.activityType)
   const isParkType = PARK_TYPES.includes(type)
 
-  // A crane tab pinned to one child type - the type filter has nothing left to offer.
+  // A crane tab pinned to its own child types; the type filter picks among those only.
   const pinnedChildId = CRANE_TAB_CHILD_ID[String(type)]
+  const pinnedChildList = pinnedChildId?.split(',') ?? []
   const isPinnedCrane = !!pinnedChildId
   const equipmentType = isPinnedCrane ? 'CRANE' : type
   // The plain crane tab shows only what the two crane tabs leave over.
@@ -107,7 +109,7 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
       active: 'true',
       type: !isTanker && equipmentType !== 'ALL' ? equipmentType : '',
       childEquipmentId: pinnedChildId ? '' : childEquipmentId,
-      childEquipmentIds: pinnedChildId ?? '',
+      childEquipmentIds: pinnedChildIds(type, childEquipmentId) ?? '',
       excludeChildEquipmentIds: excludedChildIds,
       regionId: regionId === 'ALL' ? '' : regionId,
       size: 1,
@@ -250,11 +252,15 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
       header: 'Qurilmaning turi',
       accessorKey: 'childEquipment',
       maxSize: 150,
-      // A pinned crane tab has no type left to pick, so it carries no filter at all.
-      filterKey: isPinnedCrane ? undefined : 'childEquipmentId',
+      // A crane tab pinned to a single type has nothing left to pick, so it carries no filter at all.
+      filterKey: pinnedChildList.length === 1 ? undefined : 'childEquipmentId',
       filterType: 'select',
       filterOptions:
-        childEquipmentTypes?.filter((child) => !excludedChildIds.split(',').includes(String(child.id))) || [],
+        childEquipmentTypes?.filter((child) =>
+          isPinnedCrane
+            ? pinnedChildList.includes(String(child.id))
+            : !excludedChildIds.split(',').includes(String(child.id))
+        ) || [],
     },
     {
       header: 'Tashkilot/Fuqaro nomi',

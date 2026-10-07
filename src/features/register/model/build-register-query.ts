@@ -31,6 +31,19 @@ export const CRANE_TAB_CHILD_ID: Record<string, string | undefined> = {
 export const CRANE_EXCLUDED_CHILD_IDS = Object.values(CRANE_TAB_CHILD_ID).join(',')
 
 /**
+ * The child types a pinned crane tab asks for: the one picked in its type filter
+ * when that is one of the tab's own, otherwise all of them.
+ */
+export const pinnedChildIds = (type: UrlParamValue, childEquipmentId: UrlParamValue) => {
+  const pinned = CRANE_TAB_CHILD_ID[String(type)]
+  if (!pinned) return undefined
+
+  const picked = String(childEquipmentId ?? '')
+
+  return picked && pinned.split(',').includes(picked) ? picked : pinned
+}
+
+/**
  * Arriving from the deregistration report, the two report params define the set
  * on their own, so the tab's own change filters are left out. changed=true is
  * what resolves the pending change onto the row, which the request type column
@@ -204,7 +217,7 @@ function buildEquipmentsQuery({
     params: {
       type: equipmentType !== 'ALL' ? equipmentType : '',
       childEquipmentId: pinnedChildId ? '' : childEquipmentId,
-      childEquipmentIds: pinnedChildId ?? '',
+      childEquipmentIds: pinnedChildIds(type, childEquipmentId) ?? '',
       excludeChildEquipmentIds: type === 'CRANE' ? CRANE_EXCLUDED_CHILD_IDS : '',
       mode,
       regionId: normalizeRegionId(regionId),
