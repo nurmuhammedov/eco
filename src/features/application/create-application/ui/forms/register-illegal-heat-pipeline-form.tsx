@@ -63,9 +63,7 @@ const RegisterIllegalHeatPipelineForm = ({ onSubmit, isPending = false }: Regist
     <Form {...form}>
       <form autoComplete="off" onSubmit={form.handleSubmit(handleSubmit)}>
         <GoBack
-          title={
-            isUpdate ? 'Issiqlik tarmog‘i ma’lumotlarini tahrirlash' : 'Issiqlik tarmog‘ini ro‘yxatga olish arizasi'
-          }
+          title={isUpdate ? 'Issiqlik tarmog‘i ma’lumotlarini tahrirlash' : 'Issiqlik tarmog‘ini ro‘yxatga olish'}
         />
         <NoteForm equipmentName="issiqlik tarmog‘i" />
 
@@ -560,7 +558,7 @@ const RegisterIllegalHeatPipelineForm = ({ onSubmit, isPending = false }: Regist
           loading={isPending || isSubmitPending}
           className="mt-0"
         >
-          {isUpdate ? 'Saqlash' : 'Ariza yaratish'}
+          {isUpdate ? 'Saqlash' : 'Ro‘yxatga olish'}
         </Button>
       </form>
     </Form>

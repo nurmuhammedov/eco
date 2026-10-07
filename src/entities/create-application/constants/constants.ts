@@ -248,9 +248,9 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
   },
   {
     id: 65,
-    title: 'Kranni ro‘yxatga olish arizasi',
+    title: 'Kranni ro‘yxatga olish',
     name: 'Kran',
-    description: 'Kranni ro‘yxatga olish arizasi',
+    description: 'Kranni ro‘yxatga olish',
     category: ApplicationCategory.ILLEGAL_EQUIPMENTS,
     type: ApplicationTypeEnum.ILLEGAL_REGISTER_CRANE,
     icon: 'crane',
@@ -293,9 +293,9 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
   },
   {
     id: 71,
-    title: 'Quvurlarni ro‘yxatga olish ariza shakli',
+    title: 'Quvurlarni ro‘yxatga olish',
     name: 'Quvur',
-    description: 'Quvurlarni ro‘yxatga olish ariza shakli',
+    description: 'Quvurlarni ro‘yxatga olish',
     category: ApplicationCategory.ILLEGAL_EQUIPMENTS,
     type: ApplicationTypeEnum.ILLEGAL_REGISTER_PIPELINE,
     icon: 'pipeSystem',
@@ -375,7 +375,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
   {
     id: 2,
     title: 'XICHOni ro‘yxatga olish',
-    description: 'XICHOni ro‘yxatga olish ariza shakli',
+    description: 'XICHOni ro‘yxatga olish',
     category: ApplicationCategory.ILLEGAL_HF,
     type: ApplicationTypeEnum.ILLEGAL_REGISTER_HF,
     icon: 'factoryRegisterIcon',
@@ -392,7 +392,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
   {
     id: 55,
     title: 'Rentgenni ro‘yxatga olish',
-    description: 'Rentgenni ro‘yxatga olish ariza shakli',
+    description: 'Rentgenni ro‘yxatga olish',
     category: ApplicationCategory.ILLEGAL_XRAY,
     type: ApplicationTypeEnum.ILLEGAL_REGISTER_XRAY,
     icon: 'radiationRegisterIcon',
@@ -408,7 +408,7 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
   {
     id: 52,
     title: 'Ionlashtiruvchi nurlanish manbalarini ro‘yxatga olish',
-    description: 'Ionlashtiruvchi nurlanish manbalarini ro‘yxatga olish ariza shakli',
+    description: 'Ionlashtiruvchi nurlanish manbalarini ro‘yxatga olish',
     category: ApplicationCategory.ILLEGAL_IRS,
     type: ApplicationTypeEnum.ILLEGAL_REGISTER_IRS,
     icon: 'radiationReceiveIcon',

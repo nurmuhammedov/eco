@@ -14,13 +14,24 @@ import useData from '../../../../shared/hooks/api/use-data'
 import { API_ENDPOINTS } from '@/shared/api'
 import { UserRoles } from '@/shared/types/user'
 import type { OptionItem } from '@/shared/types/general'
+import { RegistrationMode } from '../model/registration-mode'
 
-export const ApplicationTable = () => {
+export const ApplicationTable = ({ mode }: { mode: RegistrationMode }) => {
   const navigate = useNavigate()
   const { user } = useAuth()
+  // The committee's own registrations are not appeals, so nothing here may call them one
+  const isRegistration = mode === RegistrationMode.UNOFFICIAL
 
   const {
-    paramsObject: { status = ApplicationStatus.ALL, mode, search = '', startDate = '', endDate = '', ...rest },
+    // A mode left in an old link would cross the two lists, so the page's own one wins
+    paramsObject: {
+      status = ApplicationStatus.ALL,
+      mode: _linkMode,
+      search = '',
+      startDate = '',
+      endDate = '',
+      ...rest
+    },
   } = useCustomSearchParams()
 
   // An old link may carry a type the backend no longer accepts, and it would
@@ -47,13 +58,13 @@ export const ApplicationTable = () => {
     const ownerColumns: ExtendedColumnDef<ApplicationRow>[] = [
       {
         accessorKey: 'ownerName',
-        header: 'Arizachi tashkilot nomi',
+        header: isRegistration ? 'Tashkilot nomi' : 'Arizachi tashkilot nomi',
         filterKey: 'ownerName',
         filterType: 'search',
       },
       {
         accessorKey: 'ownerIdentity',
-        header: 'Arizachi STIR/JSHSHIR',
+        header: isRegistration ? 'STIR/JSHSHIR' : 'Arizachi STIR/JSHSHIR',
         className: '!w-[1%]',
         filterKey: 'search',
         filterType: 'number',
@@ -64,19 +75,23 @@ export const ApplicationTable = () => {
     return [
       {
         accessorKey: 'number',
-        header: () => <div className="whitespace-nowrap">Ariza raqami</div>,
+        header: () => (
+          <div className="whitespace-nowrap">{isRegistration ? 'Ro‘yxatga olish raqami' : 'Ariza raqami'}</div>
+        ),
         className: '!w-[1%] whitespace-nowrap',
         filterKey: 'search',
         filterType: 'search',
       },
       {
         id: 'date',
-        header: () => <div className="whitespace-nowrap">Ariza sanasi</div>,
+        header: () => (
+          <div className="whitespace-nowrap">{isRegistration ? 'Ro‘yxatga olish sanasi' : 'Ariza sanasi'}</div>
+        ),
         className: '!w-[1%]',
         accessorFn: (row) => getDate(row.createdAt),
       },
       {
-        header: 'Ariza turi',
+        header: isRegistration ? 'Ro‘yxatga olish turi' : 'Ariza turi',
         accessorKey: 'appealType',
         filterKey: 'appealType',
         filterType: 'select',
@@ -115,7 +130,7 @@ export const ApplicationTable = () => {
         filterType: 'date-range',
       },
       {
-        header: 'Ariza holati',
+        header: isRegistration ? 'Holati' : 'Ariza holati',
         cell: (cell) => (
           <div className="flex items-center gap-1.5">
             {cell.row.original.status && <ApplicationStatusBadge status={cell.row.original.status} />}
@@ -130,12 +145,12 @@ export const ApplicationTable = () => {
             showView
             showDelete
             row={row}
-            onView={(row) => navigate(`/applications/${row.original.id}`)}
+            onView={(row) => navigate(`/${isRegistration ? 'registrations' : 'applications'}/${row.original.id}`)}
           />
         ),
       },
     ]
-  }, [user, officeSelect, executorOptions, navigate])
+  }, [user, officeSelect, executorOptions, navigate, isRegistration])
 
   return <DataTable showFilters isLoading={isLoading} isPaginated data={applications} columns={columns || []} />
 }

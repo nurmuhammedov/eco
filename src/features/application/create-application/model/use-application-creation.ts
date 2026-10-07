@@ -85,8 +85,10 @@ export function useApplicationCreation({ pdfEndpoint, onError, submitEndpoint }:
     onSuccess: ({ success }) => {
       if (success) {
         resetState()
-        navigate('/applications')
-        toast.success('Ariza muvaffaqqiyatli yuborildi')
+        // What the committee registers itself is not an appeal and lives in its own list
+        const isRegistration = submitEndpoint.includes('/unofficial')
+        navigate(isRegistration ? '/registrations' : '/applications')
+        toast.success(isRegistration ? 'Muvaffaqqiyatli ro‘yxatga olindi' : 'Ariza muvaffaqqiyatli yuborildi')
       }
     },
     mutationKey: ['submit-application'],

@@ -19,7 +19,7 @@ export const ApplicationsGridIns: React.FC = () => {
     if (!hasMainCards) {
       return (
         <div className="py-12 text-center">
-          <p className="text-slate-500">Bu toifada hozircha arizalar mavjud emas!</p>
+          <p className="text-slate-500">Bu toifada hozircha ro‘yxatga olish turlari mavjud emas!</p>
         </div>
       )
     }
@@ -27,7 +27,7 @@ export const ApplicationsGridIns: React.FC = () => {
     if (selectedMainCard && !hasSubCards) {
       return (
         <div className="py-12 text-center">
-          <p className="text-slate-500">Tanlangan toifaga oid arizalar mavjud emas!</p>
+          <p className="text-slate-500">Tanlangan toifaga oid ro‘yxatga olish turlari mavjud emas!</p>
         </div>
       )
     }

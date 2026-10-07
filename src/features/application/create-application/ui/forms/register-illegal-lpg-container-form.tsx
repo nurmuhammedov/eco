@@ -62,7 +62,7 @@ const RegisterIllegalLpgContainerForm = ({ onSubmit, isPending = false }: Regist
   return (
     <Form {...form}>
       <form autoComplete="off" onSubmit={form.handleSubmit(handleSubmit)}>
-        <GoBack title={isUpdate ? 'Idish (SUG) ma’lumotlarini tahrirlash' : 'Idish (SUG)ni ro‘yxatga olish arizasi'} />
+        <GoBack title={isUpdate ? 'Idish (SUG) ma’lumotlarini tahrirlash' : 'Idish (SUG)ni ro‘yxatga olish'} />
         <NoteForm equipmentName="idish (SUG)" />
 
         <ApplicantSearchCard
@@ -538,7 +538,7 @@ const RegisterIllegalLpgContainerForm = ({ onSubmit, isPending = false }: Regist
           loading={isPending || isSubmitPending}
           className="mt-0"
         >
-          {isUpdate ? 'Saqlash' : 'Ariza yaratish'}
+          {isUpdate ? 'Saqlash' : 'Ro‘yxatga olish'}
         </Button>
       </form>
     </Form>

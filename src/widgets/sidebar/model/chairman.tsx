@@ -9,6 +9,12 @@ export default [
     icon: MODULE_ICONS.APPEAL,
   },
   {
+    id: 'COMMITTEE_REGISTRATION',
+    title: 'Ro‘yxatga olish',
+    url: '/registrations',
+    icon: MODULE_ICONS.COMMITTEE_REGISTRATION,
+  },
+  {
     id: 'REGISTRY',
     title: 'menu.register',
     url: '/register',

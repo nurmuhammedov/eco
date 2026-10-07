@@ -506,7 +506,7 @@ const RegisterIllegalXrayForm = ({ onSubmit, isPending = false }: RegisterIllega
               yangilash imkoniyati mavjud.{' '}
               {isUpdate
                 ? 'Tashkilot hujjatlari to‘liq mavjud bo‘lganda tahrirlash mumkin!'
-                : ' Arizani tashkilot hujjatlari to‘liq mavjud bo‘lganda yuborish mumkin!'}
+                : ' Tashkilot hujjatlari to‘liq mavjud bo‘lganda ro‘yxatga olish mumkin!'}
             </AlertDescription>
           </Alert>
         )}
@@ -692,7 +692,7 @@ const RegisterIllegalXrayForm = ({ onSubmit, isPending = false }: RegisterIllega
         )}
 
         <Button type="submit" loading={isPending || isSubmitPending} disabled={hasIncompleteOrgFiles}>
-          {isUpdate ? 'Saqlash' : 'Ariza yaratish'}
+          {isUpdate ? 'Saqlash' : 'Ro‘yxatga olish'}
         </Button>
       </form>
     </Form>

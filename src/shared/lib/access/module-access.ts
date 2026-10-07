@@ -2,12 +2,25 @@ import { Direction, UserRoles, UserState } from '@/shared/types/user'
 
 type Viewer = Pick<UserState, 'role' | 'directions'>
 
+/** Registrations made by the committee itself, shown apart from the applicants' appeals */
+export const COMMITTEE_REGISTRATION_MODULE = 'COMMITTEE_REGISTRATION'
+
 /** These cabinets are fixed by role; a direction never enters into them. */
 const ROLES_WITHOUT_DIRECTIONS: UserRoles[] = [UserRoles.ADMIN, UserRoles.HR]
 
 /** Guarded by role on the backend rather than by a direction of its own. */
 const ROLE_ONLY_MODULES: Record<string, UserRoles[]> = {
   ORGANIZATIONS: [UserRoles.HEAD, UserRoles.REGIONAL, UserRoles.CHAIRMAN],
+  // Temporary: until the law allows the committee to register by application, what its
+  // staff register is kept apart from the applicants' appeals. Supervisors and controllers
+  // sign in as REGIONAL and INSPECTOR.
+  [COMMITTEE_REGISTRATION_MODULE]: [
+    UserRoles.INSPECTOR,
+    UserRoles.REGIONAL,
+    UserRoles.CHAIRMAN,
+    UserRoles.MANAGER,
+    UserRoles.HEAD,
+  ],
 }
 
 /** Applicants raise and follow their own enquiries without being given the direction. */

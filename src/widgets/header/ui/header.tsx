@@ -98,6 +98,7 @@ export function Header() {
       { path: '/attestations', title: 'Attestatsiya' },
       { path: '/dashboard', title: 'Bosh sahifa' },
       { path: '/register', title: 'Reyestrlar' },
+      { path: '/registrations', title: 'Ro‘yxatga olish' },
       { path: '/applications', title: 'Arizalar' },
       { path: '/preventions', title: 'Profilaktika' },
       { path: '/expertise-organizations', title: 'Ekspert tashkilotlar' },

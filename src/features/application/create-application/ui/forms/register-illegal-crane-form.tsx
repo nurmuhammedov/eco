@@ -61,7 +61,7 @@ const RegisterIllegalCraneForm = ({ onSubmit, isPending = false }: RegisterIlleg
   return (
     <Form {...form}>
       <form autoComplete="off" onSubmit={form.handleSubmit(handleSubmit)}>
-        <GoBack title={isUpdate ? 'Kran ma’lumotlarini tahrirlash' : 'Kranni ro‘yxatga olish arizasi'} />
+        <GoBack title={isUpdate ? 'Kran ma’lumotlarini tahrirlash' : 'Kranni ro‘yxatga olish'} />
         <NoteForm equipmentName="kran" />
 
         <ApplicantSearchCard
@@ -551,7 +551,7 @@ const RegisterIllegalCraneForm = ({ onSubmit, isPending = false }: RegisterIlleg
         </CardForm>
 
         <Button type="submit" disabled={!ownerData && !isUpdate} loading={isPending || isSubmitPending}>
-          {isUpdate ? 'Saqlash' : 'Ariza yaratish'}
+          {isUpdate ? 'Saqlash' : 'Ro‘yxatga olish'}
         </Button>
       </form>
     </Form>

@@ -63,9 +63,7 @@ const RegisterIllegalOilContainerForm = ({ onSubmit, isPending = false }: Regist
   return (
     <Form {...form}>
       <form autoComplete="off" onSubmit={form.handleSubmit(handleSubmit)}>
-        <GoBack
-          title={isUpdate ? 'Ma’lumotlarni tahrirlash' : 'Neft mahsulotlar saqlovchi idishni ro‘yxatga olish arizasi'}
-        />
+        <GoBack title={isUpdate ? 'Ma’lumotlarni tahrirlash' : 'Neft mahsulotlar saqlovchi idishni ro‘yxatga olish'} />
         <NoteForm equipmentName="neft mahsulotlari saqlovchi idish" />
 
         <CardForm className="my-2">
@@ -445,7 +443,7 @@ const RegisterIllegalOilContainerForm = ({ onSubmit, isPending = false }: Regist
         </CardForm>
 
         <Button type="submit" disabled={!ownerData && !isUpdate} loading={isPending || isSubmitPending}>
-          {isUpdate ? 'Saqlash' : 'Ariza yaratish'}
+          {isUpdate ? 'Saqlash' : 'Ro‘yxatga olish'}
         </Button>
       </form>
     </Form>

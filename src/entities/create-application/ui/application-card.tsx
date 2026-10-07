@@ -96,7 +96,11 @@ function ApplicationCard({ application, btnTitle }: ApplicationCardProps) {
       ) : (
         <div className="mb-6" />
       )}
-      <AnimatedButton type={application.type} btnTitle={btnTitle} disabled={isDisabled} />
+      <AnimatedButton
+        type={application.type}
+        btnTitle={btnTitle ?? (String(application.type).startsWith('ILLEGAL_') ? 'Ro‘yxatga olish' : undefined)}
+        disabled={isDisabled}
+      />
     </div>
   )
 }

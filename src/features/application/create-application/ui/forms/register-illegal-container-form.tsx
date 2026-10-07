@@ -63,9 +63,7 @@ const RegisterIllegalContainerForm = ({ onSubmit, isPending = false }: RegisterI
     <Form {...form}>
       <form autoComplete="off" onSubmit={form.handleSubmit(handleSubmit)}>
         <GoBack
-          title={
-            isUpdate ? 'Idish ma’lumotlarini tahrirlash' : 'Bosim ostida ishlovchi idishni ro‘yxatga olish arizasi'
-          }
+          title={isUpdate ? 'Idish ma’lumotlarini tahrirlash' : 'Bosim ostida ishlovchi idishni ro‘yxatga olish'}
         />
         <NoteForm equipmentName="idish" />
 
@@ -559,7 +557,7 @@ const RegisterIllegalContainerForm = ({ onSubmit, isPending = false }: RegisterI
         </CardForm>
 
         <Button type="submit" disabled={!ownerData && !isUpdate} loading={isPending || isSubmitPending}>
-          {isUpdate ? 'Saqlash' : 'Ariza yaratish'}
+          {isUpdate ? 'Saqlash' : 'Ro‘yxatga olish'}
         </Button>
       </form>
     </Form>

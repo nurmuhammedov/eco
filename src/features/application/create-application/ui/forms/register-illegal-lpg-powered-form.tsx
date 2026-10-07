@@ -66,7 +66,7 @@ const RegisterIllegalLpgPoweredForm = ({ onSubmit, isPending = false }: Register
           title={
             isUpdate
               ? 'Yiliga 100 ming va undan ortiq kubometr tabiiy gazdan foydalanuvchi qurilma ma’lumotlarini tahrirlash'
-              : 'Yiliga 100 ming va undan ortiq kubometr tabiiy gazdan foydalanuvchi qurilmani ro‘yxatga olish arizasi'
+              : 'Yiliga 100 ming va undan ortiq kubometr tabiiy gazdan foydalanuvchi qurilmani ro‘yxatga olish'
           }
         />
         <NoteForm equipmentName="qurilma" />
@@ -538,7 +538,7 @@ const RegisterIllegalLpgPoweredForm = ({ onSubmit, isPending = false }: Register
           loading={isPending || isSubmitPending}
           className="mt-0"
         >
-          {isUpdate ? 'Saqlash' : 'Ariza yaratish'}
+          {isUpdate ? 'Saqlash' : 'Ro‘yxatga olish'}
         </Button>
       </form>
     </Form>

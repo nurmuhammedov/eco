@@ -62,9 +62,7 @@ const RegisterIllegalHoistForm = ({ onSubmit, isPending = false }: RegisterIlleg
   return (
     <Form {...form}>
       <form autoComplete="off" onSubmit={form.handleSubmit(handleSubmit)}>
-        <GoBack
-          title={isUpdate ? 'Yuk ko‘targich ma’lumotlarini tahrirlash' : 'Yuk ko‘targichni ro‘yxatga olish arizasi'}
-        />
+        <GoBack title={isUpdate ? 'Yuk ko‘targich ma’lumotlarini tahrirlash' : 'Yuk ko‘targichni ro‘yxatga olish'} />
         <NoteForm equipmentName="yuk ko‘targich" />
 
         <ApplicantSearchCard
@@ -490,7 +488,7 @@ const RegisterIllegalHoistForm = ({ onSubmit, isPending = false }: RegisterIlleg
           loading={isPending || isSubmitPending}
           className="mt-0"
         >
-          {isUpdate ? 'Saqlash' : 'Ariza yaratish'}
+          {isUpdate ? 'Saqlash' : 'Ro‘yxatga olish'}
         </Button>
       </form>
     </Form>

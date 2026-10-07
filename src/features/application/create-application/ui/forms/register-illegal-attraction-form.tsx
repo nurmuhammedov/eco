@@ -69,7 +69,7 @@ const RegisterIllegalAttractionForm = ({ onSubmit, isPending = false }: Register
   return (
     <Form {...form}>
       <form autoComplete="off" onSubmit={form.handleSubmit(handleSubmit)}>
-        <GoBack title={isUpdate ? 'Attraksion ma’lumotlarini tahrirlash' : 'Attraksionni ro‘yxatga olish arizasi'} />
+        <GoBack title={isUpdate ? 'Attraksion ma’lumotlarini tahrirlash' : 'Attraksionni ro‘yxatga olish'} />
         <NoteForm equipmentName="attraksion" />
 
         <ApplicantSearchCard
@@ -691,7 +691,7 @@ const RegisterIllegalAttractionForm = ({ onSubmit, isPending = false }: Register
         </CardForm>
 
         <Button type="submit" disabled={!ownerData && !isUpdate} loading={isPending || isSubmitPending}>
-          {isUpdate ? 'Saqlash' : 'Ariza yaratish'}
+          {isUpdate ? 'Saqlash' : 'Ro‘yxatga olish'}
         </Button>
       </form>
     </Form>

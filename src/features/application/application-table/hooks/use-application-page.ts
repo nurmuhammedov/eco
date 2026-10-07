@@ -3,12 +3,10 @@ import { UserRoles } from '@/shared/types/user'
 import { useCustomSearchParams, useData, useTranslatedObject } from '@/shared/hooks'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { useMemo } from 'react'
+import { RegistrationMode } from '../model/registration-mode'
 
-export const useApplicationPage = () => {
-  const {
-    addParams,
-    paramsObject: { mode },
-  } = useCustomSearchParams()
+export const useApplicationPage = (mode: RegistrationMode) => {
+  const { addParams } = useCustomSearchParams()
   const { user } = useAuth()
   const userRole = user?.role
 

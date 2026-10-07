@@ -62,7 +62,7 @@ const RegisterIllegalPipelineForm = ({ onSubmit, isPending = false }: RegisterIl
   return (
     <Form {...form}>
       <form autoComplete="off" onSubmit={form.handleSubmit(handleSubmit)}>
-        <GoBack title={isUpdate ? 'Quvur ma’lumotlarini tahrirlash' : 'Quvurni ro‘yxatga olish arizasi'} />
+        <GoBack title={isUpdate ? 'Quvur ma’lumotlarini tahrirlash' : 'Quvurni ro‘yxatga olish'} />
         <NoteForm equipmentName="quvur" />
 
         <ApplicantSearchCard
@@ -624,7 +624,7 @@ const RegisterIllegalPipelineForm = ({ onSubmit, isPending = false }: RegisterIl
           loading={isPending || isSubmitPending}
           className="mt-0"
         >
-          {isUpdate ? 'Saqlash' : 'Ariza yaratish'}
+          {isUpdate ? 'Saqlash' : 'Ro‘yxatga olish'}
         </Button>
       </form>
     </Form>

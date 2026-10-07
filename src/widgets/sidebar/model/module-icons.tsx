@@ -10,6 +10,7 @@ import {
   Database,
   FileBadge,
   FileCheck,
+  FilePen,
   FileText,
   Gauge,
   LandPlot,
@@ -33,6 +34,7 @@ import {
  */
 export const MODULE_ICONS = {
   APPEAL: <FileText />,
+  COMMITTEE_REGISTRATION: <FilePen />,
   REGISTRY: <Database />,
   ELEVATOR: <ArrowDownUp />,
   PREVENTION: <ShieldCheck />,

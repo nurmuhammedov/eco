@@ -69,7 +69,7 @@ const RegisterIllegalChemicalContainerForm = ({
           title={
             isUpdate
               ? 'Bosim ostida ishlovchi idish (kimyo) ma’lumotlarini tahrirlash'
-              : 'Bosim ostida ishlovchi idishni (kimyo) ro‘yxatga olish arizasi'
+              : 'Bosim ostida ishlovchi idishni (kimyo) ro‘yxatga olish'
           }
         />
         <NoteForm equipmentName="idish (kimyo)" />
@@ -568,7 +568,7 @@ const RegisterIllegalChemicalContainerForm = ({
           loading={isPending || isSubmitPending}
           className="mt-0"
         >
-          {isUpdate ? 'Saqlash' : 'Ariza yaratish'}
+          {isUpdate ? 'Saqlash' : 'Ro‘yxatga olish'}
         </Button>
       </form>
     </Form>

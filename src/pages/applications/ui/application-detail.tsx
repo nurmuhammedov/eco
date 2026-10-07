@@ -26,7 +26,9 @@ const ApplicationDetailPage = ({ showAttestationActions }: { showAttestationActi
   return (
     <>
       <div className="flex items-center justify-between gap-2">
-        <GoBack title={`Ariza raqami: ${data?.number || ''}`} />
+        <GoBack
+          title={`${data?.mode === 'UNOFFICIAL' ? 'Ro‘yxatga olish raqami' : 'Ariza raqami'}: ${data?.number || ''}`}
+        />
         <div className="ml-auto flex flex-wrap items-center justify-end gap-2">
           {isAccreditation && user?.role === UserRoles.MANAGER && (
             <AccreditationAppealActions appealId={data?.id} status={data?.status} />

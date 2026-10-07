@@ -79,7 +79,7 @@ const RegisterIllegalIrsForm = ({ onSubmit, isPending = false }: RegisterIllegal
   return (
     <Form {...form}>
       <form autoComplete="off" onSubmit={form.handleSubmit(handleSubmit)}>
-        <GoBack title={isUpdate ? 'INM ma’lumotlarini tahrirlash' : 'INMni ro‘yxatga olish arizasi'} />
+        <GoBack title={isUpdate ? 'INM ma’lumotlarini tahrirlash' : 'INMni ro‘yxatga olish'} />
         <NoteForm equipmentName="INM" onlyLatin={true} />
 
         <CardForm className="my-2">
@@ -178,7 +178,7 @@ const RegisterIllegalIrsForm = ({ onSubmit, isPending = false }: RegisterIllegal
                 name="phoneNumber"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel required>Ariza beruvchining telefon raqami</FormLabel>
+                    <FormLabel required>Tashkilot telefon raqami</FormLabel>
                     <FormControl>
                       <PhoneInput className="3xl:w-sm w-full" placeholder="+998 XX XXX XX XX" {...field} />
                     </FormControl>
@@ -609,7 +609,7 @@ const RegisterIllegalIrsForm = ({ onSubmit, isPending = false }: RegisterIllegal
               yangilash imkoniyati mavjud.{' '}
               {isUpdate
                 ? 'Tashkilot hujjatlari to‘liq mavjud bo‘lganda tahrirlash mumkin!'
-                : ' Arizani tashkilot hujjatlari to‘liq mavjud bo‘lganda yuborish mumkin!'}
+                : ' Tashkilot hujjatlari to‘liq mavjud bo‘lganda ro‘yxatga olish mumkin!'}
             </AlertDescription>
           </Alert>
         )}
@@ -840,7 +840,7 @@ const RegisterIllegalIrsForm = ({ onSubmit, isPending = false }: RegisterIllegal
         )}
 
         <Button type="submit" loading={isPending || isSubmitPending} disabled={hasIncompleteOrgFiles}>
-          {isUpdate ? 'Saqlash' : 'Ariza yaratish'}
+          {isUpdate ? 'Saqlash' : 'Ro‘yxatga olish'}
         </Button>
       </form>
     </Form>

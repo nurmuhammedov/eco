@@ -64,7 +64,7 @@ const RegisterIllegalBoilerForm = ({ onSubmit, isPending = false }: RegisterIlle
   return (
     <Form {...form}>
       <form autoComplete="off" onSubmit={form.handleSubmit(handleSubmit)}>
-        <GoBack title={isUpdate ? 'Qozon ma’lumotlarini tahrirlash' : 'Bug‘ qozonni ro‘yxatga olish arizasi'} />
+        <GoBack title={isUpdate ? 'Qozon ma’lumotlarini tahrirlash' : 'Bug‘ qozonni ro‘yxatga olish'} />
         <NoteForm equipmentName="qozon" />
 
         <CardForm className="my-2">
@@ -640,7 +640,7 @@ const RegisterIllegalBoilerForm = ({ onSubmit, isPending = false }: RegisterIlle
         </CardForm>
 
         <Button type="submit" disabled={!ownerData && !isUpdate} loading={isPending || isSubmitPending}>
-          {isUpdate ? 'Saqlash' : 'Ariza yaratish'}
+          {isUpdate ? 'Saqlash' : 'Ro‘yxatga olish'}
         </Button>
       </form>
     </Form>

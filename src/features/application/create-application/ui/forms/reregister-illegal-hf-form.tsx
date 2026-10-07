@@ -577,7 +577,7 @@ const ReregisterIllegalHfForm = ({ onSubmit }: { onSubmit: (data: ReRegisterIlle
           </div>
         </CardForm>
 
-        <Button type="submit">Ariza yaratish</Button>
+        <Button type="submit">Ro‘yxatga olish</Button>
       </form>
     </Form>
   )

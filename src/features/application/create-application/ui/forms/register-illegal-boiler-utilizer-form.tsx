@@ -63,9 +63,7 @@ const RegisterIllegalBoilerUtilizerForm = ({ onSubmit, isPending = false }: Regi
     <Form {...form}>
       <form autoComplete="off" onSubmit={form.handleSubmit(handleSubmit)}>
         <GoBack
-          title={
-            isUpdate ? 'Qozon utilizator ma’lumotlarini tahrirlash' : 'Qozon utilizatorlarini ro‘yxatga olish arizasi'
-          }
+          title={isUpdate ? 'Qozon utilizator ma’lumotlarini tahrirlash' : 'Qozon utilizatorlarini ro‘yxatga olish'}
         />
         <NoteForm equipmentName="qozon utilizatori" />
 
@@ -607,7 +605,7 @@ const RegisterIllegalBoilerUtilizerForm = ({ onSubmit, isPending = false }: Regi
           loading={isPending || isSubmitPending}
           className="mt-0"
         >
-          {isUpdate ? 'Saqlash' : 'Ariza yaratish'}
+          {isUpdate ? 'Saqlash' : 'Ro‘yxatga olish'}
         </Button>
       </form>
     </Form>

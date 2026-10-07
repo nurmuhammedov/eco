@@ -37,6 +37,9 @@ const ApplicationDetail = ({
 }) => {
   const objectPoint = parseCoordinate(data?.data?.location)
   const isLegalApplication = data?.ownerType == 'LEGAL'
+  // Registered by the committee's own staff: there is no applicant and no appeal to speak of
+  const isRegistration = data?.mode === 'UNOFFICIAL'
+  const ownerTitle = isRegistration ? 'Tashkilot to‘g‘risida ma’lumot' : 'Arizachi to‘g‘risida ma’lumot'
   const defaultDocsTab = getDefaultDocsTab(data?.status)
 
   const multiCategoryFiles = data?.multiCategoryFiles || {}
@@ -56,13 +59,22 @@ const ApplicationDetail = ({
         ]}
       >
         {!isLegalApplication && (
-          <DetailCardAccordion.Item value="applicant_info_individual" title="Arizachi to‘g‘risida ma’lumot">
+          <DetailCardAccordion.Item value="applicant_info_individual" title={ownerTitle}>
             <div className="flex flex-col py-1">
-              <DetailRow title="Arizachi F.I.SH.:" value={data?.ownerName || <EmptyValue />} />
-              <DetailRow title="Arizachi JSHSHIR:" value={data?.ownerIdentity || <EmptyValue />} />
-              <DetailRow title="Arizachining manzili:" value={data?.address || <EmptyValue />} />
               <DetailRow
-                title="Arizada bog‘lanish uchun ko‘rsatilgan telefon raqam:"
+                title={isRegistration ? 'F.I.SH.:' : 'Arizachi F.I.SH.:'}
+                value={data?.ownerName || <EmptyValue />}
+              />
+              <DetailRow
+                title={isRegistration ? 'JSHSHIR:' : 'Arizachi JSHSHIR:'}
+                value={data?.ownerIdentity || <EmptyValue />}
+              />
+              <DetailRow
+                title={isRegistration ? 'Manzili:' : 'Arizachining manzili:'}
+                value={data?.address || <EmptyValue />}
+              />
+              <DetailRow
+                title={isRegistration ? 'Telefon raqami:' : 'Arizada bog‘lanish uchun ko‘rsatilgan telefon raqam:'}
                 value={data?.phoneNumber || <EmptyValue />}
               />
             </div>
@@ -70,7 +82,7 @@ const ApplicationDetail = ({
         )}
 
         {isLegalApplication && (
-          <DetailCardAccordion.Item value="applicant_info_legal" title="Arizachi to‘g‘risida ma’lumot">
+          <DetailCardAccordion.Item value="applicant_info_legal" title={ownerTitle}>
             <LegalApplicantInfo
               isShowPhoneNumber={true}
               tinNumber={data?.ownerIdentity}
@@ -79,15 +91,26 @@ const ApplicationDetail = ({
           </DetailCardAccordion.Item>
         )}
 
-        <DetailCardAccordion.Item value="general" title="Ariza va ijro to‘g‘risida ma’lumot">
+        <DetailCardAccordion.Item
+          value="general"
+          title={isRegistration ? 'Ijro to‘g‘risida ma’lumot' : 'Ariza va ijro to‘g‘risida ma’lumot'}
+        >
           <div className="flex flex-col py-1">
+            {!isRegistration && (
+              <DetailRow
+                title="Ariza manbasi:"
+                value={data?.sourceType ? <SourceTypeBadge sourceType={data.sourceType} /> : <EmptyValue />}
+              />
+            )}
             <DetailRow
-              title="Ariza manbasi:"
-              value={data?.sourceType ? <SourceTypeBadge sourceType={data.sourceType} /> : <EmptyValue />}
+              title={isRegistration ? 'Ro‘yxatga olish sanasi:' : 'Ariza sanasi:'}
+              value={getDate(data?.createdAt)}
             />
-            <DetailRow title="Ariza sanasi:" value={getDate(data?.createdAt)} />
-            <DetailRow title="Ariza turi:" value={getApplicationTitle(data?.appealType)} />
-            <ApplicationStatusRow status={data?.status} />
+            <DetailRow
+              title={isRegistration ? 'Ro‘yxatga olish turi:' : 'Ariza turi:'}
+              value={getApplicationTitle(data?.appealType)}
+            />
+            <ApplicationStatusRow status={data?.status} title={isRegistration ? 'Holati:' : undefined} />
             <DetailRow title="Ijro muddati:" value={getDate(data?.deadline)} />
             <DetailRow title="Ijrochi qo‘mita mas’ul bo‘limi:" value={data?.departmentName || <EmptyValue />} />
             <DetailRow title="Ijrochi hududiy boshqarma nomi:" value={data?.officeName || <EmptyValue />} />
@@ -98,11 +121,20 @@ const ApplicationDetail = ({
           </div>
         </DetailCardAccordion.Item>
 
-        <DetailCardAccordion.Item value="appeal_docs" title="Ariza bo‘yicha batafsil ma’lumotlar va hujjatlar">
-          <Tabs key={defaultDocsTab} defaultValue={defaultDocsTab}>
+        <DetailCardAccordion.Item
+          value="appeal_docs"
+          title={
+            isRegistration ? 'Batafsil ma’lumotlar va hujjatlar' : 'Ariza bo‘yicha batafsil ma’lumotlar va hujjatlar'
+          }
+        >
+          <Tabs
+            key={defaultDocsTab}
+            defaultValue={isRegistration && defaultDocsTab === 'applicant_docs' ? 'info' : defaultDocsTab}
+          >
             <TabsList className="bg-neutral-250">
               <TabsTrigger value="info">Ma’lumotlar</TabsTrigger>
-              <TabsTrigger value="applicant_docs">Arizachi hujjatlari</TabsTrigger>
+              {/* Nobody applied, so there are no applicant's documents to show */}
+              {!isRegistration && <TabsTrigger value="applicant_docs">Arizachi hujjatlari</TabsTrigger>}
               <TabsTrigger value="response_docs">Javob hujjatlari</TabsTrigger>
             </TabsList>
             <TabsContent value="info">
@@ -136,7 +168,10 @@ const ApplicationDetail = ({
           />
         ) : (
           !!data?.files.length && (
-            <DetailCardAccordion.Item value="appeal_files" title="Arizaga biriktirilgan fayllar">
+            <DetailCardAccordion.Item
+              value="appeal_files"
+              title={isRegistration ? 'Biriktirilgan fayllar' : 'Arizaga biriktirilgan fayllar'}
+            >
               <FilesSection
                 files={data?.files || []}
                 userRole={userRole}
@@ -149,7 +184,10 @@ const ApplicationDetail = ({
         )}
 
         {objectPoint && (
-          <DetailCardAccordion.Item value="object_location" title="Arizada ko‘rsatilgan obyekt yoki qurilma joyi">
+          <DetailCardAccordion.Item
+            value="object_location"
+            title={isRegistration ? 'Obyekt yoki qurilma joyi' : 'Arizada ko‘rsatilgan obyekt yoki qurilma joyi'}
+          >
             <YandexMap coords={[objectPoint]} center={objectPoint} zoom={16} />
           </DetailCardAccordion.Item>
         )}

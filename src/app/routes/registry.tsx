@@ -42,6 +42,7 @@ const ConclusionDetail = lazy(() => import('@/pages/expertise/conclusion-detail-
 const CreateApplicationForm = lazy(() => import('@/pages/applications/ui/create-application-form'))
 const CreateApplicationGrids = lazy(() => import('@/pages/applications/ui/create-application-grids'))
 const CreateApplicationGridsIns = lazy(() => import('@/pages/applications/ui/create-application-grids-ins'))
+const RegistrationsPage = lazy(() => import('@/pages/applications/ui/registration-page'))
 const DashboardPage = lazy(() => import('@/pages/dashboard').then((m) => ({ default: m.DashboardPage })))
 const DeclarationDetailPage = lazy(() => import('@/pages/declarations/declaration-detail-page'))
 const DeclarationsPage = lazy(() => import('@/pages/declarations/page'))
@@ -305,6 +306,24 @@ export const APP_ROUTES: AppRouteDefinition[] = [
       UserRoles.PROCURATOR,
       UserRoles.REGIONAL,
     ],
+  },
+  {
+    id: 'COMMITTEE_REGISTRATION',
+    path: 'registrations',
+    element: withSuspense(RegistrationsPage),
+    roles: [UserRoles.CHAIRMAN, UserRoles.HEAD, UserRoles.INSPECTOR, UserRoles.MANAGER, UserRoles.REGIONAL],
+  },
+  {
+    id: 'COMMITTEE_REGISTRATION',
+    path: 'registrations/add',
+    element: withSuspense(CreateApplicationGridsIns),
+    roles: [UserRoles.INSPECTOR, UserRoles.MANAGER],
+  },
+  {
+    id: 'COMMITTEE_REGISTRATION',
+    path: 'registrations/:id',
+    element: withSuspense(ApplicationDetail),
+    roles: [UserRoles.CHAIRMAN, UserRoles.HEAD, UserRoles.INSPECTOR, UserRoles.MANAGER, UserRoles.REGIONAL],
   },
   {
     id: 'APPEAL',
