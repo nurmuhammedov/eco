@@ -1,9 +1,10 @@
 import type { ReactNode } from 'react'
-import { FileText, PlusCircle, Clock, Gavel, HandCoins, CheckCircle, XCircle } from 'lucide-react'
+import { FileText, PlusCircle, Clock, Gavel, HandCoins, CheckCircle, XCircle, CalendarX } from 'lucide-react'
 import { cn } from '@/shared/lib/utils'
 import usePaginatedData from '@/shared/hooks/api/use-paginated-data'
 import { InquiryStatus } from '@/features/inquiries/model/types'
 import { DASHBOARD_STALE_TIME } from '../model/use-dashboard-stats'
+import { useOverdueInquiriesCount } from '../model/use-overdue-inquiries'
 import { StatValue } from './stat-value'
 
 interface InquiriesStatsProps {
@@ -49,6 +50,8 @@ export const InquiriesStats = ({ regionId }: InquiriesStatsProps) => {
     DASHBOARD_STALE_TIME
   )
 
+  const overdueQuery = useOverdueInquiriesCount(regionId)
+
   const queries = [inqNewQuery, inqProcessQuery, inqCourtQuery, inqRewardQuery, inqCompletedQuery, inqRejectedQuery]
 
   // A real zero and a not-yet-loaded zero must not look the same.
@@ -69,7 +72,8 @@ export const InquiriesStats = ({ regionId }: InquiriesStatsProps) => {
     icon: ReactNode,
     colorText: string,
     bgColor: string,
-    className?: string
+    className?: string,
+    valueLoading = isLoading
   ) => (
     <div
       className={cn(
@@ -85,7 +89,7 @@ export const InquiriesStats = ({ regionId }: InquiriesStatsProps) => {
       <div className="mt-auto">
         <StatValue
           value={value}
-          isLoading={isLoading}
+          isLoading={valueLoading}
           className="mb-1 block text-2xl font-bold text-slate-900"
           skeletonClassName="mb-1 h-8 w-16"
         />
@@ -136,6 +140,15 @@ export const InquiriesStats = ({ regionId }: InquiriesStatsProps) => {
           'bg-emerald-50'
         )}
         {renderCleanCard('Rad etilgan', inqRejected, <XCircle className="h-6 w-6" />, 'text-red-600', 'bg-red-50')}
+        {renderCleanCard(
+          'Muddati o‘tganlar',
+          overdueQuery.data ?? 0,
+          <CalendarX className="h-6 w-6" />,
+          'text-red-600',
+          'bg-white',
+          'border-red-200 bg-red-50',
+          overdueQuery.isFetching && overdueQuery.data === undefined
+        )}
       </div>
     </div>
   )
