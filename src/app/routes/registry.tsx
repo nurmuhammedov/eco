@@ -489,7 +489,8 @@ export const APP_ROUTES: AppRouteDefinition[] = [
     id: 'CADASTRE_PASSPORT',
     path: 'cadastre-passports/add',
     element: withSuspense(CadastreAdd),
-    roles: [UserRoles.CHAIRMAN, UserRoles.LEGAL, UserRoles.MANAGER, UserRoles.PROCURATOR],
+    // INDIVIDUAL: an organisation's representative; the backend refuses anyone else
+    roles: [UserRoles.CHAIRMAN, UserRoles.INDIVIDUAL, UserRoles.LEGAL, UserRoles.MANAGER, UserRoles.PROCURATOR],
   },
   {
     path: 'dashboard',

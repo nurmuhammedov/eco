@@ -11,6 +11,7 @@ import useDelete from '@/shared/hooks/api/use-delete'
 import { UserRoles } from '@/shared/types/user'
 import { CadastrePassportRow } from '../model/types'
 import { isPreparer } from '../model/permissions'
+import { useCadastreRepresentation } from '../model/use-representation'
 import { STATUS_OPTIONS, StatusBadge } from './components/status-badge'
 import { MyTasksTable } from './components/my-tasks-table'
 import { paramText } from '@/shared/lib/url-params'
@@ -41,11 +42,16 @@ export default function CadastreList({ customerTin, isShortView }: CadastreListP
   // A partner organisation's employee works off their own workflow queue; the
   // committee's queue is simply the passports that have reached it, and the
   // committee is the responsible manager.
-  const isEmployee = !isShortView && user?.role === UserRoles.INDIVIDUAL
+  // An organisation's representative is an individual too, but files passports
+  // instead of reviewing them, so has no queue of its own.
+  const { representation } = useCadastreRepresentation()
+  const isRepresentative = !!representation
+
+  const isEmployee = !isShortView && user?.role === UserRoles.INDIVIDUAL && !isRepresentative
   const isCommittee = !isShortView && user?.role === UserRoles.MANAGER
 
   const showTasks = isEmployee || isCommittee
-  const canCreate = !isShortView && user?.role === UserRoles.LEGAL
+  const canCreate = !isShortView && (user?.role === UserRoles.LEGAL || isRepresentative)
 
   /**
    * An employee's queue sits next to one tab per status, so a passport can be
@@ -145,6 +151,16 @@ export default function CadastreList({ customerTin, isShortView }: CadastreListP
       filterKey: 'customerTin',
       filterType: 'search',
     },
+    // Several employees file for the same organisation, so they need to tell their passports apart
+    ...(isRepresentative
+      ? [
+          {
+            accessorKey: 'createdByName',
+            header: 'Kim tomonidan yaratilgan',
+            cell: ({ row }) => row.original.createdByName || '-',
+          } as ExtendedColumnDef<CadastrePassportRow, unknown>,
+        ]
+      : []),
     {
       accessorKey: 'status',
       header: 'Holati',

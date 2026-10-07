@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react'
+import { UserRoles } from '@/shared/types/user'
+import { useCadastreRepresentation } from '../model/use-representation'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card'
 import { Button } from '@/shared/components/ui/button'
@@ -57,7 +59,13 @@ export default function CadastreAdd() {
   const resubmitTin = searchParams.get('customerTin')
   const resubmitRequestNumber = searchParams.get('parentRequestNumber')
 
-  const ownTin = user?.tinOrPin ? String(user.tinOrPin) : null
+  // A representative files in the name of the organisation they stand for, so "own" is that one
+  const { representation } = useCadastreRepresentation()
+  const ownTin = representation
+    ? String(representation.tin)
+    : user?.role === UserRoles.LEGAL && user?.tinOrPin
+      ? String(user.tinOrPin)
+      : null
 
   // Its own toast names what happened, so the hook stays quiet
   const { mutate: createCadastre, isPending: isCreating } = useAdd<CadastreCreatePayload>('/cadastre-passports', '')
@@ -136,6 +144,13 @@ export default function CadastreAdd() {
       <GoBack
         title={resubmitRequestNumber ? 'TXYUZ kadastr pasportini qayta yuborish' : 'TXYUZ kadastr pasporti qo‘shish'}
       />
+
+      {representation && (
+        <div className="rounded-md border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-800">
+          Pasport <span className="font-semibold">{representation.name}</span> (STIR {representation.tin}) nomidan olib
+          beriladi.
+        </div>
+      )}
 
       <Card>
         <CardHeader>

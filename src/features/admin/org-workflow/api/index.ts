@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { apiClient } from '@/shared/api/api-client'
 import { CommonService } from '@/shared/api/dictionaries/queries/common.api'
+import { belongsToEndpoint } from '@/shared/lib/query/endpoint-key'
 import { OrgPosition, PartnerOrg, ProcessParticipant, WorkflowDefinition } from '../model/types'
 
 const KEY = 'org-workflow'
@@ -49,11 +50,8 @@ export const useOrgWorkflowMutation = () => {
       toast.success(success)
 
       return queryClient.invalidateQueries({
-        predicate: ({ queryKey }) => {
-          const head = String(queryKey[0])
-
-          return head === KEY || head.startsWith('/org-employees')
-        },
+        // The employee list is keyed by its endpoint, which is stored without the leading slash
+        predicate: ({ queryKey }) => queryKey[0] === KEY || belongsToEndpoint(queryKey, '/org-employees'),
       })
     },
   })

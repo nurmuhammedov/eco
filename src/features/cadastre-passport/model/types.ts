@@ -87,4 +87,6 @@ export interface CadastrePassportRow {
   customerTin: number
   status: CadastrePassportStatus
   myTurn: boolean
+  /** Who filed it: the organisation itself or one of its representatives */
+  createdByName?: string | null
 }
