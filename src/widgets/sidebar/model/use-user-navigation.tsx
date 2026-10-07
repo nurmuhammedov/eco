@@ -12,6 +12,11 @@ import legalNavigation from './legal'
 
 const DASHBOARD_ROLES = [UserRoles.REGIONAL, UserRoles.INSPECTOR, UserRoles.CHAIRMAN]
 
+/** Menu entries kept to some roles within a module: regional heads examine but do not write the questions */
+const ROLE_ONLY_ITEMS: Record<string, UserRoles[]> = {
+  '/attestation/questions': [UserRoles.HEAD],
+}
+
 /** What the two designated approvers see under KPI instead of their own scorecard. */
 export const KPI_APPROVER_ITEMS = [
   { id: 'KPI', title: 'Boshqarma va bo‘limlar', url: '/kpi/departments' },
@@ -47,8 +52,11 @@ export const useUserNavigation = (): Navigation => {
 
     // An individual's register is empty until something is registered in it,
     // and an empty section reads as a broken one.
-    const isVisible = ({ id }: { id?: string }) =>
-      isIndividual && id === 'REGISTRY' ? equipmentCount > 0 : isModuleInMenu(id, user)
+    const isVisible = ({ id, url }: { id?: string; url?: string }) => {
+      if (url && ROLE_ONLY_ITEMS[url] && !ROLE_ONLY_ITEMS[url].includes(role)) return false
+
+      return isIndividual && id === 'REGISTRY' ? equipmentCount > 0 : isModuleInMenu(id, user)
+    }
 
     const base: Navigation = role === UserRoles.LEGAL ? legalNavigation : NAVIGATIONS[role] || allNavigation
 
