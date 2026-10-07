@@ -7,6 +7,7 @@ import { ExpertiseTypeEnum, ExpertiseTypeOptions } from '@/entities/expertise/mo
 import { getDate } from '@/shared/utils/date'
 import { Badge } from '@/shared/components/ui/badge'
 import FileLink from '@/shared/components/common/file-link'
+import { CalendarDays, Hash } from 'lucide-react'
 import { useLegalOrganizationQuery } from '@/shared/api/dictionaries'
 import type { ConclusionDetail as ConclusionDetailData } from '@/entities/expertise/model/conclusion.types'
 
@@ -131,7 +132,29 @@ export const ConclusionDetail = ({ isOld }: ConclusionDetailProps) => {
                 )}
                 <DetailRow
                   title="Deklaratsiya fayli:"
-                  value={detail?.declarationFilePath ? <FileLink url={detail?.declarationFilePath} /> : 'Mavjud emas'}
+                  value={
+                    detail?.declarationFilePath ||
+                    (!isOld && (detail.declarationRegistryNumber || detail.declarationRegistrationDate)) ? (
+                      <div className="flex flex-wrap items-center gap-2">
+                        {detail?.declarationFilePath && <FileLink url={detail.declarationFilePath} />}
+                        {/* The old-conclusion page lists these in rows of their own above */}
+                        {!isOld && detail.declarationRegistryNumber && (
+                          <span className="inline-flex items-center gap-1.5 rounded-md border border-blue-200 bg-blue-50 px-2 py-0.5 text-xs font-medium text-blue-700">
+                            <Hash className="size-3.5" />
+                            {detail.declarationRegistryNumber}
+                          </span>
+                        )}
+                        {!isOld && detail.declarationRegistrationDate && (
+                          <span className="inline-flex items-center gap-1.5 rounded-md border border-neutral-200 bg-neutral-50 px-2 py-0.5 text-xs font-medium text-neutral-700">
+                            <CalendarDays className="size-3.5" />
+                            {getDate(detail.declarationRegistrationDate)}
+                          </span>
+                        )}
+                      </div>
+                    ) : (
+                      'Mavjud emas'
+                    )
+                  }
                 />
                 <DetailRow
                   title="Hisob-kitob tushuntirish xati:"
