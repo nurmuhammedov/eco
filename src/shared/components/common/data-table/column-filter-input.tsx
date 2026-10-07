@@ -121,6 +121,12 @@ const ValueFilter = <TData, TValue>({ column, filterKey }: ValueFilterProps<TDat
   const [open, setOpen] = useState(false)
   const [value, setValue] = useState(paramText(paramsObject[filterKey]))
   const debouncedValue = useDebounce(value, 800)
+  const urlValue = paramText(paramsObject[filterKey])
+
+  // Follow the URL when it changes from outside, e.g. a tab switch clearing the filter.
+  useEffect(() => {
+    setValue(urlValue)
+  }, [urlValue])
 
   useEffect(() => {
     if (filterType !== 'search' && filterType !== 'number') return

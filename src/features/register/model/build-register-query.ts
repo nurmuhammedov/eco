@@ -19,12 +19,16 @@ const normalizeRegionId = (regionId: UrlParamValue) => (regionId === 'ALL' ? '' 
 
 /**
  * Two crane tabs are not equipment types of their own: they are cranes pinned to
- * one child type, which is what the tab stands for.
+ * the child types the tab stands for (31 avtokran, 35 manipulyator, 3 minorali).
+ * The ids are comma-separated, sent as childEquipmentIds.
  */
 export const CRANE_TAB_CHILD_ID: Record<string, string | undefined> = {
-  AUTO_CRANE: '31',
+  AUTO_CRANE: '31,35',
   TOWER_CRANE: '3',
 }
+
+/** The plain crane tab leaves out what the two crane tabs above already show */
+export const CRANE_EXCLUDED_CHILD_IDS = Object.values(CRANE_TAB_CHILD_ID).join(',')
 
 /**
  * Arriving from the deregistration report, the two report params define the set
@@ -199,7 +203,9 @@ function buildEquipmentsQuery({
     endpoint: '/equipments',
     params: {
       type: equipmentType !== 'ALL' ? equipmentType : '',
-      childEquipmentId: pinnedChildId ?? childEquipmentId,
+      childEquipmentId: pinnedChildId ? '' : childEquipmentId,
+      childEquipmentIds: pinnedChildId ?? '',
+      excludeChildEquipmentIds: type === 'CRANE' ? CRANE_EXCLUDED_CHILD_IDS : '',
       mode,
       regionId: normalizeRegionId(regionId),
       districtId,

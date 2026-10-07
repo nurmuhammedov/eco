@@ -1,10 +1,29 @@
 import * as path from 'path'
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 import svgr from 'vite-plugin-svgr'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import compression from 'vite-plugin-compression'
 import { VitePWA } from 'vite-plugin-pwa'
+
+// Local dev only: set in .env.development.local to send the API through the dev server.
+// The browser then sees one origin (localhost), so the backend's Secure auth cookies stick
+// and reach the services backend too, even when the backend runs on another machine.
+const { VITE_API_PROXY_TARGET: apiProxyTarget, VITE_SERVICES_PROXY_TARGET: servicesProxyTarget } = loadEnv(
+  'development',
+  process.cwd(),
+  ['VITE_API_PROXY', 'VITE_SERVICES_PROXY']
+)
+
+const devProxy = {
+  ...(apiProxyTarget && {
+    '/api': { target: apiProxyTarget, changeOrigin: true },
+    '/files': { target: apiProxyTarget, changeOrigin: true },
+  }),
+  ...(servicesProxyTarget && {
+    '/services': { target: servicesProxyTarget, changeOrigin: true, secure: true },
+  }),
+}
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -145,6 +164,7 @@ export default defineConfig({
   server: {
     host: true,
     port: 5173,
+    proxy: devProxy,
   },
   resolve: {
     alias: { '@': path.resolve(__dirname, './src'), buffer: 'buffer' },

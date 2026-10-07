@@ -19,7 +19,11 @@ import { ApplicationTypeEnum } from '@/entities/create-application/types/enums'
 import { useMemo } from 'react'
 import { canUpdateRegistryType } from '@/features/register/model/can-update-registry'
 import { TruncatedCell } from '@/shared/components/common/truncated-cell'
-import { CRANE_TAB_CHILD_ID, buildRegisterQuery } from '@/features/register/model/build-register-query'
+import {
+  CRANE_EXCLUDED_CHILD_IDS,
+  CRANE_TAB_CHILD_ID,
+  buildRegisterQuery,
+} from '@/features/register/model/build-register-query'
 import { REPORT_KEYS, RESET_KEYS } from '@/features/register/model/report-drill-down'
 import { RegisterActiveTab } from '@/features/register/model/register-tabs'
 import { paramText } from '@/shared/lib/url-params'
@@ -75,7 +79,8 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
   const pinnedChildId = CRANE_TAB_CHILD_ID[String(type)]
   const isPinnedCrane = !!pinnedChildId
   const equipmentType = isPinnedCrane ? 'CRANE' : type
-  const actualChildEquipmentId = pinnedChildId ?? childEquipmentId
+  // The plain crane tab shows only what the two crane tabs leave over.
+  const excludedChildIds = type === 'CRANE' ? CRANE_EXCLUDED_CHILD_IDS : ''
 
   const currentStatus = String(status)
   const isTanker = type === 'TANKERS'
@@ -101,7 +106,9 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
       changed: 'true',
       active: 'true',
       type: !isTanker && equipmentType !== 'ALL' ? equipmentType : '',
-      childEquipmentId: actualChildEquipmentId,
+      childEquipmentId: pinnedChildId ? '' : childEquipmentId,
+      childEquipmentIds: pinnedChildId ?? '',
+      excludeChildEquipmentIds: excludedChildIds,
       regionId: regionId === 'ALL' ? '' : regionId,
       size: 1,
     },
@@ -110,6 +117,7 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
 
   const { data: dataForNewCount } = useData<number>(`/equipments/count`, !isTanker && !isPinnedCrane, {
     type: !isTanker && type !== 'ALL' ? type : '',
+    excludeChildEquipmentIds: excludedChildIds,
     active: !isArchive,
     regionId: regionId === 'ALL' ? '' : regionId,
     districtId: districtId === 'ALL' ? '' : districtId,
@@ -242,9 +250,11 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
       header: 'Qurilmaning turi',
       accessorKey: 'childEquipment',
       maxSize: 150,
-      filterKey: 'childEquipmentId',
-      filterType: isPinnedCrane ? undefined : 'select',
-      filterOptions: childEquipmentTypes || [],
+      // A pinned crane tab has no type left to pick, so it carries no filter at all.
+      filterKey: isPinnedCrane ? undefined : 'childEquipmentId',
+      filterType: 'select',
+      filterOptions:
+        childEquipmentTypes?.filter((child) => !excludedChildIds.split(',').includes(String(child.id))) || [],
     },
     {
       header: 'Tashkilot/Fuqaro nomi',
