@@ -25,6 +25,7 @@ import {
 import { Card } from '@/shared/components/ui/card'
 import { Link } from 'react-router-dom'
 import { useCurrentRole } from '@/shared/hooks/use-current-role'
+import { useAuth } from '@/shared/hooks/use-auth'
 import { UserRoles } from '@/shared/types/user'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 
@@ -356,6 +357,9 @@ const REPORTS_GROUPS: ReportGroup[] = [
 
 export const ReportsGrid: React.FC = () => {
   const role = useCurrentRole()
+  const { user } = useAuth()
+  // Supervisors sign in as REGIONAL with this flag; they may be a KPI department's executor.
+  const isSupervisor = !!user?.isSupervisor
   const [filterType, setFilterType] = useState<string>('ALL')
 
   const filteredGroups = useMemo(() => {
@@ -365,8 +369,8 @@ export const ReportsGrid: React.FC = () => {
       groups = groups.filter((group) => group.id !== 'employees')
     }
 
-    // Answered by the KPI service only for the chairman and department heads
-    if (role !== UserRoles.CHAIRMAN && role !== UserRoles.HEAD) {
+    // Answered by the KPI service for the chairman and the roles that may execute a department's KPI
+    if (![UserRoles.CHAIRMAN, UserRoles.HEAD, UserRoles.MANAGER].includes(role) && !isSupervisor) {
       groups = groups.filter((group) => group.id !== 'kpi')
     }
 
@@ -385,7 +389,7 @@ export const ReportsGrid: React.FC = () => {
     }
 
     return groups
-  }, [role, filterType])
+  }, [role, isSupervisor, filterType])
 
   return (
     <Fragment>

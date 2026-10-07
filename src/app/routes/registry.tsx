@@ -639,7 +639,13 @@ export const APP_ROUTES: AppRouteDefinition[] = [
     roles: [UserRoles.CHAIRMAN, UserRoles.HEAD, UserRoles.PROCURATOR],
   },
   { path: 'kpi/approvers', element: withSuspense(KpiApproversPage), roles: [UserRoles.ADMIN] },
-  { id: 'KPI', path: 'kpi/my-tasks', element: withSuspense(MyKpiPage), roles: [UserRoles.HEAD] },
+  // Supervisors arrive as REGIONAL; the KPI direction keeps other regional heads out.
+  {
+    id: 'KPI',
+    path: 'kpi/my-tasks',
+    element: withSuspense(MyKpiPage),
+    roles: [UserRoles.HEAD, UserRoles.MANAGER, UserRoles.REGIONAL],
+  },
   {
     path: 'kpi/tasks',
     element: withSuspense(KpiTasksPage),
@@ -1072,7 +1078,7 @@ export const APP_ROUTES: AppRouteDefinition[] = [
   {
     path: 'reports/kpi-departments',
     element: withSuspense(KpiDepartmentsReport),
-    roles: [UserRoles.CHAIRMAN, UserRoles.HEAD],
+    roles: [UserRoles.CHAIRMAN, UserRoles.HEAD, UserRoles.MANAGER, UserRoles.REGIONAL],
   },
   {
     path: 'reports/kpi-regional',
