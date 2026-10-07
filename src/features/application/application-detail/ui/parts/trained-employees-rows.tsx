@@ -1,17 +1,10 @@
 import DetailRow from '@/shared/components/common/detail-row'
 import { EmptyValue } from '@/shared/components/common/empty-value'
-import { useData } from '@/shared/hooks'
-
-interface TrainedEmployees {
-  managerCount: number | null
-  engineerCount: number | null
-}
+import { useTrainedEmployeesQuery } from '@/entities/organizations'
 
 /** Staff the organization has had trained at the partner training centre */
 export const TrainedEmployeesRows = ({ tinNumber }: { tinNumber: string | number }) => {
-  const { data } = useData<TrainedEmployees>('/integration/ktnu/trained-employees', !!tinNumber, {
-    legalTin: tinNumber,
-  })
+  const { data } = useTrainedEmployeesQuery(tinNumber)
 
   return (
     <>
