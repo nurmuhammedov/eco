@@ -1,11 +1,13 @@
 import { z } from 'zod'
+import { MapPin, Plus, Trash2 } from 'lucide-react'
 import { format, parseISO } from 'date-fns'
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/shared/components/ui/form'
 import { Input } from '@/shared/components/ui/input'
+import { Button } from '@/shared/components/ui/button'
 import DatePicker from '@/shared/components/ui/datepicker'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { useEffect } from 'react'
-import { useFormContext, useWatch } from 'react-hook-form'
+import { useFieldArray, useFormContext, useWatch } from 'react-hook-form'
 import type { OptionItem } from '@/shared/types/general'
 import { InputNumber } from '@/shared/components/ui/input-number'
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
@@ -21,9 +23,7 @@ import {
   OKPO_PATTERN,
   STATE_REGISTRY_CERT_NUMBER_SAMPLE,
   onlyDigits,
-  CERTIFICATE_NUMBER_LENGTH,
-  CERTIFICATE_NUMBER_PATTERN,
-  CERTIFICATE_NUMBER_SAMPLE,
+  BELONGING_TYPES,
   COORDINATE_LENGTH,
   COORDINATE_PATTERN,
   LAND_CADASTRE_NUMBER_LENGTH,
@@ -32,13 +32,15 @@ import {
   LATITUDE_SAMPLE,
   LONGITUDE_SAMPLE,
   TXYUZ_DOMINANT_HAZARD_TYPES,
+  TXYUZ_HAZARD_LEVELS,
+  TXYUZ_HEALTH_RISK_FACTORS,
   TXYUZ_FIREFIGHTING_EQUIPMENT,
   TXYUZ_PROTECTION_DISTANCES,
   TXYUZ_PURPOSES,
   TXYUZ_SUBSTANCES,
-  formatCertificateNumber,
   formatCoordinate,
   formatLandCadastreNumber,
+  mapLinks,
 } from '../../model/txyuz-options'
 
 const { required, invalid } = FORM_ERROR_MESSAGES
@@ -73,10 +75,12 @@ const whole = () => numeric().int(invalid)
  * the taxpayer number (7), the hazard type (15) and the number of extinguishers
  * (19) - so they are left out until the backend carries them.
  */
-export const cadastreDataSchema = z
+const cadastreObjectSchema = z
   .object({
     name: text(),
-    organizationalBelonging: text(),
+    /** Joined into `organizationalBelonging` on the way out. */
+    belongingName: text(),
+    belongingType: text(),
     /**
      * The endpoint keeps one address string and no region or district of its
      * own, so the three parts are collected here and joined on the way out.
@@ -88,7 +92,7 @@ export const cadastreDataSchema = z
     addressLine: text(),
     longitude: coordinate(),
     latitude: coordinate(),
-    cadastreRegistrationNumber: text().regex(CERTIFICATE_NUMBER_PATTERN, invalid),
+    cadastreRegistrationNumber: text(),
     cadastreRegistrationDate: day(),
     landCadastreNumber: text().regex(LAND_CADASTRE_NUMBER_PATTERN, invalid),
     landArea: numeric(),
@@ -108,23 +112,51 @@ export const cadastreDataSchema = z
     distanceToResidence: numeric(),
     estimatedValue: numeric(),
     status: text(),
-    // "TXYUZ kadastr pasporti davlat reyestridan o‘tkazilganligi to‘g‘risida ma’lumotlar" - the
-    // second sheet of the passport, filled in by the same customer.
-    stateRegistryCertNumber: text(),
-    stateRegistryCertDate: day(),
-    licenseNumber: text(),
-    licenseDate: day(),
-    okpo: text().regex(OKPO_PATTERN, invalid),
-    bankMfo: text().regex(BANK_MFO_PATTERN, invalid),
-    phoneNumber: text().regex(USER_PATTERNS.phone),
   })
-  .transform(({ regionId: _regionId, districtId: _districtId, regionName, districtName, addressLine, ...rest }) => ({
-    ...rest,
-    address: [regionName, districtName, addressLine]
-      .map((part) => part?.trim())
-      .filter(Boolean)
-      .join(', '),
-  }))
+  .transform(
+    ({
+      regionId: _regionId,
+      districtId: _districtId,
+      regionName,
+      districtName,
+      addressLine,
+      belongingName,
+      belongingType,
+      ...rest
+    }) => ({
+      ...rest,
+      organizationalBelonging: `${belongingName.trim()} ${belongingType}`,
+      address: [regionName, districtName, addressLine]
+        .map((part) => part?.trim())
+        .filter(Boolean)
+        .join(', '),
+    })
+  )
+
+/**
+ * One passport covers one or more objects; the registry sheet and the
+ * organisation's own belonging and address are filled in once per passport.
+ */
+export const cadastreDataSchema = z.object({
+  objects: z.array(cadastreObjectSchema).min(1, required),
+  /** Titul varag'i: tashkilotning idoraviy mansubligi va joylashgan manzili. */
+  organizationalBelonging: text(),
+  address: text(),
+  // "TXYZ kadastr pasporti davlat reyestridan o‘tkazilganligi to‘g‘risida ma’lumotlar" - the
+  // second sheet of the passport, filled in by the same customer.
+  stateRegistryCertNumber: text(),
+  stateRegistryCertDate: day(),
+  // ixtiyoriy: litsenziyasi yo'q obyektlar ham bor
+  licenseNumber: z
+    .string()
+    .trim()
+    .optional()
+    .transform((value) => value || undefined),
+  licenseDate: day().optional(),
+  okpo: text().regex(OKPO_PATTERN, invalid),
+  bankMfo: text().regex(BANK_MFO_PATTERN, invalid),
+  phoneNumber: text().regex(USER_PATTERNS.phone),
+})
 
 /** The fields sit on whichever form wraps them, under `prefix` */
 interface CadastreDataFieldsProps {
@@ -148,6 +180,10 @@ export const CadastreDataFields = ({ prefix = 'cadastreData.' }: CadastreDataFie
 
   const regionName = useWatch({ control, name: `${prefix}regionName` })
   const districtName = useWatch({ control, name: `${prefix}districtName` })
+
+  const latitude = useWatch({ control, name: `${prefix}latitude` })
+  const longitude = useWatch({ control, name: `${prefix}longitude` })
+  const links = mapLinks(String(latitude ?? ''), String(longitude ?? ''))
 
   const { data: regions } = useRegionSelectQuery()
   const { data: districts } = useDistrictSelectQuery(Number(regionId))
@@ -194,13 +230,46 @@ export const CadastreDataFields = ({ prefix = 'cadastreData.' }: CadastreDataFie
         />
         <FormField
           control={control}
-          name={`${prefix}organizationalBelonging`}
+          name={`${prefix}belongingName`}
           render={({ field }) => (
             <FormItem>
               <FormLabel required>Obyektning idoraviy mansubligi</FormLabel>
-              <FormControl>
-                <Input placeholder="Kiriting" maxLength={255} {...field} />
-              </FormControl>
+              {/* One field to the eye: the name is typed, the kind of body is
+                  picked beside it, and both leave as one string. */}
+              <div className="flex items-start">
+                <FormControl>
+                  <Input
+                    placeholder="Kiriting"
+                    maxLength={200}
+                    className="rounded-r-none"
+                    {...field}
+                    value={field.value ?? ''}
+                  />
+                </FormControl>
+                <FormField
+                  control={control}
+                  name={`${prefix}belongingType`}
+                  render={({ field: typeField }) => (
+                    <FormItem className="w-48 shrink-0 space-y-0">
+                      <Select value={typeField.value || ''} onValueChange={typeField.onChange}>
+                        <FormControl>
+                          <SelectTrigger className="rounded-l-none border-l-0">
+                            <SelectValue placeholder="Tanlang" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {BELONGING_TYPES.map((item) => (
+                            <SelectItem key={item} value={item}>
+                              {item}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
               <FormMessage />
             </FormItem>
           )}
@@ -307,16 +376,45 @@ export const CadastreDataFields = ({ prefix = 'cadastreData.' }: CadastreDataFie
           render={({ field }) => (
             <FormItem>
               <FormLabel required>Obyektning Y koordinatasi</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder={LATITUDE_SAMPLE}
-                  inputMode="decimal"
-                  maxLength={COORDINATE_LENGTH}
-                  {...field}
-                  value={field.value ?? ''}
-                  onChange={(event) => field.onChange(formatCoordinate(event.target.value))}
-                />
-              </FormControl>
+              {/* Once both axes are whole, the point can be checked on a map
+                  without leaving the form. */}
+              <div className="relative">
+                <FormControl>
+                  <Input
+                    placeholder={LATITUDE_SAMPLE}
+                    inputMode="decimal"
+                    maxLength={COORDINATE_LENGTH}
+                    className={links ? 'pr-36' : undefined}
+                    {...field}
+                    value={field.value ?? ''}
+                    onChange={(event) => field.onChange(formatCoordinate(event.target.value))}
+                  />
+                </FormControl>
+                {links && (
+                  <div className="absolute inset-y-0 right-2 flex items-center gap-1">
+                    <a
+                      href={links.google}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      title="Google Maps’da ko‘rish"
+                      className="text-muted-foreground hover:bg-muted hover:text-foreground inline-flex items-center gap-1 rounded border px-1.5 py-0.5 text-xs"
+                    >
+                      <MapPin className="size-3" />
+                      Google
+                    </a>
+                    <a
+                      href={links.yandex}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      title="Yandex Kartada ko‘rish"
+                      className="text-muted-foreground hover:bg-muted hover:text-foreground inline-flex items-center gap-1 rounded border px-1.5 py-0.5 text-xs"
+                    >
+                      <MapPin className="size-3" />
+                      Yandex
+                    </a>
+                  </div>
+                )}
+              </div>
               <FormMessage />
             </FormItem>
           )}
@@ -330,13 +428,7 @@ export const CadastreDataFields = ({ prefix = 'cadastreData.' }: CadastreDataFie
                 Obyektning yer uchastkasini kadastr ro‘yxatidan o‘tkazilgan guvohnoma raqami
               </FormLabel>
               <FormControl>
-                <Input
-                  placeholder={CERTIFICATE_NUMBER_SAMPLE}
-                  maxLength={CERTIFICATE_NUMBER_LENGTH}
-                  {...field}
-                  value={field.value ?? ''}
-                  onChange={(event) => field.onChange(formatCertificateNumber(event.target.value))}
-                />
+                <Input placeholder="Kiriting" maxLength={255} {...field} value={field.value ?? ''} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -458,7 +550,7 @@ export const CadastreDataFields = ({ prefix = 'cadastreData.' }: CadastreDataFie
             <FormItem>
               <FormLabel required>Xavflilik darajasi</FormLabel>
               <FormControl>
-                <Input placeholder="Kiriting" {...field} />
+                <SelectOrInput options={TXYUZ_HAZARD_LEVELS} value={field.value} onChange={field.onChange} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -581,7 +673,7 @@ export const CadastreDataFields = ({ prefix = 'cadastreData.' }: CadastreDataFie
                 Obyektda texnogen xavf sodir bo‘lganda inson salomatligi uchun salbiy ta’sir ko‘rsatuvchi omillari
               </FormLabel>
               <FormControl>
-                <Input placeholder="Kiriting" maxLength={255} {...field} />
+                <SelectOrInput options={TXYUZ_HEALTH_RISK_FACTORS} value={field.value} onChange={field.onChange} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -690,6 +782,41 @@ export const CadastreDataFields = ({ prefix = 'cadastreData.' }: CadastreDataFie
   )
 }
 
+/** An empty object block - the schema only has to hold at submit time. */
+export const emptyCadastreObject = () => ({}) as z.input<typeof cadastreObjectSchema>
+
+/**
+ * Every object of the passport gets its own block of the sheet's fields; the
+ * first one is always there, the rest can be added and removed.
+ */
+export const CadastreObjectsFields = ({ prefix = 'cadastreData.' }: CadastreDataFieldsProps) => {
+  const { control } = useFormContext()
+  const { fields, append, remove } = useFieldArray({ control, name: `${prefix}objects` })
+
+  return (
+    <div className="space-y-4">
+      {fields.map((item, index) => (
+        <div key={item.id} className="rounded-xl border border-neutral-200 p-4">
+          <div className="mb-4 flex items-center justify-between">
+            <h6 className="text-sm font-semibold text-gray-700">{index + 1}-obyekt</h6>
+            {fields.length > 1 && (
+              <Button type="button" variant="ghost" size="sm" className="text-red-600" onClick={() => remove(index)}>
+                <Trash2 className="size-4" />
+                O‘chirish
+              </Button>
+            )}
+          </div>
+          <CadastreDataFields prefix={`${prefix}objects.${index}.`} />
+        </div>
+      ))}
+      <Button type="button" variant="outline" onClick={() => append(emptyCadastreObject())}>
+        <Plus className="size-4" />
+        Obyekt qo‘shish
+      </Button>
+    </div>
+  )
+}
+
 /**
  * The passport's second sheet - what the state registry and the licence say
  * about the organisation. It is part of the same `preparerData` object, so it
@@ -701,6 +828,32 @@ export const CadastreRegistryFields = ({ prefix = 'cadastreData.' }: CadastreDat
   return (
     <div className="@container">
       <div className="grid grid-cols-1 items-end gap-x-4 gap-y-5 @2xl:grid-cols-2 @5xl:grid-cols-3">
+        <FormField
+          control={control}
+          name={`${prefix}organizationalBelonging`}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel required>Tashkilotning idoraviy mansubligi</FormLabel>
+              <FormControl>
+                <Input placeholder="Kiriting" maxLength={255} {...field} value={field.value ?? ''} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={control}
+          name={`${prefix}address`}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel required>Tashkilotning yuridik manzili</FormLabel>
+              <FormControl>
+                <Input placeholder="Kiriting" maxLength={255} {...field} value={field.value ?? ''} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <FormField
           control={control}
           name={`${prefix}stateRegistryCertNumber`}
@@ -747,7 +900,7 @@ export const CadastreRegistryFields = ({ prefix = 'cadastreData.' }: CadastreDat
           name={`${prefix}licenseNumber`}
           render={({ field }) => (
             <FormItem>
-              <FormLabel required>Obyektning litsenziya raqami</FormLabel>
+              <FormLabel>Obyektning litsenziya raqami</FormLabel>
               <FormControl>
                 <Input placeholder={LICENSE_NUMBER_SAMPLE} maxLength={50} {...field} value={field.value ?? ''} />
               </FormControl>
@@ -762,7 +915,7 @@ export const CadastreRegistryFields = ({ prefix = 'cadastreData.' }: CadastreDat
             const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
             return (
               <FormItem>
-                <FormLabel required>Obyektning litsenziya sanasi</FormLabel>
+                <FormLabel>Obyektning litsenziya sanasi</FormLabel>
                 <DatePicker
                   value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                   onChange={field.onChange}

@@ -16,7 +16,7 @@ import { useCadastrePassport } from '../model/use-cadastre-passport'
 import { CadastreEditModal } from './components/cadastre-edit-modal'
 import { CommitteeActions } from './components/committee-actions'
 import { CustomerActions } from './components/customer-actions'
-import { PreparerDataRows, RegistryDataRows } from './components/preparer-data-rows'
+import { ObjectsDataRows, RegistryDataRows } from './components/preparer-data-rows'
 import { ReviewsList } from './components/reviews-list'
 import { SectionRows } from './components/section-rows'
 import { StatusBadge } from './components/status-badge'
@@ -103,7 +103,7 @@ export default function CadastreDetail() {
         type="multiple"
         defaultValue={['txyuz', 'workflows', 'cadastre-data', 'registry-data', 'fvv', 'ses', 'reviews']}
       >
-        <DetailCardAccordion.Item value="txyuz" title="TXYUZ kadastr pasporti ma’lumotlari">
+        <DetailCardAccordion.Item value="txyuz" title="TXYZ kadastr pasporti ma’lumotlari">
           <DetailRow title="Holati" value={<StatusBadge status={passport.status} />} />
           <DetailRow title="Ariza raqami" value={passport.requestNumber || '-'} />
           <DetailRow title="Reyestr raqami" value={passport.registryNumber || '-'} />
@@ -125,7 +125,7 @@ export default function CadastreDetail() {
           <DetailRow title="Tashkilot nomi" value={customerInfo?.name || '-'} />
           <DetailRow title="Tashkilot STIR" value={passport.customerTin || '-'} />
           <DetailRow title="Titul va Davlat reyestri fayli" value={fileValue(passport.titlePagePath)} />
-          <DetailRow title="TXYUZ ma’lumotlari fayli" value={fileValue(passport.dataPagePath)} />
+          <DetailRow title="TXYZ ma’lumotlari fayli" value={fileValue(passport.dataPagePath)} />
           <DetailRow title="Kadastr passporti fayli" value={fileValue(passport.passportFilePath)} />
         </DetailCardAccordion.Item>
 
@@ -137,7 +137,7 @@ export default function CadastreDetail() {
 
         <DetailCardAccordion.Item
           value="cadastre-data"
-          title="TXYUZ kadastr pasportining atributiv ma’lumotlari"
+          title="TXYZ kadastr pasportining atributiv ma’lumotlari"
           action={
             canEdit ? (
               <Button
@@ -153,12 +153,12 @@ export default function CadastreDetail() {
             ) : null
           }
         >
-          <PreparerDataRows data={data?.preparerData} />
+          <ObjectsDataRows data={data?.preparerData} />
         </DetailCardAccordion.Item>
 
         <DetailCardAccordion.Item
           value="registry-data"
-          title="TXYUZ kadastr pasporti davlat reyestridan o‘tkazilganligi to‘g‘risida ma’lumotlar"
+          title="TXYZ kadastr pasporti davlat reyestridan o‘tkazilganligi to‘g‘risida ma’lumotlar"
         >
           <RegistryDataRows data={data?.preparerData} />
         </DetailCardAccordion.Item>

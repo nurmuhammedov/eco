@@ -73,7 +73,6 @@ const WorkflowCard = ({ workflow }: { workflow: WorkflowInstance }) => {
     >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <p className="text-muted-foreground text-xs font-medium">{workflow.slot}</p>
           <p className="font-semibold text-neutral-900">{workflow.orgName}</p>
         </div>
         <div className="flex shrink-0 flex-wrap justify-end gap-1.5">

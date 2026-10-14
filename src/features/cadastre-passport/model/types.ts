@@ -13,6 +13,9 @@ export type WorkflowStatus = 'IN_PROGRESS' | 'COMPLETED' | 'REJECTED' | 'CANCELL
 /** One party's part of the passport: its fields depend on the form that filled it */
 export type CadastreSection = Record<string, string | number | null | undefined>
 
+/** The preparer's part: one block per object plus the passport-level registry sheet. */
+export type CadastrePreparerData = CadastreSection & { objects?: CadastreSection[] | null }
+
 export interface CadastreReview {
   party: ReviewParty
   signAction: SignAction
@@ -68,7 +71,7 @@ export interface CadastrePassport {
   status: CadastrePassportStatus
   myTurn: boolean
   cadastreData: {
-    preparerData: CadastreSection | null
+    preparerData: CadastrePreparerData | null
     fvvData: CadastreSection | null
     sesData: CadastreSection | null
   } | null
@@ -85,6 +88,10 @@ export interface CadastrePassportRow {
   preparerTin: number
   customerName: string | null
   customerTin: number
+  /** Obyektning joylashgan manzili, from the passport's cadastre data */
+  objectAddress?: string | null
+  /** Obyektning vazifasi */
+  objectPurpose?: string | null
   status: CadastrePassportStatus
   myTurn: boolean
   /** Who filed it: the organisation itself or one of its representatives */

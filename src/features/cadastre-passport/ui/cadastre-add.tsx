@@ -21,7 +21,12 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
 import { InputFile } from '@/shared/components/common/file-upload'
 import { DetailCardAccordion } from '@/shared/components/common/detail-card'
-import { cadastreDataSchema, CadastreDataFields, CadastreRegistryFields } from './components/cadastre-data-fields'
+import {
+  cadastreDataSchema,
+  CadastreObjectsFields,
+  CadastreRegistryFields,
+  emptyCadastreObject,
+} from './components/cadastre-data-fields'
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 
 const schema = z.object({
@@ -92,9 +97,16 @@ export default function CadastreAdd() {
       passportFile: '',
       parentRequestNumber: resubmitRequestNumber ?? '',
       // The form starts empty; the schema only has to hold at submit time.
-      cadastreData: {} as FormValues['cadastreData'],
+      cadastreData: { objects: [emptyCadastreObject()] } as unknown as FormValues['cadastreData'],
     },
   })
+
+  /** The organisation's legal address comes from the integration; it can still be corrected by hand. */
+  useEffect(() => {
+    if (legalInfo?.address && !form.getValues('cadastreData.address')) {
+      form.setValue('cadastreData.address', legalInfo.address)
+    }
+  }, [legalInfo, form])
 
   const handleSearch = ({ stir }: SearchValues) => setSearchedStir(stir)
 
@@ -142,7 +154,7 @@ export default function CadastreAdd() {
   return (
     <div className="space-y-4 pb-4">
       <GoBack
-        title={resubmitRequestNumber ? 'TXYUZ kadastr pasportini qayta yuborish' : 'TXYUZ kadastr pasporti qo‘shish'}
+        title={resubmitRequestNumber ? 'TXYZ kadastr pasportini qayta yuborish' : 'TXYZ kadastr pasporti qo‘shish'}
       />
 
       {representation && (
@@ -264,18 +276,18 @@ export default function CadastreAdd() {
               </CardContent>
             </Card>
 
-            <DetailCardAccordion defaultValue={['cadastre-data', 'registry-data']}>
-              <DetailCardAccordion.Item value="cadastre-data" title="TXYUZ kadastr pasportining atributiv ma’lumotlari">
-                <div className="pt-2 pb-5">
-                  <CadastreDataFields prefix="cadastreData." />
-                </div>
-              </DetailCardAccordion.Item>
+            <DetailCardAccordion defaultValue={['registry-data', 'cadastre-data']}>
               <DetailCardAccordion.Item
                 value="registry-data"
-                title="TXYUZ kadastr pasporti davlat reyestridan o‘tkazilganligi to‘g‘risida ma’lumotlar"
+                title="TXYZ kadastr pasporti davlat reyestridan o‘tkazilganligi to‘g‘risida ma’lumotlar"
               >
                 <div className="pt-2 pb-5">
                   <CadastreRegistryFields prefix="cadastreData." />
+                </div>
+              </DetailCardAccordion.Item>
+              <DetailCardAccordion.Item value="cadastre-data" title="TXYZ kadastr pasportining atributiv ma’lumotlari">
+                <div className="pt-2 pb-5">
+                  <CadastreObjectsFields prefix="cadastreData." />
                 </div>
               </DetailCardAccordion.Item>
             </DetailCardAccordion>

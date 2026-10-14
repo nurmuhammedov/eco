@@ -63,7 +63,7 @@ export default function CadastreList({ customerTin, isShortView }: CadastreListP
     ...(isEmployee
       ? STATUS_OPTIONS.map((option) => ({ value: option.id, label: option.name }))
       : showTasks
-        ? [{ value: ALL_VIEW, label: 'TXYUZ kadastr pasportlari' }]
+        ? [{ value: ALL_VIEW, label: 'TXYZ kadastr pasportlari' }]
         : []),
   ]
 
@@ -130,26 +130,20 @@ export default function CadastreList({ customerTin, isShortView }: CadastreListP
       cell: ({ row }) => row.original.registryNumber || '-',
     },
     {
-      accessorKey: 'preparerName',
-      header: 'Ishlab chiqqan tashkilot',
-      cell: ({ row }) => row.original.preparerName || '-',
-    },
-    {
-      accessorKey: 'preparerTin',
-      header: 'Ishlab chiqqan tashkilot STIR',
-      filterKey: 'preparerTin',
-      filterType: 'search',
-    },
-    {
-      accessorKey: 'customerName',
-      header: 'Tashkilot nomi',
-      cell: ({ row }) => row.original.customerName || '-',
-    },
-    {
       accessorKey: 'customerTin',
       header: 'Tashkilot STIR',
       filterKey: 'customerTin',
       filterType: 'search',
+    },
+    {
+      accessorKey: 'objectAddress',
+      header: 'Obyektning joylashgan manzili',
+      cell: ({ row }) => row.original.objectAddress || '-',
+    },
+    {
+      accessorKey: 'objectPurpose',
+      header: 'Obyektning vazifasi',
+      cell: ({ row }) => row.original.objectPurpose || '-',
     },
     // Several employees file for the same organisation, so they need to tell their passports apart
     ...(isRepresentative
@@ -191,7 +185,7 @@ export default function CadastreList({ customerTin, isShortView }: CadastreListP
           {canCreate && (
             <Button onClick={() => navigate('/cadastre-passports/add')}>
               <Plus className="mr-2 h-4 w-4" />
-              TXYUZ kadastr pasporti qo‘shish
+              TXYZ kadastr pasporti qo‘shish
             </Button>
           )}
         </div>

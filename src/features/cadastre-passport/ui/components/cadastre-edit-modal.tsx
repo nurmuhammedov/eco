@@ -1,12 +1,12 @@
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog'
 import { Form } from '@/shared/components/ui/form'
 import { Button } from '@/shared/components/ui/button'
-import { CadastreDataFields, CadastreRegistryFields, cadastreDataSchema } from './cadastre-data-fields'
-import { splitAddress } from '../../model/txyuz-options'
+import { CadastreObjectsFields, CadastreRegistryFields, cadastreDataSchema } from './cadastre-data-fields'
+import { splitAddress, splitBelonging } from '../../model/txyuz-options'
 import { useForm } from 'react-hook-form'
 import { zodFormResolver } from '@/shared/lib/zod-form-resolver'
 import type { z } from 'zod'
-import type { CadastreSection } from '../../model/types'
+import type { CadastrePreparerData, CadastreSection } from '../../model/types'
 
 type CadastreDataInput = z.input<typeof cadastreDataSchema>
 type CadastreDataValues = z.output<typeof cadastreDataSchema>
@@ -20,7 +20,31 @@ interface CadastreEditModalProps {
   isOpen: boolean
   onClose: () => void
   cadastreId: string
-  defaultValues?: CadastreSection | null
+  defaultValues?: CadastrePreparerData | null
+}
+
+/** One saved object back into the shape its form block works on. */
+const toObjectFormValues = (object: CadastreSection) => {
+  const values: Record<string, unknown> = { ...object }
+
+  for (const key of ['cadastreRegistrationDate', 'exploitationDate'] as const) {
+    const value = object[key]
+    if (value) values[key] = new Date(value)
+  }
+
+  // The address is one string on the record and three fields on the form.
+  Object.assign(values, splitAddress(String(object.address ?? '')))
+
+  // The belonging is one string on the record and name + type on the form.
+  Object.assign(values, splitBelonging(String(object.organizationalBelonging ?? '')))
+
+  // Coordinates come back as numbers; the masked inputs work on text.
+  for (const axis of ['latitude', 'longitude'] as const) {
+    const value = object[axis]
+    values[axis] = value === null || value === undefined ? '' : String(value)
+  }
+
+  return values
 }
 
 export const CadastreEditModal = ({ isOpen, onClose, cadastreId, defaultValues }: CadastreEditModalProps) => {
@@ -36,27 +60,16 @@ export const CadastreEditModal = ({ isOpen, onClose, cadastreId, defaultValues }
 
   useEffect(() => {
     if (defaultValues && isOpen) {
-      const formattedValues: Record<string, unknown> = { ...defaultValues }
+      const { objects, ...registry } = defaultValues
+      const formattedValues: Record<string, unknown> = { ...registry }
 
       // The record keeps dates as 'yyyy-MM-dd'; the picker works on Date.
-      for (const key of [
-        'cadastreRegistrationDate',
-        'exploitationDate',
-        'stateRegistryCertDate',
-        'licenseDate',
-      ] as const) {
-        const value = defaultValues[key]
+      for (const key of ['stateRegistryCertDate', 'licenseDate'] as const) {
+        const value = registry[key]
         if (value) formattedValues[key] = new Date(value)
       }
 
-      // The address is one string on the record and three fields on the form.
-      Object.assign(formattedValues, splitAddress(String(defaultValues.address ?? '')))
-
-      // Coordinates come back as numbers; the masked inputs work on text.
-      for (const axis of ['latitude', 'longitude'] as const) {
-        const value = defaultValues[axis]
-        formattedValues[axis] = value === null || value === undefined ? '' : String(value)
-      }
+      formattedValues.objects = (objects?.length ? objects : [{}]).map(toObjectFormValues)
 
       // The record is this form's own earlier output, keyed the same way
       form.reset(formattedValues as CadastreDataInput)
@@ -77,17 +90,17 @@ export const CadastreEditModal = ({ isOpen, onClose, cadastreId, defaultValues }
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent size="xl">
         <DialogHeader>
-          <DialogTitle>TXYUZ kadastr pasportining atributiv ma’lumotlarini tahrirlash</DialogTitle>
+          <DialogTitle>TXYZ kadastr pasportining atributiv ma’lumotlarini tahrirlash</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form id="cadastre-edit-form" onSubmit={form.handleSubmit(onSubmit)} className="mt-4 space-y-6">
-            <CadastreDataFields prefix="" />
             <div>
               <h6 className="mb-4 text-sm font-semibold text-gray-700">
-                TXYUZ kadastr pasporti davlat reyestridan o‘tkazilganligi to‘g‘risida ma’lumotlar
+                TXYZ kadastr pasporti davlat reyestridan o‘tkazilganligi to‘g‘risida ma’lumotlar
               </h6>
               <CadastreRegistryFields prefix="" />
             </div>
+            <CadastreObjectsFields prefix="" />
             <DialogFooter>
               <Button type="button" variant="outline" onClick={onClose} disabled={isPending}>
                 Bekor qilish

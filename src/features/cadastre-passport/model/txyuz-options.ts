@@ -113,11 +113,11 @@ export const splitAddress = (address?: string | null) => {
 }
 
 /**
- * A coordinate inside this country is two whole degrees and six decimals -
- * nine characters exactly, and the form keeps it as text so the dot survives
- * being typed. It leaves for the endpoint as a number.
+ * A coordinate inside this country is two whole degrees and three to six
+ * decimals, and the form keeps it as text so the dot survives being typed. It
+ * leaves for the endpoint as a number.
  */
-export const COORDINATE_PATTERN = /^\d{2}\.\d{6}$/
+export const COORDINATE_PATTERN = /^\d{2}\.\d{3,6}$/
 
 export const COORDINATE_LENGTH = 9
 
@@ -135,6 +135,49 @@ export const formatCoordinate = (raw: string) => {
 
   return `${head}.${rest.join('').slice(0, 6)}`
 }
+
+/** Map links for a typed pair, so the customer can check where it lands. */
+export const mapLinks = (latitude: string, longitude: string) => {
+  if (!COORDINATE_PATTERN.test(latitude) || !COORDINATE_PATTERN.test(longitude)) return null
+
+  return {
+    google: `https://www.google.com/maps?q=${latitude},${longitude}`,
+    yandex: `https://yandex.uz/maps/?pt=${longitude},${latitude}&z=16&l=map`,
+  }
+}
+
+/**
+ * Obyektning idoraviy mansubligi is "<name> <body>" - the name typed by hand,
+ * the kind of body picked from this list, e.g. "Andijon shahar hokimligi".
+ */
+export const BELONGING_TYPES = ['tumani hokimligi', 'shahar hokimligi'] as const
+
+/** Saved before the wording was fixed; read back as its current form. */
+const LEGACY_BELONGING_TYPES: Record<string, (typeof BELONGING_TYPES)[number]> = {
+  'tuman hokimligi': 'tumani hokimligi',
+}
+
+/** The longest type that ends the string wins, so "shahar hokimligi" is not read as "...hokimligi". */
+export const splitBelonging = (value?: string | null) => {
+  const full = String(value ?? '').trim()
+  const known = [...BELONGING_TYPES, ...Object.keys(LEGACY_BELONGING_TYPES)]
+  const type = known.sort((a, b) => b.length - a.length).find((item) => full === item || full.endsWith(` ${item}`))
+
+  if (!type) return { belongingName: full, belongingType: '' }
+
+  return {
+    belongingName: full.slice(0, full.length - type.length).trim(),
+    belongingType: LEGACY_BELONGING_TYPES[type] ?? type,
+  }
+}
+
+/** Texnogen xavf yuqori bo‘lgan zona obyektining xavflilik darajasi; any other text typed is kept as typed. */
+export const TXYUZ_HAZARD_LEVELS = ['I – tip', 'II – tip', 'III – tip'] as const
+
+/** Inson salomatligi uchun salbiy ta'sir ko'rsatuvchi omillar; any other text typed is kept as typed. */
+export const TXYUZ_HEALTH_RISK_FACTORS = [
+  'Havodan zaharlanish, ko‘z achishishi, tana kuyishi va jarohatlanish',
+] as const
 
 /** Obyektning sanitariya muhofaza zonasi (m). */
 export const TXYUZ_PROTECTION_DISTANCES = ['50 metr', '100 metr', '300 metr', '500 metr', '1 000 metr'] as const

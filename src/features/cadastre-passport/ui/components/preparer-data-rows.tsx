@@ -1,7 +1,7 @@
 import { format } from 'date-fns'
 import DetailRow from '@/shared/components/common/detail-row'
 import { EmptyValue } from '@/shared/components/common/empty-value'
-import { CadastreSection } from '../../model/types'
+import { CadastrePreparerData, CadastreSection } from '../../model/types'
 import { StatusBadge } from './status-badge'
 
 const isBlank = (value: unknown) => value === null || value === undefined || value === ''
@@ -95,6 +95,8 @@ export const RegistryDataRows = ({ data }: { data: CadastreSection | null | unde
 
   return (
     <>
+      <DetailRow title="Tashkilotning idoraviy mansubligi" value={text(values.organizationalBelonging)} />
+      <DetailRow title="Tashkilotning yuridik manzili" value={text(values.address)} />
       <DetailRow
         title="Obyektning davlat ro‘yxatidan o‘tkazilganligi to‘g‘risidagi guvohnoma raqami"
         value={text(values.stateRegistryCertNumber)}
@@ -108,6 +110,22 @@ export const RegistryDataRows = ({ data }: { data: CadastreSection | null | unde
       <DetailRow title="Korxona va tashkilotning umumdavlat tasnifi raqami (KTUT, OKPO)" value={text(values.okpo)} />
       <DetailRow title="Filiallararo aylanma pul muomalalarining xos raqami (YBK, MFO)" value={text(values.bankMfo)} />
       <DetailRow title="Telefon raqami" value={text(values.phoneNumber)} />
+    </>
+  )
+}
+
+/** Every object of the passport, each under its own number. */
+export const ObjectsDataRows = ({ data }: { data: CadastrePreparerData | null | undefined }) => {
+  const objects = data?.objects?.length ? data.objects : [null]
+
+  return (
+    <>
+      {objects.map((object, index) => (
+        <div key={index} className={index > 0 ? 'mt-4 border-t pt-4' : undefined}>
+          {objects.length > 1 && <h6 className="mb-2 text-sm font-semibold text-gray-700">{index + 1}-obyekt</h6>}
+          <PreparerDataRows data={object} />
+        </div>
+      ))}
     </>
   )
 }
