@@ -8,6 +8,8 @@ import { RiskAnalysisData } from '../risk-analysis'
 import RiskAnalysisForm from '@/features/risk-analysis/ui/parts/risk-analysis-form'
 import useDetail from '@/shared/hooks/api/use-detail'
 import FormSkeleton from '@/shared/components/common/form-skeleton/ui'
+import { RiskAnalysisRecheck, RiskAnalysisWarning } from './risk-analysis-warning'
+import { RiskLevelBadge } from './risk-level'
 
 interface RiskAnalysisIndicatorProps {
   riskAnalysisId?: string
@@ -36,10 +38,13 @@ const RiskAnalysisIndicator: FC<RiskAnalysisIndicatorProps> = ({ riskAnalysisId 
     <Tabs value={activeTab} onValueChange={setActiveTab}>
       <div className="flex items-center justify-between">
         <div className="ml-auto flex items-center gap-4">
+          <RiskLevelBadge level={analysisData.level} />
           <Badge variant={totalScore > 80 ? 'destructive' : 'success'}>Jami ballar: {totalScore}</Badge>
         </div>
       </div>
       <RiskAnalysisInspectorInfo data={analysisData} />
+      <RiskAnalysisWarning data={analysisData} />
+      <RiskAnalysisRecheck data={analysisData} />
       <RiskAnalysisForm data={analysisData.indicators} />
     </Tabs>
   )

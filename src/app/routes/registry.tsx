@@ -60,6 +60,7 @@ const ExpertiseOrganizations = lazy(() => import('@/pages/expertise/organization
 const ExpertisePage = lazy(() => import('@/pages/expertise/page'))
 const HazardousFacilitiesPage = lazy(() => import('@/pages/admin/hazardous-facility/ui'))
 const HybridMailPage = lazy(() => import('@/features/admin/hybrid-mail/ui/hybrid-mail-page'))
+const RiskRecheckPage = lazy(() => import('@/features/admin/risk-recheck/ui/risk-recheck-page'))
 const InquiriesStatusReport = lazy(() => import('@/features/reports/ui/inquiries-status'))
 const InquiryAddPage = lazy(() => import('@/pages/inquiries/ui/inquiry-add'))
 const InquiryDetailPage = lazy(() => import('@/pages/inquiries/ui/inquiry-detail'))
@@ -568,6 +569,7 @@ export const APP_ROUTES: AppRouteDefinition[] = [
   },
   { path: 'hazardous-facilities', element: withSuspense(HazardousFacilitiesPage), roles: [UserRoles.ADMIN] },
   { path: 'hybrid-mail', element: withSuspense(HybridMailPage), roles: [UserRoles.ADMIN] },
+  { path: 'risk-recheck', element: withSuspense(RiskRecheckPage), roles: [UserRoles.ADMIN] },
   {
     id: 'INQUIRY',
     path: 'inquiries',

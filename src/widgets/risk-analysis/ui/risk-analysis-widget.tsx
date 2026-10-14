@@ -88,6 +88,7 @@ const RiskAnalysisWidget = ({ periodType }: RiskAnalysisWidgetProps) => {
       inspectorId,
       periodId,
       status,
+      isWarningSent,
     },
   } = useCustomSearchParams()
 
@@ -125,6 +126,7 @@ const RiskAnalysisWidget = ({ periodType }: RiskAnalysisWidgetProps) => {
     identity,
     inspectorId,
     periodId,
+    isWarningSent,
   }
 
   const { data, isLoading } = usePaginatedData<RiskAnalysisItem>(

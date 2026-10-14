@@ -21,6 +21,8 @@ import { EmptyValue } from '@/shared/components/common/empty-value'
 import { paramText } from '@/shared/lib/url-params'
 import { toLabelledFiles } from '@/entities/application'
 import type { RiskAnalysisPeriod } from '@/entities/risk-analysis/model/risk-analysis.types'
+import { RiskLevelBadge } from './parts/risk-level'
+import { WarningCell } from './parts/risk-analysis-warning'
 import type { RadiationProfile } from '@/shared/api/radiation-profile/use-radiation-profile-check'
 
 const RiskAnalysisDetail = () => {
@@ -88,6 +90,20 @@ const RiskAnalysisDetail = () => {
     {
       header: 'Salbiylar soni',
       accessorKey: 'negativeCount',
+    },
+    {
+      header: 'Daraja',
+      cell: ({ row }) => <RiskLevelBadge level={row.original.level} />,
+    },
+    {
+      header: 'Tavsiyanoma',
+      cell: ({ row }) => (
+        <WarningCell
+          riskAnalysisId={row.original.id}
+          level={row.original.level}
+          warningDate={row.original.warningDate}
+        />
+      ),
     },
     {
       header: 'Xavf tahlili o‘tkazilgan vaqt',

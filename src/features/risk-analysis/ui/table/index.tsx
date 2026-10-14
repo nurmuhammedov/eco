@@ -7,6 +7,7 @@ import { FC } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
+import { RiskLevelBadge, WARNING_FILTER_OPTIONS, WarningStateBadge } from '../parts/risk-level'
 
 interface Props {
   data?: ResponseData<RiskAnalysisItem>
@@ -78,6 +79,21 @@ const List: FC<Props> = ({ data, isLoading = false }) => {
       className: '!w-[1%]',
 
       filterType: 'search' as const,
+    },
+    {
+      header: 'Daraja',
+      accessorKey: 'level',
+      className: '!w-[1%] whitespace-nowrap',
+      cell: ({ row }) => <RiskLevelBadge level={row.original.level} />,
+    },
+    {
+      header: 'Tavsiyanoma',
+      accessorKey: 'warningDate',
+      className: '!w-[1%] whitespace-nowrap',
+      cell: ({ row }) => <WarningStateBadge level={row.original.level} warningDate={row.original.warningDate} />,
+      filterKey: 'isWarningSent',
+      filterType: 'select' as const,
+      filterOptions: WARNING_FILTER_OPTIONS,
     },
     {
       id: 'actions',

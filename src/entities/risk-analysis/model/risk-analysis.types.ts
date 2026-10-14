@@ -8,6 +8,9 @@ export interface RiskAnalysisItem {
   legalTin: number | null
   address: string | null
   score: number | null
+  level: RiskAnalysisLevel | null
+  /** Tavsiyanoma yuborilgan sana; null - yuborilmagan */
+  warningDate: string | null
 }
 
 export type RiskAnalysisLevel = 'LOW' | 'MEDIUM' | 'HIGH'
@@ -27,6 +30,8 @@ export interface RiskAnalysisPeriod {
   createdAt: string | null
   positiveCount: number | null
   negativeCount: number | null
+  /** Tavsiyanoma yuborilgan sana; null - yuborilmagan */
+  warningDate?: string | null
 }
 
 /** CountByLevel (`GET /risk-analyses/count`) */

@@ -14,6 +14,7 @@ import {
   Newspaper,
   Workflow,
   ShieldCheck,
+  RefreshCw,
 } from 'lucide-react'
 
 export default [
@@ -39,7 +40,7 @@ export default [
   },
   {
     url: '/org-workflow',
-    title: 'TXYUZ jarayoni',
+    title: 'TXYZ jarayoni',
     icon: <Workflow />,
   },
   {
@@ -76,6 +77,11 @@ export default [
     url: '/hybrid-mail',
     title: 'Gibrid pochta',
     icon: <Mail />,
+  },
+  {
+    url: '/risk-recheck',
+    title: 'Havf tahlili',
+    icon: <RefreshCw />,
   },
   {
     url: '/parks',

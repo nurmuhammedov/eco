@@ -1,3 +1,6 @@
+import type { RiskAnalysisLevel } from '@/entities/risk-analysis/model/risk-analysis.types'
+import type { PostalMailStatus } from './parts/risk-level'
+
 export interface Indicator {
   id: string
   text: string
@@ -24,4 +27,13 @@ export interface RiskAnalysisData {
   endDate: string
   inspectorName: string | null
   assignedDate: string | null
+  level?: RiskAnalysisLevel | null
+  inspectionId?: string | null
+  warningPath?: string | null
+  warningDate?: string | null
+  warningStatus?: PostalMailStatus | null
+  recheckTotalScore?: number | null
+  recheckLevel?: RiskAnalysisLevel | null
+  recheckIndicators?: RiskIndicators | null
+  recheckDate?: string | null
 }
