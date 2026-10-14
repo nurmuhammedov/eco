@@ -124,7 +124,7 @@ export function Header() {
       { path: '/elevators', title: 'Liftlar' },
       { path: '/expertise', title: 'Ekspertiza' },
       { path: '/archive', title: 'Arxiv' },
-      { path: '/cadastre-passports', title: 'TXYUZ kadastr pasportlari' },
+      { path: '/cadastre-passports', title: 'TXYZ kadastr pasportlari' },
       { path: '/user-delegation', title: 'Vazifalarni yuklash' },
       { path: '/profile', title: 'Profil' },
     ]

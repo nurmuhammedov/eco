@@ -207,7 +207,7 @@ const HfDetail = () => {
         <DetailCardAccordion.Item value="attached_equipments" title="Biriktirilgan qurilmalar">
           {isOpen('attached_equipments') && <EquipmentsList hfId={id} hideTabs={true} isShortView={true} />}
         </DetailCardAccordion.Item>
-        <DetailCardAccordion.Item value="cadastre_passports" title="TXYUZ kadastr pasportlari">
+        <DetailCardAccordion.Item value="cadastre_passports" title="TXYZ kadastr pasportlari">
           {isOpen('cadastre_passports') && <CadastreList customerTin={data?.legalTin} isShortView />}
         </DetailCardAccordion.Item>
         <DetailCardAccordion.Item value="history" title="O‘zgartirishlar tarixi">
