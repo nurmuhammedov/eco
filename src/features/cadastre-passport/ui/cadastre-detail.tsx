@@ -13,6 +13,7 @@ import { useAuth } from '@/shared/hooks/use-auth'
 import { FVV_GROUPS, SES_GROUPS } from '../model/review-fields'
 import { canSignAsCommittee, isCustomer, isPreparer } from '../model/permissions'
 import { useCadastrePassport } from '../model/use-cadastre-passport'
+import { useCadastreRepresentation } from '../model/use-representation'
 import { CadastreEditModal } from './components/cadastre-edit-modal'
 import { CommitteeActions } from './components/committee-actions'
 import { CustomerActions } from './components/customer-actions'
@@ -30,6 +31,7 @@ export default function CadastreDetail() {
   const navigate = useNavigate()
   const { user } = useAuth()
   const [editOpen, setEditOpen] = useState(false)
+  const { representation } = useCadastreRepresentation()
 
   const { data: passport, isLoading } = useCadastrePassport(id)
 
@@ -68,8 +70,8 @@ export default function CadastreDetail() {
   const workflows = passport.workflows ?? []
   const myWorkflow = passport.status === 'IN_REVIEW' ? workflows.find((workflow) => workflow.myTurn) : undefined
 
-  const canEdit = passport.status === 'NEW' && isPreparer(user, passport)
-  const canResubmit = passport.status === 'REJECTED' && isPreparer(user, passport)
+  const canEdit = passport.status === 'NEW' && isPreparer(user, passport, representation?.tin)
+  const canResubmit = passport.status === 'REJECTED' && isPreparer(user, passport, representation?.tin)
 
   const resubmit = () => {
     const params = new URLSearchParams({
@@ -101,7 +103,8 @@ export default function CadastreDetail() {
 
       <Accordion
         type="multiple"
-        defaultValue={['txyuz', 'workflows', 'cadastre-data', 'registry-data', 'fvv', 'ses', 'reviews']}
+        // FVV, SES and the conclusions are long and read on demand, so they start closed
+        defaultValue={['txyuz', 'workflows', 'cadastre-data', 'registry-data']}
       >
         <DetailCardAccordion.Item value="txyuz" title="TXYZ kadastr pasporti ma’lumotlari">
           <DetailRow title="Holati" value={<StatusBadge status={passport.status} />} />

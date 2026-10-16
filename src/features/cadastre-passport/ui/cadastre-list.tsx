@@ -102,7 +102,7 @@ export default function CadastreList({ customerTin, isShortView }: CadastreListP
           row={row}
           showView
           onView={(target) => navigate(`/cadastre-passports/${target.original.id}`)}
-          showDelete={row.original.status === 'NEW' && isPreparer(user, row.original)}
+          showDelete={row.original.status === 'NEW' && isPreparer(user, row.original, representation?.tin)}
           onDelete={(target) => deleteCadastre(target.original.id, { onSuccess: () => refetch() })}
         />
       </div>

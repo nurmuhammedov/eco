@@ -103,6 +103,7 @@ const cadastreObjectSchema = z
     employeeCount: whole(),
     workingHour: whole().min(1, invalid).max(24, invalid),
     firefightingEquipment: text(),
+    fireEquipmentCount: whole().min(0, invalid),
     distanceToFireDepartment: numeric(),
     dominantHazardType: text(),
     damageArea: numeric(),
@@ -604,6 +605,19 @@ export const CadastreDataFields = ({ prefix = 'cadastreData.' }: CadastreDataFie
               <FormLabel required>Obyektda yong‘in o‘chirish vositasining turi</FormLabel>
               <FormControl>
                 <SelectOrInput options={TXYUZ_FIREFIGHTING_EQUIPMENT} value={field.value} onChange={field.onChange} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={control}
+          name={`${prefix}fireEquipmentCount`}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel required>Obyektda yong‘in o‘chirish vositasining soni (ta)</FormLabel>
+              <FormControl>
+                <InputNumber control={control} name={field.name} min={0} allowNegative={false} placeholder="Kiriting" />
               </FormControl>
               <FormMessage />
             </FormItem>

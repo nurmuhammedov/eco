@@ -53,6 +53,10 @@ export const PreparerDataRows = ({ data }: { data: CadastreSection | null | unde
       />
       <DetailRow title="Obyektda yong‘in o‘chirish vositasining turi" value={text(values.firefightingEquipment)} />
       <DetailRow
+        title="Obyektda yong‘in o‘chirish vositasining soni (ta)"
+        value={unit(values.fireEquipmentCount, 'ta')}
+      />
+      <DetailRow
         title="Obyektdan yong‘in-qutqaruv qismigacha bo‘lgan masofa (km)"
         value={unit(values.distanceToFireDepartment, 'km')}
       />
