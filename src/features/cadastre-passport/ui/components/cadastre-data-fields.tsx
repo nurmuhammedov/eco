@@ -343,7 +343,7 @@ export const CadastreDataFields = ({ prefix = 'cadastreData.' }: CadastreDataFie
           name={`${prefix}addressLine`}
           render={({ field }) => (
             <FormItem>
-              <FormLabel required>Obyektning joylashgan manzili</FormLabel>
+              <FormLabel required>Obyektning joylashgan manzili (MFY, ko‘chasi, uy raqami)</FormLabel>
               <FormControl>
                 <Input placeholder="Kiriting" maxLength={255} {...field} />
               </FormControl>
