@@ -374,8 +374,8 @@ export const ReportsGrid: React.FC = () => {
       groups = groups.filter((group) => group.id !== 'kpi')
     }
 
-    // Kadastr pasportlari hisobotini backend faqat rais va hudud boshlig‘iga ochadi.
-    if (role !== UserRoles.CHAIRMAN && role !== UserRoles.REGIONAL) {
+    // Kadastr pasportlari hisobotini backend rais, hudud boshlig‘i va bo‘lim boshlig‘iga ochadi.
+    if (role !== UserRoles.CHAIRMAN && role !== UserRoles.REGIONAL && role !== UserRoles.HEAD) {
       groups = groups.filter((group) => group.id !== 'cadastre-passports')
     }
 

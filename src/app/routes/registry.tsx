@@ -979,7 +979,7 @@ export const APP_ROUTES: AppRouteDefinition[] = [
     id: 'REPORT',
     path: 'reports/cadastre-passport',
     element: withSuspense(CadastrePassportReport),
-    roles: [UserRoles.CHAIRMAN, UserRoles.REGIONAL],
+    roles: [UserRoles.CHAIRMAN, UserRoles.HEAD, UserRoles.REGIONAL],
   },
   {
     id: 'REPORT',
@@ -1197,13 +1197,13 @@ export const APP_ROUTES: AppRouteDefinition[] = [
     id: 'REPORT',
     path: 'reports/risk-comparison',
     element: withSuspense(RiskComparisonReport),
-    roles: [UserRoles.CHAIRMAN, UserRoles.MANAGER, UserRoles.PROCURATOR],
+    roles: [UserRoles.CHAIRMAN, UserRoles.HEAD, UserRoles.MANAGER, UserRoles.PROCURATOR],
   },
   {
     id: 'REPORT',
     path: 'reports/risk-date-comparison',
     element: withSuspense(RiskDateComparisonReport),
-    roles: [UserRoles.CHAIRMAN, UserRoles.MANAGER, UserRoles.PROCURATOR, UserRoles.REGIONAL],
+    roles: [UserRoles.CHAIRMAN, UserRoles.HEAD, UserRoles.MANAGER, UserRoles.PROCURATOR, UserRoles.REGIONAL],
   },
   {
     id: 'REPORT',
