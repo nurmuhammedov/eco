@@ -1,457 +1,114 @@
-import React, { Fragment, useMemo, useState } from 'react'
-import {
-  AlertTriangle,
-  BarChart,
-  Box,
-  CalendarClock,
-  ClipboardCheck,
-  Clock,
-  FileSearch,
-  Factory,
-  FileText,
-  Flame,
-  LineChart,
-  Map,
-  PieChart,
-  PlusSquare,
-  Radiation,
-  ShieldCheck,
-  Siren,
-  Target,
-  TrendingUp,
-  Users,
-  Zap,
-} from 'lucide-react'
+import React, { useMemo, useState } from 'react'
+import { Link, Navigate, useParams } from 'react-router-dom'
+import { ChevronRight, FileText } from 'lucide-react'
 import { Card } from '@/shared/components/ui/card'
-import { Link } from 'react-router-dom'
-import { useCurrentRole } from '@/shared/hooks/use-current-role'
-import { useAuth } from '@/shared/hooks/use-auth'
-import { UserRoles } from '@/shared/types/user'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
+import { cn } from '@/shared/lib/utils'
+import { isReportReady, reportGroupUrl, useReportGroups } from '../../model/reports-catalog'
 
-interface ReportItem {
-  id: string
-  title: string
-  icon?: React.ElementType
-  url: string
-  badge?: string
-  reportType?: 'MONTHLY' | 'OTHERS'
-}
-
-interface ReportGroup {
-  id: string
-  title: string
-  items: ReportItem[]
-}
-
-const REPORTS_GROUPS: ReportGroup[] = [
-  {
-    id: 'applications',
-    title: 'Arizalar',
-    items: [
-      {
-        id: 'rep-1',
-        title: 'Arizalarning hududlar kesimida taqsimlanishi',
-        icon: Map,
-        url: '/reports/applications-by-region',
-        reportType: 'MONTHLY',
-      },
-      {
-        id: 'rep-2',
-        title: 'Arizalar turlari bo‘yicha taqsimlanishi',
-        icon: PieChart,
-        url: '/reports/applications-by-type',
-        reportType: 'MONTHLY',
-      },
-    ],
-  },
-  {
-    id: 'registers',
-    title: 'Reyestrlar',
-    items: [
-      {
-        id: 'rep-3',
-        title: 'Davlat ro‘yxatiga olingan/chiqarilgan obyektlar',
-        icon: Box,
-        url: '/reports/registry-objects',
-        reportType: 'MONTHLY',
-      },
-      {
-        id: 'rep-4',
-        title: 'Davlat ro‘yxatidagi yangi qo‘shilgan va amaldagi obyektlar',
-        icon: PlusSquare,
-        url: '/reports/registry-new-objects',
-        reportType: 'MONTHLY',
-      },
-      {
-        id: 'rep-8',
-        title: 'Reyestr ma’lumotlarini o‘zgartirish so‘rovlari bo‘yicha hisobot',
-        icon: Zap,
-        url: '/reports/registry-changes',
-        reportType: 'MONTHLY',
-      },
-      {
-        id: 'rep-9',
-        title: 'Inspektorlar tomonidan reyestrdan chiqarish so‘rovlari bo‘yicha hisobot',
-        icon: ClipboardCheck,
-        url: '/reports/registry-deregistrations',
-        reportType: 'MONTHLY',
-      },
-      {
-        id: 'rep-hf-employee-stats',
-        title: 'XICHOlarda ishchi xodimlari bo‘yicha statistika',
-        icon: Users,
-        url: '/reports/hf-employee-stats',
-        reportType: 'OTHERS',
-      },
-    ],
-  },
-  {
-    id: 'terms',
-    title: 'Muddati bo‘yicha',
-    items: [
-      {
-        id: 'rep-irs-xray-status',
-        title: 'INM va Rentgen muddati o‘tganlar',
-        icon: Radiation,
-        url: '/reports/irs-xray-status',
-        badge: 'Yangi',
-        reportType: 'OTHERS',
-      },
-      {
-        id: 'rep-5',
-        title: 'Qurilmalarning muddatlari bo‘yicha hisobot',
-        icon: CalendarClock,
-        url: '/reports/registry-equipment-terms',
-        reportType: 'OTHERS',
-      },
-      {
-        id: 'rep-appeal-execution',
-        title: 'Arizalarning ijro muddati bo‘yicha umumiy hisobot',
-        icon: Clock,
-        url: '/reports/appeal-execution',
-        reportType: 'MONTHLY',
-      },
-      {
-        id: 'rep-appeal-status-duration',
-        title: 'Arizalar holati va muddati bo‘yicha hisobot',
-        icon: Clock,
-        url: '/reports/appeal-status-duration',
-        reportType: 'MONTHLY',
-      },
-    ],
-  },
-  {
-    id: 'cadastre-passports',
-    title: 'Kadastr pasportlari',
-    items: [
-      {
-        id: 'cadastre-passport-status',
-        title: 'Kadastr pasportlari holati hududlar kesimida',
-        icon: ClipboardCheck,
-        url: '/reports/cadastre-passport',
-        reportType: 'OTHERS',
-      },
-    ],
-  },
-  {
-    id: 'accidents-and-incidents',
-    title: 'Baxtsiz hodisalar va avariyalar',
-    items: [
-      {
-        id: 'rep-6',
-        title: 'Baxtsiz hodisalar bo‘yicha umumiy hisobot',
-        icon: Siren,
-        url: '#',
-        badge: 'Jarayonda',
-        reportType: 'OTHERS',
-      },
-      {
-        id: 'rep-7',
-        title: 'Avariyalar bo‘yicha umumiy hisobot',
-        icon: Flame,
-        url: '#',
-        badge: 'Jarayonda',
-        reportType: 'OTHERS',
-      },
-    ],
-  },
-  {
-    id: 'prevention',
-    title: 'Profilaktika',
-    items: [
-      {
-        id: 'prev-stats',
-        title: 'Profilaktika ishlari statistikasi',
-        icon: ShieldCheck,
-        url: '/reports/prevention-stats',
-        reportType: 'MONTHLY',
-      },
-      {
-        id: 'prev-inspector-load',
-        title: 'Profilaktika hududlar kesimida',
-        icon: Map,
-        url: '#',
-        badge: 'Jarayonda',
-        reportType: 'OTHERS',
-      },
-    ],
-  },
-  {
-    id: 'risk-analysis',
-    title: 'Xavfni tahlil qilish',
-    items: [
-      {
-        id: 'risk-date-comparison',
-        title: 'Xavf tahlili natijasi bo‘yicha muddatlar o‘rtasida solishtirish hisoboti',
-        icon: LineChart,
-        url: '/reports/risk-date-comparison',
-        reportType: 'MONTHLY',
-      },
-      {
-        id: 'risk-objects',
-        title: 'Xavf darajasi bo‘yicha obyektlar',
-        icon: AlertTriangle,
-        url: '#',
-        badge: 'Jarayonda',
-        reportType: 'OTHERS',
-      },
-      {
-        id: 'risk-trends',
-        title: 'Xavf ko‘rsatkichlari dinamikasi',
-        icon: Target,
-        url: '#',
-        badge: 'Jarayonda',
-        reportType: 'OTHERS',
-      },
-    ],
-  },
-  {
-    id: 'inspections',
-    title: 'Tekshiruvlar',
-    items: [
-      {
-        id: 'insp-stats',
-        title: 'Tekshiruv holati bo‘yicha',
-        icon: FileSearch,
-        url: '/reports/inspection-stats',
-        reportType: 'MONTHLY',
-      },
-      {
-        id: 'insp-execution',
-        title: 'Tekshiruvlarning chora tadbirlari bo‘yicha hisobot',
-        icon: ClipboardCheck,
-        url: '/reports/inspection-execution',
-        reportType: 'MONTHLY',
-      },
-      {
-        id: 'insp-hf-category',
-        title: 'XICHO toifalari bo‘yicha o‘tkazilgan tekshiruvlar',
-        icon: Factory,
-        url: '/reports/inspection-hf-category',
-        reportType: 'OTHERS',
-      },
-      {
-        id: 'insp-types',
-        title: 'Rejali va rejadan tashqari',
-        icon: FileSearch,
-        url: '#',
-        badge: 'Jarayonda',
-        reportType: 'OTHERS',
-      },
-      {
-        id: 'insp-rejected',
-        title: '1 kunlik va 10 kunlik tekshiruvlar',
-        icon: Clock,
-        url: '#',
-        badge: 'Jarayonda',
-        reportType: 'OTHERS',
-      },
-    ],
-  },
-  {
-    id: 'inquiries',
-    title: 'Murojaatlar',
-    items: [
-      {
-        id: 'inq-status',
-        title: 'Murojaatlar holati bo‘yicha hisobot',
-        icon: Map,
-        url: '/reports/inquiries-status',
-        reportType: 'OTHERS',
-      },
-      {
-        id: 'inq-content',
-        title: 'Murojaatlar dinamikasi',
-        icon: TrendingUp,
-        url: '#',
-        badge: 'Jarayonda',
-        reportType: 'OTHERS',
-      },
-      {
-        id: 'inq-execution',
-        title: 'Murojaatlar oylar kesimida',
-        icon: BarChart,
-        url: '#',
-        badge: 'Jarayonda',
-        reportType: 'MONTHLY',
-      },
-    ],
-  },
-  {
-    id: 'kpi',
-    title: 'KPI',
-    items: [
-      {
-        id: 'kpi-departments',
-        title: 'Bo‘limlarning KPI ko‘rsatkichi',
-        icon: Target,
-        url: '/reports/kpi-departments',
-        reportType: 'OTHERS',
-      },
-    ],
-  },
-  {
-    id: 'employees',
-    title: 'Xodimlar',
-    items: [
-      {
-        id: 'emp-kpi-regional',
-        title: 'Hududlarning KPI ko‘rsatkichi',
-        icon: Users,
-        url: '/reports/kpi-regional',
-        reportType: 'MONTHLY',
-      },
-      {
-        id: 'emp-top-100-orgs',
-        title: 'Eng ko‘p 3 toifa xodimga ega Top-100 tashkilotlar',
-        icon: Users,
-        url: '/reports/top-100-organizations',
-        reportType: 'OTHERS',
-      },
-      {
-        id: 'emp-turniket',
-        title: 'Xodimlarning ishga vaqtida kelishi bo‘yicha hisobot',
-        icon: Users,
-        url: '/reports/turniket-logs',
-        reportType: 'MONTHLY',
-      },
-      {
-        id: 'emp-device-login',
-        title: 'Xodimlar qaysi qurilmadan kirayotgani bo‘yicha hisobot',
-        icon: FileText,
-        url: '/reports/employee-device-login',
-        reportType: 'OTHERS',
-      },
-      {
-        id: 'emp-activity-dashboard',
-        title: 'Xodimlar faolligi doir umumiy boshqaruv paneli',
-        icon: BarChart,
-        url: '/reports/employees-dashboard',
-        badge: 'Jarayonda',
-        reportType: 'OTHERS',
-      },
-    ],
-  },
-]
-
+/**
+ * One section of the reports, picked in the sidebar under "Hisobotlar". The
+ * bare /reports address opens the first section the role has.
+ */
 export const ReportsGrid: React.FC = () => {
-  const role = useCurrentRole()
-  const { user } = useAuth()
-  // Supervisors sign in as REGIONAL with this flag; they may be a KPI department's executor.
-  const isSupervisor = !!user?.isSupervisor
+  const { groupId } = useParams<{ groupId: string }>()
+  const groups = useReportGroups()
   const [filterType, setFilterType] = useState<string>('ALL')
 
-  const filteredGroups = useMemo(() => {
-    let groups = REPORTS_GROUPS
+  const group = groups.find((item) => item.id === groupId)
 
-    if (role !== UserRoles.CHAIRMAN && role !== UserRoles.ADMIN) {
-      groups = groups.filter((group) => group.id !== 'employees')
-    }
+  const items = useMemo(
+    () => (group?.items ?? []).filter((item) => filterType === 'ALL' || item.reportType === filterType),
+    [group, filterType]
+  )
 
-    // Answered by the KPI service for the chairman and the roles that may execute a department's KPI
-    if (![UserRoles.CHAIRMAN, UserRoles.HEAD, UserRoles.MANAGER].includes(role) && !isSupervisor) {
-      groups = groups.filter((group) => group.id !== 'kpi')
-    }
-
-    // Kadastr pasportlari hisobotini backend rais, hudud boshlig‘i va bo‘lim boshlig‘iga ochadi.
-    if (role !== UserRoles.CHAIRMAN && role !== UserRoles.REGIONAL && role !== UserRoles.HEAD) {
-      groups = groups.filter((group) => group.id !== 'cadastre-passports')
-    }
-
-    if (filterType !== 'ALL') {
-      groups = groups
-        .map((group) => ({
-          ...group,
-          items: group.items.filter((item) => item.reportType === filterType),
-        }))
-        .filter((group) => group.items.length > 0)
-    }
-
-    return groups
-  }, [role, isSupervisor, filterType])
+  if (!group) {
+    return groups.length ? <Navigate to={reportGroupUrl(groups[0].id)} replace /> : null
+  }
 
   return (
-    <Fragment>
-      <div className="mb-6 flex items-center justify-between">
-        <h5 className="flex flex-wrap items-baseline gap-2 text-xl font-semibold text-gray-800 sm:text-2xl">
-          Hisobotlar
-          <span className="text-xs font-normal text-amber-600 italic sm:text-sm">
-            (ushbu sahifa ishlab chiqish jarayonida)
-          </span>
-        </h5>
-        <div className="flex items-center gap-2">
-          <Select value={filterType} onValueChange={setFilterType}>
-            <SelectTrigger className="w-[180px] bg-white">
-              <SelectValue placeholder="Barchasi" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="ALL">Barchasi</SelectItem>
-              <SelectItem value="MONTHLY">Oylik hisobotlar</SelectItem>
-              <SelectItem value="OTHERS">Boshqa turdagi hisobotlar</SelectItem>
-            </SelectContent>
-          </Select>
+    <div className="flex flex-col gap-4 pb-4">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <p className="text-muted-foreground text-sm">Hisobotlar</p>
+          <h5 className="text-xl font-semibold text-gray-800 sm:text-2xl">{group.title}</h5>
         </div>
+        <Select value={filterType} onValueChange={setFilterType}>
+          <SelectTrigger className="w-[200px] bg-white">
+            <SelectValue placeholder="Barchasi" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="ALL">Barchasi</SelectItem>
+            <SelectItem value="MONTHLY">Oylik hisobotlar</SelectItem>
+            <SelectItem value="OTHERS">Boshqa turdagi hisobotlar</SelectItem>
+          </SelectContent>
+        </Select>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 pb-4 md:grid-cols-2 xl:grid-cols-3">
-        {filteredGroups.map((group) => (
-          <div key={group.id} className="flex flex-col gap-2">
-            <h6 className="px-1 text-lg font-semibold text-gray-700">{group.title}</h6>
-            <Card className="overflow-hidden border-none shadow-sm">
-              <div className="flex flex-col">
-                {group.items.map((item) => {
-                  const Icon = item.icon || FileText
-                  return (
-                    <Link
-                      key={item.id}
-                      to={item.url}
-                      className="group flex items-center gap-3 border-b border-gray-100 p-3 transition-colors last:border-b-0 hover:bg-gray-50"
-                    >
-                      <div className="rounded-md bg-gray-50 p-2 text-gray-500 transition-colors group-hover:bg-blue-50 group-hover:text-blue-600">
-                        <Icon size={18} />
-                      </div>
-                      <span className="flex items-center gap-2 text-sm font-medium text-gray-600 group-hover:text-gray-900">
-                        {item.title}
-                        {item.badge && (
-                          <span
-                            className={`rounded px-2 py-0.5 text-[10px] font-bold uppercase ${
-                              item.badge === 'Jarayonda' ? 'bg-amber-100 text-amber-700' : 'bg-green-100 text-green-700'
-                            }`}
-                          >
-                            {item.badge}
-                          </span>
+      {items.length === 0 ? (
+        <Card className="text-muted-foreground border-none p-8 text-center text-sm shadow-sm">
+          Bu bo‘limda tanlangan turdagi hisobot yo‘q.
+        </Card>
+      ) : (
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
+          {items.map((item) => {
+            const Icon = item.icon || FileText
+            const ready = isReportReady(item)
+
+            const body = (
+              <>
+                <div
+                  className={cn(
+                    'shrink-0 rounded-md p-2.5 transition-colors',
+                    ready
+                      ? 'bg-blue-50 text-blue-600 group-hover:bg-blue-600 group-hover:text-white'
+                      : 'bg-gray-50 text-gray-400'
+                  )}
+                >
+                  <Icon size={20} />
+                </div>
+                <div className="flex min-w-0 flex-1 flex-col gap-1.5">
+                  <span className={cn('text-sm leading-snug font-medium', ready ? 'text-gray-800' : 'text-gray-400')}>
+                    {item.title}
+                  </span>
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    <span className="rounded bg-gray-100 px-1.5 py-0.5 text-[10px] font-medium text-gray-500">
+                      {item.reportType === 'MONTHLY' ? 'Oylik' : 'Boshqa'}
+                    </span>
+                    {item.badge && (
+                      <span
+                        className={cn(
+                          'rounded px-1.5 py-0.5 text-[10px] font-bold uppercase',
+                          item.badge === 'Jarayonda' ? 'bg-amber-100 text-amber-700' : 'bg-green-100 text-green-700'
                         )}
+                      >
+                        {item.badge}
                       </span>
-                    </Link>
-                  )
-                })}
+                    )}
+                  </div>
+                </div>
+                {ready && (
+                  <ChevronRight className="mt-1 h-4 w-4 shrink-0 text-gray-300 transition-transform group-hover:translate-x-0.5 group-hover:text-blue-600" />
+                )}
+              </>
+            )
+
+            const className = 'group flex items-start gap-3 rounded-lg border bg-white p-4 shadow-xs transition-all'
+
+            return ready ? (
+              <Link key={item.id} to={item.url} className={cn(className, 'hover:border-blue-200 hover:shadow-md')}>
+                {body}
+              </Link>
+            ) : (
+              // Not built yet: shown so it is known to be coming, but nothing to open
+              <div key={item.id} className={cn(className, 'cursor-not-allowed')} title="Ishlab chiqish jarayonida">
+                {body}
               </div>
-            </Card>
-          </div>
-        ))}
-      </div>
-    </Fragment>
+            )
+          })}
+        </div>
+      )}
+    </div>
   )
 }
 

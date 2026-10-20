@@ -32,7 +32,14 @@ const basePath = (url: string) => url.split('?')[0]
  */
 const WRAP = 'h-auto min-h-8 py-1.5 [&>span:last-child]:overflow-visible [&>span:last-child]:whitespace-normal'
 
-export function NavMain({ item }: { item: NavigationItem }) {
+interface NavMainProps {
+  item: NavigationItem
+  /** Given by the sidebar so that opening one section folds the one open before it */
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
+}
+
+export function NavMain({ item, open, onOpenChange }: NavMainProps) {
   const { pathname } = useLocation()
   const { t } = useTranslation(['common'])
   const { startNavigation } = useNavigationProgress()
@@ -78,7 +85,13 @@ export function NavMain({ item }: { item: NavigationItem }) {
 
   return (
     <SidebarMenu>
-      <Collapsible asChild defaultOpen={isActive} className="group/collapsible">
+      <Collapsible
+        asChild
+        open={open ?? undefined}
+        defaultOpen={isActive}
+        onOpenChange={onOpenChange}
+        className="group/collapsible"
+      >
         <SidebarMenuItem>
           <CollapsibleTrigger asChild>
             {subItems.length ? (
@@ -107,7 +120,14 @@ export function NavMain({ item }: { item: NavigationItem }) {
               <SidebarMenuSub>
                 {subItems.map((subItem) => (
                   <SidebarMenuSubItem key={subItem.title}>
-                    <SidebarMenuSubButton asChild isActive={pathname === basePath(subItem.url)} className={WRAP}>
+                    <SidebarMenuSubButton
+                      asChild
+                      isActive={
+                        pathname === basePath(subItem.url) ||
+                        !!subItem.activeUrls?.some((url) => pathname === url || pathname.startsWith(`${url}/`))
+                      }
+                      className={WRAP}
+                    >
                       <Link to={subItem.url} onClick={() => startNavigation(subItem.url)}>
                         <span>{t(subItem.title)}</span>
                       </Link>

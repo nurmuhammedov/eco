@@ -915,6 +915,19 @@ export const APP_ROUTES: AppRouteDefinition[] = [
   },
   {
     id: 'REPORT',
+    path: 'reports/groups/:groupId',
+    element: withSuspense(ReportsPage),
+    roles: [
+      UserRoles.CHAIRMAN,
+      UserRoles.HEAD,
+      UserRoles.INSPECTOR,
+      UserRoles.MANAGER,
+      UserRoles.PROCURATOR,
+      UserRoles.REGIONAL,
+    ],
+  },
+  {
+    id: 'REPORT',
     path: 'reports/accidents',
     element: withSuspense(AccidentsReport),
     roles: [

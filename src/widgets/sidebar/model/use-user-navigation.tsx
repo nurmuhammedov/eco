@@ -5,6 +5,7 @@ import { isModuleInMenu } from '@/shared/lib/access/module-access'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { usePaginatedData } from '@/shared/hooks'
 import { useKpiAccess } from '@/entities/kpi'
+import { isReportReady, reportGroupUrl, useReportGroups } from '@/features/reports/model/reports-catalog'
 import { NAVIGATIONS } from './navigations'
 import { Navigation } from './types'
 import allNavigation from './all'
@@ -45,6 +46,9 @@ export const useUserNavigation = (): Navigation => {
   // ask the server which of the heads they are.
   const { access } = useKpiAccess()
 
+  // Reports grew past one page of cards; each section is a menu entry of its own
+  const reportGroups = useReportGroups()
+
   return useMemo<Navigation>(() => {
     if (!user) return []
 
@@ -80,12 +84,27 @@ export const useUserNavigation = (): Navigation => {
       navigations = navigations.map((item) => (item.id === 'KPI' ? { ...item, items: KPI_APPROVER_ITEMS } : item))
     }
 
+    navigations = navigations.map((item) =>
+      item.id === 'REPORT' && item.url === '/reports' && reportGroups.length
+        ? {
+            ...item,
+            items: reportGroups.map((group) => ({
+              id: 'REPORT',
+              title: group.title,
+              url: reportGroupUrl(group.id),
+              // An open report keeps its section lit
+              activeUrls: group.items.filter(isReportReady).map((report) => report.url),
+            })),
+          }
+        : item
+    )
+
     if (DASHBOARD_ROLES.includes(role)) {
       navigations = [{ title: 'Bosh sahifa', url: '/dashboard', icon: <LucideHome /> }, ...navigations]
     }
 
     return navigations
-  }, [user, isIndividual, equipmentCount, access.is_approver])
+  }, [user, isIndividual, equipmentCount, access.is_approver, reportGroups])
 }
 
 /** First reachable page for the user, used as the landing route after sign-in. */
