@@ -15,6 +15,7 @@ import {
   Workflow,
   ShieldCheck,
   RefreshCw,
+  ScanFace,
 } from 'lucide-react'
 
 export default [
@@ -82,6 +83,11 @@ export default [
     url: '/risk-recheck',
     title: 'Havf tahlili',
     icon: <RefreshCw />,
+  },
+  {
+    url: '/skud',
+    title: 'SKUD (FaceID)',
+    icon: <ScanFace />,
   },
   {
     url: '/parks',
