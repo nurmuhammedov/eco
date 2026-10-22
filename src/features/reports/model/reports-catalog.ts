@@ -33,6 +33,8 @@ export interface ReportItem {
   url: string
   badge?: string
   reportType?: 'MONTHLY' | 'OTHERS'
+  /** Narrows a single report to these roles within an otherwise visible group */
+  roles?: UserRoles[]
 }
 
 export interface ReportGroup {
@@ -306,19 +308,21 @@ export const REPORTS_GROUPS: ReportGroup[] = [
         url: '/reports/kpi-departments',
         reportType: 'OTHERS',
       },
-    ],
-  },
-  {
-    id: 'employees',
-    title: 'Xodimlar',
-    items: [
       {
         id: 'emp-kpi-regional',
         title: 'Hududlarning KPI ko‘rsatkichi',
         icon: Users,
         url: '/reports/kpi-regional',
         reportType: 'MONTHLY',
+        // Moved here from "Xodimlar"; still only for the chairman, as the backend answers it
+        roles: [UserRoles.CHAIRMAN, UserRoles.ADMIN],
       },
+    ],
+  },
+  {
+    id: 'employees',
+    title: 'Xodimlar',
+    items: [
       {
         id: 'emp-top-100-orgs',
         title: 'Eng ko‘p 3 toifa xodimga ega Top-100 tashkilotlar',
@@ -380,6 +384,8 @@ export const filterReportGroups = (role: UserRoles, isSupervisor: boolean): Repo
   }
 
   return groups
+    .map((group) => ({ ...group, items: group.items.filter((item) => !item.roles || item.roles.includes(role)) }))
+    .filter((group) => group.items.length > 0)
 }
 
 export const useReportGroups = () => {
