@@ -16,6 +16,7 @@ import {
   ShieldCheck,
   RefreshCw,
   ScanFace,
+  Inbox,
 } from 'lucide-react'
 
 export default [
@@ -88,6 +89,11 @@ export default [
     url: '/skud',
     title: 'SKUD (FaceID)',
     icon: <ScanFace />,
+  },
+  {
+    url: '/mygov-tasks',
+    title: 'MyGov so‘rovlari',
+    icon: <Inbox />,
   },
   {
     url: '/parks',

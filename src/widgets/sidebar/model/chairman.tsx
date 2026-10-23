@@ -1,3 +1,4 @@
+import { Inbox } from 'lucide-react'
 import { MODULE_ICONS } from './module-icons'
 import { Navigation } from '@/widgets/sidebar/model/types'
 
@@ -157,5 +158,10 @@ export default [
         url: '/kpi/tasks',
       },
     ],
+  },
+  {
+    title: 'MyGov so‘rovlari',
+    url: '/mygov-tasks',
+    icon: <Inbox />,
   },
 ] as Navigation

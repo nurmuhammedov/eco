@@ -62,6 +62,7 @@ const HazardousFacilitiesPage = lazy(() => import('@/pages/admin/hazardous-facil
 const HybridMailPage = lazy(() => import('@/features/admin/hybrid-mail/ui/hybrid-mail-page'))
 const RiskRecheckPage = lazy(() => import('@/features/admin/risk-recheck/ui/risk-recheck-page'))
 const SkudPage = lazy(() => import('@/features/admin/skud/ui/skud-page'))
+const MygovTasksPage = lazy(() => import('@/features/admin/mygov-tasks/ui/mygov-tasks-page'))
 const InquiriesStatusReport = lazy(() => import('@/features/reports/ui/inquiries-status'))
 const InquiryAddPage = lazy(() => import('@/pages/inquiries/ui/inquiry-add'))
 const InquiryDetailPage = lazy(() => import('@/pages/inquiries/ui/inquiry-detail'))
@@ -572,6 +573,7 @@ export const APP_ROUTES: AppRouteDefinition[] = [
   { path: 'hybrid-mail', element: withSuspense(HybridMailPage), roles: [UserRoles.ADMIN] },
   { path: 'risk-recheck', element: withSuspense(RiskRecheckPage), roles: [UserRoles.ADMIN] },
   { path: 'skud', element: withSuspense(SkudPage), roles: [UserRoles.ADMIN] },
+  { path: 'mygov-tasks', element: withSuspense(MygovTasksPage), roles: [UserRoles.ADMIN, UserRoles.CHAIRMAN] },
   {
     id: 'INQUIRY',
     path: 'inquiries',
