@@ -16,12 +16,12 @@ describe('canUpdateRegistryType', () => {
     expect(canUpdateRegistryType('HF', UserRoles.INDIVIDUAL)).toBe(true)
   })
 
-  it('lets inspectors edit devices, cranes and attractions included, but not HF', () => {
+  it('lets inspectors edit devices, cranes, attractions and HF', () => {
     expect(canUpdateRegistryType('CRANE', UserRoles.INSPECTOR)).toBe(true)
     expect(canUpdateRegistryType('AUTO_CRANE', UserRoles.INSPECTOR)).toBe(true)
     expect(canUpdateRegistryType('ATTRACTION', UserRoles.INSPECTOR)).toBe(true)
     expect(canUpdateRegistryType('BOILER', UserRoles.INSPECTOR)).toBe(true)
-    expect(canUpdateRegistryType('HF', UserRoles.INSPECTOR)).toBe(false)
+    expect(canUpdateRegistryType('HF', UserRoles.INSPECTOR)).toBe(true)
   })
 
   it('leaves the other staff rules as they were', () => {
