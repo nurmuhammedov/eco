@@ -27,10 +27,16 @@ interface CadastreEditModalProps {
 const toObjectFormValues = (object: CadastreSection) => {
   const values: Record<string, unknown> = { ...object }
 
-  for (const key of ['cadastreRegistrationDate', 'exploitationDate'] as const) {
-    const value = object[key]
-    if (value) values[key] = new Date(value)
-  }
+  if (object.cadastreRegistrationDate) values.cadastreRegistrationDate = new Date(object.cadastreRegistrationDate)
+
+  // The date became a year; an object saved before that still carries the old date
+  const legacyDate = object.exploitationDate ? new Date(object.exploitationDate) : null
+  values.exploitationYear = object.exploitationYear
+    ? String(object.exploitationYear)
+    : legacyDate && !isNaN(legacyDate.valueOf())
+      ? String(legacyDate.getFullYear())
+      : ''
+  delete values.exploitationDate
 
   // The address is one string on the record and three fields on the form.
   Object.assign(values, splitAddress(String(object.address ?? '')))

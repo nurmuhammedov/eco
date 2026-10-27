@@ -40,7 +40,11 @@ export const PreparerDataRows = ({ data }: { data: CadastreSection | null | unde
       />
       <DetailRow title="Obyektning yer uchastkasi kadastr raqami" value={text(values.landCadastreNumber)} />
       <DetailRow title="Obyektning yer uchastkasi maydoni (gektar)" value={unit(values.landArea, 'ga')} />
-      <DetailRow title="Obyektning ekspluatatsiya qilingan sanasi" value={day(values.exploitationDate)} />
+      <DetailRow
+        title="Obyektning ekspluatatsiya qilingan yili"
+        // Objects saved before the date became a year still carry the date
+        value={values.exploitationYear ? text(values.exploitationYear) : day(values.exploitationDate)}
+      />
       <DetailRow title="Obyektning vazifasi" value={text(values.purpose)} />
       <DetailRow
         title="Obyektda ishlab chiqarish, qayta ishlash, saqlash va foydalanish moddasining nomi"

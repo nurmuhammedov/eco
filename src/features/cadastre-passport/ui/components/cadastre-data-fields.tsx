@@ -12,6 +12,7 @@ import type { OptionItem } from '@/shared/types/general'
 import { InputNumber } from '@/shared/components/ui/input-number'
 import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 import { SelectOrInput } from '@/shared/components/ui/select-or-input'
+import { Combobox } from '@/shared/components/ui/combobox'
 import { useDistrictSelectQuery, useRegionSelectQuery } from '@/shared/api/dictionaries'
 import { PhoneInput } from '@/shared/components/ui/phone-input'
 import { USER_PATTERNS } from '@/shared/constants/custom-patterns'
@@ -66,6 +67,19 @@ const coordinate = () =>
 const day = () =>
   z.date({ required_error: required, invalid_type_error: invalid }).transform((date) => format(date, 'yyyy-MM-dd'))
 
+/** The year the object was put into service; the backend keeps it as text */
+const year = () =>
+  z
+    .string({ required_error: required, invalid_type_error: invalid })
+    .regex(/^\d{4}$/, required)
+    .refine((value) => Number(value) <= new Date().getFullYear(), invalid)
+
+/** Newest first: most objects are recent, and the list can still be searched */
+const EXPLOITATION_YEARS = Array.from({ length: new Date().getFullYear() - 1900 + 1 }, (_, index) => {
+  const value = String(new Date().getFullYear() - index)
+  return { id: value, name: value }
+})
+
 /** A whole count of things - people, extinguishers, floors. */
 const whole = () => numeric().int(invalid)
 
@@ -96,7 +110,7 @@ const cadastreObjectSchema = z
     cadastreRegistrationDate: day(),
     landCadastreNumber: text().regex(LAND_CADASTRE_NUMBER_PATTERN, invalid),
     landArea: numeric(),
-    exploitationDate: day(),
+    exploitationYear: year(),
     purpose: text(),
     substance: text(),
     hazardLevel: text(),
@@ -499,22 +513,22 @@ export const CadastreDataFields = ({ prefix = 'cadastreData.' }: CadastreDataFie
         />
         <FormField
           control={control}
-          name={`${prefix}exploitationDate`}
-          render={({ field }) => {
-            const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
-            return (
-              <FormItem>
-                <FormLabel required>Obyektning ekspluatatsiya qilingan sanasi</FormLabel>
-                <DatePicker
-                  value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                  onChange={field.onChange}
-                  placeholder="Sanani tanlang"
-                  disableStrategy="after"
+          name={`${prefix}exploitationYear`}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel required>Obyektning ekspluatatsiya qilingan yili</FormLabel>
+              <FormControl>
+                <Combobox
+                  options={EXPLOITATION_YEARS}
+                  value={field.value ? String(field.value) : null}
+                  onChange={(value) => field.onChange(String(value))}
+                  placeholder="Yilni tanlang"
+                  searchPlaceholder="Yilni qidirish"
                 />
-                <FormMessage />
-              </FormItem>
-            )
-          }}
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
         <FormField
           control={control}

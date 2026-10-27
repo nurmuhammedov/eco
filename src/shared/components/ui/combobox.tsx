@@ -74,6 +74,8 @@ export function Combobox({
                 <CommandItem
                   key={option.id}
                   value={option.name}
+                  // Room for the check mark, which sits absolutely at the left edge
+                  className="pl-8"
                   onSelect={() => {
                     onChange(option.id)
                     setOpen(false)
