@@ -719,7 +719,7 @@ export const CadastreDataFields = ({ prefix = 'cadastreData.' }: CadastreDataFie
           name={`${prefix}protectionDistance`}
           render={({ field }) => (
             <FormItem>
-              <FormLabel required>Obyektning sanitariya muhofaza zonasi (metr)</FormLabel>
+              <FormLabel required>Obyektning sanitariya muhofaza zonasi (m)</FormLabel>
               <FormControl>
                 <SelectOrInput options={TXYUZ_PROTECTION_DISTANCES} value={field.value} onChange={field.onChange} />
               </FormControl>

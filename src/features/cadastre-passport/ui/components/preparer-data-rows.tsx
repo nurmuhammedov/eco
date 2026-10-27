@@ -76,7 +76,7 @@ export const PreparerDataRows = ({ data }: { data: CadastreSection | null | unde
         title="Obyektdan eng yaqin bo‘lgan boshqa obyektgacha bo‘lgan masofa (metr)"
         value={unit(values.distanceToNearestObject, 'm')}
       />
-      <DetailRow title="Obyektning sanitariya muhofaza zonasi (metr)" value={text(values.protectionDistance)} />
+      <DetailRow title="Obyektning sanitariya muhofaza zonasi (m)" value={text(values.protectionDistance)} />
       <DetailRow
         title="Obyektdan aholi yashash punktigacha bo‘lgan masofa (km)"
         value={unit(values.distanceToResidence, 'km')}
