@@ -180,7 +180,7 @@ export const TXYUZ_HEALTH_RISK_FACTORS = [
 ] as const
 
 /** Obyektning sanitariya muhofaza zonasi (m). */
-export const TXYUZ_PROTECTION_DISTANCES = ['50 m', '100 m', '300 m', '500 m', '1 000 m'] as const
+export const TXYUZ_PROTECTION_DISTANCES = ['50', '100', '300', '500', '1 000'] as const
 
 /**
  * The state registry certificate and the licence are issued as a two-letter
