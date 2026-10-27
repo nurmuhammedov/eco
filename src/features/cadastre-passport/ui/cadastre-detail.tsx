@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { Edit2, FileQuestion, Loader2, RotateCcw } from 'lucide-react'
+import { Edit2, FileQuestion, Loader2, RotateCcw, Upload } from 'lucide-react'
 import { Button } from '@/shared/components/ui/button'
 import { Accordion } from '@/shared/components/ui/accordion'
 import GoBack from '@/shared/components/common/go-back'
@@ -18,6 +18,7 @@ import { CadastreEditModal } from './components/cadastre-edit-modal'
 import { CommitteeActions } from './components/committee-actions'
 import { CustomerActions } from './components/customer-actions'
 import { ObjectsDataRows, RegistryDataRows } from './components/preparer-data-rows'
+import { PassportFileDialog } from './components/passport-file-dialog'
 import { ReviewsList } from './components/reviews-list'
 import { SectionRows } from './components/section-rows'
 import { StatusBadge } from './components/status-badge'
@@ -31,6 +32,7 @@ export default function CadastreDetail() {
   const navigate = useNavigate()
   const { user } = useAuth()
   const [editOpen, setEditOpen] = useState(false)
+  const [fileOpen, setFileOpen] = useState(false)
   const { representation } = useCadastreRepresentation()
 
   const { data: passport, isLoading } = useCadastrePassport(id)
@@ -129,7 +131,21 @@ export default function CadastreDetail() {
           <DetailRow title="Tashkilot STIR" value={passport.customerTin || '-'} />
           <DetailRow title="Titul va Davlat reyestri fayli" value={fileValue(passport.titlePagePath)} />
           <DetailRow title="TXYZ ma’lumotlari fayli" value={fileValue(passport.dataPagePath)} />
-          <DetailRow title="Kadastr passporti fayli" value={fileValue(passport.passportFilePath)} />
+          <DetailRow
+            title="Kadastr passporti fayli"
+            value={
+              <div className="flex flex-wrap items-center gap-2">
+                {fileValue(passport.passportFilePath)}
+                {/* Same rule as editing the data: the preparer, until the customer approves */}
+                {canEdit && (
+                  <Button variant="outline" size="sm" className="h-8" onClick={() => setFileOpen(true)}>
+                    <Upload className="mr-1.5 size-4" />
+                    Almashtirish
+                  </Button>
+                )}
+              </div>
+            }
+          />
         </DetailCardAccordion.Item>
 
         <DetailCardAccordion.Item value="workflows" title="Tashkilotlar tomonidan ko‘rib chiqish">
@@ -178,6 +194,8 @@ export default function CadastreDetail() {
           <ReviewsList reviews={passport.reviews ?? []} />
         </DetailCardAccordion.Item>
       </Accordion>
+
+      <PassportFileDialog open={fileOpen} onOpenChange={setFileOpen} passportId={passport.id} />
 
       {editOpen && (
         <CadastreEditModal

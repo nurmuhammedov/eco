@@ -96,4 +96,6 @@ export interface CadastrePassportRow {
   myTurn: boolean
   /** Who filed it: the organisation itself or one of its representatives */
   createdByName?: string | null
+  /** Ariza sanasi, `YYYY-MM-DD` */
+  requestDate?: string | null
 }

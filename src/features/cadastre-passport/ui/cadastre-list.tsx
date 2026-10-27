@@ -15,6 +15,7 @@ import { useCadastreRepresentation } from '../model/use-representation'
 import { STATUS_OPTIONS, StatusBadge } from './components/status-badge'
 import { MyTasksTable } from './components/my-tasks-table'
 import { paramText } from '@/shared/lib/url-params'
+import { getDate } from '@/shared/utils/date'
 
 const FILTER_KEYS = ['requestNumber', 'registryNumber', 'preparerTin', 'customerTin', 'status']
 
@@ -123,11 +124,21 @@ export default function CadastreList({ customerTin, isShortView }: CadastreListP
       ),
     },
     {
+      accessorKey: 'requestDate',
+      header: 'Ariza sanasi',
+      cell: ({ row }) => getDate(row.original.requestDate) || '-',
+    },
+    {
       accessorKey: 'registryNumber',
       header: 'Reyestr raqami',
       filterKey: 'registryNumber',
       filterType: 'search',
       cell: ({ row }) => row.original.registryNumber || '-',
+    },
+    {
+      accessorKey: 'customerName',
+      header: 'Tashkilot nomi',
+      cell: ({ row }) => row.original.customerName || '-',
     },
     {
       accessorKey: 'customerTin',
