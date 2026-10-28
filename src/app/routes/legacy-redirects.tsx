@@ -36,6 +36,7 @@ const MOVED: [from: string, to: string][] = [
   ['register/:id/irs', '/register/irs/:id'],
   ['register/:id/xrays', '/register/xrays/:id'],
   ['risk-analysis/info/:id', '/risk-analysis/objects/:id'],
+  ['risk-analysis/detail', '/risk-analysis/monthly'],
   ['staffs', '/employees'],
   ['accreditations/old/detail/:id', '/accreditations/old/:id'],
   ['accreditations/edit/:id', '/accreditations/:id/edit'],

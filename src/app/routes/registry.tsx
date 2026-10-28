@@ -126,7 +126,6 @@ const RegistryDeregistrationsReport = lazy(() => import('@/features/reports/ui/r
 const ReportsPage = lazy(() => import('@/features/reports/ui/reports'))
 const RiskAnalysisDailyPage = lazy(() => import('@/pages/risk-analysis/daily'))
 const RiskAnalysisDetailInfoPage = lazy(() => import('@/features/risk-analysis/ui/risk-analysis-info-by-id'))
-const RiskAnalysisDetailPage = lazy(() => import('@/features/risk-analysis/ui/risk-analysis-detail'))
 const RiskAnalysisMonthlyPage = lazy(() => import('@/pages/risk-analysis/monthly'))
 const RiskComparisonReport = lazy(() => import('@/features/reports/ui/risk-comparison-report'))
 const RiskDateComparisonReport = lazy(() => import('@/features/reports/ui/risk-date-comparison-report'))
@@ -1280,20 +1279,6 @@ export const APP_ROUTES: AppRouteDefinition[] = [
     id: 'RISK_ANALYSIS',
     path: 'risk-analysis/daily',
     element: withSuspense(RiskAnalysisDailyPage),
-    roles: [
-      UserRoles.CHAIRMAN,
-      UserRoles.HEAD,
-      UserRoles.INSPECTOR,
-      UserRoles.LEGAL,
-      UserRoles.MANAGER,
-      UserRoles.PROCURATOR,
-      UserRoles.REGIONAL,
-    ],
-  },
-  {
-    id: 'RISK_ANALYSIS',
-    path: 'risk-analysis/detail',
-    element: withSuspense(RiskAnalysisDetailPage),
     roles: [
       UserRoles.CHAIRMAN,
       UserRoles.HEAD,

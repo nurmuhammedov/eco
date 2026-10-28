@@ -1,6 +1,7 @@
 import { useData } from '@/shared/hooks'
 import { ShieldCheck, AlertTriangle, Flame, Layers, RefreshCw } from 'lucide-react'
 import { cn } from '@/shared/lib/utils'
+import { RECHECK_HIGH_LEVEL } from '../model/risk-analysis.types'
 
 interface RiskStatisticsCardsProps {
   type: string
@@ -105,59 +106,63 @@ export const RiskStatisticsCards = ({
       inactiveTextClass: 'text-slate-600',
       inactiveIconClass: 'bg-rose-50 text-rose-600 group-hover:bg-rose-500 group-hover:text-white',
     },
+    // Rechecks belong to the quarterly analysis, and only once the backend sends the figure
+    ...(periodType === 'MONTHLY' && recheckHighCount !== undefined && recheckHighCount !== null
+      ? [
+          {
+            id: RECHECK_HIGH_LEVEL,
+            name: 'Qayta tahlilda yana yuqori',
+            count: recheckHighCount,
+            icon: RefreshCw,
+            activeClass: 'bg-red-50 border-red-700 shadow-sm ring-1 ring-red-700',
+            textClass: 'text-red-800',
+            iconClass: 'bg-red-700 text-white',
+            inactiveClass: 'bg-white border-slate-200 hover:border-red-200 hover:bg-red-50',
+            inactiveTextClass: 'text-slate-600',
+            inactiveIconClass: 'bg-red-50 text-red-700 group-hover:bg-red-700 group-hover:text-white',
+          },
+        ]
+      : []),
   ]
 
+  const visibleStats = stats.filter((s) => (showAllCard ? true : s.id !== 'ALL'))
+  const columns = ['lg:grid-cols-3', 'lg:grid-cols-4', 'lg:grid-cols-5'][visibleStats.length - 3] ?? 'lg:grid-cols-4'
+
   return (
-    <div
-      className={cn(
-        'mb-2 grid grid-cols-1 gap-4 px-1 sm:grid-cols-2',
-        showAllCard ? 'lg:grid-cols-4' : 'lg:grid-cols-3',
-        className
-      )}
-    >
-      {stats
-        .filter((s) => (showAllCard ? true : s.id !== 'ALL'))
-        .map((stat) => {
-          const isActive = activeRiskLevel === stat.id
+    <div className={cn('mb-2 grid grid-cols-1 gap-4 px-1 sm:grid-cols-2', columns, className)}>
+      {visibleStats.map((stat) => {
+        const isActive = activeRiskLevel === stat.id
 
-          return (
-            <button
-              key={stat.id}
-              type="button"
-              aria-pressed={isActive}
-              onClick={() => onTabChange(stat.id)}
-              className={cn(
-                'group relative flex cursor-pointer items-center justify-between overflow-hidden rounded-xl border p-5 text-left transition-all duration-300',
-                isActive ? stat.activeClass : stat.inactiveClass
-              )}
-            >
-              <div className="flex flex-col gap-1">
-                <span className="text-sm font-medium text-slate-500">{stat.name}</span>
-                <span
-                  className={cn(
-                    'text-2xl font-bold transition-colors',
-                    isLoading && 'animate-pulse opacity-50',
-                    isActive ? stat.textClass : 'text-slate-900'
-                  )}
-                >
-                  {stat.count}
-                </span>
-                {stat.id === 'HIGH' && recheckHighCount !== undefined && recheckHighCount !== null && (
-                  <span className="flex items-center gap-1.5 text-sm font-semibold text-rose-600">
-                    <RefreshCw size={15} />
-                    Qayta tahlilda yana yuqori: {recheckHighCount}
-                  </span>
+        return (
+          <button
+            key={stat.id}
+            type="button"
+            aria-pressed={isActive}
+            onClick={() => onTabChange(stat.id)}
+            className={cn(
+              'group relative flex cursor-pointer items-center justify-between overflow-hidden rounded-xl border p-5 text-left transition-all duration-300',
+              isActive ? stat.activeClass : stat.inactiveClass
+            )}
+          >
+            <div className="flex flex-col gap-1">
+              <span className="text-sm font-medium text-slate-500">{stat.name}</span>
+              <span
+                className={cn(
+                  'text-2xl font-bold transition-colors',
+                  isLoading && 'animate-pulse opacity-50',
+                  isActive ? stat.textClass : 'text-slate-900'
                 )}
-              </div>
-
-              <div
-                className={cn('rounded-lg p-3 transition-colors', isActive ? stat.iconClass : stat.inactiveIconClass)}
               >
-                <stat.icon size={24} className="current-color" />
-              </div>
-            </button>
-          )
-        })}
+                {stat.count}
+              </span>
+            </div>
+
+            <div className={cn('rounded-lg p-3 transition-colors', isActive ? stat.iconClass : stat.inactiveIconClass)}>
+              <stat.icon size={24} className="current-color" />
+            </div>
+          </button>
+        )
+      })}
     </div>
   )
 }

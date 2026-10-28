@@ -10,7 +10,7 @@ import { useEimzo } from '@/shared/hooks/use-eimzo'
 import { UserRoles } from '@/shared/types/user'
 import { ApplicationModal } from '@/features/application/create-application'
 import RiskAnalysisForm from './risk-analysis-form'
-import { RiskLevelBadge, WarningStateBadge, canHaveWarning, postalMailStatusLabel } from './risk-level'
+import { RiskLevelBadge, canHaveWarning, postalMailStatusLabel } from './risk-level'
 import type { RiskAnalysisData } from '../risk-analysis'
 import type { RiskAnalysisLevel } from '@/entities/risk-analysis/model/risk-analysis.types'
 
@@ -66,24 +66,6 @@ export const WarningFormButton = ({ riskAnalysisId }: { riskAnalysisId: string }
   )
 }
 
-/** A table cell: the button while a warning can still be sent, otherwise its state. */
-export const WarningCell = ({
-  riskAnalysisId,
-  level,
-  warningDate,
-}: {
-  riskAnalysisId: string
-  level?: RiskAnalysisLevel | null
-  warningDate?: string | null
-}) => {
-  const canSend = useCanSendWarning(level, warningDate)
-  return canSend ? (
-    <WarningFormButton riskAnalysisId={riskAnalysisId} />
-  ) : (
-    <WarningStateBadge level={level} warningDate={warningDate} />
-  )
-}
-
 export const RiskAnalysisWarning = ({ data }: { data: RiskAnalysisData }) => {
   const canSend = useCanSendWarning(data.level, data.warningDate)
 
@@ -114,53 +96,65 @@ export const RiskAnalysisWarning = ({ data }: { data: RiskAnalysisData }) => {
   )
 }
 
-/** The admin-run recheck of the month's HIGH analyses, and the inspection it may have led to. */
-export const RiskAnalysisRecheck = ({ data }: { data: RiskAnalysisData }) => {
+/**
+ * The admin-run recheck of the quarter's HIGH analyses. Only MEDIUM and HIGH
+ * results go on to a warning and a recheck, so a LOW one says it is not needed.
+ */
+export const RiskAnalysisRecheckResult = ({ data }: { data: RiskAnalysisData }) => {
+  if (!data.recheckAt) {
+    return (
+      <p className="py-3 text-sm text-neutral-500">
+        {canHaveWarning(data.level)
+          ? 'Qayta xavf tahlili hali o‘tkazilmagan'
+          : 'Xavfi past bo‘lgani uchun qayta xavf tahlili talab qilinmaydi'}
+      </p>
+    )
+  }
+
+  return (
+    <>
+      <DetailRow title="O‘tkazilgan vaqti" value={format(new Date(data.recheckAt), 'dd.MM.yyyy HH:mm')} />
+      <DetailRow title="Ballar" value={`${data.totalScore ?? '—'} → ${data.recheckTotalScore ?? '—'}`} />
+      <DetailRow title="Daraja" value={<RiskLevelBadge level={data.recheckLevel} />} />
+      <div className="mt-3">
+        <RiskAnalysisForm data={data.recheckIndicators ?? null} />
+      </div>
+    </>
+  )
+}
+
+/** The inspection the analysis led to, if it led to one. */
+export const RiskAnalysisInspectionLink = ({ data }: { data: RiskAnalysisData }) => {
   const {
     paramsObject: { name },
   } = useCustomSearchParams()
 
-  if (!data.recheckAt && !data.inspectionId) return null
+  if (!data.inspectionId) return null
 
   // the inspection page heads itself with the organisation, so it gets the same tin and name
   const inspectionQuery = new URLSearchParams({
-    inspectionId: String(data.inspectionId ?? ''),
+    inspectionId: String(data.inspectionId),
     tin: String(data.identity ?? ''),
     name: String(name ?? ''),
   })
 
   return (
-    <>
-      {data.recheckAt && (
-        <div className="mb-4 rounded-lg border p-4">
-          <h6 className="mb-2 text-sm font-semibold text-gray-700">Qayta havf tahlili</h6>
-          <DetailRow title="Sana" value={data.recheckAt ? format(new Date(data.recheckAt), 'dd.MM.yyyy HH:mm') : '—'} />
-          <DetailRow title="Ballar" value={`${data.totalScore ?? '—'} → ${data.recheckTotalScore ?? '—'}`} />
-          <DetailRow title="Daraja" value={<RiskLevelBadge level={data.recheckLevel} />} />
-          <div className="mt-3">
-            <RiskAnalysisForm data={data.recheckIndicators ?? null} />
-          </div>
+    <div className="flex items-center justify-between gap-4 rounded-lg border border-teal-200 bg-teal-50/60 px-4 py-3">
+      <div className="flex items-center gap-3">
+        <div className="flex size-9 shrink-0 items-center justify-center rounded-full bg-teal-100 text-teal-700">
+          <ClipboardCheck className="size-5" />
         </div>
-      )}
-      {data.inspectionId && (
-        <div className="mb-4 flex items-center justify-between gap-4 rounded-lg border border-teal-200 bg-teal-50/60 p-4">
-          <div className="flex items-center gap-3">
-            <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-teal-100 text-teal-700">
-              <ClipboardCheck className="size-5" />
-            </div>
-            <div>
-              <p className="text-sm font-semibold text-gray-800">Tekshiruv yaratilgan</p>
-              <p className="text-xs text-neutral-500">Ushbu havf tahlili natijasi asosida tekshiruv tayinlangan</p>
-            </div>
-          </div>
-          <Button asChild size="sm" variant="outline" className="shrink-0">
-            <Link to={`/inspections/info?${inspectionQuery}`}>
-              Tekshiruvni ko‘rish
-              <ArrowRight className="size-4" />
-            </Link>
-          </Button>
+        <div>
+          <p className="text-sm font-semibold text-gray-800">Tekshiruv yaratilgan</p>
+          <p className="text-xs text-neutral-500">Ushbu xavf tahlili natijasi asosida tekshiruv tayinlangan</p>
         </div>
-      )}
-    </>
+      </div>
+      <Button asChild size="sm" variant="outline" className="shrink-0">
+        <Link to={`/inspections/info?${inspectionQuery}`}>
+          Tekshiruvni ko‘rish
+          <ArrowRight className="size-4" />
+        </Link>
+      </Button>
+    </div>
   )
 }

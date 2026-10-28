@@ -20,13 +20,12 @@ const List: FC<Props> = ({ data, isLoading = false }) => {
   const { t } = useTranslation('common')
   const type = paramsObject.mainTab || RiskAnalysisTab.HF
   const handleView = (row: RiskAnalysisItem) => {
+    // Straight to this quarter's analysis; the object page with every quarter is gone
     const query = new URLSearchParams({
       tin: row.legalTin?.toString() ?? '',
-      id: row.belongId,
-      type: String(type),
       name: row.legalName || row.name || '',
     })
-    navigate(`/risk-analysis/detail?${query}`)
+    navigate(`/risk-analysis/objects/${row.id}?${query}`)
   }
 
   // Shown once the backend sends the recheck score; until then the list is as it was

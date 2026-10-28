@@ -17,6 +17,16 @@ export interface RiskAnalysisItem {
 
 export type RiskAnalysisLevel = 'LOW' | 'MEDIUM' | 'HIGH'
 
+/**
+ * The list filter for analyses that came out HIGH again on the recheck.
+ * Provisional: the backend has not named this value yet; change it here once
+ * it does.
+ */
+export const RECHECK_HIGH_LEVEL = 'RECHECK_HIGH'
+
+/** Levels a recheck applies to: only HIGH results are rechecked */
+export const RECHECK_LEVEL_FILTERS = ['ALL', 'HIGH', RECHECK_HIGH_LEVEL]
+
 export type RiskAnalysisStatus = 'NEW' | 'ASSIGNED' | 'IN_PROCESS' | 'COMPLETED'
 
 /** RiskAnalysisRes (`GET /risk-analyses/belongings`): one analysis period of an object */

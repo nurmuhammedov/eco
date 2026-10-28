@@ -1,13 +1,7 @@
-import { type ReactNode, useMemo, useState } from 'react'
-import { Link } from 'react-router-dom'
+import type { ReactNode } from 'react'
 import { format } from 'date-fns'
-import { ArrowRight, Check, Circle, Clock, Minus } from 'lucide-react'
-import { Button } from '@/shared/components/ui/button'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
-import { Skeleton } from '@/shared/components/ui/skeleton'
-import useDetail from '@/shared/hooks/api/use-detail'
+import { Check, Circle, Clock, Minus } from 'lucide-react'
 import { cn } from '@/shared/lib/utils'
-import type { RiskAnalysisPeriod } from '@/entities/risk-analysis/model/risk-analysis.types'
 import type { RiskAnalysisData } from '../risk-analysis'
 import { RISK_LEVEL_LABELS, canHaveWarning } from './risk-level'
 
@@ -22,9 +16,6 @@ interface ProcessStep {
 }
 
 const day = (value?: string | null) => (value ? format(new Date(value), 'dd.MM.yyyy') : '')
-
-const periodLabel = (period: Pick<RiskAnalysisPeriod, 'startDate' | 'endDate'>) =>
-  [period.startDate, period.endDate].map((value) => day(value) || '...').join(' – ')
 
 const score = (total?: number | null, level?: RiskAnalysisData['level']) =>
   [total !== null && total !== undefined ? `${total} ball` : null, level ? RISK_LEVEL_LABELS[level] : null]
@@ -52,18 +43,28 @@ export const deriveRiskProcess = (data: RiskAnalysisData): ProcessStep[] => {
 
   const recheck: ProcessStep = data.recheckAt
     ? {
-        title: '2-xavf tahlili natijasi',
-        short: '2-tahlil',
+        title: 'Qayta o‘tkazilgan xavf tahlili',
+        short: 'Qayta tahlil',
         state: 'done',
         caption: `${data.totalScore ?? '—'} → ${data.recheckTotalScore ?? '—'} ball, ${day(data.recheckAt)}`,
       }
     : !needsWarning
-      ? { title: '2-xavf tahlili natijasi', short: '2-tahlil', state: 'skipped', caption: 'Talab qilinmaydi' }
+      ? {
+          title: 'Qayta o‘tkazilgan xavf tahlili',
+          short: 'Qayta tahlil',
+          state: 'skipped',
+          caption: 'Talab qilinmaydi',
+        }
       : movedOn
-        ? { title: '2-xavf tahlili natijasi', short: '2-tahlil', state: 'skipped', caption: 'O‘tkazilmagan' }
+        ? { title: 'Qayta o‘tkazilgan xavf tahlili', short: 'Qayta tahlil', state: 'skipped', caption: 'O‘tkazilmagan' }
         : data.warningDate
-          ? { title: '2-xavf tahlili natijasi', short: '2-tahlil', state: 'active', caption: 'Kutilmoqda' }
-          : { title: '2-xavf tahlili natijasi', short: '2-tahlil', state: 'pending', caption: 'Tavsiyanomadan keyin' }
+          ? { title: 'Qayta o‘tkazilgan xavf tahlili', short: 'Qayta tahlil', state: 'active', caption: 'Kutilmoqda' }
+          : {
+              title: 'Qayta o‘tkazilgan xavf tahlili',
+              short: 'Qayta tahlil',
+              state: 'pending',
+              caption: 'Tavsiyanomadan keyin',
+            }
 
   const inspection: ProcessStep = movedOn
     ? { title: 'Tekshiruv', short: 'Tekshiruv', state: 'done', caption: 'Shakllangan' }
@@ -76,7 +77,12 @@ export const deriveRiskProcess = (data: RiskAnalysisData): ProcessStep[] => {
           : { title: 'Tekshiruv', short: 'Tekshiruv', state: 'pending', caption: 'Qayta tahlil yuqori chiqsa' }
 
   return [
-    { title: '1-xavf tahlili natijasi', short: '1-tahlil', state: 'done', caption: score(data.totalScore, data.level) },
+    {
+      title: 'O‘tkazilgan xavf tahlili',
+      short: 'Xavf tahlili',
+      state: 'done',
+      caption: score(data.totalScore, data.level),
+    },
     warning,
     recheck,
     inspection,
@@ -132,64 +138,16 @@ const ProcessChevrons = ({ steps }: { steps: ProcessStep[] }) => (
   </ol>
 )
 
-interface RiskProcessProps {
-  periods: RiskAnalysisPeriod[]
-  /** Query string the full analysis page is opened with (tin and organisation name) */
-  detailQuery: string
-}
-
-/** One quarter's analysis and where it stands, with a picker for the earlier quarters. */
-export const RiskProcess = ({ periods, detailQuery }: RiskProcessProps) => {
-  const sorted = useMemo(
-    () => [...periods].sort((a, b) => String(b.startDate ?? '').localeCompare(String(a.startDate ?? ''))),
-    [periods]
-  )
-  const [selectedId, setSelectedId] = useState<string | undefined>()
-  const currentId = selectedId ?? sorted[0]?.id
-
-  const { data, isLoading } = useDetail<RiskAnalysisData>('/risk-analyses', currentId)
-
-  if (!sorted.length) return null
-
-  return (
-    <div className="mb-4 flex flex-col gap-2 rounded-lg border bg-white px-3 py-2.5">
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-        <p className="text-sm text-gray-600">
-          <span className="font-semibold text-gray-800">Xavf tahlili jarayoni</span>
-          {data && (
-            <>
-              {' · Hozirgi holati: '}
-              <span className="font-semibold text-gray-800">
-                {score(data.recheckTotalScore ?? data.totalScore, data.recheckLevel ?? data.level)}
-              </span>
-            </>
-          )}
-        </p>
-        <div className="flex shrink-0 flex-wrap items-center gap-2">
-          <Select value={currentId} onValueChange={setSelectedId}>
-            <SelectTrigger className="h-8 w-auto min-w-[250px] gap-2 bg-white text-sm whitespace-nowrap [&>span]:overflow-visible">
-              <SelectValue placeholder="Davrni tanlang" />
-            </SelectTrigger>
-            <SelectContent>
-              {sorted.map((period) => (
-                <SelectItem key={period.id} value={period.id}>
-                  {periodLabel(period)}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          {currentId && (
-            <Button asChild size="sm" variant="outline" className="h-8">
-              <Link to={`/risk-analysis/objects/${currentId}?${detailQuery}`}>
-                Batafsil
-                <ArrowRight className="size-4" />
-              </Link>
-            </Button>
-          )}
-        </div>
-      </div>
-
-      {isLoading || !data ? <Skeleton className="h-9 w-full" /> : <ProcessChevrons steps={deriveRiskProcess(data)} />}
-    </div>
-  )
-}
+/** Where one analysis stands: its current score and the chain it went through. */
+export const RiskProcessBar = ({ data }: { data: RiskAnalysisData }) => (
+  <div className="flex flex-col gap-2 rounded-lg border bg-white px-3 py-2.5">
+    <p className="text-sm text-gray-600">
+      <span className="font-semibold text-gray-800">Xavf tahlili jarayoni</span>
+      {' · Hozirgi holati: '}
+      <span className="font-semibold text-gray-800">
+        {score(data.recheckTotalScore ?? data.totalScore, data.recheckLevel ?? data.level)}
+      </span>
+    </p>
+    <ProcessChevrons steps={deriveRiskProcess(data)} />
+  </div>
+)

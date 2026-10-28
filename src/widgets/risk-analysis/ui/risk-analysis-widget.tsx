@@ -8,10 +8,11 @@ import { useData } from '@/shared/hooks/api'
 import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks'
 import { UserRoles } from '@/shared/types/user'
 import { useAuth } from '@/shared/hooks/use-auth'
-import type {
-  RiskAnalysisItem,
-  RiskLevelCount,
-  RiskRegionCount,
+import {
+  RECHECK_LEVEL_FILTERS,
+  type RiskAnalysisItem,
+  type RiskLevelCount,
+  type RiskRegionCount,
 } from '@/entities/risk-analysis/model/risk-analysis.types'
 import { RiskStatisticsCards } from '@/entities/risk-analysis/ui/risk-statistics-cards'
 import { cn } from '@/shared/lib/utils'
@@ -188,6 +189,9 @@ const RiskAnalysisWidget = ({ periodType }: RiskAnalysisWidgetProps) => {
     addParams({ riskLevel: level }, 'page')
   }
 
+  // LOW and MEDIUM results are never rechecked, so the figure would only ever read 0 there
+  const showRecheckCount = periodType === 'MONTHLY' && RECHECK_LEVEL_FILTERS.includes(String(riskLevel))
+
   const regionTabs = useMemo(() => {
     return (
       regions?.map((item) => {
@@ -200,12 +204,12 @@ const RiskAnalysisWidget = ({ periodType }: RiskAnalysisWidgetProps) => {
           name: item.name || '',
           count: count,
           // Absent until the backend sends it, and then the tab shows nothing extra
-          secondaryCount: countItem?.recheckCount,
+          secondaryCount: showRecheckCount ? countItem?.recheckCount : undefined,
           secondaryTitle: 'Qayta xavf tahlili o‘tkazilganlar',
         }
       }) || []
     )
-  }, [regions, regionCounts])
+  }, [regions, regionCounts, showRecheckCount])
 
   return (
     <>
