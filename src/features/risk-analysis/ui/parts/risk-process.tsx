@@ -46,16 +46,16 @@ export const deriveRiskProcess = (data: RiskAnalysisData): ProcessStep[] => {
     ? { title: 'Tavsiyanoma', short: 'Tavsiyanoma', state: 'done', caption: `Yuborilgan: ${day(data.warningDate)}` }
     : !needsWarning
       ? { title: 'Tavsiyanoma', short: 'Tavsiyanoma', state: 'skipped', caption: 'Talab qilinmaydi' }
-      : movedOn || data.recheckDate
+      : movedOn || data.recheckAt
         ? { title: 'Tavsiyanoma', short: 'Tavsiyanoma', state: 'skipped', caption: 'Yuborilmagan' }
         : { title: 'Tavsiyanoma', short: 'Tavsiyanoma', state: 'active', caption: 'Yuborilishi kutilmoqda' }
 
-  const recheck: ProcessStep = data.recheckDate
+  const recheck: ProcessStep = data.recheckAt
     ? {
         title: '2-xavf tahlili natijasi',
         short: '2-tahlil',
         state: 'done',
-        caption: `${data.totalScore ?? '—'} → ${data.recheckTotalScore ?? '—'} ball, ${day(data.recheckDate)}`,
+        caption: `${data.totalScore ?? '—'} → ${data.recheckTotalScore ?? '—'} ball, ${day(data.recheckAt)}`,
       }
     : !needsWarning
       ? { title: '2-xavf tahlili natijasi', short: '2-tahlil', state: 'skipped', caption: 'Talab qilinmaydi' }
@@ -69,9 +69,9 @@ export const deriveRiskProcess = (data: RiskAnalysisData): ProcessStep[] => {
     ? { title: 'Tekshiruv', short: 'Tekshiruv', state: 'done', caption: 'Shakllangan' }
     : !needsWarning
       ? { title: 'Tekshiruv', short: 'Tekshiruv', state: 'skipped', caption: 'Talab qilinmaydi' }
-      : data.recheckDate && data.recheckLevel === 'HIGH'
+      : data.recheckAt && data.recheckLevel === 'HIGH'
         ? { title: 'Tekshiruv', short: 'Tekshiruv', state: 'active', caption: 'Shakllanishi kutilmoqda' }
-        : data.recheckDate
+        : data.recheckAt
           ? { title: 'Tekshiruv', short: 'Tekshiruv', state: 'skipped', caption: 'Xavf kamaygan, talab qilinmaydi' }
           : { title: 'Tekshiruv', short: 'Tekshiruv', state: 'pending', caption: 'Qayta tahlil yuqori chiqsa' }
 

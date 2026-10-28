@@ -120,7 +120,7 @@ export const RiskAnalysisRecheck = ({ data }: { data: RiskAnalysisData }) => {
     paramsObject: { name },
   } = useCustomSearchParams()
 
-  if (!data.recheckDate && !data.inspectionId) return null
+  if (!data.recheckAt && !data.inspectionId) return null
 
   // the inspection page heads itself with the organisation, so it gets the same tin and name
   const inspectionQuery = new URLSearchParams({
@@ -131,10 +131,10 @@ export const RiskAnalysisRecheck = ({ data }: { data: RiskAnalysisData }) => {
 
   return (
     <>
-      {data.recheckDate && (
+      {data.recheckAt && (
         <div className="mb-4 rounded-lg border p-4">
           <h6 className="mb-2 text-sm font-semibold text-gray-700">Qayta havf tahlili</h6>
-          <DetailRow title="Sana" value={day(data.recheckDate)} />
+          <DetailRow title="Sana" value={data.recheckAt ? format(new Date(data.recheckAt), 'dd.MM.yyyy HH:mm') : '—'} />
           <DetailRow title="Ballar" value={`${data.totalScore ?? '—'} → ${data.recheckTotalScore ?? '—'}`} />
           <DetailRow title="Daraja" value={<RiskLevelBadge level={data.recheckLevel} />} />
           <div className="mt-3">

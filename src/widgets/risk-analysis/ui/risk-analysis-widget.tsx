@@ -199,6 +199,9 @@ const RiskAnalysisWidget = ({ periodType }: RiskAnalysisWidgetProps) => {
           id,
           name: item.name || '',
           count: count,
+          // Absent until the backend sends it, and then the tab shows nothing extra
+          secondaryCount: countItem?.recheckCount,
+          secondaryTitle: 'Qayta xavf tahlili o‘tkazilganlar',
         }
       }) || []
     )

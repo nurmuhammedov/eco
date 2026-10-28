@@ -36,7 +36,7 @@ describe('deriveRiskProcess', () => {
   it('waits for the inspection when the recheck stays HIGH', () => {
     const data = analysis({
       warningDate: '2026-07-10',
-      recheckDate: '2026-08-01',
+      recheckAt: '2026-08-01T10:15:00',
       recheckLevel: 'HIGH',
       recheckTotalScore: 90,
     })
@@ -46,7 +46,7 @@ describe('deriveRiskProcess', () => {
   it('needs no inspection when the recheck comes out lower', () => {
     const data = analysis({
       warningDate: '2026-07-10',
-      recheckDate: '2026-08-01',
+      recheckAt: '2026-08-01T10:15:00',
       recheckLevel: 'MEDIUM',
       recheckTotalScore: 60,
     })
@@ -56,7 +56,7 @@ describe('deriveRiskProcess', () => {
   it('is complete once the inspection is formed', () => {
     const data = analysis({
       warningDate: '2026-07-10',
-      recheckDate: '2026-08-01',
+      recheckAt: '2026-08-01T10:15:00',
       recheckLevel: 'HIGH',
       inspectionId: 'insp-1',
     })

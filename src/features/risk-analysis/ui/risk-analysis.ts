@@ -35,5 +35,6 @@ export interface RiskAnalysisData {
   recheckTotalScore?: number | null
   recheckLevel?: RiskAnalysisLevel | null
   recheckIndicators?: RiskIndicators | null
-  recheckDate?: string | null
+  /** When the recheck ran (date and time) */
+  recheckAt?: string | null
 }

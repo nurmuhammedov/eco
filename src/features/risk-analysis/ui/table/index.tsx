@@ -29,6 +29,10 @@ const List: FC<Props> = ({ data, isLoading = false }) => {
     navigate(`/risk-analysis/detail?${query}`)
   }
 
+  // Shown once the backend sends the recheck score; until then the list is as it was
+  const rows = data && 'content' in data ? data.content : []
+  const hasRecheckScore = rows.some((row) => row.recheckScore !== undefined)
+
   const columns: ExtendedColumnDef<RiskAnalysisItem, unknown>[] = [
     ...(type === RiskAnalysisTab.INM || type === RiskAnalysisTab.XRAY
       ? []
@@ -80,6 +84,20 @@ const List: FC<Props> = ({ data, isLoading = false }) => {
 
       filterType: 'search' as const,
     },
+    ...(hasRecheckScore
+      ? [
+          {
+            header: () => (
+              <div className="whitespace-nowrap">
+                Qayta tahlil <br /> bali
+              </div>
+            ),
+            accessorKey: 'recheckScore',
+            className: '!w-[1%] whitespace-nowrap',
+            cell: ({ row }) => row.original.recheckScore ?? '—',
+          } as ExtendedColumnDef<RiskAnalysisItem, unknown>,
+        ]
+      : []),
     {
       header: 'Daraja',
       accessorKey: 'level',

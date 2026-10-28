@@ -8,6 +8,8 @@ export interface RiskAnalysisItem {
   legalTin: number | null
   address: string | null
   score: number | null
+  /** Qayta xavf tahlili bali; null - qayta tahlil o'tkazilmagan */
+  recheckScore?: number | null
   level: RiskAnalysisLevel | null
   /** Tavsiyanoma yuborilgan sana; null - yuborilmagan */
   warningDate: string | null
@@ -39,6 +41,8 @@ export interface RiskLevelCount {
   lowCount: number | null
   mediumCount: number | null
   highCount: number | null
+  /** Qayta xavf tahlilida yana yuqori chiqqanlar soni */
+  recheckHighCount?: number | null
 }
 
 /** CountDtoByRegion (`GET /risk-analyses/count/by-region`) */
@@ -46,4 +50,6 @@ export interface RiskRegionCount {
   regionId: number
   region: string | null
   count: number | null
+  /** Hududda qayta xavf tahlili o'tkazilganlar soni */
+  recheckCount?: number | null
 }

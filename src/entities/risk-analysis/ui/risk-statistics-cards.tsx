@@ -1,5 +1,5 @@
 import { useData } from '@/shared/hooks'
-import { ShieldCheck, AlertTriangle, Flame, Layers } from 'lucide-react'
+import { ShieldCheck, AlertTriangle, Flame, Layers, RefreshCw } from 'lucide-react'
 import { cn } from '@/shared/lib/utils'
 
 interface RiskStatisticsCardsProps {
@@ -19,6 +19,8 @@ interface RiskCountResponse {
   lowCount: number
   mediumCount: number
   highCount: number
+  /** Qayta tahlilda yana yuqori chiqqanlar; absent until the backend sends it */
+  recheckHighCount?: number | null
 }
 
 export const RiskStatisticsCards = ({
@@ -44,6 +46,7 @@ export const RiskStatisticsCards = ({
   const mediumCount = data?.mediumCount || 0
   const highCount = data?.highCount || 0
   const totalCount = lowCount + mediumCount + highCount
+  const recheckHighCount = data?.recheckHighCount
 
   const stats = [
     {
@@ -139,6 +142,12 @@ export const RiskStatisticsCards = ({
                 >
                   {stat.count}
                 </span>
+                {stat.id === 'HIGH' && recheckHighCount !== undefined && recheckHighCount !== null && (
+                  <span className="flex items-center gap-1.5 text-sm font-semibold text-rose-600">
+                    <RefreshCw size={15} />
+                    Qayta tahlilda yana yuqori: {recheckHighCount}
+                  </span>
+                )}
               </div>
 
               <div

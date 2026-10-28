@@ -2,13 +2,16 @@ import { Badge } from '@/shared/components/ui/badge'
 import { Button } from '@/shared/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
 import { cn } from '@/shared/lib/utils'
-import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react'
+import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, RefreshCw } from 'lucide-react'
 import { ReactNode, useEffect, useRef, useState } from 'react'
 
 interface Tab {
   id: string
   name: string
   count?: number | null
+  /** A second, smaller figure beside the count (e.g. how many were rechecked) */
+  secondaryCount?: number | null
+  secondaryTitle?: string
   renderName?: ReactNode
 }
 
@@ -148,6 +151,17 @@ export const TabsLayout = ({
                           )}
                         >
                           {tab.count}
+                        </Badge>
+                      ) : null}
+                      {tab.secondaryCount || tab.secondaryCount === 0 ? (
+                        // The same size as the main count, told apart by the icon and its own colour
+                        <Badge
+                          variant="outline"
+                          title={tab.secondaryTitle}
+                          className="ml-1.5 gap-1 border-amber-300 bg-amber-50 text-amber-700 hover:bg-amber-50"
+                        >
+                          <RefreshCw className="size-3.5" />
+                          {tab.secondaryCount}
                         </Badge>
                       ) : null}
                     </>
