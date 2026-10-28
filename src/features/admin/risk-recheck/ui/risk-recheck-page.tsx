@@ -32,7 +32,7 @@ const RiskRecheckPage = () => {
     <div className="container mx-auto p-6">
       <div className="mb-6">
         <h1 className="text-2xl font-bold tracking-tight">Havf tahlili</h1>
-        <p className="text-muted-foreground">Oylik havf tahlili natijalarini qayta o‘tkazish</p>
+        <p className="text-muted-foreground">Choraklik xavf tahlili natijalarini qayta o‘tkazish</p>
       </div>
 
       <Card className="w-full max-w-2xl">
@@ -42,9 +42,9 @@ const RiskRecheckPage = () => {
             Havf tahlilini qayta o‘tkazish
           </CardTitle>
           <CardDescription>
-            Oxirgi oylik davrdagi yuqori (HIGH) darajali havf tahlillari qayta hisoblanadi. Natijasi yana yuqori bo‘lgan
-            obyektlar uchun tekshiruv yaratiladi (davlat korxonalaridan tashqari). Jarayon fon rejimida bajariladi:
-            natijani bir necha daqiqadan so‘ng havf tahlili ro‘yxati va detalkasida ko‘rish mumkin.
+            Oxirgi chorak davridagi yuqori (HIGH) darajali havf tahlillari qayta hisoblanadi. Natijasi yana yuqori
+            bo‘lgan obyektlar uchun tekshiruv yaratiladi (davlat korxonalaridan tashqari). Jarayon fon rejimida
+            bajariladi: natijani bir necha daqiqadan so‘ng havf tahlili ro‘yxati va detalkasida ko‘rish mumkin.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -56,7 +56,7 @@ const RiskRecheckPage = () => {
               <AlertDialogHeader>
                 <AlertDialogTitle>Qayta havf tahlili</AlertDialogTitle>
                 <AlertDialogDescription>
-                  Oxirgi oylik davrdagi barcha yuqori (HIGH) darajali havf tahlillari qayta o‘tkaziladi. Natijasi yana
+                  Oxirgi chorak davridagi barcha yuqori (HIGH) darajali havf tahlillari qayta o‘tkaziladi. Natijasi yana
                   yuqori bo‘lgan obyektlar uchun tekshiruv yaratiladi. Davom etasizmi?
                 </AlertDialogDescription>
               </AlertDialogHeader>

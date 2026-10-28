@@ -81,7 +81,7 @@ export function Header() {
       { path: '/inspections/other', title: 'Boshqa turdagi tekshiruvlar' },
       { path: '/inspections/info', title: 'Tekshiruv ma’lumotlari' },
       { path: '/inspections', title: 'Tekshiruvlar' },
-      { path: '/risk-analysis/monthly', title: 'Oylik xavf tahlili' },
+      { path: '/risk-analysis/monthly', title: 'Choraklik xavf tahlili' },
       { path: '/risk-analysis/daily', title: 'Kunlik xavf tahlili' },
       { path: '/risk-analysis', title: 'Xavfni tahlil qilish' },
       { path: '/kpi/departments', title: 'Boshqarma va bo‘limlar' },

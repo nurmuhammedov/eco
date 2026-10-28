@@ -42,7 +42,7 @@ export default [
       {
         id: 'RISK_ANALYSIS',
         url: '/risk-analysis/monthly',
-        title: 'Oylik xavf tahlili',
+        title: 'Choraklik xavf tahlili',
       },
       {
         id: 'RISK_ANALYSIS',

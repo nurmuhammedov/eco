@@ -23,6 +23,7 @@ import { toLabelledFiles } from '@/entities/application'
 import type { RiskAnalysisPeriod } from '@/entities/risk-analysis/model/risk-analysis.types'
 import { RiskLevelBadge } from './parts/risk-level'
 import { WarningCell } from './parts/risk-analysis-warning'
+import { RiskProcess } from './parts/risk-process'
 import type { RadiationProfile } from '@/shared/api/radiation-profile/use-radiation-profile-check'
 
 const RiskAnalysisDetail = () => {
@@ -60,8 +61,10 @@ const RiskAnalysisDetail = () => {
 
   const formattedFiles = toLabelledFiles(radData?.files, (field) => t(`labels.${radType}.${field}`))
 
+  const detailQuery = String(new URLSearchParams({ tin: currentTin, name: orgName }))
+
   const handleView = (row: Row<RiskAnalysisPeriod>) =>
-    navigate(`/risk-analysis/objects/${row.original.id}?${new URLSearchParams({ tin: currentTin, name: orgName })}`)
+    navigate(`/risk-analysis/objects/${row.original.id}?${detailQuery}`)
 
   const columns: ColumnDef<RiskAnalysisPeriod>[] = [
     {
@@ -128,9 +131,6 @@ const RiskAnalysisDetail = () => {
             <div className="text-neutral-850 truncate text-base font-normal">
               Xavf tahlili natijasi: <span className="font-semibold">{tableData?.content?.[0]?.totalScore || 0}</span>
             </div>
-            <div className="text-neutral-850 truncate text-base font-normal">
-              Hozirgi holati: <span className="font-semibold">{tableData?.content?.[0]?.totalScore || 0}</span>
-            </div>
           </div>
         )}
       </div>
@@ -138,6 +138,9 @@ const RiskAnalysisDetail = () => {
         <DetailCardAccordion.Item value="risk_analysis_info" title="Xavfni tahlil qilish bo‘yicha ma’lumotlar">
           {objectId ? (
             <>
+              {/* One quarter's chain first; the quarters themselves are the history under it */}
+              <RiskProcess periods={tableData?.content ?? []} detailQuery={detailQuery} />
+              <h6 className="mb-2 text-sm font-semibold text-gray-700">Davrlar tarixi</h6>
               <DataTable data={tableData || []} columns={columns} isLoading={isTableDataLoading} />
             </>
           ) : (
