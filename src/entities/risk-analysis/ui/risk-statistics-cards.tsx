@@ -106,13 +106,13 @@ export const RiskStatisticsCards = ({
       inactiveTextClass: 'text-slate-600',
       inactiveIconClass: 'bg-rose-50 text-rose-600 group-hover:bg-rose-500 group-hover:text-white',
     },
-    // Rechecks belong to the quarterly analysis, and only once the backend sends the figure
-    ...(periodType === 'MONTHLY' && recheckHighCount !== undefined && recheckHighCount !== null
+    // Rechecks belong to the quarterly analysis; the card stays put and reads 0 until there are any
+    ...(periodType === 'MONTHLY'
       ? [
           {
             id: RECHECK_HIGH_LEVEL,
             name: 'Qayta tahlilda yana yuqori',
-            count: recheckHighCount,
+            count: recheckHighCount ?? 0,
             icon: RefreshCw,
             activeClass: 'bg-red-50 border-red-700 shadow-sm ring-1 ring-red-700',
             textClass: 'text-red-800',
