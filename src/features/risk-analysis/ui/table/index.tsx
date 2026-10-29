@@ -93,7 +93,14 @@ const List: FC<Props> = ({ data, isLoading = false }) => {
             ),
             accessorKey: 'recheckScore',
             className: '!w-[1%] whitespace-nowrap',
-            cell: ({ row }) => row.original.recheckScore ?? '—',
+            // Every HIGH analysis is rechecked; one that was not had its object taken off the register
+            cell: ({ row }) =>
+              row.original.recheckScore ??
+              (row.original.level === 'HIGH' ? (
+                <span className="text-xs font-medium whitespace-nowrap text-red-600">Reyestrdan chiqarilgan</span>
+              ) : (
+                '—'
+              )),
           } as ExtendedColumnDef<RiskAnalysisItem, unknown>,
         ]
       : []),

@@ -18,11 +18,14 @@ export interface RiskAnalysisItem {
 export type RiskAnalysisLevel = 'LOW' | 'MEDIUM' | 'HIGH'
 
 /**
- * The list filter for analyses that came out HIGH again on the recheck.
- * Provisional: the backend has not named this value yet; change it here once
- * it does.
+ * The card (and URL value) for analyses that came out HIGH again on the
+ * recheck. The API is asked for them with `recheckLevel=HIGH` instead of a level.
  */
 export const RECHECK_HIGH_LEVEL = 'RECHECK_HIGH'
+
+/** The `level` / `recheckLevel` pair the list and region endpoints are filtered by */
+export const riskLevelParams = (riskLevel: string) =>
+  riskLevel === RECHECK_HIGH_LEVEL ? { recheckLevel: 'HIGH' } : { level: riskLevel === 'ALL' ? undefined : riskLevel }
 
 /** Levels a recheck applies to: only HIGH results are rechecked */
 export const RECHECK_LEVEL_FILTERS = ['ALL', 'HIGH', RECHECK_HIGH_LEVEL]

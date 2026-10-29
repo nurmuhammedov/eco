@@ -10,6 +10,7 @@ import { UserRoles } from '@/shared/types/user'
 import { useAuth } from '@/shared/hooks/use-auth'
 import {
   RECHECK_LEVEL_FILTERS,
+  riskLevelParams,
   type RiskAnalysisItem,
   type RiskLevelCount,
   type RiskRegionCount,
@@ -113,7 +114,7 @@ const RiskAnalysisWidget = ({ periodType }: RiskAnalysisWidgetProps) => {
   const apiParams = {
     type: currentApiType,
     periodType,
-    level: riskLevel == 'ALL' ? undefined : riskLevel,
+    ...riskLevelParams(String(riskLevel)),
     year: periodType === 'MONTHLY' ? year : undefined,
     month: periodType === 'MONTHLY' ? month : undefined,
     date: periodType === 'DAILY' ? date : undefined,
@@ -171,7 +172,7 @@ const RiskAnalysisWidget = ({ periodType }: RiskAnalysisWidgetProps) => {
   const { data: regionCounts = [] } = useData<RiskRegionCount[]>('/risk-analyses/count/by-region', shouldShowRegions, {
     type: currentApiType,
     periodType,
-    level: riskLevel == 'ALL' ? undefined : riskLevel,
+    ...riskLevelParams(String(riskLevel)),
     year: periodType === 'MONTHLY' ? year : undefined,
     month: periodType === 'MONTHLY' ? month : undefined,
     date: periodType === 'DAILY' ? date : undefined,
