@@ -4,6 +4,10 @@ import FileLink from '@/shared/components/common/file-link'
 import { PARTY_LABELS, SIGN_ACTION } from '../../model/labels'
 import { CadastreReview } from '../../model/types'
 
+/** FVV and SES attach a reference (ma'lumotnoma); the committee's file is its conclusion. */
+const filesLabel = (review: CadastreReview) =>
+  review.party === 'FVV' || review.party === 'SES' ? 'Ma’lumotnoma' : 'Xulosa'
+
 export const ReviewsList = ({ reviews }: { reviews: CadastreReview[] }) => {
   if (!reviews.length) return <p className="text-muted-foreground py-4 text-center text-sm">Hali xulosalar yo‘q</p>
 
@@ -29,13 +33,22 @@ export const ReviewsList = ({ reviews }: { reviews: CadastreReview[] }) => {
                 {review.conclusion}
               </p>
             )}
-            {!!review.conclusionFilePaths?.length && (
+            {(review.observationLetterPath || !!review.conclusionFilePaths?.length) && (
               <ul className="space-y-1">
-                {review.conclusionFilePaths.map((path, fileIndex) => (
+                {review.observationLetterPath && (
+                  <li>
+                    <FileLink url={review.observationLetterPath} title="Kuzatuv xati" />
+                  </li>
+                )}
+                {review.conclusionFilePaths?.map((path, fileIndex) => (
                   <li key={path}>
                     <FileLink
                       url={path}
-                      title={review.conclusionFilePaths!.length > 1 ? `Xulosa ${fileIndex + 1}` : 'Xulosa'}
+                      title={
+                        review.conclusionFilePaths!.length > 1
+                          ? `${filesLabel(review)} ${fileIndex + 1}`
+                          : filesLabel(review)
+                      }
                     />
                   </li>
                 ))}

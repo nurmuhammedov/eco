@@ -100,6 +100,7 @@ export const WorkflowActions = ({ passport, workflow }: WorkflowActionsProps) =>
         title={WORKFLOW_ACTION_LABELS.SUBMIT}
         submitLabel="Yuborish"
         defaultText={DEFAULT_POSITIVE_CONCLUSION}
+        withObservationLetter
         isPending={isPending}
         onSubmit={(values) => run({ command: 'submit', body: values })}
       />
@@ -159,13 +160,18 @@ export const WorkflowActions = ({ passport, workflow }: WorkflowActionsProps) =>
                     {submission.comment}
                   </p>
                 )}
-                {!!submission.filePaths?.length && (
+                {(submission.observationLetterPath || !!submission.filePaths?.length) && (
                   <ul className="space-y-1">
-                    {submission.filePaths.map((path, index) => (
+                    {submission.observationLetterPath && (
+                      <li>
+                        <FileLink url={submission.observationLetterPath} title="Kuzatuv xati" />
+                      </li>
+                    )}
+                    {submission.filePaths?.map((path, index) => (
                       <li key={path}>
                         <FileLink
                           url={path}
-                          title={submission.filePaths!.length > 1 ? `Xulosa ${index + 1}` : 'Xulosa'}
+                          title={submission.filePaths!.length > 1 ? `Ma’lumotnoma ${index + 1}` : 'Ma’lumotnoma'}
                         />
                       </li>
                     ))}

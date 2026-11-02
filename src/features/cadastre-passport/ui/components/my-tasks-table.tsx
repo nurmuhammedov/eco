@@ -4,6 +4,7 @@ import { DataTable, DataTableRowActions } from '@/shared/components/common/data-
 import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
 import { EmptyValue } from '@/shared/components/common/empty-value'
 import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks'
+import { getDate } from '@/shared/utils/date'
 import { WorkflowInstance } from '../../model/types'
 import { useCadastrePassport } from '../../model/use-cadastre-passport'
 import { StatusBadge } from './status-badge'
@@ -14,12 +15,19 @@ import { StatusBadge } from './status-badge'
  * document is waiting. The cells of one row share a query key, so they cost a
  * single request between them.
  */
-const PassportCell = ({ id, field }: { id: string; field: 'requestNumber' | 'customerTin' | 'status' }) => {
+const PassportCell = ({
+  id,
+  field,
+}: {
+  id: string
+  field: 'requestNumber' | 'requestDate' | 'customerName' | 'customerTin' | 'status'
+}) => {
   const { data, isPending } = useCadastrePassport(id)
 
   if (isPending) return <Skeleton className="h-4 w-24" />
   if (!data) return <EmptyValue />
   if (field === 'status') return <StatusBadge status={data.status} />
+  if (field === 'requestDate') return <>{getDate(data.requestDate) || <EmptyValue />}</>
 
   return <>{data[field] || <EmptyValue />}</>
 }
@@ -42,6 +50,16 @@ export const MyTasksTable = () => {
       id: 'requestNumber',
       header: 'Ariza raqami',
       cell: ({ row }) => <PassportCell id={row.original.businessId} field="requestNumber" />,
+    },
+    {
+      id: 'requestDate',
+      header: 'Ariza sanasi',
+      cell: ({ row }) => <PassportCell id={row.original.businessId} field="requestDate" />,
+    },
+    {
+      id: 'customerName',
+      header: 'Yuridik shaxs nomi',
+      cell: ({ row }) => <PassportCell id={row.original.businessId} field="customerName" />,
     },
     {
       id: 'customerTin',

@@ -10,6 +10,7 @@ import FileLink from '@/shared/components/common/file-link'
 import { EmptyValue } from '@/shared/components/common/empty-value'
 import { useLegalOrganizationQuery } from '@/shared/api/dictionaries'
 import { useAuth } from '@/shared/hooks/use-auth'
+import { getDate } from '@/shared/utils/date'
 import { FVV_GROUPS, SES_GROUPS } from '../model/review-fields'
 import { canSignAsCommittee, isCustomer, isPreparer } from '../model/permissions'
 import { useCadastrePassport } from '../model/use-cadastre-passport'
@@ -111,6 +112,7 @@ export default function CadastreDetail() {
         <DetailCardAccordion.Item value="txyuz" title="TXYZ kadastr pasporti ma’lumotlari">
           <DetailRow title="Holati" value={<StatusBadge status={passport.status} />} />
           <DetailRow title="Ariza raqami" value={passport.requestNumber || '-'} />
+          <DetailRow title="Ariza sanasi" value={getDate(passport.requestDate) || '-'} />
           <DetailRow title="Reyestr raqami" value={passport.registryNumber || '-'} />
           {passport.parentCadastrePassportId && (
             <DetailRow
@@ -188,7 +190,7 @@ export default function CadastreDetail() {
 
         <DetailCardAccordion.Item
           value="ses"
-          title="Sog‘liqni saqlash vazirligi huzuridagi Sanitariya – epidemiologik osoyishtalik va jamoat salomatligi qo‘mitasi"
+          title="Sog‘liqni saqlash vazirligi huzuridagi Sanitariya – epidemiologik osoyishtalik va jamoat salomatligi qo‘mitasi ma’lumotlari"
         >
           <SectionRows groups={SES_GROUPS} data={data?.sesData} />
         </DetailCardAccordion.Item>

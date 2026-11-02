@@ -21,6 +21,8 @@ export interface CadastreReview {
   signAction: SignAction
   conclusion: string | null
   conclusionFilePaths: string[] | null
+  /** Kuzatuv xati - FVV/SES executor's single letter; the committee has none */
+  observationLetterPath?: string | null
   reviewerProfileId: string | null
   reviewerName: string | null
   createdAt: string | null
@@ -51,6 +53,8 @@ export interface WorkflowHistoryEntry {
   positionName: string | null
   comment: string | null
   filePaths: string[] | null
+  /** Kuzatuv xati, only on a SUBMIT entry */
+  observationLetterPath?: string | null
   signatureId: string | null
   createdAt: string | null
 }
@@ -63,7 +67,10 @@ export interface CadastrePassport {
   preparerProfileId: string
   preparerTin: number
   customerProfileId: string
+  customerName?: string | null
   customerTin: number
+  /** Ariza sanasi, `YYYY-MM-DD` */
+  requestDate?: string | null
   /** Atribut sahifasi - pasport tasdiqlanganda serverda generatsiya qilinadi. */
   dataPagePath: string | null
   passportFilePath: string | null
