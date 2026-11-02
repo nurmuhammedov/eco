@@ -186,7 +186,10 @@ export default function CadastreDetail() {
           <SectionRows groups={FVV_GROUPS} data={data?.fvvData} />
         </DetailCardAccordion.Item>
 
-        <DetailCardAccordion.Item value="ses" title="Sanitariya-epidemiologik osoyishtalik xizmati ma’lumotlari">
+        <DetailCardAccordion.Item
+          value="ses"
+          title="Sog‘liqni saqlash vazirligi huzuridagi Sanitariya – epidemiologik osoyishtalik va jamoat salomatligi qo‘mitasi"
+        >
           <SectionRows groups={SES_GROUPS} data={data?.sesData} />
         </DetailCardAccordion.Item>
 
