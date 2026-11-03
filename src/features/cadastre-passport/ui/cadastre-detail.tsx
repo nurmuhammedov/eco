@@ -72,6 +72,10 @@ export default function CadastreDetail() {
   const data = passport.cadastreData
   const workflows = passport.workflows ?? []
   const myWorkflow = passport.status === 'IN_REVIEW' ? workflows.find((workflow) => workflow.myTurn) : undefined
+  // The backend keeps no registry date: the number is issued when the committee approves, so that review's date is it.
+  const registryDate = passport.registryNumber
+    ? passport.reviews?.find((review) => review.party === 'COMMITTEE' && review.signAction === 'APPROVED')?.createdAt
+    : null
 
   const canEdit = passport.status === 'NEW' && isPreparer(user, passport, representation?.tin)
   const canResubmit = passport.status === 'REJECTED' && isPreparer(user, passport, representation?.tin)
@@ -110,10 +114,9 @@ export default function CadastreDetail() {
         defaultValue={['txyuz', 'workflows', 'cadastre-data', 'registry-data']}
       >
         <DetailCardAccordion.Item value="txyuz" title="TXYZ kadastr pasporti ma’lumotlari">
-          <DetailRow title="Holati" value={<StatusBadge status={passport.status} />} />
+          <DetailRow title="Obyektning holati" value={<StatusBadge status={passport.status} />} />
           <DetailRow title="Ariza raqami" value={passport.requestNumber || '-'} />
           <DetailRow title="Ariza sanasi" value={getDate(passport.requestDate) || '-'} />
-          <DetailRow title="Reyestr raqami" value={passport.registryNumber || '-'} />
           {passport.parentCadastrePassportId && (
             <DetailRow
               title="Oldin yuborilgan pasport"
@@ -127,14 +130,20 @@ export default function CadastreDetail() {
               }
             />
           )}
-          <DetailRow title="Ishlab chiqqan tashkilot nomi" value={preparerInfo?.name || '-'} />
-          <DetailRow title="Ishlab chiqqan tashkilot STIR" value={passport.preparerTin || '-'} />
-          <DetailRow title="Tashkilot nomi" value={customerInfo?.name || '-'} />
-          <DetailRow title="Tashkilot STIR" value={passport.customerTin || '-'} />
-          <DetailRow title="Titul va Davlat reyestri fayli" value={fileValue(passport.titlePagePath)} />
-          <DetailRow title="TXYZ ma’lumotlari fayli" value={fileValue(passport.dataPagePath)} />
+          <DetailRow title="Ishlab chiquvchi tashkilot nomi" value={preparerInfo?.name || '-'} />
+          <DetailRow title="Ishlab chiquvchi tashkilot STIR raqami" value={passport.preparerTin || '-'} />
+          <DetailRow title="Obyektning nomi" value={customerInfo?.name || '-'} />
+          <DetailRow title="Obyektning STIR raqami" value={passport.customerTin || '-'} />
           <DetailRow
-            title="Kadastr passporti fayli"
+            title="Obyektning TXYZ kadastr pasporti Kelishuv varag‘i va Davlat reyestridan o‘tkazilgan obyekt to‘g‘risida ma’lumotlar"
+            value={fileValue(passport.titlePagePath)}
+          />
+          <DetailRow
+            title="Obyektning huzurida joylashgan texnogen xavf yuqori bo‘lgan obyektlar to‘g‘risida ma’lumotlar"
+            value={fileValue(passport.dataPagePath)}
+          />
+          <DetailRow
+            title="Obyektning TXYZ kadastr pasporti"
             value={
               <div className="flex flex-wrap items-center gap-2">
                 {fileValue(passport.passportFilePath)}
@@ -148,6 +157,9 @@ export default function CadastreDetail() {
               </div>
             }
           />
+          {/* Both are issued at the very end, on the committee's approval */}
+          <DetailRow title="Obyektning TXYZ kadastr pasporti reyestr raqami" value={passport.registryNumber || '-'} />
+          <DetailRow title="Obyektning TXYZ kadastr pasporti reyestr sanasi" value={getDate(registryDate) || '-'} />
         </DetailCardAccordion.Item>
 
         <DetailCardAccordion.Item value="workflows" title="Tashkilotlar tomonidan ko‘rib chiqish">

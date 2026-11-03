@@ -1,12 +1,18 @@
 import { format } from 'date-fns'
 import { Badge } from '@/shared/components/ui/badge'
 import FileLink from '@/shared/components/common/file-link'
-import { PARTY_LABELS, SIGN_ACTION } from '../../model/labels'
+import {
+  OBSERVATION_LETTER_LABEL,
+  PARTY_LABELS,
+  REFERENCE_FILES_LABEL,
+  SIGN_ACTION,
+  fileTitle,
+} from '../../model/labels'
 import { CadastreReview } from '../../model/types'
 
 /** FVV and SES attach a reference (ma'lumotnoma); the committee's file is its conclusion. */
 const filesLabel = (review: CadastreReview) =>
-  review.party === 'FVV' || review.party === 'SES' ? 'Ma’lumotnoma' : 'Xulosa'
+  review.party === 'FVV' || review.party === 'SES' ? REFERENCE_FILES_LABEL : 'Xulosa'
 
 export const ReviewsList = ({ reviews }: { reviews: CadastreReview[] }) => {
   if (!reviews.length) return <p className="text-muted-foreground py-4 text-center text-sm">Hali xulosalar yo‘q</p>
@@ -37,18 +43,14 @@ export const ReviewsList = ({ reviews }: { reviews: CadastreReview[] }) => {
               <ul className="space-y-1">
                 {review.observationLetterPath && (
                   <li>
-                    <FileLink url={review.observationLetterPath} title="Kuzatuv xati" />
+                    <FileLink url={review.observationLetterPath} title={OBSERVATION_LETTER_LABEL} />
                   </li>
                 )}
                 {review.conclusionFilePaths?.map((path, fileIndex) => (
                   <li key={path}>
                     <FileLink
                       url={path}
-                      title={
-                        review.conclusionFilePaths!.length > 1
-                          ? `${filesLabel(review)} ${fileIndex + 1}`
-                          : filesLabel(review)
-                      }
+                      title={fileTitle(filesLabel(review), fileIndex, review.conclusionFilePaths!.length)}
                     />
                   </li>
                 ))}

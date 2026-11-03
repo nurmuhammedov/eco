@@ -6,11 +6,26 @@ import { Progress } from '@/shared/components/ui/progress'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/shared/components/ui/collapsible'
 import FileLink from '@/shared/components/common/file-link'
 import { cn } from '@/shared/lib/utils'
-import { WORKFLOW_HISTORY_LABELS, WORKFLOW_STATUS } from '../../model/labels'
-import { WorkflowInstance } from '../../model/types'
+import {
+  OBSERVATION_LETTER_LABEL,
+  REFERENCE_FILES_LABEL,
+  WORKFLOW_HISTORY_LABELS,
+  WORKFLOW_STATUS,
+  fileTitle,
+} from '../../model/labels'
+import { WorkflowHistoryEntry, WorkflowInstance } from '../../model/types'
 import { useWorkflowHistory } from '../../model/use-cadastre-passport'
 
 const dateTime = (value: string | null) => (value ? format(new Date(value), 'dd.MM.yyyy HH:mm') : '')
+
+/** A submission's files are the executor's reference; other steps attach plain files. */
+const historyFileTitle = (entry: WorkflowHistoryEntry, index: number) => {
+  const count = entry.filePaths?.length ?? 0
+
+  if (entry.action === 'SUBMIT') return fileTitle(REFERENCE_FILES_LABEL, index, count)
+
+  return count > 1 ? `Fayl ${index + 1}` : 'Faylni ko‘rish'
+}
 
 const HistoryTimeline = ({ instanceId }: { instanceId: string }) => {
   const { data, isLoading } = useWorkflowHistory(instanceId)
@@ -45,12 +60,12 @@ const HistoryTimeline = ({ instanceId }: { instanceId: string }) => {
             <ul className="space-y-1">
               {entry.observationLetterPath && (
                 <li>
-                  <FileLink url={entry.observationLetterPath} title="Kuzatuv xati" />
+                  <FileLink url={entry.observationLetterPath} title={OBSERVATION_LETTER_LABEL} />
                 </li>
               )}
               {entry.filePaths?.map((path, index) => (
                 <li key={path}>
-                  <FileLink url={path} title={entry.filePaths!.length > 1 ? `Fayl ${index + 1}` : 'Faylni ko‘rish'} />
+                  <FileLink url={path} title={historyFileTitle(entry, index)} />
                 </li>
               ))}
             </ul>

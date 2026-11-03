@@ -103,8 +103,8 @@ export const RegistryDataRows = ({ data }: { data: CadastreSection | null | unde
 
   return (
     <>
-      <DetailRow title="Tashkilotning idoraviy mansubligi" value={text(values.organizationalBelonging)} />
-      <DetailRow title="Tashkilotning yuridik manzili" value={text(values.address)} />
+      <DetailRow title="Obyektning idoraviy mansubligi" value={text(values.organizationalBelonging)} />
+      <DetailRow title="Obyektning yuridik manzili" value={text(values.address)} />
       <DetailRow
         title="Obyektning davlat ro‘yxatidan o‘tkazilganligi to‘g‘risidagi guvohnoma raqami"
         value={text(values.stateRegistryCertNumber)}

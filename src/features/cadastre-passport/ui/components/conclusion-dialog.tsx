@@ -7,6 +7,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Textarea } from '@/shared/components/ui/textarea'
 import { Button } from '@/shared/components/ui/button'
 import { InputFile } from '@/shared/components/common/file-upload'
+import { OBSERVATION_LETTER_LABEL, REFERENCE_FILES_LABEL } from '../../model/labels'
 
 /** The backend refuses more than this, so the picker stops before the request does. */
 const MAX_FILES = 10
@@ -14,19 +15,14 @@ const MAX_FILES = 10
 const schema = z.object({
   conclusion: z.string().trim().min(1),
   conclusionFilePaths: z.array(z.string()).min(1).max(MAX_FILES),
-  observationLetterPath: z.string().optional(),
+  // Optional, so an empty picker leaves the key out of the payload instead of sending ''.
+  observationLetterPath: z
+    .string()
+    .optional()
+    .transform((path) => path || undefined),
 })
-
-const withLetterSchema = schema.extend({ observationLetterPath: z.string().min(1) })
 
 export type ConclusionValues = z.infer<typeof schema>
-
-/** The letter key is left out unless asked for, so the committee's payload does not carry an empty one. */
-const emptyValues = (conclusion: string, withLetter?: boolean): ConclusionValues => ({
-  conclusion,
-  conclusionFilePaths: [],
-  ...(withLetter ? { observationLetterPath: '' } : {}),
-})
 
 interface ConclusionDialogProps {
   open: boolean
@@ -38,9 +34,9 @@ interface ConclusionDialogProps {
   /** Prefills the text box; the usual wording, still free to edit. */
   defaultText?: string
   /**
-   * The FVV/SES executor sends two documents: a single observation letter and
-   * the reference (ma'lumotnoma) as one or more files. The committee only
-   * attaches its conclusion.
+   * The FVV/SES executor sends the reference (ma'lumotnoma) as one or more
+   * files and may add a single observation letter. The committee only attaches
+   * its conclusion.
    */
   withObservationLetter?: boolean
   onSubmit: (values: ConclusionValues) => void
@@ -58,13 +54,13 @@ export const ConclusionDialog = ({
   onSubmit,
 }: ConclusionDialogProps) => {
   const form = useForm<ConclusionValues>({
-    resolver: zodResolver(withObservationLetter ? withLetterSchema : schema),
-    defaultValues: emptyValues(defaultText, withObservationLetter),
+    resolver: zodResolver(schema),
+    defaultValues: { conclusion: defaultText, conclusionFilePaths: [], observationLetterPath: '' },
   })
 
   useEffect(() => {
-    if (open) form.reset(emptyValues(defaultText, withObservationLetter))
-  }, [open, defaultText, withObservationLetter, form])
+    if (open) form.reset({ conclusion: defaultText, conclusionFilePaths: [], observationLetterPath: '' })
+  }, [open, defaultText, form])
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -93,7 +89,7 @@ export const ConclusionDialog = ({
                 name="observationLetterPath"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel required>Kuzatuv xati</FormLabel>
+                    <FormLabel>{OBSERVATION_LETTER_LABEL}</FormLabel>
                     <FormControl>
                       <InputFile name={field.name} form={form} uploadEndpoint="/attachments/cadastre-passports" />
                     </FormControl>
@@ -106,7 +102,7 @@ export const ConclusionDialog = ({
               name="conclusionFilePaths"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>{withObservationLetter ? 'Ma’lumotnoma (ilova)' : 'Xulosa'}</FormLabel>
+                  <FormLabel required>{withObservationLetter ? REFERENCE_FILES_LABEL : 'Xulosa'}</FormLabel>
                   <FormControl>
                     {/* InputFile prints the field's own error, so a FormMessage
                         here only repeats it. */}

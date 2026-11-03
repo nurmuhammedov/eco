@@ -861,7 +861,7 @@ export const CadastreRegistryFields = ({ prefix = 'cadastreData.' }: CadastreDat
           name={`${prefix}organizationalBelonging`}
           render={({ field }) => (
             <FormItem>
-              <FormLabel required>Tashkilotning idoraviy mansubligi</FormLabel>
+              <FormLabel required>Obyektning idoraviy mansubligi</FormLabel>
               <FormControl>
                 <Input placeholder="Kiriting" maxLength={255} {...field} value={field.value ?? ''} />
               </FormControl>
@@ -874,7 +874,7 @@ export const CadastreRegistryFields = ({ prefix = 'cadastreData.' }: CadastreDat
           name={`${prefix}address`}
           render={({ field }) => (
             <FormItem>
-              <FormLabel required>Tashkilotning yuridik manzili</FormLabel>
+              <FormLabel required>Obyektning yuridik manzili</FormLabel>
               <FormControl>
                 <Input placeholder="Kiriting" maxLength={255} {...field} value={field.value ?? ''} />
               </FormControl>

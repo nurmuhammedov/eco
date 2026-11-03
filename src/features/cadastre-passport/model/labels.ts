@@ -14,6 +14,13 @@ export const SIGN_ACTION: Record<SignAction, { label: string; variant: BadgeVari
   REJECTED: { label: 'Rad etilgan', variant: 'error' },
 }
 
+/** The FVV/SES executor's two documents on SUBMIT: the reference files and the optional letter. */
+export const REFERENCE_FILES_LABEL = 'Ma’lumotnoma (ilova)'
+export const OBSERVATION_LETTER_LABEL = 'Kuzatuv xati'
+
+/** One link per file; a number only when there is more than one. */
+export const fileTitle = (label: string, index: number, count: number) => (count > 1 ? `${label} ${index + 1}` : label)
+
 /** What an executor writes nearly every time; the box stays editable. */
 export const DEFAULT_POSITIVE_CONCLUSION = 'Obyektga ijobiy xulosa berilgan'
 

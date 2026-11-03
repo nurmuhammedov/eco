@@ -14,7 +14,13 @@ import {
 import FileLink from '@/shared/components/common/file-link'
 import { ApplicationModal } from '@/features/application/create-application'
 import { useEimzo } from '@/shared/hooks/use-eimzo'
-import { DEFAULT_POSITIVE_CONCLUSION, WORKFLOW_ACTION_LABELS } from '../../model/labels'
+import {
+  DEFAULT_POSITIVE_CONCLUSION,
+  OBSERVATION_LETTER_LABEL,
+  REFERENCE_FILES_LABEL,
+  WORKFLOW_ACTION_LABELS,
+  fileTitle,
+} from '../../model/labels'
 import { CadastrePassport, WorkflowAction, WorkflowInstance } from '../../model/types'
 import { useRefreshPassport, useWorkflowHistory } from '../../model/use-cadastre-passport'
 import { ConclusionDialog } from './conclusion-dialog'
@@ -164,14 +170,14 @@ export const WorkflowActions = ({ passport, workflow }: WorkflowActionsProps) =>
                   <ul className="space-y-1">
                     {submission.observationLetterPath && (
                       <li>
-                        <FileLink url={submission.observationLetterPath} title="Kuzatuv xati" />
+                        <FileLink url={submission.observationLetterPath} title={OBSERVATION_LETTER_LABEL} />
                       </li>
                     )}
                     {submission.filePaths?.map((path, index) => (
                       <li key={path}>
                         <FileLink
                           url={path}
-                          title={submission.filePaths!.length > 1 ? `Ma’lumotnoma ${index + 1}` : 'Ma’lumotnoma'}
+                          title={fileTitle(REFERENCE_FILES_LABEL, index, submission.filePaths!.length)}
                         />
                       </li>
                     ))}
