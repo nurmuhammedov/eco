@@ -11,7 +11,7 @@ import { Search } from 'lucide-react'
 import GoBack from '@/shared/components/common/go-back'
 import DetailRow from '@/shared/components/common/detail-row'
 import { toast } from 'sonner'
-import { useLegalOrganizationQuery } from '@/shared/api/dictionaries'
+import { useLegalInfoByTinQuery } from '@/shared/api/dictionaries'
 import useAdd from '@/shared/hooks/api/use-add'
 import { useAuth } from '@/shared/hooks/use-auth'
 
@@ -85,11 +85,20 @@ export default function CadastreAdd() {
     defaultValues: { stir: resubmitTin ?? '' },
   })
 
+  /**
+   * The state registry, as on the application forms: the customer does not have
+   * to be in this system yet - the backend takes it from the registry when the
+   * passport is filed.
+   */
   const {
     data: legalInfo,
     isFetching: isLegalInfoLoading,
-    isError: isLegalInfoError,
-  } = useLegalOrganizationQuery(searchedStir, searchedStir?.length === 9)
+    isError: isLegalInfoFailed,
+    isSuccess: isLegalInfoAnswered,
+  } = useLegalInfoByTinQuery(searchedStir, searchedStir?.length === 9)
+
+  // An unknown number may come back as an empty record rather than an error
+  const isLegalInfoError = isLegalInfoFailed || (isLegalInfoAnswered && !legalInfo?.legalName)
 
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
@@ -103,8 +112,8 @@ export default function CadastreAdd() {
 
   /** The organisation's legal address comes from the integration; it can still be corrected by hand. */
   useEffect(() => {
-    if (legalInfo?.address && !form.getValues('cadastreData.address')) {
-      form.setValue('cadastreData.address', legalInfo.address)
+    if (legalInfo?.legalAddress && !form.getValues('cadastreData.address')) {
+      form.setValue('cadastreData.address', legalInfo.legalAddress)
     }
   }, [legalInfo, form])
 
@@ -166,7 +175,7 @@ export default function CadastreAdd() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Buyurtmachi tashkilot</CardTitle>
+          <CardTitle>Buyurtmachi obyekt</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex items-center gap-2">
@@ -177,7 +186,7 @@ export default function CadastreAdd() {
               onCheckedChange={(checked) => handleForSelf(checked === true)}
             />
             <Label htmlFor="cadastre-for-self" className="cursor-pointer font-normal">
-              Pasport o‘z tashkilotim uchun
+              TXYZ kadastr pasporti o‘z obyektim uchun
             </Label>
           </div>
 
@@ -192,7 +201,7 @@ export default function CadastreAdd() {
                     <FormItem className="flex-1">
                       <FormControl>
                         <Input
-                          placeholder="Tashkilot STIRini kiriting..."
+                          placeholder="Obyektning STIR raqamini kiriting..."
                           inputMode="numeric"
                           maxLength={9}
                           disabled={hasLegalInfo || isLegalInfoLoading}
@@ -226,13 +235,13 @@ export default function CadastreAdd() {
           <form id="cadastre-add-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <Card>
               <CardHeader>
-                <CardTitle>Obyekt ma’lumotlari</CardTitle>
+                <CardTitle>Obyektning ma’lumotlari</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 gap-x-2 gap-y-2 md:grid-cols-1">
-                  <DetailRow title="Obyektning nomi:" value={legalInfo?.name || '-'} />
-                  <DetailRow title="Obyektning rahbari F.I.Sh.:" value={legalInfo?.directorName || '-'} />
-                  <DetailRow title="Manzil:" value={legalInfo?.address || '-'} />
+                  <DetailRow title="Obyektning nomi:" value={legalInfo?.legalName || '-'} />
+                  <DetailRow title="Obyektning rahbari F.I.Sh.:" value={legalInfo?.fullName || '-'} />
+                  <DetailRow title="Obyektning yuridik manzili:" value={legalInfo?.legalAddress || '-'} />
                   <DetailRow title="Telefon raqami:" value={legalInfo?.phoneNumber || '-'} />
                 </div>
               </CardContent>
@@ -240,7 +249,7 @@ export default function CadastreAdd() {
 
             <Card>
               <CardHeader>
-                <CardTitle>Kerakli hujjatlarni yuklash</CardTitle>
+                <CardTitle>TXYZ kadastr pasporti hujjatini yuklash</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 gap-x-4 gap-y-5 md:grid-cols-2">
