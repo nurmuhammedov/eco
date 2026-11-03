@@ -152,26 +152,32 @@ const cadastreObjectSchema = z
  * One passport covers one or more objects; the registry sheet and the
  * organisation's own belonging and address are filled in once per passport.
  */
-export const cadastreDataSchema = z.object({
-  objects: z.array(cadastreObjectSchema).min(1, required),
-  /** Titul varag'i: tashkilotning idoraviy mansubligi va joylashgan manzili. */
-  organizationalBelonging: text(),
-  address: text(),
-  // "TXYZ kadastr pasporti davlat reyestridan o‘tkazilganligi to‘g‘risida ma’lumotlar" - the
-  // second sheet of the passport, filled in by the same customer.
-  stateRegistryCertNumber: text(),
-  stateRegistryCertDate: day(),
-  // ixtiyoriy: litsenziyasi yo'q obyektlar ham bor
-  licenseNumber: z
-    .string()
-    .trim()
-    .optional()
-    .transform((value) => value || undefined),
-  licenseDate: day().optional(),
-  okpo: text().regex(OKPO_PATTERN, invalid),
-  bankMfo: text().regex(BANK_MFO_PATTERN, invalid),
-  phoneNumber: text().regex(USER_PATTERNS.phone),
-})
+export const cadastreDataSchema = z
+  .object({
+    objects: z.array(cadastreObjectSchema).min(1, required),
+    /** Titul varag'i: idoraviy mansublik (joined into `organizationalBelonging`, as on an object) va manzil. */
+    belongingName: text(),
+    belongingType: text(),
+    address: text(),
+    // "TXYZ kadastr pasporti davlat reyestridan o‘tkazilganligi to‘g‘risida ma’lumotlar" - the
+    // second sheet of the passport, filled in by the same customer.
+    stateRegistryCertNumber: text(),
+    stateRegistryCertDate: day(),
+    // ixtiyoriy: litsenziyasi yo'q obyektlar ham bor
+    licenseNumber: z
+      .string()
+      .trim()
+      .optional()
+      .transform((value) => value || undefined),
+    licenseDate: day().optional(),
+    okpo: text().regex(OKPO_PATTERN, invalid),
+    bankMfo: text().regex(BANK_MFO_PATTERN, invalid),
+    phoneNumber: text().regex(USER_PATTERNS.phone),
+  })
+  .transform(({ belongingName, belongingType, ...rest }) => ({
+    ...rest,
+    organizationalBelonging: `${belongingName.trim()} ${belongingType}`,
+  }))
 
 /** The fields sit on whichever form wraps them, under `prefix` */
 interface CadastreDataFieldsProps {
@@ -185,6 +191,62 @@ const idByName = (list: OptionItem<number>[] | undefined, name: string) => {
   const match = (list ?? []).find((item) => String(item.name).trim() === String(name).trim())
 
   return match ? String(match.id) : ''
+}
+
+/**
+ * Obyektning idoraviy mansubligi, on an object and on the registry sheet alike.
+ * One field to the eye: the name is typed, the kind of body is picked beside
+ * it, and both leave as one string.
+ */
+const BelongingField = ({ prefix }: { prefix: string }) => {
+  const { control } = useFormContext()
+
+  return (
+    <FormField
+      control={control}
+      name={`${prefix}belongingName`}
+      render={({ field }) => (
+        <FormItem>
+          <FormLabel required>Obyektning idoraviy mansubligi</FormLabel>
+          <div className="flex items-start">
+            <FormControl>
+              <Input
+                placeholder="Kiriting"
+                maxLength={200}
+                className="rounded-r-none"
+                {...field}
+                value={field.value ?? ''}
+              />
+            </FormControl>
+            <FormField
+              control={control}
+              name={`${prefix}belongingType`}
+              render={({ field: typeField }) => (
+                <FormItem className="w-48 shrink-0 space-y-0">
+                  <Select value={typeField.value || ''} onValueChange={typeField.onChange}>
+                    <FormControl>
+                      <SelectTrigger className="rounded-l-none border-l-0">
+                        <SelectValue placeholder="Tanlang" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {BELONGING_TYPES.map((item) => (
+                        <SelectItem key={item} value={item}>
+                          {item}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <FormMessage />
+        </FormItem>
+      )}
+    />
+  )
 }
 
 export const CadastreDataFields = ({ prefix = 'cadastreData.' }: CadastreDataFieldsProps) => {
@@ -243,52 +305,7 @@ export const CadastreDataFields = ({ prefix = 'cadastreData.' }: CadastreDataFie
             </FormItem>
           )}
         />
-        <FormField
-          control={control}
-          name={`${prefix}belongingName`}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel required>Obyektning idoraviy mansubligi</FormLabel>
-              {/* One field to the eye: the name is typed, the kind of body is
-                  picked beside it, and both leave as one string. */}
-              <div className="flex items-start">
-                <FormControl>
-                  <Input
-                    placeholder="Kiriting"
-                    maxLength={200}
-                    className="rounded-r-none"
-                    {...field}
-                    value={field.value ?? ''}
-                  />
-                </FormControl>
-                <FormField
-                  control={control}
-                  name={`${prefix}belongingType`}
-                  render={({ field: typeField }) => (
-                    <FormItem className="w-48 shrink-0 space-y-0">
-                      <Select value={typeField.value || ''} onValueChange={typeField.onChange}>
-                        <FormControl>
-                          <SelectTrigger className="rounded-l-none border-l-0">
-                            <SelectValue placeholder="Tanlang" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {BELONGING_TYPES.map((item) => (
-                            <SelectItem key={item} value={item}>
-                              {item}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <BelongingField prefix={prefix} />
         <FormField
           control={control}
           name={`${prefix}regionId`}
@@ -813,6 +830,18 @@ export const CadastreDataFields = ({ prefix = 'cadastreData.' }: CadastreDataFie
 /** An empty object block - the schema only has to hold at submit time. */
 export const emptyCadastreObject = () => ({}) as z.input<typeof cadastreObjectSchema>
 
+/** The block's number and, once chosen, the object's purpose - so blocks are told apart without opening them up. */
+const ObjectHeading = ({ prefix, index }: { prefix: string; index: number }) => {
+  const { control } = useFormContext()
+  const purpose = useWatch({ control, name: `${prefix}purpose` })
+
+  return (
+    <h6 className="text-sm font-semibold text-gray-700">
+      {index + 1}-obyekt{purpose ? ` – ${purpose}` : ''}
+    </h6>
+  )
+}
+
 /**
  * Every object of the passport gets its own block of the sheet's fields; the
  * first one is always there, the rest can be added and removed.
@@ -826,7 +855,7 @@ export const CadastreObjectsFields = ({ prefix = 'cadastreData.' }: CadastreData
       {fields.map((item, index) => (
         <div key={item.id} className="rounded-xl border border-neutral-200 p-4">
           <div className="mb-4 flex items-center justify-between">
-            <h6 className="text-sm font-semibold text-gray-700">{index + 1}-obyekt</h6>
+            <ObjectHeading prefix={`${prefix}objects.${index}.`} index={index} />
             {fields.length > 1 && (
               <Button type="button" variant="ghost" size="sm" className="text-red-600" onClick={() => remove(index)}>
                 <Trash2 className="size-4" />
@@ -856,19 +885,7 @@ export const CadastreRegistryFields = ({ prefix = 'cadastreData.' }: CadastreDat
   return (
     <div className="@container">
       <div className="grid grid-cols-1 items-end gap-x-4 gap-y-5 @2xl:grid-cols-2 @5xl:grid-cols-3">
-        <FormField
-          control={control}
-          name={`${prefix}organizationalBelonging`}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel required>Obyektning idoraviy mansubligi</FormLabel>
-              <FormControl>
-                <Input placeholder="Kiriting" maxLength={255} {...field} value={field.value ?? ''} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <BelongingField prefix={prefix} />
         <FormField
           control={control}
           name={`${prefix}address`}

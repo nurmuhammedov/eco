@@ -69,6 +69,10 @@ export const CadastreEditModal = ({ isOpen, onClose, cadastreId, defaultValues }
       const { objects, ...registry } = defaultValues
       const formattedValues: Record<string, unknown> = { ...registry }
 
+      // The registry belonging is one string on the record and name + type on the form, as on an object.
+      Object.assign(formattedValues, splitBelonging(String(registry.organizationalBelonging ?? '')))
+      delete formattedValues.organizationalBelonging
+
       // The record keeps dates as 'yyyy-MM-dd'; the picker works on Date.
       for (const key of ['stateRegistryCertDate', 'licenseDate'] as const) {
         const value = registry[key]

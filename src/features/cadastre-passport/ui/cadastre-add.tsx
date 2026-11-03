@@ -226,12 +226,12 @@ export default function CadastreAdd() {
           <form id="cadastre-add-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <Card>
               <CardHeader>
-                <CardTitle>Tashkilot ma’lumotlari</CardTitle>
+                <CardTitle>Obyekt ma’lumotlari</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 gap-x-2 gap-y-2 md:grid-cols-1">
-                  <DetailRow title="Tashkilot nomi:" value={legalInfo?.name || '-'} />
-                  <DetailRow title="Tashkilot rahbari F.I.Sh.:" value={legalInfo?.directorName || '-'} />
+                  <DetailRow title="Obyektning nomi:" value={legalInfo?.name || '-'} />
+                  <DetailRow title="Obyektning rahbari F.I.Sh.:" value={legalInfo?.directorName || '-'} />
                   <DetailRow title="Manzil:" value={legalInfo?.address || '-'} />
                   <DetailRow title="Telefon raqami:" value={legalInfo?.phoneNumber || '-'} />
                 </div>
@@ -249,7 +249,7 @@ export default function CadastreAdd() {
                     name="passportFile"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel required>Kadastr passport fayli</FormLabel>
+                        <FormLabel required>TXYZ kadastr pasporti</FormLabel>
                         <FormControl>
                           <InputFile
                             name={field.name as 'passportFile'}

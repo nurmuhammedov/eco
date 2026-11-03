@@ -75,7 +75,7 @@ export const PassportFileDialog = ({ open, onOpenChange, passportId }: PassportF
               name="passportFile"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>Kadastr pasporti fayli</FormLabel>
+                  <FormLabel required>TXYZ kadastr pasporti</FormLabel>
                   <FormControl>
                     <InputFile
                       name={field.name as 'passportFile'}

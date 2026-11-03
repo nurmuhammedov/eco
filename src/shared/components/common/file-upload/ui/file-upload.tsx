@@ -1,6 +1,6 @@
 import { onActivate } from '@/shared/lib/on-activate'
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { FieldValues, Path, PathValue, UseFormReturn } from 'react-hook-form'
+import { FieldValues, Path, PathValue, UseFormReturn, useFormState, useWatch } from 'react-hook-form'
 import type { AxiosProgressEvent } from 'axios'
 import { Camera, Paperclip } from 'lucide-react'
 import { cn } from '@/shared/lib/utils'
@@ -149,18 +149,19 @@ function InputFileComponent<T extends FieldValues, TSubmitted = T>({
   onUploadProgress,
   onRemove,
 }: InputFileProps<T, TSubmitted>) {
-  const {
-    setValue,
-    watch,
-    clearErrors,
-    setError,
-    formState: { errors },
-  } = form
+  const { setValue, watch, clearErrors, setError, control } = form
+
+  /**
+   * Subscribed here rather than read off `form`: this component is memoised
+   * and its props stay the same, so a change the form makes on its own - a
+   * single file removed, an error set on submit - would otherwise never reach
+   * it. Only an upload re-rendered it, through its own mutation state.
+   */
+  const formValue = useWatch({ control, name })
+  const { errors } = useFormState({ control, name })
 
   const [uploadProgress, setUploadProgress] = useState<number>(0)
   const [fileList, setFileList] = useState<FileData[]>([])
-
-  const formValue = watch(name)
 
   /**
    * The effects below run on form changes and on unmount, so neither of them
@@ -432,7 +433,8 @@ function InputFileComponent<T extends FieldValues, TSubmitted = T>({
         </div>
       )}
 
-      <div className="flex flex-col gap-1">
+      {/* Under the picker the first file gets the same gap as the ones after it */}
+      <div className={cn('flex flex-col gap-1', multiple && fileList.length > 0 && 'mt-1')}>
         {fileList.map((file, index) => (
           <FileRow
             key={`${file.url}-${index}`}

@@ -130,7 +130,11 @@ export const ObjectsDataRows = ({ data }: { data: CadastrePreparerData | null | 
     <>
       {objects.map((object, index) => (
         <div key={index} className={index > 0 ? 'mt-4 border-t pt-4' : undefined}>
-          {objects.length > 1 && <h6 className="mb-2 text-sm font-semibold text-gray-700">{index + 1}-obyekt</h6>}
+          {objects.length > 1 && (
+            <h6 className="mb-2 text-sm font-semibold text-gray-700">
+              {index + 1}-obyekt{object?.purpose ? ` – ${object.purpose}` : ''}
+            </h6>
+          )}
           <PreparerDataRows data={object} />
         </div>
       ))}
