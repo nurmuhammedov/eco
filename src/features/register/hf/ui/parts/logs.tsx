@@ -13,12 +13,14 @@ export const Logs = ({ url = 'hf' }: { url?: string }) => {
   const { id } = useParams()
 
   const {
-    paramsObject: { page = 1, size = 10 },
+    // The detail page owns the URL, so the filter key is kept apart from any other table's `date` there
+    paramsObject: { page = 1, size = 10, logDate = '' },
   } = useCustomSearchParams()
 
   const { data = [], isLoading } = usePaginatedData<ChangeLogEntry>(`/${url}/${id}/logs`, {
     page,
     size,
+    date: logDate,
   })
 
   const columns: ExtendedColumnDef<ChangeLogEntry>[] = [
@@ -56,6 +58,9 @@ export const Logs = ({ url = 'hf' }: { url?: string }) => {
     },
     {
       header: 'O‘zgartirish vaqti',
+      filterKey: 'logDate',
+      filterType: 'date',
+      filterDateStrategy: 'after',
       cell: ({ row }) => (
         <div className="whitespace-nowrap">
           {row?.original?.updatedAt ? format(row?.original?.updatedAt, 'dd.MM.yyyy - HH:mm') : null}
