@@ -6,7 +6,7 @@ import FileLink from '@/shared/components/common/file-link'
 import { Button } from '@/shared/components/ui/button'
 import { useCustomSearchParams } from '@/shared/hooks'
 import RiskAnalysisForm from './risk-analysis-form'
-import { RiskLevelBadge, canHaveWarning, postalMailStatusLabel } from './risk-level'
+import { RiskLevelBadge, canHaveWarning } from './risk-level'
 import type { RiskAnalysisData } from '../risk-analysis'
 // Needed only by the staff signing flow below, which is switched off
 // import { useAuth } from '@/shared/hooks/use-auth'
@@ -80,7 +80,6 @@ export const RiskAnalysisWarning = ({ data }: { data: RiskAnalysisData }) => {
       <div className="mb-4 rounded-lg border p-4">
         <h6 className="mb-2 text-sm font-semibold text-gray-700">Tavsiyanoma</h6>
         <DetailRow title="Yuborilgan sana" value={day(data.warningDate)} />
-        <DetailRow title="Pochta holati" value={postalMailStatusLabel(data.warningStatus)} />
         <DetailRow
           title="Tavsiyanoma fayli"
           value={data.warningPath ? <FileLink url={data.warningPath} title="PDF’ni ko‘rish" /> : '—'}
