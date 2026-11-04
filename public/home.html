@@ -496,6 +496,278 @@
         font-weight: 500;
       }
 
+      #xavf-tahlili {
+        padding: 80px 0 0;
+        background-color: #f4f7f6;
+      }
+
+      .risk-lead {
+        text-align: center;
+        color: var(--light-text);
+        margin: -30px auto 30px;
+        max-width: 720px;
+      }
+
+      .risk-panel {
+        background: var(--white);
+        border-radius: 15px;
+        box-shadow: var(--shadow);
+        padding: 30px;
+      }
+
+      .risk-toolbar {
+        display: grid;
+        grid-template-columns: 120px 140px minmax(180px, 240px) 1fr;
+        gap: 15px;
+        margin-bottom: 20px;
+      }
+
+      .risk-field {
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        gap: 5px;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--light-text);
+      }
+
+      .risk-field select,
+      .risk-field input {
+        width: 100%;
+        height: 42px;
+        padding: 0 12px;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        background: var(--white);
+        color: var(--text-color);
+        font-size: 14px;
+        font-weight: 400;
+      }
+
+      /* The native arrow sits flush against the border and differs per browser */
+      .risk-field select {
+        appearance: none;
+        padding-right: 38px;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23666666' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 12px center;
+        background-size: 16px;
+        cursor: pointer;
+      }
+
+      .risk-field select:focus,
+      .risk-field input:focus {
+        outline: 2px solid var(--primary-color);
+        outline-offset: 1px;
+        border-color: var(--primary-color);
+      }
+
+      .risk-levels {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+        margin-bottom: 20px;
+      }
+
+      .risk-level {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 2px;
+        padding: 18px 20px;
+        border: 2px solid transparent;
+        border-radius: 12px;
+        cursor: pointer;
+        text-align: left;
+        font-size: 15px;
+        font-weight: 600;
+        transition:
+          border-color 0.2s,
+          transform 0.2s;
+      }
+
+      .risk-level:hover {
+        transform: translateY(-2px);
+      }
+
+      .risk-level:focus-visible {
+        outline: 2px solid var(--primary-color);
+        outline-offset: 2px;
+      }
+
+      .risk-level[aria-pressed='true'] {
+        border-color: currentColor;
+      }
+
+      .risk-level-count {
+        font-size: 30px;
+        font-weight: 800;
+        line-height: 1.2;
+      }
+
+      .risk-level--low {
+        background: #e7f6ed;
+        color: #1b6e3c;
+      }
+
+      .risk-level--medium {
+        background: #fff4e0;
+        color: #8a4b00;
+      }
+
+      .risk-level--high {
+        background: #fdecea;
+        color: #b42318;
+      }
+
+      .risk-table-wrap {
+        position: relative;
+        /* an empty or first load does not collapse the section to one line */
+        min-height: 320px;
+        overflow-x: auto;
+        border: 1px solid #eef2f3;
+        border-radius: 10px;
+      }
+
+      /* header (46px) and ten one-line rows (48px): a short last page keeps the same height */
+      @media (min-width: 901px) {
+        .risk-table-wrap {
+          min-height: 528px;
+        }
+      }
+
+      .risk-table tbody {
+        transition: opacity 0.15s;
+      }
+
+      .risk-table-wrap.is-loading tbody {
+        opacity: 0.45;
+      }
+
+      .risk-table-wrap.is-loading::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, transparent, var(--primary-color), transparent) no-repeat;
+        background-size: 50% 100%;
+        animation: risk-loading 1s linear infinite;
+      }
+
+      @keyframes risk-loading {
+        from {
+          background-position: -100% 0;
+        }
+        to {
+          background-position: 200% 0;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .risk-table-wrap.is-loading::before {
+          animation: none;
+          background-size: 100% 100%;
+        }
+      }
+
+      .risk-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+      }
+
+      .risk-table th {
+        background: #f8fcfd;
+        color: var(--primary-dark);
+        font-weight: 600;
+        text-align: left;
+        padding: 12px 14px;
+        white-space: nowrap;
+      }
+
+      .risk-table td {
+        padding: 12px 14px;
+        border-top: 1px solid #eef2f3;
+        vertical-align: top;
+      }
+
+      .risk-table td.risk-nowrap {
+        white-space: nowrap;
+      }
+
+      .risk-badge {
+        display: inline-block;
+        padding: 2px 10px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+
+      .risk-status {
+        padding: 30px 10px;
+        text-align: center;
+        color: var(--light-text);
+      }
+
+      .risk-status:empty {
+        display: none;
+      }
+
+      .risk-pager {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        gap: 15px;
+        margin-top: 15px;
+        font-size: 14px;
+        color: var(--light-text);
+      }
+
+      .risk-pager button {
+        height: 38px;
+        padding: 0 16px;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        background: var(--white);
+        color: var(--primary-color);
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      .risk-pager button:disabled {
+        color: #9aa5a8;
+        cursor: default;
+      }
+
+      @media (max-width: 900px) {
+        .risk-toolbar {
+          grid-template-columns: 1fr 1fr;
+        }
+
+        .risk-levels {
+          grid-template-columns: 1fr;
+        }
+
+        .risk-panel {
+          padding: 20px 15px;
+        }
+      }
+
+      @media (max-width: 560px) {
+        .risk-toolbar {
+          grid-template-columns: 1fr;
+        }
+
+        .risk-pager {
+          justify-content: space-between;
+          flex-wrap: wrap;
+        }
+      }
+
       #hujjatlar {
         padding: 80px 0;
         background-color: #f4f7f6;
@@ -919,6 +1191,7 @@
           <ul class="nav-links">
             <li><a href="#bosh-sahifa" class="active">Asosiy</a></li>
             <li><a href="#statistika">Statistika</a></li>
+            <li><a href="#xavf-tahlili">Xavf tahlili</a></li>
             <li><a href="#hujjatlar">Hujjatlar</a></li>
             <li><a href="#aloqa">Aloqa</a></li>
           </ul>
@@ -1150,6 +1423,90 @@
               </div>
               <div class="stat-number count" data-target="12500">3 700 +</div>
               <div class="stat-label">Berilgan litsenziyalar</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="xavf-tahlili" aria-labelledby="risk-title">
+        <div class="container">
+          <h2 class="section-title" id="risk-title">Xavf tahlili natijalari</h2>
+          <p class="risk-lead">
+            Obyektlarning choraklik xavf tahlili natijalari: xavf darajasi past, o&lsquo;rta va yuqori bo&lsquo;lgan
+            tashkilotlar
+          </p>
+          <div class="risk-panel">
+            <div class="risk-toolbar">
+              <label class="risk-field">
+                Yil
+                <select id="risk-year" autocomplete="off"></select>
+              </label>
+              <label class="risk-field">
+                Chorak
+                <select id="risk-quarter" autocomplete="off">
+                  <option value="1">I chorak</option>
+                  <option value="2">II chorak</option>
+                  <option value="3">III chorak</option>
+                  <option value="4">IV chorak</option>
+                </select>
+              </label>
+              <label class="risk-field">
+                Hudud
+                <select id="risk-region" autocomplete="off">
+                  <option value="">Barcha hududlar</option>
+                </select>
+              </label>
+              <label class="risk-field">
+                Qidiruv
+                <input
+                  type="search"
+                  id="risk-search"
+                  placeholder="Tashkilot nomi, STIR yoki reyestr raqami"
+                  autocomplete="off"
+                />
+              </label>
+            </div>
+
+            <div class="risk-levels">
+              <button type="button" class="risk-level risk-level--low" data-level="LOW" aria-pressed="false">
+                <span class="risk-level-count" data-count="LOW">0</span>
+                <span>Xavfi past</span>
+              </button>
+              <button type="button" class="risk-level risk-level--medium" data-level="MEDIUM" aria-pressed="false">
+                <span class="risk-level-count" data-count="MEDIUM">0</span>
+                <span>Xavfi o&lsquo;rta</span>
+              </button>
+              <button type="button" class="risk-level risk-level--high" data-level="HIGH" aria-pressed="false">
+                <span class="risk-level-count" data-count="HIGH">0</span>
+                <span>Xavfi yuqori</span>
+              </button>
+            </div>
+
+            <div class="risk-table-wrap">
+              <table class="risk-table">
+                <caption class="visually-hidden">
+                  Xavf tahlili natijalari ro&lsquo;yxati
+                </caption>
+                <thead>
+                  <tr>
+                    <th scope="col">&#8470;</th>
+                    <th scope="col">Tashkilot nomi</th>
+                    <th scope="col">STIR</th>
+                    <th scope="col">Reyestr raqami</th>
+                    <th scope="col">Ball</th>
+                    <th scope="col">Xavf darajasi</th>
+                    <th scope="col">O&lsquo;tkazilgan sana</th>
+                  </tr>
+                </thead>
+                <tbody id="risk-rows"></tbody>
+              </table>
+              <p class="risk-status" id="risk-status" role="status" aria-live="polite"></p>
+            </div>
+
+            <div class="risk-pager">
+              <span id="risk-range"></span>
+              <button type="button" id="risk-prev" disabled>&lsaquo; Oldingi</button>
+              <button type="button" id="risk-next" disabled>Keyingi &rsaquo;</button>
             </div>
           </div>
         </div>
@@ -1649,6 +2006,266 @@
           }
         })
       })
+
+      // Quarterly risk analysis results from the public API (no sign-in), loaded once the section nears the viewport
+      ;(() => {
+        const section = document.getElementById('xavf-tahlili')
+        if (!section) return
+
+        const API = '/api/v1/public'
+        const PAGE_SIZE = 10
+        const FIRST_YEAR = 2025
+        const LEVELS = {
+          LOW: { label: 'Xavfi past', className: 'risk-level--low', key: 'lowCount' },
+          MEDIUM: { label: 'Xavfi o‘rta', className: 'risk-level--medium', key: 'mediumCount' },
+          HIGH: { label: 'Xavfi yuqori', className: 'risk-level--high', key: 'highCount' },
+        }
+
+        const byId = (id) => document.getElementById(id)
+        const yearSelect = byId('risk-year')
+        const quarterSelect = byId('risk-quarter')
+        const regionSelect = byId('risk-region')
+        const searchInput = byId('risk-search')
+        const rowsEl = byId('risk-rows')
+        const tableWrap = section.querySelector('.risk-table-wrap')
+        const statusEl = byId('risk-status')
+        const rangeEl = byId('risk-range')
+        const prevBtn = byId('risk-prev')
+        const nextBtn = byId('risk-next')
+        const levelButtons = section.querySelectorAll('.risk-level')
+
+        // the last finished quarter is the newest one with results
+        const now = new Date()
+        const currentYear = now.getFullYear()
+        const currentQuarter = Math.floor(now.getMonth() / 3) + 1
+        const state = {
+          year: currentQuarter === 1 ? currentYear - 1 : currentYear,
+          quarter: currentQuarter === 1 ? 4 : currentQuarter - 1,
+          regionId: '',
+          search: '',
+          level: '',
+          page: 1,
+        }
+        let countsRequest = 0
+        let rowsRequest = 0
+
+        for (let year = currentYear; year >= FIRST_YEAR; year--) {
+          yearSelect.append(new Option(String(year), String(year)))
+        }
+        yearSelect.value = String(state.year)
+
+        const syncQuarters = () => {
+          Array.from(quarterSelect.options).forEach((option) => {
+            option.disabled = state.year === currentYear && Number(option.value) > currentQuarter
+          })
+          if (state.year === currentYear && state.quarter > currentQuarter) state.quarter = currentQuarter
+          quarterSelect.value = String(state.quarter)
+        }
+        syncQuarters()
+
+        // one box for all three: a 9/14-digit number is a TIN/PINFL, anything else with a digit a registry number
+        const filterParams = () => {
+          const params = new URLSearchParams({ year: String(state.year), quarter: String(state.quarter) })
+          if (state.regionId) params.set('regionId', state.regionId)
+          const query = state.search
+          if (/^(\d{9}|\d{14})$/.test(query)) params.set('identity', query)
+          else if (/\d/.test(query)) params.set('registryNumber', query)
+          else if (query.length >= 3) params.set('ownerName', query)
+          return params
+        }
+
+        const getJson = async (path, params) => {
+          const response = await fetch(`${API}${path}${params ? `?${params}` : ''}`, {
+            headers: { Accept: 'application/json' },
+          })
+          if (!response.ok) throw new Error(String(response.status))
+          const body = await response.json()
+          if (!body || body.success === false) throw new Error(body?.message || 'error')
+          return body.data
+        }
+
+        const formatNumber = (value) => Number(value || 0).toLocaleString('ru-RU')
+
+        const formatDate = (value) => {
+          const [year, month, day] = String(value || '')
+            .slice(0, 10)
+            .split('-')
+          return year && month && day ? `${day}.${month}.${year}` : '—'
+        }
+
+        const cell = (text, className) => {
+          const td = document.createElement('td')
+          td.textContent = text
+          if (className) td.className = className
+          return td
+        }
+
+        const loadCounts = async () => {
+          const id = ++countsRequest
+          let data = null
+          try {
+            data = await getJson('/risk-analyses/count', filterParams())
+          } catch {
+            data = null
+          }
+          if (id !== countsRequest) return
+          Object.entries(LEVELS).forEach(([level, { key }]) => {
+            section.querySelector(`[data-count="${level}"]`).textContent = formatNumber(data?.[key])
+          })
+        }
+
+        const loadRows = async () => {
+          const id = ++rowsRequest
+          // the old rows stay, dimmed, until the new ones arrive, so the table keeps its height
+          tableWrap.classList.add('is-loading')
+          tableWrap.setAttribute('aria-busy', 'true')
+          if (!rowsEl.children.length) statusEl.textContent = 'Yuklanmoqda...'
+          prevBtn.disabled = true
+          nextBtn.disabled = true
+
+          const params = filterParams()
+          if (state.level) params.set('level', state.level)
+          params.set('page', String(state.page))
+          params.set('size', String(PAGE_SIZE))
+
+          try {
+            const data = await getJson('/risk-analyses', params)
+            if (id !== rowsRequest) return
+            const items = data?.content ?? []
+            const total = data?.page?.totalElements ?? 0
+            const offset = (state.page - 1) * PAGE_SIZE
+
+            const fragment = document.createDocumentFragment()
+            items.forEach((item, index) => {
+              const level = LEVELS[item.level]
+              const levelCell = document.createElement('td')
+              if (level) {
+                const badge = document.createElement('span')
+                badge.className = `risk-badge ${level.className}`
+                badge.textContent = level.label
+                levelCell.append(badge)
+              } else {
+                levelCell.textContent = '—'
+              }
+              const row = document.createElement('tr')
+              row.append(
+                cell(String(offset + index + 1)),
+                cell(item.legalName || '—'),
+                cell(item.legalTin ? String(item.legalTin) : '—', 'risk-nowrap'),
+                cell(item.registryNumber || '—', 'risk-nowrap'),
+                cell(item.score ?? '—'),
+                levelCell,
+                cell(formatDate(item.date), 'risk-nowrap')
+              )
+              fragment.append(row)
+            })
+            rowsEl.replaceChildren(fragment)
+
+            statusEl.textContent = items.length ? '' : 'Ma’lumot topilmadi'
+            rangeEl.textContent = items.length
+              ? `${formatNumber(offset + 1)}–${formatNumber(offset + items.length)} / ${formatNumber(total)}`
+              : ''
+            prevBtn.disabled = state.page <= 1
+            nextBtn.disabled = offset + items.length >= total
+          } catch {
+            if (id !== rowsRequest) return
+            rowsEl.replaceChildren()
+            rangeEl.textContent = ''
+            statusEl.textContent = 'Ma’lumotlarni yuklab bo‘lmadi. Birozdan so‘ng qayta urinib ko‘ring.'
+          } finally {
+            if (id === rowsRequest) {
+              tableWrap.classList.remove('is-loading')
+              tableWrap.removeAttribute('aria-busy')
+            }
+          }
+        }
+
+        const reload = () => {
+          state.page = 1
+          loadCounts()
+          loadRows()
+        }
+
+        const loadRegions = async () => {
+          try {
+            const regions = await getJson('/regions/select')
+            ;(regions || [])
+              .slice()
+              .sort((a, b) => String(a.name).localeCompare(String(b.name), 'uz'))
+              .forEach((region) => regionSelect.append(new Option(region.name, String(region.id))))
+          } catch {
+            // the filter stays at "all regions"
+          }
+        }
+
+        yearSelect.addEventListener('change', () => {
+          state.year = Number(yearSelect.value)
+          syncQuarters()
+          reload()
+        })
+        quarterSelect.addEventListener('change', () => {
+          state.quarter = Number(quarterSelect.value)
+          reload()
+        })
+        regionSelect.addEventListener('change', () => {
+          state.regionId = regionSelect.value
+          reload()
+        })
+
+        let searchTimer
+        searchInput.addEventListener('input', () => {
+          clearTimeout(searchTimer)
+          searchTimer = setTimeout(() => {
+            const value = searchInput.value.trim()
+            if (value === state.search) return
+            state.search = value
+            reload()
+          }, 400)
+        })
+
+        levelButtons.forEach((button) => {
+          button.addEventListener('click', () => {
+            state.level = state.level === button.dataset.level ? '' : button.dataset.level
+            levelButtons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.level === state.level)))
+            state.page = 1
+            loadRows()
+          })
+        })
+
+        prevBtn.addEventListener('click', () => {
+          if (state.page <= 1) return
+          state.page -= 1
+          loadRows()
+        })
+        nextBtn.addEventListener('click', () => {
+          state.page += 1
+          loadRows()
+        })
+
+        const start = () => {
+          // the browser may have restored old control values after a reload; the state decides
+          yearSelect.value = String(state.year)
+          syncQuarters()
+          regionSelect.value = ''
+          searchInput.value = ''
+          loadRegions()
+          reload()
+        }
+
+        if ('IntersectionObserver' in window) {
+          const observer = new IntersectionObserver(
+            (entries) => {
+              if (!entries.some((entry) => entry.isIntersecting)) return
+              observer.disconnect()
+              start()
+            },
+            { rootMargin: '300px 0px' }
+          )
+          observer.observe(section)
+        } else {
+          start()
+        }
+      })()
     </script>
   </body>
 </html>
