@@ -29,3 +29,38 @@ describe('buildRegisterQuery for the auto crane tab', () => {
     expect(params.childEquipmentId).toBe('')
   })
 })
+
+describe('buildRegisterQuery for tower cranes without a usage-rights file', () => {
+  it('asks for the active ones that have no file', () => {
+    const params = equipmentsParams({ type: 'TOWER_CRANE', status: 'NO_USAGE_RIGHTS' })
+
+    expect(params.hasUsageRightsFile).toBe(false)
+    expect(params.active).toBe(true)
+    expect(params.status).toBe('')
+    expect(params.childEquipmentIds).toBe('3')
+  })
+
+  it('leaves the filter out on every other status', () => {
+    for (const status of ['ACTIVE', 'VALID', 'INVALID', 'EXPIRED', 'NO_DATE', 'CHANGED']) {
+      expect(equipmentsParams({ type: 'TOWER_CRANE', status }).hasUsageRightsFile).toBe('')
+    }
+  })
+
+  it('does not filter a type that has no such tab', () => {
+    const params = equipmentsParams({ type: 'BOILER', status: 'NO_USAGE_RIGHTS' })
+
+    expect(params.hasUsageRightsFile).toBe('')
+    expect(params.active).toBe(true)
+  })
+
+  it('does not filter the archive', () => {
+    const { params } = buildRegisterQuery({
+      tab: RegisterActiveTab.EQUIPMENTS,
+      paramsObject: { type: 'TOWER_CRANE', status: 'NO_USAGE_RIGHTS' },
+      defaultRegionId: 'ALL',
+      isArchive: true,
+    })
+
+    expect(params.hasUsageRightsFile).toBe('')
+  })
+})

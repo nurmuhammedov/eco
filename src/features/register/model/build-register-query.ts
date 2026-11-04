@@ -31,6 +31,17 @@ export const CRANE_TAB_CHILD_ID: Record<string, string | undefined> = {
 export const CRANE_EXCLUDED_CHILD_IDS = Object.values(CRANE_TAB_CHILD_ID).join(',')
 
 /**
+ * Registered equipment without a usage-rights file. The permit carries no expiry
+ * date, so having the file at all is what is checked.
+ */
+export const NO_USAGE_RIGHTS_STATUS = 'NO_USAGE_RIGHTS'
+
+/** The equipment tabs that carry it; the backend filter itself works for any type */
+export const NO_USAGE_RIGHTS_TYPES: string[] = ['TOWER_CRANE']
+
+export const hasNoUsageRightsTab = (type: UrlParamValue) => NO_USAGE_RIGHTS_TYPES.includes(String(type))
+
+/**
  * The child types a pinned crane tab asks for: the one picked in its type filter
  * when that is one of the tab's own, otherwise all of them.
  */
@@ -244,6 +255,8 @@ function buildEquipmentsQuery({
               : true,
       changed: isArchive ? '' : currentStatus === 'CHANGED' ? true : '',
       changeStatus: currentStatus === 'CHANGED' && changeStatus !== 'ALL' ? changeStatus : '',
+      hasUsageRightsFile:
+        !isArchive && currentStatus === NO_USAGE_RIGHTS_STATUS && hasNoUsageRightsTab(type) ? false : '',
     },
   }
 }

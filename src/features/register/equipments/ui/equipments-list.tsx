@@ -22,7 +22,9 @@ import { TruncatedCell } from '@/shared/components/common/truncated-cell'
 import {
   CRANE_EXCLUDED_CHILD_IDS,
   CRANE_TAB_CHILD_ID,
+  NO_USAGE_RIGHTS_STATUS,
   buildRegisterQuery,
+  hasNoUsageRightsTab,
   pinnedChildIds,
 } from '@/features/register/model/build-register-query'
 import { REPORT_KEYS, RESET_KEYS } from '@/features/register/model/report-drill-down'
@@ -138,7 +140,12 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
     if (currentStatus === 'CHANGED') {
       navigate(`/register/change/equipments/${id}`)
     } else {
-      const query = ['ACTIVE', 'VALID', 'INVALID'].includes(currentStatus) ? `?active=true&status=${currentStatus}` : ''
+      // the rows of the no-usage-rights tab can be either valid or not, so no status goes along
+      const query = ['ACTIVE', 'VALID', 'INVALID'].includes(currentStatus)
+        ? `?active=true&status=${currentStatus}`
+        : currentStatus === NO_USAGE_RIGHTS_STATUS
+          ? '?active=true'
+          : ''
       navigate(`equipments/${id}${query}`)
     }
   }
@@ -345,7 +352,7 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
               (Number(row.original.regionId) === user?.regionId || user?.isController)) ||
               user?.role === UserRoles.LEGAL ||
               user?.role === UserRoles.INDIVIDUAL) &&
-            ['ACTIVE', 'EXPIRED', 'NO_DATE'].includes(currentStatus)
+            ['ACTIVE', 'EXPIRED', 'NO_DATE', NO_USAGE_RIGHTS_STATUS].includes(currentStatus)
           }
           row={row}
           showDelete={!isShortView}
@@ -489,6 +496,15 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
                     name: isPinnedCrane ? `Muddati kiritilmagan ${tabNoun}` : 'Muddati kiritilmaganlar',
                     count: currentStatus === 'NO_DATE' ? totalElements : undefined,
                   },
+                  ...(hasNoUsageRightsTab(type)
+                    ? [
+                        {
+                          id: NO_USAGE_RIGHTS_STATUS,
+                          name: `Ruxsatnomasiz ${tabNoun}`,
+                          count: currentStatus === NO_USAGE_RIGHTS_STATUS ? totalElements : undefined,
+                        },
+                      ]
+                    : []),
                   {
                     id: 'CHANGED',
                     name: 'O‘zgartirish so‘rovlari',
