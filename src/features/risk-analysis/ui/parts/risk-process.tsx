@@ -32,14 +32,18 @@ const score = (total?: number | null, level?: RiskAnalysisData['level']) =>
 export const deriveRiskProcess = (data: RiskAnalysisData): ProcessStep[] => {
   const needsWarning = canHaveWarning(data.level)
   const movedOn = !!data.inspectionId
+  // a warning is either the old hand-signed one (warningDate) or the automatic PDF
+  const hasWarning = !!data.warningDate || !!data.warningPath
 
   const warning: ProcessStep = data.warningDate
     ? { title: 'Tavsiyanoma', short: 'Tavsiyanoma', state: 'done', caption: `Yuborilgan: ${day(data.warningDate)}` }
-    : !needsWarning
-      ? { title: 'Tavsiyanoma', short: 'Tavsiyanoma', state: 'skipped', caption: 'Talab qilinmaydi' }
-      : movedOn || data.recheckAt
-        ? { title: 'Tavsiyanoma', short: 'Tavsiyanoma', state: 'skipped', caption: 'Yuborilmagan' }
-        : { title: 'Tavsiyanoma', short: 'Tavsiyanoma', state: 'active', caption: 'Yuborilishi kutilmoqda' }
+    : data.warningPath
+      ? { title: 'Tavsiyanoma', short: 'Tavsiyanoma', state: 'done', caption: 'Kabinetga yuborilgan' }
+      : !needsWarning
+        ? { title: 'Tavsiyanoma', short: 'Tavsiyanoma', state: 'skipped', caption: 'Talab qilinmaydi' }
+        : movedOn || data.recheckAt
+          ? { title: 'Tavsiyanoma', short: 'Tavsiyanoma', state: 'skipped', caption: 'Yuborilmagan' }
+          : { title: 'Tavsiyanoma', short: 'Tavsiyanoma', state: 'active', caption: 'Shakllanishi kutilmoqda' }
 
   const recheck: ProcessStep = data.recheckAt
     ? {
@@ -57,7 +61,7 @@ export const deriveRiskProcess = (data: RiskAnalysisData): ProcessStep[] => {
         }
       : movedOn
         ? { title: 'Qayta o‘tkazilgan xavf tahlili', short: 'Qayta tahlil', state: 'skipped', caption: 'O‘tkazilmagan' }
-        : data.warningDate
+        : hasWarning
           ? { title: 'Qayta o‘tkazilgan xavf tahlili', short: 'Qayta tahlil', state: 'active', caption: 'Kutilmoqda' }
           : {
               title: 'Qayta o‘tkazilgan xavf tahlili',

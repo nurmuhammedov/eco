@@ -90,7 +90,7 @@ const RiskAnalysisWidget = ({ periodType }: RiskAnalysisWidgetProps) => {
       inspectorId,
       periodId,
       status,
-      isWarningSent,
+      // isWarningSent, - its column is hidden, so an old link must not filter unseen
     },
   } = useCustomSearchParams()
 
@@ -128,7 +128,7 @@ const RiskAnalysisWidget = ({ periodType }: RiskAnalysisWidgetProps) => {
     identity,
     inspectorId,
     periodId,
-    isWarningSent,
+    // isWarningSent,
   }
 
   const { data, isLoading } = usePaginatedData<RiskAnalysisItem>(

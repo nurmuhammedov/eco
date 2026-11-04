@@ -29,6 +29,15 @@ describe('deriveRiskProcess', () => {
     expect(states(analysis({}))).toEqual(['done', 'active', 'pending', 'pending'])
   })
 
+  it('takes the automatic warning PDF for a sent warning', () => {
+    expect(states(analysis({ warningPath: '/files/risk-analyses/warnings/1.pdf' }))).toEqual([
+      'done',
+      'done',
+      'active',
+      'pending',
+    ])
+  })
+
   it('waits for the recheck once the warning is out', () => {
     expect(states(analysis({ warningDate: '2026-07-10' }))).toEqual(['done', 'done', 'active', 'pending'])
   })

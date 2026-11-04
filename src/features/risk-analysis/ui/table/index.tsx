@@ -7,7 +7,8 @@ import { FC } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
-import { RiskLevelBadge, WARNING_FILTER_OPTIONS, WarningStateBadge } from '../parts/risk-level'
+import { RiskLevelBadge } from '../parts/risk-level'
+// import { WARNING_FILTER_OPTIONS, WarningStateBadge } from '../parts/risk-level'
 
 interface Props {
   data?: ResponseData<RiskAnalysisItem>
@@ -110,15 +111,17 @@ const List: FC<Props> = ({ data, isLoading = false }) => {
       className: '!w-[1%] whitespace-nowrap',
       cell: ({ row }) => <RiskLevelBadge level={row.original.level} />,
     },
-    {
-      header: 'Tavsiyanoma',
-      accessorKey: 'warningDate',
-      className: '!w-[1%] whitespace-nowrap',
-      cell: ({ row }) => <WarningStateBadge level={row.original.level} warningDate={row.original.warningDate} />,
-      filterKey: 'isWarningSent',
-      filterType: 'select' as const,
-      filterOptions: WARNING_FILTER_OPTIONS,
-    },
+    // Hidden while warnings are automatic: warningDate (and the isWarningSent filter
+    // built on it) is filled only by the staff signing flow, which is switched off.
+    // {
+    //   header: 'Tavsiyanoma',
+    //   accessorKey: 'warningDate',
+    //   className: '!w-[1%] whitespace-nowrap',
+    //   cell: ({ row }) => <WarningStateBadge level={row.original.level} warningDate={row.original.warningDate} />,
+    //   filterKey: 'isWarningSent',
+    //   filterType: 'select' as const,
+    //   filterOptions: WARNING_FILTER_OPTIONS,
+    // },
     {
       id: 'actions',
       cell: ({ row }) => <DataTableRowActions showView onView={() => handleView(row.original)} row={row} />,

@@ -3,10 +3,12 @@ import { useNavigate } from 'react-router-dom'
 import { formatDate } from 'date-fns'
 import { Bell, CheckCheck, FileText, Inbox, Loader2 } from 'lucide-react'
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui/popover'
+import { apiConfig } from '@/shared/api/constants'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { cn } from '@/shared/lib/utils'
 import {
   NotificationItem,
+  resolveNotificationTarget,
   useNotificationActions,
   useNotificationList,
   useUnreadNotificationCount,
@@ -17,14 +19,7 @@ const GroupLabel = ({ children }: { children: React.ReactNode }) => (
   <p className="bg-slate-50 px-4 py-1.5 text-[11px] font-semibold tracking-wide text-slate-500 uppercase">{children}</p>
 )
 
-const decodeStoredUrl = (url: string) =>
-  url
-    .replace(/&amp;/gi, '&')
-    .replace(/&#38;/g, '&')
-    .replace(/&quot;/gi, '"')
-    .replace(/&#39;/g, "'")
-    .replace(/&lt;/gi, '<')
-    .replace(/&gt;/gi, '>')
+const targetOf = (item: NotificationItem) => resolveNotificationTarget(item.url, apiConfig.baseURL ?? '')
 
 export const NotificationsMenu = () => {
   const { user } = useAuth()
@@ -44,15 +39,13 @@ export const NotificationsMenu = () => {
   const handleSelect = (item: NotificationItem) => {
     if (!item.isRead) markAsRead.mutate(item.id)
     setOpen(false)
-    if (!item.url) return
 
-    const url = decodeStoredUrl(item.url)
+    const target = targetOf(item)
+    if (!target) return
 
-    if (/^https?:\/\//i.test(url)) {
-      window.open(url, '_blank', 'noopener,noreferrer')
-    } else {
-      navigate(url.startsWith('/') ? url : `/${url}`)
-    }
+    // opened within the click itself, so the browser does not block the new tab
+    if (target.kind === 'route') navigate(target.href)
+    else window.open(target.href, '_blank', 'noopener,noreferrer')
   }
 
   const handleInquirySelect = (id: string) => {
@@ -131,12 +124,18 @@ export const NotificationsMenu = () => {
                         <span className="flex min-w-0 items-center gap-2 font-medium text-slate-800">
                           {!item.isRead && <span className="size-2 shrink-0 rounded-full bg-red-500" />}
                           <span className="truncate">{item.title}</span>
+                          {targetOf(item)?.kind === 'file' && (
+                            <span className="inline-flex shrink-0 items-center gap-0.5 rounded bg-red-50 px-1.5 py-0.5 text-[10px] font-semibold text-red-600">
+                              <FileText className="size-3" />
+                              PDF
+                            </span>
+                          )}
                         </span>
                         <span className="shrink-0 text-xs whitespace-nowrap text-slate-400">
                           {item.createdAt ? formatDate(new Date(item.createdAt), 'dd.MM.yyyy HH:mm') : ''}
                         </span>
                       </div>
-                      <span className="line-clamp-2 text-sm text-slate-600">{item.message}</span>
+                      <span className="line-clamp-3 text-sm text-slate-600">{item.message}</span>
                     </button>
                   ))}
                 </>
