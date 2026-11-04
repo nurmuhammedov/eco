@@ -28,10 +28,12 @@ const Applications = lazy(() => import('@/pages/applications/ui/application-page
 const ArchivePage = lazy(() => import('@/pages/archive'))
 const AttestationExamPage = lazy(() => import('@/pages/attestation/exam-page'))
 const AttestationApplicationDetailPage = lazy(() => import('@/pages/attestation/application-detail-page'))
+const AttestationCommissionPage = lazy(() => import('@/pages/attestation/commission-page'))
 const AttestationExamsPage = lazy(() => import('@/pages/attestation/exams-page'))
 const AttestationMyApplicationsPage = lazy(() => import('@/pages/attestation/my-applications-page'))
 const AttestationQueuePage = lazy(() => import('@/pages/attestation/queue-page'))
 const AttestationQuestionsPage = lazy(() => import('@/pages/attestation/questions-page'))
+const AttestationRequestsPage = lazy(() => import('@/pages/attestation/requests-page'))
 const AttractionTypePage = lazy(() => import('@/pages/admin/attraction-type/page'))
 const CadastreAdd = lazy(() => import('@/features/cadastre-passport/ui/cadastre-add'))
 const CadastreDetail = lazy(() => import('@/features/cadastre-passport/ui/cadastre-detail'))
@@ -464,8 +466,20 @@ export const APP_ROUTES: AppRouteDefinition[] = [
   },
   {
     id: 'ATTESTATION',
+    path: 'attestation/requests',
+    element: withSuspense(AttestationRequestsPage),
+    roles: [UserRoles.HEAD, UserRoles.REGIONAL],
+  },
+  {
+    id: 'ATTESTATION',
     path: 'attestation/queue',
     element: withSuspense(AttestationQueuePage),
+    roles: [UserRoles.HEAD, UserRoles.REGIONAL],
+  },
+  {
+    id: 'ATTESTATION',
+    path: 'attestation/commission',
+    element: withSuspense(AttestationCommissionPage),
     roles: [UserRoles.HEAD, UserRoles.REGIONAL],
   },
   {

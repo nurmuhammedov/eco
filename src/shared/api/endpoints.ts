@@ -105,6 +105,10 @@ export const API_ENDPOINTS: Record<string, string> = {
   PROFILES_INFO: '/profiles/info',
 }
 
+/** PDF documents the services API renders for a request and for an exam */
+type RequestDocument = 'decision' | 'decision-letter'
+type CalendarDocument = 'notice' | 'protocol' | 'protocol-letter'
+
 export const SERVICES_API_ENDPOINTS = {
   // Questions (Savollar)
   QUESTIONS: '/attestation/questions',
@@ -117,12 +121,27 @@ export const SERVICES_API_ENDPOINTS = {
   CALENDAR_APPLICATION: (id: string, applicationId: string) =>
     `/attestation/calendars/${id}/applications/${applicationId}`,
   CALENDAR_VIDEO: (id: string) => `/attestation/calendars/${id}/video`,
-  // Applications (Arizalar)
+  CALENDAR_DOCUMENT: (id: string, type: CalendarDocument) => `/attestation/calendars/${id}/documents/${type}`,
+  MY_CALENDAR_DOCUMENT: (id: string, type: CalendarDocument) => `/attestation/my-calendars/${id}/documents/${type}`,
+  // Requests (Arizalar): one organization, one direction, one employee type
+  REQUESTS: '/attestation/requests',
+  MY_REQUESTS: '/attestation/my-requests',
+  REQUEST_BY_ID: (id: string) => `/attestation/requests/${id}`,
+  REQUEST_ACCEPT: (id: string) => `/attestation/requests/${id}/accept`,
+  REQUEST_REJECT: (id: string) => `/attestation/requests/${id}/reject`,
+  REQUEST_DOCUMENT: (id: string, type: RequestDocument) => `/attestation/requests/${id}/documents/${type}`,
+  MY_REQUEST_DOCUMENT: (id: string, type: RequestDocument) => `/attestation/my-requests/${id}/documents/${type}`,
+  // Commission (Attestatsiya komissiyasi)
+  COMMISSION: '/attestation/commission',
+  COMMISSION_MEMBERS: '/attestation/commission/members',
+  COMMISSION_MEMBER: (id: string) => `/attestation/commission/members/${id}`,
+  // Applications (bitta xodim)
   APPLICATIONS: '/attestation/applications',
-  MY_APPLICATIONS: '/attestation/my-applications',
   EMPLOYEES: '/attestation/employees',
   APPLICATION_BY_ID: (id: string) => `/attestation/applications/${id}`,
   APPLICATION_RESULT: (id: string) => `/attestation/applications/${id}/result`,
+  APPLICATION_CERTIFICATE: (id: string) => `/attestation/applications/${id}/certificate`,
+  MY_APPLICATION_CERTIFICATE: (id: string) => `/attestation/my-applications/${id}/certificate`,
   // Exams (Imtihon savollari)
   EXAM_GENERATE: (applicationId: string) => `/attestation/exams/generate/${applicationId}`,
   EXAM_BY_APPLICATION: (applicationId: string) => `/attestation/exams/${applicationId}`,

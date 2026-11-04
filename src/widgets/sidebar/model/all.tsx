@@ -155,6 +155,11 @@ export default [
     items: [
       {
         id: 'ATTESTATION',
+        title: 'Kelgan arizalar',
+        url: '/attestation/requests',
+      },
+      {
+        id: 'ATTESTATION',
         title: 'Arizalar navbati',
         url: '/attestation/queue',
       },
@@ -167,6 +172,11 @@ export default [
         id: 'ATTESTATION',
         title: 'Imtihon savollari',
         url: '/attestation/questions',
+      },
+      {
+        id: 'ATTESTATION',
+        title: 'Attestatsiya komissiyasi',
+        url: '/attestation/commission',
       },
     ],
   },

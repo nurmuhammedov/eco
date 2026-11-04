@@ -93,6 +93,8 @@ export function Header() {
       { path: '/attestation/exams/', title: 'Imtihon ishtirokchilari' },
       { path: '/attestation/exams', title: 'Imtihonlar' },
       { path: '/attestation/queue', title: 'Arizalar navbati' },
+      { path: '/attestation/requests', title: 'Kelgan arizalar' },
+      { path: '/attestation/commission', title: 'Attestatsiya komissiyasi' },
       { path: '/attestation/questions', title: 'Imtihon savollari' },
       { path: '/attestation/applications', title: 'Attestatsiya arizalari' },
       { path: '/attestations', title: 'Attestatsiya' },

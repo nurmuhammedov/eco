@@ -1,5 +1,5 @@
-import { MyApplicationsList } from '@/features/attestation/applications/ui/my-applications-list'
+import { MyRequestsList } from '@/features/attestation/requests/ui/my-requests-list'
 
 export default function AttestationMyApplicationsPage() {
-  return <MyApplicationsList />
+  return <MyRequestsList />
 }

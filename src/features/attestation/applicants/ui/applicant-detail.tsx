@@ -9,6 +9,8 @@ import { NoData } from '@/shared/components/common/no-data'
 import GoBack from '@/shared/components/common/go-back'
 import { APPLICATION_STATUS, DIRECTION, EMPLOYEE_TYPE } from '@/entities/attestation/model/labels'
 import { formatExamTime } from '@/entities/attestation/lib/exam-time'
+import { SERVICES_API_ENDPOINTS } from '@/shared/api/endpoints'
+import { DocumentButton } from '@/entities/attestation/ui/document-button'
 import { useApplication, useExamQuestions, useGenerateExam, useSetResult } from '../model/use-applicants'
 
 const InfoItem = ({ label, value }: { label: string; value: React.ReactNode }) => (
@@ -84,6 +86,26 @@ export const ApplicantDetail = () => {
                 <InfoItem label="Baholagan xodim" value={application.examined_by_name} />
               </>
             )}
+
+            {application.certificate_number && (
+              <InfoItem
+                label="Attestatsiya guvohnomasi"
+                value={
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span>
+                      {application.certificate_number}-son
+                      {application.certificate_expires_at &&
+                        `, ${format(parseISO(application.certificate_expires_at), 'dd.MM.yyyy')} gacha`}
+                    </span>
+                    <DocumentButton
+                      url={SERVICES_API_ENDPOINTS.APPLICATION_CERTIFICATE(application.id)}
+                      fileName={`guvohnoma-${application.certificate_number}.pdf`}
+                      label="Guvohnoma"
+                    />
+                  </div>
+                }
+              />
+            )}
           </div>
         </CardContent>
       </Card>
@@ -112,9 +134,13 @@ export const ApplicantDetail = () => {
 
           {!application.has_exam && (
             <p className="text-muted-foreground text-sm">
-              {application.status === 'NEW'
-                ? 'Ariza hali imtihonga kiritilmagan. Savollar imtihon belgilangach generatsiya qilinadi.'
-                : 'Savollar hali generatsiya qilinmagan. Suhbat boshlanganda savollar tasodifiy tanlanadi.'}
+              {application.status === 'PENDING'
+                ? 'Ariza komissiya qarorini kutmoqda.'
+                : application.status === 'REJECTED'
+                  ? 'Ariza rad etilgan.'
+                  : application.status === 'NEW'
+                    ? 'Ariza hali imtihonga kiritilmagan. Savollar imtihon belgilangach generatsiya qilinadi.'
+                    : 'Savollar hali generatsiya qilinmagan. Suhbat boshlanganda 10 ta savol tasodifiy tanlanadi.'}
             </p>
           )}
 

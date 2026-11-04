@@ -41,6 +41,11 @@ export const ExamsList = () => {
       cell: ({ row }) => <span>{formatExamHours(row.original)}</span>,
     },
     {
+      header: 'Joyi',
+      accessorKey: 'location',
+      cell: ({ row }) => <span className="text-sm">{row.original.location || '-'}</span>,
+    },
+    {
       header: 'Xodim turi',
       accessorKey: 'employee_type',
       filterKey: 'employee_type',

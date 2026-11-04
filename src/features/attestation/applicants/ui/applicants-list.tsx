@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { Eye, Plus, Undo2, Video } from 'lucide-react'
+import { Award, Eye, Mail, Plus, Send, Undo2, Video } from 'lucide-react'
 import { DataTable, ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
 import { Button } from '@/shared/components/ui/button'
 import { Badge } from '@/shared/components/ui/badge'
@@ -11,6 +11,7 @@ import { SERVICES_API_ENDPOINTS } from '@/shared/api/endpoints'
 import { APPLICATION_STATUS, CALENDAR_STATUS, DIRECTION, EMPLOYEE_TYPE } from '@/entities/attestation/model/labels'
 import type { AttestationApplication } from '@/entities/attestation/model/types'
 import { formatExamTime } from '@/entities/attestation/lib/exam-time'
+import { DocumentButton } from '@/entities/attestation/ui/document-button'
 import { useDetachApplication } from '@/features/attestation/exams/model/use-exams'
 import { useCalendar } from '../model/use-applicants'
 import { AddApplicationsDialog } from './add-applications-dialog'
@@ -93,6 +94,37 @@ export const ApplicantsList = () => {
             <Eye className="h-4 w-4" />
           </Button>
 
+          {/* Letters go to the employee's organization; the same one serves all its employees here */}
+          <DocumentButton
+            url={SERVICES_API_ENDPOINTS.CALENDAR_DOCUMENT(calendarId, 'notice')}
+            params={{ organization_tin: row.original.organization_tin }}
+            fileName={`xabarnoma-${row.original.organization_tin}.pdf`}
+            label="Tashkilotga o‘tkazilishi haqida xat"
+            icon={<Mail className="h-4 w-4" />}
+            iconOnly
+          />
+
+          {calendar?.protocol_number && (
+            <DocumentButton
+              url={SERVICES_API_ENDPOINTS.CALENDAR_DOCUMENT(calendarId, 'protocol-letter')}
+              params={{ organization_tin: row.original.organization_tin }}
+              fileName={`bayonnoma-xati-${calendar.protocol_number}-${row.original.organization_tin}.pdf`}
+              label="Tashkilotga bayonnoma yuborish xati"
+              icon={<Send className="h-4 w-4" />}
+              iconOnly
+            />
+          )}
+
+          {row.original.certificate_number && (
+            <DocumentButton
+              url={SERVICES_API_ENDPOINTS.APPLICATION_CERTIFICATE(row.original.id)}
+              fileName={`guvohnoma-${row.original.certificate_number}.pdf`}
+              label="Attestatsiya guvohnomasi"
+              icon={<Award className="h-4 w-4" />}
+              iconOnly
+            />
+          )}
+
           {/* Also how a no-show is taken out, so the exam can still close */}
           {row.original.status === 'ASSIGNED' && (
             <DeleteConfirmationDialog
@@ -130,6 +162,14 @@ export const ApplicantsList = () => {
 
         {calendar && (
           <div className="ml-auto flex flex-wrap items-start gap-2">
+            {calendar.protocol_number && (
+              <DocumentButton
+                url={SERVICES_API_ENDPOINTS.CALENDAR_DOCUMENT(calendar.id, 'protocol')}
+                fileName={`bayonnoma-${calendar.protocol_number}.pdf`}
+                label={`${calendar.protocol_number}-son bayonnoma`}
+              />
+            )}
+
             {calendar.zoom_start_url && (
               <Button variant="outline" asChild>
                 <a href={calendar.zoom_start_url} target="_blank" rel="noreferrer">
