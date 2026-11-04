@@ -41,7 +41,9 @@ const RiskAnalysisInfoById = () => {
   const { data, isLoading } = useDetail<RiskAnalysisData>('/risk-analyses', id)
 
   const tinNumber = paramText(tin) || (data?.identity ? String(data.identity) : '')
-  const title = `Tashkilot: ${paramText(name)} ${tinNumber ? `(${tinNumber})` : ''}`
+  // a 14-digit PINFL is a person owning a lift or attraction; the organisation lookup takes a TIN only
+  const isPerson = tinNumber.length === 14
+  const title = `${isPerson ? 'Fuqaro' : 'Tashkilot'}: ${paramText(name)} ${tinNumber ? `(${tinNumber})` : ''}`
 
   if (isLoading) return <DetailPageSkeleton sections={3} />
 
@@ -73,9 +75,11 @@ const RiskAnalysisInfoById = () => {
 
       {/* The organisation is looked up on demand; the analyses are what the page is opened for */}
       <DetailCardAccordion defaultValue={['first_analysis', 'second_analysis']}>
-        <DetailCardAccordion.Item value="org_info" title="Tashkilot to‘g‘risida ma’lumot">
-          <LegalApplicantInfo tinNumber={tinNumber} />
-        </DetailCardAccordion.Item>
+        {!isPerson && (
+          <DetailCardAccordion.Item value="org_info" title="Tashkilot to‘g‘risida ma’lumot">
+            <LegalApplicantInfo tinNumber={tinNumber} />
+          </DetailCardAccordion.Item>
+        )}
 
         <DetailCardAccordion.Item
           value="first_analysis"

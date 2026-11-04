@@ -1293,9 +1293,11 @@ export const APP_ROUTES: AppRouteDefinition[] = [
     id: 'RISK_ANALYSIS',
     path: 'risk-analysis/objects/:id',
     element: withSuspense(RiskAnalysisDetailInfoPage),
+    // INDIVIDUAL: an owner of a lift or attraction gets here from the high-risk notification
     roles: [
       UserRoles.CHAIRMAN,
       UserRoles.HEAD,
+      UserRoles.INDIVIDUAL,
       UserRoles.INSPECTOR,
       UserRoles.LEGAL,
       UserRoles.MANAGER,

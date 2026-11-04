@@ -26,6 +26,22 @@ describe('resolveNotificationTarget', () => {
     })
   })
 
+  it('keeps the high-risk link as the backend encoded it', () => {
+    const url =
+      '/risk-analysis/objects/49662bc3-a612-4c31-8e58-57de9f7e8f07?tin=308639954&name=%22MASTER+GAS-SM%22+MCHJ'
+    const target = resolveNotificationTarget(url, API)
+
+    expect(target).toEqual({ kind: 'route', href: url })
+    const query = new URLSearchParams(target!.href.split('?')[1])
+    expect(query.get('tin')).toBe('308639954')
+    expect(query.get('name')).toBe('"MASTER GAS-SM" MCHJ')
+  })
+
+  it('reads a Cyrillic name the backend URL-encoded', () => {
+    const target = resolveNotificationTarget('/risk-analysis/objects/1?tin=1&name=%D0%9E%D0%9E%D0%9E+%22%D0%90%22', API)
+    expect(new URLSearchParams(target!.href.split('?')[1]).get('name')).toBe('ООО "А"')
+  })
+
   it('does not take a route that merely mentions files for a file', () => {
     expect(resolveNotificationTarget('/register/files/1', API)?.kind).toBe('route')
   })
