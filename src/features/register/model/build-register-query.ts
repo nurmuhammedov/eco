@@ -37,7 +37,7 @@ export const CRANE_EXCLUDED_CHILD_IDS = Object.values(CRANE_TAB_CHILD_ID).join('
 export const NO_USAGE_RIGHTS_STATUS = 'NO_USAGE_RIGHTS'
 
 /** The equipment tabs that carry it; the backend filter itself works for any type */
-export const NO_USAGE_RIGHTS_TYPES: string[] = ['TOWER_CRANE']
+export const NO_USAGE_RIGHTS_TYPES: string[] = ['CRANE', 'AUTO_CRANE', 'TOWER_CRANE']
 
 export const hasNoUsageRightsTab = (type: UrlParamValue) => NO_USAGE_RIGHTS_TYPES.includes(String(type))
 

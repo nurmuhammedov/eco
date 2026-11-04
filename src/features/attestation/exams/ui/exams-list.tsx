@@ -1,8 +1,10 @@
+import { ZoomStartLink } from '@/entities/attestation/ui/zoom-start-link'
+import { cn } from '@/shared/lib/utils'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { CalendarPlus, Edit2, Users, Video } from 'lucide-react'
 import { DataTable, ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
-import { Button } from '@/shared/components/ui/button'
+import { Button, buttonVariants } from '@/shared/components/ui/button'
 import { Badge } from '@/shared/components/ui/badge'
 import DeleteConfirmationDialog from '@/shared/components/common/delete-confirm-dialog'
 import { useServicesPaginatedData, useCustomSearchParams } from '@/shared/hooks/api'
@@ -106,11 +108,13 @@ export const ExamsList = () => {
             </Button>
 
             {calendar.zoom_start_url && (
-              <Button variant="ghost" size="icon" className="h-8 w-8 text-blue-500" title="Zoomda boshlash" asChild>
-                <a href={calendar.zoom_start_url} target="_blank" rel="noreferrer">
-                  <Video className="h-4 w-4" />
-                </a>
-              </Button>
+              <ZoomStartLink
+                exam={calendar}
+                title="Zoomda boshlash"
+                className={cn(buttonVariants({ variant: 'ghost', size: 'icon' }), 'h-8 w-8 text-blue-500')}
+              >
+                <Video className="h-4 w-4" />
+              </ZoomStartLink>
             )}
 
             {isEditable && (

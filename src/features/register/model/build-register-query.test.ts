@@ -40,6 +40,16 @@ describe('buildRegisterQuery for tower cranes without a usage-rights file', () =
     expect(params.childEquipmentIds).toBe('3')
   })
 
+  it('asks the same of plain cranes and autocranes, each with its own child types', () => {
+    const cranes = equipmentsParams({ type: 'CRANE', status: 'NO_USAGE_RIGHTS' })
+    expect(cranes.hasUsageRightsFile).toBe(false)
+    expect(cranes.active).toBe(true)
+
+    const autoCranes = equipmentsParams({ type: 'AUTO_CRANE', status: 'NO_USAGE_RIGHTS' })
+    expect(autoCranes.hasUsageRightsFile).toBe(false)
+    expect(autoCranes.childEquipmentIds).toBe('31,35')
+  })
+
   it('leaves the filter out on every other status', () => {
     for (const status of ['ACTIVE', 'VALID', 'INVALID', 'EXPIRED', 'NO_DATE', 'CHANGED']) {
       expect(equipmentsParams({ type: 'TOWER_CRANE', status }).hasUsageRightsFile).toBe('')

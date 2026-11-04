@@ -500,7 +500,7 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
                     ? [
                         {
                           id: NO_USAGE_RIGHTS_STATUS,
-                          name: `Ruxsatnomasiz ${tabNoun}`,
+                          name: `Ruxsatnomasiz ${type === 'CRANE' ? 'kranlar' : tabNoun}`,
                           count: currentStatus === NO_USAGE_RIGHTS_STATUS ? totalElements : undefined,
                         },
                       ]

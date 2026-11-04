@@ -1,8 +1,9 @@
+import { ZoomStartLink } from '@/entities/attestation/ui/zoom-start-link'
 import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Award, Eye, Mail, Plus, Send, Undo2, Video } from 'lucide-react'
 import { DataTable, ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
-import { Button } from '@/shared/components/ui/button'
+import { Button, buttonVariants } from '@/shared/components/ui/button'
 import { Badge } from '@/shared/components/ui/badge'
 import GoBack from '@/shared/components/common/go-back'
 import DeleteConfirmationDialog from '@/shared/components/common/delete-confirm-dialog'
@@ -171,12 +172,10 @@ export const ApplicantsList = () => {
             )}
 
             {calendar.zoom_start_url && (
-              <Button variant="outline" asChild>
-                <a href={calendar.zoom_start_url} target="_blank" rel="noreferrer">
-                  <Video className="mr-2 h-4 w-4 text-blue-500" />
-                  Zoomda boshlash
-                </a>
-              </Button>
+              <ZoomStartLink exam={calendar} className={buttonVariants({ variant: 'outline' })}>
+                <Video className="mr-2 h-4 w-4 text-blue-500" />
+                Zoomda boshlash
+              </ZoomStartLink>
             )}
 
             {calendar.status === 'OPEN' && (

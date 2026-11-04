@@ -5,7 +5,11 @@ type BadgeVariant = 'default' | 'info' | 'warning' | 'success' | 'error' | 'seco
 // Pill classes follow the application status badges
 export const EMPLOYEE_TYPE: Record<EmployeeType, { label: string; short: string; className: string }> = {
   LEADER: { label: 'Rahbar xodimlar', short: 'Rahbarlar', className: 'border-orange-200 bg-orange-50 text-orange-700' },
-  ENGINEER: { label: 'Ishchi xodimlar', short: 'Ishchilar', className: 'border-blue-200 bg-blue-50 text-blue-700' },
+  ENGINEER: {
+    label: 'Muhandis-texnik xodimlar',
+    short: 'Muhandis-texnik',
+    className: 'border-blue-200 bg-blue-50 text-blue-700',
+  },
 }
 
 export const EMPLOYEE_TYPE_OPTIONS = (Object.keys(EMPLOYEE_TYPE) as EmployeeType[]).map((value) => ({
