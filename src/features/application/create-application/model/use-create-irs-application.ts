@@ -7,7 +7,7 @@ import { useAuth } from '@/shared/hooks/use-auth'
 import { type FormDraft, zodFormResolver } from '@/shared/lib/zod-form-resolver'
 import { useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
-import { fillFromProfile, requireProfileFiles } from './radiation-profile-files'
+import { fillFromProfile, hasIncompleteIrsFiles, requireProfileFiles } from './radiation-profile-files'
 
 const PROFILE_FILE_FIELDS = [
   'file17Path',
@@ -128,15 +128,6 @@ export const useCreateIrsApplication = () => {
     irsStatusOptions,
     isProfileLoading,
     profileData,
-    hasIncompleteOrgFiles:
-      !!profileData &&
-      !!profileData.files &&
-      (!profileData.files.file17Path?.path ||
-        !profileData.files.file2Path?.path ||
-        !profileData.files.file2Path?.expiryDate ||
-        !profileData.files.file5Path?.path ||
-        !profileData.files.file5Path?.expiryDate ||
-        !profileData.files.file15Path?.path ||
-        !profileData.files.file15Path?.expiryDate),
+    hasIncompleteOrgFiles: hasIncompleteIrsFiles(profileData?.files),
   }
 }

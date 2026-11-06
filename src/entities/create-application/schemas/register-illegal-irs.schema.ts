@@ -55,12 +55,6 @@ export const RegisterIllegalIrsBaseSchema = z.object({
   isValid: z.boolean(),
   usageType: z.nativeEnum(IrsUsageType),
   storageLocation: z.string().trim().min(1),
-  file1Path: z.string().trim().optional().nullable(),
-  file1ExpiryDate: z
-    .union([z.date(), z.string()])
-    .optional()
-    .nullable()
-    .transform((val) => (val ? format(new Date(val), 'yyyy-MM-dd') : null)),
   file2Path: z.string().trim().optional().nullable(),
   file2ExpiryDate: z
     .union([z.date(), z.string()])
@@ -79,15 +73,23 @@ export const RegisterIllegalIrsBaseSchema = z.object({
     .optional()
     .nullable()
     .transform((val) => (val ? format(new Date(val), 'yyyy-MM-dd') : null)),
+  // The same organisation files as the legal entity's own application (IrsAppealDto)
+  file17Path: z.string().trim().optional().nullable(),
+  file18Path: z.string().trim().optional().nullable(),
+  file18ExpiryDate: z
+    .union([z.date(), z.string()])
+    .optional()
+    .nullable()
+    .transform((val) => (val ? format(new Date(val), 'yyyy-MM-dd') : null)),
   regionId: z.string().trim().min(1),
   districtId: z.string().trim().min(1),
   address: z.string().trim().min(1),
 })
 
 export const RegisterIllegalIrsSchema = RegisterIllegalIrsBaseSchema.superRefine(requireCitizenBirthDate)
-  .superRefine((data, ctx) => checkExpiryDate(data, ctx, 'file1Path', 'file1ExpiryDate'))
   .superRefine((data, ctx) => checkExpiryDate(data, ctx, 'file2Path', 'file2ExpiryDate'))
   .superRefine((data, ctx) => checkExpiryDate(data, ctx, 'file5Path', 'file5ExpiryDate'))
   .superRefine((data, ctx) => checkExpiryDate(data, ctx, 'file15Path', 'file15ExpiryDate'))
+  .superRefine((data, ctx) => checkExpiryDate(data, ctx, 'file18Path', 'file18ExpiryDate'))
 
 export type RegisterIllegalIrsDTO = z.infer<typeof RegisterIllegalIrsSchema>

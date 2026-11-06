@@ -21,13 +21,18 @@ import { useRadiationProfileCheck } from '@/shared/api/radiation-profile/use-rad
 import { type OwnerData, useOwnerLookup } from './use-owner-lookup'
 import type { IrsDetail } from '@/entities/registry'
 import { asUpdatePayload, KEPT_OWNER_BIRTH_DATE, latinOrEmpty, withoutBlanks } from './edit-values'
-import { fillFromProfile, hasIncompleteFiles, requireProfileFiles, withProfileFiles } from './radiation-profile-files'
+import {
+  fillFromProfile,
+  hasIncompleteIrsFiles,
+  requireProfileFiles,
+  withProfileFiles,
+} from './radiation-profile-files'
 
 type IrsDraft = FormDraft<typeof RegisterIllegalIrsSchema>
 
+/** The legal entity form asks for the same files (use-create-irs-application) */
 const PROFILE_FILE_FIELDS = [
-  'file1Path',
-  'file1ExpiryDate',
+  'file17Path',
   'file2Path',
   'file2ExpiryDate',
   'file5Path',
@@ -61,7 +66,7 @@ export const useRegisterIllegalIrs = (
   )
 
   const isDataNull = !profileData
-  const hasIncompleteOrgFiles = !isUpdate && hasIncompleteFiles(profileData?.files)
+  const hasIncompleteOrgFiles = !isUpdate && hasIncompleteIrsFiles(profileData?.files)
 
   const formSchema = isUpdate
     ? RegisterIllegalIrsBaseSchema.extend({
@@ -106,14 +111,15 @@ export const useRegisterIllegalIrs = (
       isValid: true,
       usageType: undefined,
       storageLocation: '',
-      file1Path: undefined,
-      file1ExpiryDate: undefined,
       file2Path: undefined,
       file2ExpiryDate: undefined,
       file5Path: undefined,
       file5ExpiryDate: undefined,
       file15Path: undefined,
       file15ExpiryDate: undefined,
+      file17Path: undefined,
+      file18Path: undefined,
+      file18ExpiryDate: undefined,
       regionId: '',
       districtId: '',
       address: '',
@@ -159,14 +165,15 @@ export const useRegisterIllegalIrs = (
         storageLocation: latinOrEmpty(detail.storageLocation || ''),
         regionId: detail.regionId ? String(detail.regionId) : '',
         address: latinOrEmpty(detail.address || ''),
-        file1Path: detail.files?.file1Path?.path,
-        file1ExpiryDate: parseDate(detail.files?.file1Path?.expiryDate),
         file2Path: detail.files?.file2Path?.path,
         file2ExpiryDate: parseDate(detail.files?.file2Path?.expiryDate),
         file5Path: detail.files?.file5Path?.path,
         file5ExpiryDate: parseDate(detail.files?.file5Path?.expiryDate),
         file15Path: detail.files?.file15Path?.path,
         file15ExpiryDate: parseDate(detail.files?.file15Path?.expiryDate),
+        file17Path: detail.files?.file17Path?.path,
+        file18Path: detail.files?.file18Path?.path,
+        file18ExpiryDate: parseDate(detail.files?.file18Path?.expiryDate),
       })
 
       setTimeout(() => {

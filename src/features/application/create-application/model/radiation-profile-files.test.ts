@@ -4,6 +4,7 @@ import type { FileDto } from '@/shared/types'
 import {
   fillFromProfile,
   hasIncompleteFiles,
+  hasIncompleteIrsFiles,
   requireProfileFiles,
   withDatesAsDays,
   withProfileFiles,
@@ -54,6 +55,27 @@ describe('hasIncompleteFiles', () => {
   it('is true when a file lacks its document or its expiry date', () => {
     expect(hasIncompleteFiles({ file1Path: file('a.pdf', null) })).toBe(true)
     expect(hasIncompleteFiles({ file1Path: file(null, '2027-01-01') })).toBe(true)
+  })
+})
+
+describe('hasIncompleteIrsFiles', () => {
+  const complete = {
+    file17Path: file('specialists.pdf', null),
+    file2Path: file('ses.pdf', '2027-01-01'),
+    file5Path: file('certificate.pdf', '2027-01-01'),
+    file15Path: file('medical.pdf', '2027-01-01'),
+  }
+
+  it('accepts the specialists file without a date and no periodic report', () => {
+    expect(hasIncompleteIrsFiles(undefined)).toBe(false)
+    expect(hasIncompleteIrsFiles(complete)).toBe(false)
+    expect(hasIncompleteIrsFiles({ ...complete, file18Path: file(null, null) })).toBe(false)
+  })
+
+  it('holds back a missing required file or a dated file without its date', () => {
+    expect(hasIncompleteIrsFiles({ ...complete, file17Path: file(null, null) })).toBe(true)
+    expect(hasIncompleteIrsFiles({ ...complete, file2Path: file('ses.pdf', null) })).toBe(true)
+    expect(hasIncompleteIrsFiles({ file2Path: complete.file2Path })).toBe(true)
   })
 })
 

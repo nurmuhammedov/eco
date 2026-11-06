@@ -23,6 +23,17 @@ export const requireProfileFiles = <S extends z.ZodTypeAny>(
 export const hasIncompleteFiles = (files?: Record<string, FileDto> | null) =>
   !!files && Object.values(files).some((file) => !file?.path || !file?.expiryDate)
 
+/**
+ * The IRS files an application cannot go without: the specialists' file, which
+ * has no expiry date, and three dated ones. The periodic report (file18) is
+ * optional, so the generic check above would hold every profile back.
+ */
+const REQUIRED_IRS_FILES = { file17Path: false, file2Path: true, file5Path: true, file15Path: true }
+
+export const hasIncompleteIrsFiles = (files?: Record<string, FileDto> | null) =>
+  !!files &&
+  Object.entries(REQUIRED_IRS_FILES).some(([key, dated]) => !files[key]?.path || (dated && !files[key]?.expiryDate))
+
 /** Puts the profile's files on the form: each `fileNPath`, with its date as `fileNExpiryDate` */
 export const fillFromProfile = <T extends FieldValues>(
   setValue: UseFormSetValue<T>,
