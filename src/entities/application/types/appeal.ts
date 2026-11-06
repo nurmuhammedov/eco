@@ -74,6 +74,8 @@ export interface AppealInfoData {
   factoryNumber?: string | null
   factory?: string | null
   model?: string | null
+  /** A tanker's state number plate */
+  numberPlate?: string | null
   manufacturedAt?: string | null
   partialCheckDate?: string | null
   fullCheckDate?: string | null

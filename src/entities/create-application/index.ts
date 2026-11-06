@@ -43,6 +43,7 @@ export * from './schemas/deregister-hf.schema'
 export * from './schemas/reregister-illegal-hf.schema'
 export * from './schemas/oil-container.schema'
 export * from './schemas/illegal-oil-container.schema'
+export * from './schemas/register-tanker.schema'
 export * from './schemas/register-accreditation.schema'
 
 //other

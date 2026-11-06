@@ -9,6 +9,7 @@ import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks'
 import { UserRoles } from '@/shared/types/user'
 import { useAuth } from '@/shared/hooks/use-auth'
 import {
+  RECHECK_HIGH_LEVEL,
   RECHECK_LEVEL_FILTERS,
   riskLevelParams,
   type RiskAnalysisItem,
@@ -16,6 +17,7 @@ import {
   type RiskRegionCount,
 } from '@/entities/risk-analysis/model/risk-analysis.types'
 import { RiskStatisticsCards } from '@/entities/risk-analysis/ui/risk-statistics-cards'
+import { RecheckRegionSummary } from './recheck-region-summary'
 import { cn } from '@/shared/lib/utils'
 import { TabsLayout } from '@/shared/layouts'
 import { subDays, format } from 'date-fns'
@@ -266,6 +268,11 @@ const RiskAnalysisWidget = ({ periodType }: RiskAnalysisWidgetProps) => {
         date={date}
         regionId={activeRegion}
       />
+
+      {/* The chairman's breakdown of the recheck; the backend counts XICHO only */}
+      {isChairman && periodType === 'MONTHLY' && riskLevel === RECHECK_HIGH_LEVEL && currentApiType === 'HF' && (
+        <RecheckRegionSummary year={year} month={month} regions={regions} />
+      )}
 
       {regionTabs.length > 0 && shouldShowRegions ? (
         <TabsLayout

@@ -175,35 +175,10 @@ function buildEquipmentsQuery({
     factoryNumber = '',
     changeStatus = 'ALL',
     hfId: searchHfId = '',
-    activityType = '',
-    tin = '',
-    name = '',
-    registerNumber = '',
     numberPlate = '',
-    model = '',
-    createdBy = '',
   } = paramsObject
 
   const currentStatus = String(status)
-
-  if (type === 'TANKERS') {
-    const isPin = String(tin).length === 14
-    return {
-      endpoint: '/tankers',
-      params: {
-        activityType: activityType && activityType !== 'ALL' ? activityType : undefined,
-        status: currentStatus !== 'ALL' ? currentStatus : '',
-        name,
-        tin: tin && !isPin ? tin : undefined,
-        pin: tin && isPin ? tin : undefined,
-        registerNumber,
-        numberPlate,
-        model,
-        createdBy: createdBy || undefined,
-        regionId: normalizeRegionId(regionId),
-      },
-    }
-  }
 
   const report = readReportChangeFilters(paramsObject)
 
@@ -241,6 +216,8 @@ function buildEquipmentsQuery({
       parkId,
       address,
       factoryNumber,
+      // The backend matches the plate exactly, as it stores it: no spaces, upper case
+      numberPlate: String(numberPlate).replace(/\s+/g, '').toUpperCase(),
       startDate,
       endDate,
       status: ['VALID', 'INVALID', 'EXPIRED', 'NO_DATE'].includes(currentStatus) ? currentStatus : '',
@@ -454,7 +431,7 @@ function isExportableSubTab({ tab, paramsObject, isArchive }: BuildRegisterQuery
     case String(RegisterActiveTab.EQUIPMENTS): {
       const status = String(paramsObject.status ?? (isArchive ? 'INACTIVE' : 'ACTIVE'))
       const type = String(paramsObject.type ?? 'ALL')
-      return status !== 'CHANGED' && type !== 'ALL' && type !== 'TANKERS'
+      return status !== 'CHANGED' && type !== 'ALL'
     }
     case String(RegisterActiveTab.IRS): {
       const valid = String(paramsObject.valid ?? (isArchive ? 'false' : 'true'))

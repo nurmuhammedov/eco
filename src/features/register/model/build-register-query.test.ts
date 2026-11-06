@@ -74,3 +74,12 @@ describe('buildRegisterQuery for tower cranes without a usage-rights file', () =
     expect(params.hasUsageRightsFile).toBe('')
   })
 })
+
+describe('buildRegisterQuery for the tanker tab', () => {
+  it('asks for the plate the way the backend stores it', () => {
+    const params = equipmentsParams({ type: 'TANKER', numberPlate: '01 a 123 bc' })
+
+    expect(params.type).toBe('TANKER')
+    expect(params.numberPlate).toBe('01A123BC')
+  })
+})

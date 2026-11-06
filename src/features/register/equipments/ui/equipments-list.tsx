@@ -4,7 +4,6 @@ import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks'
 import { TabsLayout } from '@/shared/layouts'
 import { getDate } from '@/shared/utils/date'
 import { useNavigate } from 'react-router-dom'
-import { AddPermitTransportModal } from '@/features/register/auto/ui/add-auto-modal'
 import useData from '@/shared/hooks/api/use-data'
 import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
 import { changeTypeColumn } from '@/features/register/model/change-type-column'
@@ -12,8 +11,6 @@ import { EquipmentRow } from '@/features/register/model/types'
 import { useChildEquipmentTypes } from '@/shared/api/dictionaries'
 import { UserRoles } from '@/shared/types/user'
 import { useAuth } from '@/shared/hooks/use-auth'
-import { TANKER_COUNT_KEY, tabs as autoTabs } from '@/features/register/auto/model/auto-tabs'
-import { formatDate } from 'date-fns'
 import { useParkSelectQuery } from '@/entities/admin/park/hooks/use-park-select-query'
 import { ApplicationTypeEnum } from '@/entities/create-application/types/enums'
 import { useMemo } from 'react'
@@ -30,7 +27,6 @@ import {
 import { REPORT_KEYS, RESET_KEYS } from '@/features/register/model/report-drill-down'
 import { RegisterActiveTab } from '@/features/register/model/register-tabs'
 import { paramText } from '@/shared/lib/url-params'
-import type { TankerCount } from '@/entities/registry'
 
 interface EquipmentsListProps {
   isArchive?: boolean
@@ -57,7 +53,7 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
   const navigate = useNavigate()
   const { user } = useAuth()
 
-  const { paramsObject, addParams, removeParams } = useCustomSearchParams()
+  const { paramsObject, addParams } = useCustomSearchParams()
 
   // Arriving from the deregistration report: the status came with the link.
   const fromReport = !!paramsObject.reportChangeBelongType
@@ -74,8 +70,6 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
   const districtId = paramText(paramsObject.districtId)
   const childEquipmentId = paramText(paramsObject.childEquipmentId)
   const changeStatus = paramText(paramsObject.changeStatus, 'ALL')
-  const mode = paramText(paramsObject.mode)
-  const activityType = paramText(paramsObject.activityType)
   const isParkType = PARK_TYPES.includes(type)
 
   // A crane tab pinned to its own child types; the type filter picks among those only.
@@ -87,7 +81,7 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
   const excludedChildIds = type === 'CRANE' ? CRANE_EXCLUDED_CHILD_IDS : ''
 
   const currentStatus = String(status)
-  const isTanker = type === 'TANKERS'
+  const isTanker = type === 'TANKER'
 
   const tabNoun = type === 'AUTO_CRANE' ? 'avtokranlar' : type === 'TOWER_CRANE' ? 'minorali kranlar' : 'qurilmalar'
 
@@ -109,7 +103,7 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
     {
       changed: 'true',
       active: 'true',
-      type: !isTanker && equipmentType !== 'ALL' ? equipmentType : '',
+      type: equipmentType !== 'ALL' ? equipmentType : '',
       childEquipmentId: pinnedChildId ? '' : childEquipmentId,
       childEquipmentIds: pinnedChildIds(type, childEquipmentId) ?? '',
       excludeChildEquipmentIds: excludedChildIds,
@@ -119,22 +113,14 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
     !isArchive
   )
 
-  const { data: dataForNewCount } = useData<number>(`/equipments/count`, !isTanker && !isPinnedCrane, {
-    type: !isTanker && type !== 'ALL' ? type : '',
+  const { data: dataForNewCount } = useData<number>(`/equipments/count`, !isPinnedCrane, {
+    type: type !== 'ALL' ? type : '',
     excludeChildEquipmentIds: excludedChildIds,
     active: !isArchive,
     regionId: regionId === 'ALL' ? '' : regionId,
     districtId: districtId === 'ALL' ? '' : districtId,
   })
-  const { data: tankersCount } = useData<TankerCount>('/tankers/count', isTanker && !isArchive, {
-    mode,
-    regionId: regionId === 'ALL' ? '' : regionId,
-    districtId: districtId === 'ALL' ? '' : districtId,
-  })
-
-  const { data: childEquipmentTypes } = useChildEquipmentTypes(
-    !isTanker && equipmentType !== 'ALL' ? equipmentType : ''
-  )
+  const { data: childEquipmentTypes } = useChildEquipmentTypes(equipmentType !== 'ALL' ? equipmentType : '')
 
   const handleViewApplication = (id: string) => {
     if (currentStatus === 'CHANGED') {
@@ -151,78 +137,8 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
   }
 
   const handleEditApplication = (id: string, type?: string, tin?: string | number) => {
-    if (isTanker) return
     navigate(`/register/update/${type}/${id}?tin=${tin}`)
   }
-
-  const tankerColumns: ExtendedColumnDef<EquipmentRow, unknown>[] = [
-    {
-      header: 'Tashkilot nomi',
-      accessorKey: 'name',
-      filterKey: 'name',
-      filterType: 'search',
-    },
-    {
-      accessorKey: 'tin',
-      header: 'Tashkilot STIR/Fuqaro JSHSHIR',
-      cell: (cell) =>
-        cell.row.original.tin ? cell.row.original.tin : cell.row.original.pin ? cell.row.original.pin : null,
-      filterKey: 'tin',
-      filterType: 'number',
-      filterMaxLength: 14,
-    },
-    {
-      accessorKey: 'registerNumber',
-      header: 'Berilgan ruxsatnomaning ro‘yxatga olish raqami',
-      filterKey: 'registerNumber',
-      filterType: 'search',
-    },
-    {
-      accessorKey: 'expiryDate',
-      header: 'Amal qilish muddati',
-      cell: (cell) => (cell.row.original.expiryDate ? formatDate(cell.row.original.expiryDate, 'dd.MM.yyyy') : null),
-    },
-    {
-      accessorKey: 'activityTypeName',
-      header: 'Faoliyat turi',
-      cell: (cell) =>
-        cell.row.original.activityType
-          ? autoTabs?.find((i) => i?.key == cell.row.original?.activityType)?.label || '-'
-          : null,
-    },
-    {
-      accessorKey: 'numberPlate',
-      header: 'Davlat raqam belgisi',
-      filterKey: 'numberPlate',
-      filterType: 'search',
-    },
-    {
-      accessorKey: 'model',
-      header: 'Avtotransport vositasi modeli',
-      filterKey: 'model',
-      filterType: 'search',
-    },
-    {
-      accessorKey: 'validUntil',
-      header: 'Texnik ko‘rik amal qilish muddati',
-      cell: (cell) => (cell.row.original.validUntil ? formatDate(cell.row.original.validUntil, 'dd.MM.yyyy') : null),
-    },
-    {
-      id: 'actions',
-      cell: ({ row }) => (
-        <DataTableRowActions
-          showView
-          row={row}
-          showDelete
-          onView={(row) =>
-            navigate(
-              `auto/${row.original.id}?tin=${row.original.tin ? row.original.tin : row.original.pin ? row.original.pin : null}`
-            )
-          }
-        />
-      ),
-    },
-  ]
 
   const allColumns: ExtendedColumnDef<EquipmentRow, unknown>[] = [
     {
@@ -308,6 +224,14 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
       cell: ({ row }) => <TruncatedCell value={row.original?.factoryNumber} />,
     },
     {
+      id: 'numberPlate',
+      accessorKey: 'numberPlate',
+      header: () => <div className="whitespace-nowrap">Davlat raqami belgisi</div>,
+      className: '!w-[1%] whitespace-nowrap',
+      filterKey: 'numberPlate',
+      filterType: 'search',
+    },
+    {
       accessorFn: (row) => (row.nextPartialCheckDate ? getDate(row.nextPartialCheckDate) : '-'),
       id: 'nextPartialCheckDate',
       header: () => (
@@ -346,7 +270,6 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
           showEdit={
             !isShortView &&
             !isArchive &&
-            !isTanker &&
             canUpdateRegistryType(row.original?.type, user?.role) &&
             ((user?.role === UserRoles.INSPECTOR &&
               (Number(row.original.regionId) === user?.regionId || user?.isController)) ||
@@ -370,10 +293,14 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
     if (hfId && (accessorKey === 'hfName' || accessorKey === 'parkName')) {
       return false
     }
+    // Only a tanker carries a number plate
+    if (col.id === 'numberPlate') {
+      return isTanker
+    }
     if (type === 'OIL_CONTAINER') {
       return col.id !== 'nextPartialCheckDate' && col.id !== 'nextFullCheckDate'
     } else {
-      return col.id !== 'expertiseExpiryDate'
+      return isTanker || col.id !== 'expertiseExpiryDate'
     }
   })
 
@@ -397,123 +324,69 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
                 ]
               : []),
             ...EQUIPMENT_TABS,
-            ...(!isArchive
-              ? [
-                  {
-                    id: 'TANKERS',
-                    name: 'Harakatlanuvchi sig‘imlar',
-                  },
-                ]
-              : []),
           ].map((tab) => ({
             ...tab,
-            count:
-              tab.id === type
-                ? CRANE_TAB_CHILD_ID[tab.id]
-                  ? totalElements
-                  : ((isTanker ? tankersCount?.allCount : dataForNewCount) ?? 0)
-                : undefined,
+            count: tab.id === type ? (CRANE_TAB_CHILD_ID[tab.id] ? totalElements : (dataForNewCount ?? 0)) : undefined,
           }))}
           onTabChange={(type) =>
-            addParams({ type: type }, 'page', 'childEquipmentId', 'status', 'activityType', ...REPORT_KEYS)
+            addParams(
+              { type: type },
+              'page',
+              'childEquipmentId',
+              'status',
+              'activityType',
+              'numberPlate',
+              ...REPORT_KEYS
+            )
           }
         />
       )}
-      {!hideTabs && isTanker && (
-        <div className="flex flex-col gap-2 md:flex-row md:items-center md:gap-2">
-          <div className="min-w-0 flex-1">
-            <TabsLayout
-              showArrows
-              activeTab={activityType || 'ALL'}
-              tabs={autoTabs.map((tab) => ({
-                id: tab.key,
-                name: tab.label,
-                count: tankersCount?.[TANKER_COUNT_KEY[tab.key]],
-              }))}
-              onTabChange={(val) => {
-                if (val === 'ALL') {
-                  removeParams('activityType')
-                } else {
-                  addParams({ activityType: val }, 'page')
-                }
-              }}
-            />
-          </div>
-          {(user?.role == UserRoles.MANAGER ||
-            user?.role == UserRoles.REGIONAL ||
-            user?.role == UserRoles.INSPECTOR ||
-            user?.role == UserRoles.LEGAL ||
-            user?.role == UserRoles.INDIVIDUAL) && (
-            <div className="w-full shrink-0 md:w-auto">
-              <AddPermitTransportModal />
-            </div>
-          )}
-        </div>
-      )}
-
       {!hideTabs && !isArchive && user?.role !== UserRoles.PROCURATOR && (
         <TabsLayout
           activeTab={currentStatus}
-          tabs={
-            isTanker
+          tabs={[
+            {
+              id: 'ACTIVE',
+              name: `Reyestrdagi ${tabNoun}`,
+              count: currentStatus === 'ACTIVE' ? totalElements : undefined,
+            },
+            {
+              id: 'VALID',
+              name: `Soz holatdagi ${tabNoun}`,
+              count: currentStatus === 'VALID' ? totalElements : undefined,
+            },
+            {
+              id: 'INVALID',
+              name: `Nosoz holatdagi ${tabNoun}`,
+              count: currentStatus === 'INVALID' ? totalElements : undefined,
+            },
+            {
+              id: 'EXPIRED',
+              name: `Muddati o‘tgan ${tabNoun}`,
+              count: currentStatus === 'EXPIRED' ? totalElements : undefined,
+            },
+            {
+              id: 'NO_DATE',
+              name: isPinnedCrane ? `Muddati kiritilmagan ${tabNoun}` : 'Muddati kiritilmaganlar',
+              count: currentStatus === 'NO_DATE' ? totalElements : undefined,
+            },
+            ...(hasNoUsageRightsTab(type)
               ? [
-                  { id: 'ALL', name: 'Barchasi', count: currentStatus === 'ALL' ? totalElements : undefined },
-                  { id: 'ACTIVE', name: 'Aktiv', count: currentStatus === 'ACTIVE' ? totalElements : undefined },
                   {
-                    id: 'EXPIRING_SOON',
-                    name: 'Muddati yaqinlashayotganlar',
-                    count: currentStatus === 'EXPIRING_SOON' ? totalElements : undefined,
-                  },
-                  {
-                    id: 'EXPIRED',
-                    name: 'Muddati o‘tganlar',
-                    count: currentStatus === 'EXPIRED' ? totalElements : undefined,
+                    id: NO_USAGE_RIGHTS_STATUS,
+                    name: `Ruxsatnomasiz ${type === 'CRANE' ? 'kranlar' : tabNoun}`,
+                    count: currentStatus === NO_USAGE_RIGHTS_STATUS ? totalElements : undefined,
                   },
                 ]
-              : [
-                  {
-                    id: 'ACTIVE',
-                    name: `Reyestrdagi ${tabNoun}`,
-                    count: currentStatus === 'ACTIVE' ? totalElements : undefined,
-                  },
-                  {
-                    id: 'VALID',
-                    name: `Soz holatdagi ${tabNoun}`,
-                    count: currentStatus === 'VALID' ? totalElements : undefined,
-                  },
-                  {
-                    id: 'INVALID',
-                    name: `Nosoz holatdagi ${tabNoun}`,
-                    count: currentStatus === 'INVALID' ? totalElements : undefined,
-                  },
-                  {
-                    id: 'EXPIRED',
-                    name: `Muddati o‘tgan ${tabNoun}`,
-                    count: currentStatus === 'EXPIRED' ? totalElements : undefined,
-                  },
-                  {
-                    id: 'NO_DATE',
-                    name: isPinnedCrane ? `Muddati kiritilmagan ${tabNoun}` : 'Muddati kiritilmaganlar',
-                    count: currentStatus === 'NO_DATE' ? totalElements : undefined,
-                  },
-                  ...(hasNoUsageRightsTab(type)
-                    ? [
-                        {
-                          id: NO_USAGE_RIGHTS_STATUS,
-                          name: `Ruxsatnomasiz ${type === 'CRANE' ? 'kranlar' : tabNoun}`,
-                          count: currentStatus === NO_USAGE_RIGHTS_STATUS ? totalElements : undefined,
-                        },
-                      ]
-                    : []),
-                  {
-                    id: 'CHANGED',
-                    name: 'O‘zgartirish so‘rovlari',
-                    count: fromReport
-                      ? data?.page?.totalElements || undefined
-                      : changedCountData?.page?.totalElements || undefined,
-                  },
-                ]
-          }
+              : []),
+            {
+              id: 'CHANGED',
+              name: 'O‘zgartirish so‘rovlari',
+              count: fromReport
+                ? data?.page?.totalElements || undefined
+                : changedCountData?.page?.totalElements || undefined,
+            },
+          ]}
           onTabChange={(type) => {
             if (type === 'CHANGED') {
               addParams({ status: type, changeStatus: 'ALL' }, ...RESET_KEYS)
@@ -539,14 +412,7 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
           onTabChange={(s) => addParams({ changeStatus: s }, ...RESET_KEYS)}
         />
       )}
-      <DataTable
-        showFilters
-        isLoading={isLoading}
-        isPaginated
-        data={data || []}
-        columns={isTanker ? tankerColumns : columns}
-        className="flex-1"
-      />
+      <DataTable showFilters isLoading={isLoading} isPaginated data={data || []} columns={columns} className="flex-1" />
     </div>
   )
 }

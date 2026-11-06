@@ -317,4 +317,19 @@ export const ApplicationIcons = {
       <path d="M8 12h8" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
     </svg>
   ),
+  tankerTruck: (color: string) => (
+    <svg viewBox="0 0 24 24" fill="none" className="h-full w-full">
+      <rect x="1.5" y="5" width="13.5" height="9" rx="4.5" stroke={color} strokeWidth="1.5" />
+      <path
+        d="M15 9h3.3l3.2 3.6V16H19.5M15 9v7h-5.5M4.5 16H1.5"
+        stroke={color}
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <circle cx="7" cy="17" r="2.2" stroke={color} strokeWidth="1.5" />
+      <circle cx="17.3" cy="17" r="2.2" stroke={color} strokeWidth="1.5" />
+      <path d="M5.5 9.5h6" stroke={color} strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  ),
 }

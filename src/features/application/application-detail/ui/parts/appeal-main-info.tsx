@@ -373,6 +373,31 @@ const ALLOWED_FIELDS: Record<string, string[]> = {
     'birthDate',
     'oldRegistryNumber',
   ],
+  TANKER: [
+    'phoneNumber',
+    'hazardousFacilityId',
+    'childEquipmentId',
+    'numberPlate',
+    'model',
+    'factoryNumber',
+    'factory',
+    'capacity',
+    'environment',
+    'pressure',
+    'partialCheckDate',
+    'fullCheckDate',
+    'nonDestructiveCheckDate',
+    'servicePeriod',
+    'regionId',
+    'districtId',
+    'address',
+    'location',
+    'type',
+    'registryNumber',
+    'description',
+    'birthDate',
+    'oldRegistryNumber',
+  ],
   LPG_POWERED: [
     'phoneNumber',
     'hazardousFacilityId',
@@ -632,6 +657,7 @@ const AppealMainInfo: FC<Props> = ({
       {renderRow('factoryNumber', data?.factoryNumber)}
       {renderRow('factory', data?.factory)}
       {renderRow('model', data?.model)}
+      {renderRow('numberPlate', data?.numberPlate)}
       {renderDate('manufacturedAt', data?.manufacturedAt)}
       {renderDate('partialCheckDate', data?.partialCheckDate)}
       {renderDate('fullCheckDate', data?.fullCheckDate)}

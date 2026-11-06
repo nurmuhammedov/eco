@@ -21,6 +21,7 @@ export interface EquipmentDetail {
     | 'LPG_CONTAINER'
     | 'LPG_POWERED'
     | 'OIL_CONTAINER'
+    | 'TANKER'
     | null
   appealId: string | null
   registryNumber: string | null
@@ -33,6 +34,8 @@ export interface EquipmentDetail {
   factoryNumber: string | null
   address: string | null
   model: string | null
+  /** A tanker's state number plate; null for every other kind */
+  numberPlate?: string | null
   factory: string | null
   location: string | null
   manufacturedAt: string | null

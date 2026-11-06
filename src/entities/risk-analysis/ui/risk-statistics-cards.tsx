@@ -22,6 +22,8 @@ interface RiskCountResponse {
   highCount: number
   /** Qayta tahlilda yana yuqori chiqqanlar; absent until the backend sends it */
   recheckHighCount?: number | null
+  /** Of those, the ones an inspection was created for */
+  inspectionCreatedCount?: number | null
 }
 
 export const RiskStatisticsCards = ({
@@ -48,6 +50,7 @@ export const RiskStatisticsCards = ({
   const highCount = data?.highCount || 0
   const totalCount = lowCount + mediumCount + highCount
   const recheckHighCount = data?.recheckHighCount
+  const inspectionCreatedCount = data?.inspectionCreatedCount ?? 0
 
   const stats = [
     {
@@ -113,6 +116,7 @@ export const RiskStatisticsCards = ({
             id: RECHECK_HIGH_LEVEL,
             name: 'Qayta tahlilda yana yuqori',
             count: recheckHighCount ?? 0,
+            note: `Shundan tekshiruv yaratilgan: ${inspectionCreatedCount}`,
             icon: RefreshCw,
             activeClass: 'bg-red-50 border-red-700 shadow-sm ring-1 ring-red-700',
             textClass: 'text-red-800',
@@ -155,6 +159,9 @@ export const RiskStatisticsCards = ({
               >
                 {stat.count}
               </span>
+              {'note' in stat && stat.note && (
+                <span className={cn('text-xs font-medium text-slate-500', isLoading && 'opacity-50')}>{stat.note}</span>
+              )}
             </div>
 
             <div className={cn('rounded-lg p-3 transition-colors', isActive ? stat.iconClass : stat.inactiveIconClass)}>

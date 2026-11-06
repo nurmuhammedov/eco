@@ -56,6 +56,8 @@ export interface RiskLevelCount {
   highCount: number | null
   /** Qayta xavf tahlilida yana yuqori chiqqanlar soni */
   recheckHighCount?: number | null
+  /** Qayta tahlil natijasida tekshiruv yaratilganlar soni */
+  inspectionCreatedCount?: number | null
 }
 
 /** CountDtoByRegion (`GET /risk-analyses/count/by-region`) */

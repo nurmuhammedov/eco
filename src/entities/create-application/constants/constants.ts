@@ -231,6 +231,17 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     icon: 'oilBarrel',
   },
   {
+    id: 210,
+    title: 'Harakatlanuvchi sig‘imni ro‘yxatga olish',
+    name: 'Harakatlanuvchi sig‘imlar',
+    description: 'Harakatlanuvchi sig‘imni ro‘yxatga olish ariza shakli',
+    category: ApplicationCategory.EQUIPMENTS,
+    type: ApplicationTypeEnum.REGISTER_TANKER,
+    equipmentType: ApplicationTypeEnum.TANKER,
+    parentId: MainApplicationCategory.REGISTER,
+    icon: 'tankerTruck',
+  },
+  {
     id: 1,
     title: 'XICHOni ro‘yxatga olish',
     description: 'XICHOni ro‘yxatga olish ariza shakli',
@@ -371,6 +382,15 @@ export const APPLICATIONS_DATA: ApplicationCardItem[] = [
     category: ApplicationCategory.ILLEGAL_EQUIPMENTS,
     type: ApplicationTypeEnum.ILLEGAL_REGISTER_OIL_CONTAINER,
     icon: 'oilBarrel',
+  },
+  {
+    id: 211,
+    title: 'Harakatlanuvchi sig‘imni ro‘yxatga olish',
+    name: 'Harakatlanuvchi sig‘imni ro‘yxatga olish',
+    description: 'Harakatlanuvchi sig‘imni ro‘yxatga olish',
+    category: ApplicationCategory.ILLEGAL_EQUIPMENTS,
+    type: ApplicationTypeEnum.ILLEGAL_REGISTER_TANKER,
+    icon: 'tankerTruck',
   },
   {
     id: 2,
@@ -727,6 +747,23 @@ export const applicationsList = [
     id: 134,
     title: 'Neft mahsulotlar saqlovchi idishni qayta ro‘yxatga olish',
     type: ApplicationTypeEnum.RE_REGISTER_OIL_CONTAINER,
+  },
+
+  // TANKER
+  {
+    id: 212,
+    title: 'Harakatlanuvchi sig‘imni ro‘yxatga olish',
+    type: ApplicationTypeEnum.REGISTER_TANKER,
+  },
+  {
+    id: 213,
+    title: 'Harakatlanuvchi sig‘imni ro‘yxatdan chiqarish',
+    type: ApplicationTypeEnum.DEREGISTER_TANKER,
+  },
+  {
+    id: 214,
+    title: 'Harakatlanuvchi sig‘imni qayta ro‘yxatga olish',
+    type: ApplicationTypeEnum.RE_REGISTER_TANKER,
   },
 
   // XRAY

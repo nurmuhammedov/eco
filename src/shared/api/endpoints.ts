@@ -61,6 +61,8 @@ export const API_ENDPOINTS: Record<string, string> = {
   APPEAL_ATTRACTION: APPEALS_EQUIPMENT_URL + 'attraction',
   APPEAL_EQUIPMENT_OIL_CONTAINER: APPEALS_EQUIPMENT_URL + 'oil-container',
   APPEAL_EQUIPMENT_UNOFFICIAL_OIL_CONTAINER: '/appeals/equipment/unofficial/oil-container',
+  APPEAL_EQUIPMENT_TANKER: APPEALS_EQUIPMENT_URL + 'tanker',
+  APPEAL_EQUIPMENT_UNOFFICIAL_TANKER: '/appeals/equipment/unofficial/tanker',
 
   // APPEALS PDF GENERATION
   APPEAL_HF_PDF_GENERATION: '/appeals/hf/generate-pdf',
@@ -80,6 +82,8 @@ export const API_ENDPOINTS: Record<string, string> = {
   APPEAL_EQUIPMENT_PDF_ATTRACTION: APPEALS_EQUIPMENT_GENERATE_PDF_URL + 'attraction',
   APPEAL_EQUIPMENT_PDF_OIL_CONTAINER: APPEALS_EQUIPMENT_GENERATE_PDF_URL + 'oil-container',
   APPEAL_EQUIPMENT_PDF_UNOFFICIAL_OIL_CONTAINER: '/appeals/equipment/unofficial/generate-pdf/oil-container',
+  APPEAL_EQUIPMENT_PDF_TANKER: APPEALS_EQUIPMENT_GENERATE_PDF_URL + 'tanker',
+  APPEAL_EQUIPMENT_PDF_UNOFFICIAL_TANKER: '/appeals/equipment/unofficial/generate-pdf/tanker',
 
   RISK_ASSESSMENT_HF: '/risk-analyses',
   RISK_ASSESSMENT_IRS: '/irs/risk-assessment',
