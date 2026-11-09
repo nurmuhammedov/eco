@@ -13,9 +13,10 @@ import { RiskLevelBadge } from '../parts/risk-level'
 interface Props {
   data?: ResponseData<RiskAnalysisItem>
   isLoading?: boolean
+  className?: string
 }
 
-const List: FC<Props> = ({ data, isLoading = false }) => {
+const List: FC<Props> = ({ data, isLoading = false, className }) => {
   const navigate = useNavigate()
   const { paramsObject } = useCustomSearchParams()
   const { t } = useTranslation('common')
@@ -130,6 +131,7 @@ const List: FC<Props> = ({ data, isLoading = false }) => {
 
   return (
     <DataTable
+      className={className}
       paginationClassName="!pb-2"
       showFilters={true}
       isPaginated

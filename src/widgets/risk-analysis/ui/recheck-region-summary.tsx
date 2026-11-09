@@ -1,5 +1,13 @@
 import { useMemo } from 'react'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/shared/components/ui/table'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/shared/components/ui/table'
 import { Skeleton } from '@/shared/components/ui/skeleton'
 import { useData } from '@/shared/hooks/api'
 import { cn } from '@/shared/lib/utils'
@@ -42,14 +50,20 @@ interface Props {
   year: string
   month: string
   regions: { id: number; name: string | null }[]
+  /** Opens the list for a region, or for all of them on the total row */
+  onRegionSelect: (regionId: number | null) => void
+  className?: string
 }
 
 /**
  * What became of the XICHOs that came out HIGH again on the recheck, region by
  * region. The backend leaves out regions with none, so every region is listed
  * here with zeros, and the total row is summed on this side.
+ *
+ * Its rows also open the list narrowed to a region: a region with nothing to
+ * list is not offered.
  */
-export const RecheckRegionSummary = ({ year, month, regions }: Props) => {
+export const RecheckRegionSummary = ({ year, month, regions, onRegionSelect, className }: Props) => {
   const { data = [], isLoading } = useData<RecheckHighCountByRegion[]>('/risk-analyses/recheck/count/by-region', true, {
     year,
     month,
@@ -73,22 +87,13 @@ export const RecheckRegionSummary = ({ year, month, regions }: Props) => {
   )
 
   return (
-    <div className="mb-3 rounded-lg border bg-white">
-      <div className="border-b px-4 py-2.5">
-        <h6 className="text-sm font-semibold text-gray-800">
-          Qayta tahlilda yana yuqori bo‘lgan XICHOlar (viloyatlar kesimida)
-        </h6>
-        <p className="text-xs text-gray-500">
-          Har bir viloyat bo‘yicha: jami = tekshiruv yaratilgan + ro‘yxatdan chiqarilgan + vaqtincha nofaol +
-          tahlilgacha nofaol + davlat tashkiloti
-        </p>
-      </div>
-
+    // Fills what the cards leave, the way the list's table does, and scrolls inside
+    <div className={cn('relative flex-1 overflow-auto rounded-md bg-white', className)}>
       {isLoading ? (
-        <Skeleton className="m-4 h-40" />
+        <Skeleton className="m-3 h-40" />
       ) : (
         <Table>
-          <TableHeader>
+          <TableHeader className="sticky top-0 z-10">
             <TableRow>
               <TableHead className="w-12">T/r</TableHead>
               <TableHead>Viloyat</TableHead>
@@ -99,11 +104,25 @@ export const RecheckRegionSummary = ({ year, month, regions }: Props) => {
               ))}
             </TableRow>
           </TableHeader>
-          <TableBody>
+          {/* The last region sits flat on the total row, as that one does on it */}
+          <TableBody className="[&>tr:last-child>td:first-child]:rounded-bl-none [&>tr:last-child>td:last-child]:rounded-br-none">
             {rows.map((row, index) => (
-              <TableRow key={row.regionId}>
+              <TableRow
+                key={row.regionId}
+                className={cn(row.total > 0 && 'hover:bg-teal/5 cursor-pointer')}
+                onClick={row.total > 0 ? () => onRegionSelect(row.regionId) : undefined}
+              >
                 <TableCell>{index + 1}</TableCell>
-                <TableCell className="font-medium">{row.region}</TableCell>
+                <TableCell className="font-medium">
+                  {row.total > 0 ? (
+                    // The row takes the click; the button is there for the keyboard
+                    <button type="button" className="text-teal text-left hover:underline">
+                      {row.region}
+                    </button>
+                  ) : (
+                    row.region
+                  )}
+                </TableCell>
                 {COLUMNS.map((column) => (
                   <TableCell
                     key={column.key}
@@ -118,16 +137,35 @@ export const RecheckRegionSummary = ({ year, month, regions }: Props) => {
                 ))}
               </TableRow>
             ))}
-            <TableRow className="bg-gray-50 font-semibold">
+          </TableBody>
+          {/* Kept in view while the regions scroll under it */}
+          <TableFooter className="sticky bottom-0 z-10 bg-neutral-100 font-semibold">
+            <TableRow
+              disableZebra
+              className={cn(
+                // Cells round every corner by default; this row sits flat against the rows above
+                '[&>td:first-child]:rounded-tl-none [&>td:last-child]:rounded-tr-none',
+                totals.total > 0 && 'cursor-pointer hover:bg-neutral-200/60'
+              )}
+              onClick={totals.total > 0 ? () => onRegionSelect(null) : undefined}
+            >
               <TableCell />
-              <TableCell>Jami</TableCell>
+              <TableCell>
+                {totals.total > 0 ? (
+                  <button type="button" className="text-teal text-left hover:underline">
+                    Jami
+                  </button>
+                ) : (
+                  'Jami'
+                )}
+              </TableCell>
               {COLUMNS.map((column) => (
                 <TableCell key={column.key} className="text-center">
                   {totals[column.key]}
                 </TableCell>
               ))}
             </TableRow>
-          </TableBody>
+          </TableFooter>
         </Table>
       )}
     </div>

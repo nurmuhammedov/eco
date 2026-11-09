@@ -23,6 +23,7 @@ import { TabsLayout } from '@/shared/layouts'
 import { subDays, format } from 'date-fns'
 import { Button } from '@/shared/components/ui/button'
 import { Loader2 } from 'lucide-react'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { apiClient } from '@/shared/api/api-client'
 import { toast } from 'sonner'
@@ -37,12 +38,30 @@ const TAB_TO_API_TYPE: Record<string, string> = {
 }
 
 import { getDefaultYearAndMonthForRiskAnalysis } from '@/shared/utils/date'
-import { paramText } from '@/shared/lib/url-params'
+import { paramOneOf, paramText } from '@/shared/lib/url-params'
 import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 
 interface RiskAnalysisWidgetProps {
   periodType: 'DAILY' | 'MONTHLY'
 }
+
+/** The recheck list and its summary share the space below the cards, one at a time. */
+const RECHECK_VIEWS = ['list', 'regions'] as const
+type RecheckView = (typeof RECHECK_VIEWS)[number]
+
+const RECHECK_VIEW_TABS: { id: RecheckView; name: string }[] = [
+  { id: 'list', name: 'Ro‘yxat' },
+  { id: 'regions', name: 'Viloyatlar kesimida' },
+]
+
+/** The region select's "no region" value; the list is then the whole country's. */
+const ALL_REGIONS = 'ALL'
+
+/**
+ * The tables fill what the cards leave, which on a short screen is a row or
+ * two; below this the page scrolls instead of the table shrinking further.
+ */
+const TABLE_MIN_HEIGHT = 'min-h-[400px]'
 
 const RiskAnalysisWidget = ({ periodType }: RiskAnalysisWidgetProps) => {
   const { t } = useTranslation('common')
@@ -92,6 +111,7 @@ const RiskAnalysisWidget = ({ periodType }: RiskAnalysisWidgetProps) => {
       inspectorId,
       periodId,
       status,
+      recheckView: recheckViewParam,
       // isWarningSent, - its column is hidden, so an old link must not filter unseen
     },
   } = useCustomSearchParams()
@@ -107,11 +127,23 @@ const RiskAnalysisWidget = ({ periodType }: RiskAnalysisWidgetProps) => {
 
   const { data: regions = [] } = useRegionSelectQuery(shouldShowRegions)
 
-  const activeRegion = shouldShowRegions
-    ? regionId?.toString() || (regions.length > 0 ? regions[0].id.toString() : '')
-    : undefined
-
   const currentApiType = TAB_TO_API_TYPE[mainTab] || 'HF'
+
+  // The chairman's breakdown of the recheck; the backend counts XICHO only
+  const hasRecheckSummary = (level: string) =>
+    isChairman && periodType === 'MONTHLY' && level === RECHECK_HIGH_LEVEL && currentApiType === 'HF'
+  const showRecheckSummary = hasRecheckSummary(String(riskLevel))
+  const recheckView = paramOneOf(recheckViewParam, RECHECK_VIEWS, 'list')
+
+  /**
+   * The recheck list is the whole country's until a region is picked in its
+   * select or its summary; elsewhere the region strip always has one selected.
+   */
+  const activeRegion = showRecheckSummary
+    ? regionId?.toString() || undefined
+    : shouldShowRegions
+      ? regionId?.toString() || (regions.length > 0 ? regions[0].id.toString() : '')
+      : undefined
 
   const apiParams = {
     type: currentApiType,
@@ -136,7 +168,7 @@ const RiskAnalysisWidget = ({ periodType }: RiskAnalysisWidgetProps) => {
   const { data, isLoading } = usePaginatedData<RiskAnalysisItem>(
     '/risk-analyses',
     apiParams,
-    shouldShowRegions ? !!activeRegion : true
+    showRecheckSummary ? recheckView === 'list' : shouldShowRegions ? !!activeRegion : true
   )
 
   const countsApiParams = {
@@ -171,7 +203,10 @@ const RiskAnalysisWidget = ({ periodType }: RiskAnalysisWidgetProps) => {
   const xrayTotalCount = getSum(xrayRiskCounts)
   const attractionTotalCount = getSum(attractionRiskCounts)
 
-  const { data: regionCounts = [] } = useData<RiskRegionCount[]>('/risk-analyses/count/by-region', shouldShowRegions, {
+  // The recheck summary's table already counts every region, so the strip would only repeat it
+  const showRegionStrip = shouldShowRegions && !showRecheckSummary
+
+  const { data: regionCounts = [] } = useData<RiskRegionCount[]>('/risk-analyses/count/by-region', showRegionStrip, {
     type: currentApiType,
     periodType,
     ...riskLevelParams(String(riskLevel)),
@@ -188,8 +223,30 @@ const RiskAnalysisWidget = ({ periodType }: RiskAnalysisWidgetProps) => {
     status,
   })
 
+  // The recheck always opens on the whole country's list
   const handleCardTabChange = (level: string) => {
-    addParams({ riskLevel: level }, 'page')
+    if (hasRecheckSummary(level)) {
+      addParams({ riskLevel: level }, 'page', 'recheckView', 'regionId')
+    } else {
+      addParams({ riskLevel: level }, 'page', 'recheckView')
+    }
+  }
+
+  const handleRecheckRegionChange = (value: string) => {
+    if (value === ALL_REGIONS) {
+      addParams({ page: 1 }, 'regionId')
+    } else {
+      addParams({ regionId: value, page: 1 })
+    }
+  }
+
+  /** A summary row opens its region's list; the total row, every region's. */
+  const handleRecheckRegionSelect = (selectedRegionId: number | null) => {
+    if (selectedRegionId === null) {
+      addParams({ recheckView: 'list', page: 1 }, 'regionId')
+    } else {
+      addParams({ recheckView: 'list', regionId: selectedRegionId, page: 1 })
+    }
   }
 
   // LOW and MEDIUM results are never rechecked, so the figure would only ever read 0 there
@@ -219,7 +276,7 @@ const RiskAnalysisWidget = ({ periodType }: RiskAnalysisWidgetProps) => {
       <Tabs
         defaultValue={mainTab}
         value={mainTab}
-        onValueChange={(tab) => addParams({ mainTab: tab, page: 1, riskLevel: 'ALL' })}
+        onValueChange={(tab) => addParams({ mainTab: tab, page: 1, riskLevel: 'ALL' }, 'recheckView')}
         className="w-full"
       >
         <div className={cn('scrollbar-hidden mb-2 flex justify-between overflow-x-auto overflow-y-hidden')}>
@@ -269,12 +326,31 @@ const RiskAnalysisWidget = ({ periodType }: RiskAnalysisWidgetProps) => {
         regionId={activeRegion}
       />
 
-      {/* The chairman's breakdown of the recheck; the backend counts XICHO only */}
-      {isChairman && periodType === 'MONTHLY' && riskLevel === RECHECK_HIGH_LEVEL && currentApiType === 'HF' && (
-        <RecheckRegionSummary year={year} month={month} regions={regions} />
-      )}
-
-      {regionTabs.length > 0 && shouldShowRegions ? (
+      {showRecheckSummary ? (
+        <TabsLayout
+          className="mb-2"
+          tabs={RECHECK_VIEW_TABS}
+          activeTab={recheckView}
+          onTabChange={(view) => addParams({ recheckView: view })}
+          action={
+            recheckView === 'list' ? (
+              <Select value={activeRegion ?? ALL_REGIONS} onValueChange={handleRecheckRegionChange}>
+                <SelectTrigger className="h-10 w-[220px] bg-white">
+                  <SelectValue placeholder="Hudud" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={ALL_REGIONS}>Respublika bo‘yicha</SelectItem>
+                  {regions.map((region) => (
+                    <SelectItem key={region.id} value={String(region.id)}>
+                      {region.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            ) : null
+          }
+        />
+      ) : regionTabs.length > 0 && showRegionStrip ? (
         <TabsLayout
           className="mb-2"
           tabs={regionTabs}
@@ -285,7 +361,17 @@ const RiskAnalysisWidget = ({ periodType }: RiskAnalysisWidgetProps) => {
         />
       ) : null}
 
-      <Table isLoading={isLoading} data={data} />
+      {showRecheckSummary && recheckView === 'regions' ? (
+        <RecheckRegionSummary
+          className={TABLE_MIN_HEIGHT}
+          year={year}
+          month={month}
+          regions={regions}
+          onRegionSelect={handleRecheckRegionSelect}
+        />
+      ) : (
+        <Table className={TABLE_MIN_HEIGHT} isLoading={isLoading} data={data} />
+      )}
     </>
   )
 }
