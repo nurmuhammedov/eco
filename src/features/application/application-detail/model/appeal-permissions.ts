@@ -28,6 +28,8 @@ const EQUIPMENT_KEYWORDS = [
   'PIPELINE',
   'ATTRACTION',
   'LPG_POWERED',
+  // Harakatlanuvchi sig'im: REGISTER_TANKER (the inspector's registration too), DEREGISTER_, RE_REGISTER_
+  'TANKER',
 ]
 
 export function getAppealDomain(appealType?: string | null): AppealDomain {
