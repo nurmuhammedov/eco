@@ -1,5 +1,5 @@
 import { SourceTypeBadge } from '@/entities/application/ui/source-type-badge'
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { type ApplicationRow, ApplicationStatus, ApplicationStatusBadge } from '@/entities/application'
 import { AppealReturnedMark } from '@/entities/application/ui/appeal-returned-mark'
@@ -14,7 +14,16 @@ import useData from '../../../../shared/hooks/api/use-data'
 import { API_ENDPOINTS } from '@/shared/api'
 import { UserRoles } from '@/shared/types/user'
 import type { OptionItem } from '@/shared/types/general'
+import { paramText } from '@/shared/lib/url-params'
 import { RegistrationMode } from '../model/registration-mode'
+
+/**
+ * The backend takes a single `search`: nine or fourteen digits are matched
+ * against the owner's STIR/JSHSHIR, anything else against the number. The two
+ * columns keep keys of their own so a value shows only in the filter it was
+ * typed in, and they clear each other because only one can be searched.
+ */
+const IDENTITY_PATTERN = /^(\d{9}|\d{14})$/
 
 export const ApplicationTable = ({ mode }: { mode: RegistrationMode }) => {
   const navigate = useNavigate()
@@ -27,12 +36,25 @@ export const ApplicationTable = ({ mode }: { mode: RegistrationMode }) => {
     paramsObject: {
       status = ApplicationStatus.ALL,
       mode: _linkMode,
-      search = '',
+      number: numberParam,
+      ownerIdentity: identityParam,
+      search: linkSearch,
       startDate = '',
       endDate = '',
       ...rest
     },
+    addParams,
   } = useCustomSearchParams()
+
+  // Links made before the columns had keys of their own carry `search`; it moves to the column it belongs to
+  const legacySearch = paramText(linkSearch)
+  useEffect(() => {
+    if (!legacySearch) return
+
+    addParams({ [IDENTITY_PATTERN.test(legacySearch) ? 'ownerIdentity' : 'number']: legacySearch }, 'search')
+  }, [legacySearch, addParams])
+
+  const search = paramText(identityParam) || paramText(numberParam) || legacySearch
 
   // An old link may carry a type the backend no longer accepts, and it would
   // fail the whole request, so unknown values are dropped
@@ -66,7 +88,8 @@ export const ApplicationTable = ({ mode }: { mode: RegistrationMode }) => {
         accessorKey: 'ownerIdentity',
         header: isRegistration ? 'STIR/JSHSHIR' : 'Arizachi STIR/JSHSHIR',
         className: '!w-[1%]',
-        filterKey: 'search',
+        filterKey: 'ownerIdentity',
+        filterClearKeys: ['number'],
         filterType: 'number',
         filterMaxLength: 14,
       },
@@ -79,7 +102,8 @@ export const ApplicationTable = ({ mode }: { mode: RegistrationMode }) => {
           <div className="whitespace-nowrap">{isRegistration ? 'Ro‘yxatga olish raqami' : 'Ariza raqami'}</div>
         ),
         className: '!w-[1%] whitespace-nowrap',
-        filterKey: 'search',
+        filterKey: 'number',
+        filterClearKeys: ['ownerIdentity'],
         filterType: 'search',
       },
       {

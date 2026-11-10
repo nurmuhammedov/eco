@@ -17,6 +17,11 @@ export type ExtendedColumnDef<TData, TValue = unknown> = ColumnDef<TData, TValue
   filterDateStrategy?: DateDisableStrategy
   filterMaxLength?: number
   filterRangeKeys?: [string, string]
+  /**
+   * Params a value in this filter clears: filters that feed one backend
+   * parameter take turns, so only the one in use shows a value
+   */
+  filterClearKeys?: string[]
   className?: string
   headerClassName?: string
 }

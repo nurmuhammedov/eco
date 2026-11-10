@@ -115,13 +115,23 @@ interface ValueFilterProps<TData, TValue> extends ColumnFilterInputProps<TData, 
 }
 
 const ValueFilter = <TData, TValue>({ column, filterKey }: ValueFilterProps<TData, TValue>) => {
-  const { filterType = 'search', filterOptions, filterDateStrategy = 'none', filterMaxLength = 30 } = column
+  const {
+    filterType = 'search',
+    filterOptions,
+    filterDateStrategy = 'none',
+    filterMaxLength = 30,
+    filterClearKeys,
+  } = column
   const { paramsObject, addParams } = useCustomSearchParams()
 
   const [open, setOpen] = useState(false)
   const [value, setValue] = useState(paramText(paramsObject[filterKey]))
   const debouncedValue = useDebounce(value, 800)
   const urlValue = paramText(paramsObject[filterKey])
+
+  // A value replaces the filters it shares a backend parameter with; emptying it leaves them be.
+  const pushValue = (val: string | null) =>
+    addParams({ [filterKey]: val }, 'page', 'p', ...(val ? (filterClearKeys ?? []) : []))
 
   // Follow the URL when it changes from outside, e.g. a tab switch clearing the filter.
   useEffect(() => {
@@ -133,7 +143,7 @@ const ValueFilter = <TData, TValue>({ column, filterKey }: ValueFilterProps<TDat
 
     // Skip the push when the debounced value already matches the URL.
     if (debouncedValue !== paramText(paramsObject[filterKey])) {
-      addParams({ [filterKey]: debouncedValue }, 'page', 'p')
+      pushValue(debouncedValue)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedValue, filterKey, filterType])
@@ -149,7 +159,7 @@ const ValueFilter = <TData, TValue>({ column, filterKey }: ValueFilterProps<TDat
 
   const handleImmediateChange = (val: string | null) => {
     setValue(val ?? '')
-    addParams({ [filterKey]: val }, 'page', 'p')
+    pushValue(val)
   }
 
   if (filterType === 'select') {
