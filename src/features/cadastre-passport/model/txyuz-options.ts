@@ -112,6 +112,13 @@ export const splitAddress = (address?: string | null) => {
   return { regionName: parts[0], districtName: parts[1], addressLine: parts.slice(2).join(', ') }
 }
 
+/** What splitAddress takes apart: the region, the district and the rest, blanks left out. */
+export const joinAddress = (...parts: (string | null | undefined)[]) =>
+  parts
+    .map((part) => part?.trim())
+    .filter(Boolean)
+    .join(', ')
+
 /**
  * A coordinate inside this country is two whole degrees and three to six
  * decimals, and the form keeps it as text so the dot survives being typed. It

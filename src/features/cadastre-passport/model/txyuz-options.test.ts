@@ -1,5 +1,28 @@
 import { describe, expect, it } from 'vitest'
-import { CERTIFICATE_NUMBER_PATTERN, CERTIFICATE_NUMBER_SAMPLE, formatCertificateNumber } from './txyuz-options'
+import {
+  CERTIFICATE_NUMBER_PATTERN,
+  CERTIFICATE_NUMBER_SAMPLE,
+  formatCertificateNumber,
+  joinAddress,
+  splitAddress,
+} from './txyuz-options'
+
+describe('joinAddress', () => {
+  it('gives splitAddress back the parts it joined', () => {
+    const address = joinAddress('Andijon viloyati', 'Marxamat tumani', '"Mingtepa" MFY, Olmazor ko‘chasi, 39-uy')
+
+    expect(address).toBe('Andijon viloyati, Marxamat tumani, "Mingtepa" MFY, Olmazor ko‘chasi, 39-uy')
+    expect(splitAddress(address)).toEqual({
+      regionName: 'Andijon viloyati',
+      districtName: 'Marxamat tumani',
+      addressLine: '"Mingtepa" MFY, Olmazor ko‘chasi, 39-uy',
+    })
+  })
+
+  it('trims the parts and leaves the blank ones out', () => {
+    expect(joinAddress('  Andijon viloyati ', '', undefined, null, ' 39-uy')).toBe('Andijon viloyati, 39-uy')
+  })
+})
 
 describe('formatCertificateNumber', () => {
   it('puts the space in for the typist', () => {

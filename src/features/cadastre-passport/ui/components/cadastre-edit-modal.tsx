@@ -67,11 +67,21 @@ export const CadastreEditModal = ({ isOpen, onClose, cadastreId, defaultValues }
   useEffect(() => {
     if (defaultValues && isOpen) {
       const { objects, ...registry } = defaultValues
-      const formattedValues: Record<string, unknown> = { ...registry }
+      // The record keeps a blank as null, which the optional licence fields would refuse as invalid.
+      const formattedValues: Record<string, unknown> = Object.fromEntries(
+        Object.entries(registry).filter(([, value]) => value !== null)
+      )
 
       // The registry belonging is one string on the record and name + type on the form, as on an object.
       Object.assign(formattedValues, splitBelonging(String(registry.organizationalBelonging ?? '')))
       delete formattedValues.organizationalBelonging
+
+      // The title's location is one string on the record and three fields on the form, as an object's address is.
+      const location = splitAddress(String(registry.addressLine ?? ''))
+      formattedValues.locationRegionName = location.regionName
+      formattedValues.locationDistrictName = location.districtName
+      formattedValues.locationAddressLine = location.addressLine
+      delete formattedValues.addressLine
 
       // The record keeps dates as 'yyyy-MM-dd'; the picker works on Date.
       for (const key of ['stateRegistryCertDate', 'licenseDate'] as const) {

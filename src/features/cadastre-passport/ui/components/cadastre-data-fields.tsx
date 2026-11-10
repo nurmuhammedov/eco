@@ -41,6 +41,7 @@ import {
   TXYUZ_SUBSTANCES,
   formatCoordinate,
   formatLandCadastreNumber,
+  joinAddress,
   mapLinks,
 } from '../../model/txyuz-options'
 
@@ -141,10 +142,7 @@ const cadastreObjectSchema = z
     }) => ({
       ...rest,
       organizationalBelonging: `${belongingName.trim()} ${belongingType}`,
-      address: [regionName, districtName, addressLine]
-        .map((part) => part?.trim())
-        .filter(Boolean)
-        .join(', '),
+      address: joinAddress(regionName, districtName, addressLine),
     })
   )
 
@@ -159,6 +157,17 @@ export const cadastreDataSchema = z
     belongingName: text(),
     belongingType: text(),
     address: text(),
+    /**
+     * Titulning «Obyektning joylashgan manzili» qatori. The endpoint takes it as
+     * one string, `addressLine`, and the title splits that on its first two
+     * commas into viloyat, tuman and the rest - so it is collected the way an
+     * object's address is and joined on the way out.
+     */
+    locationRegionId: text(),
+    locationRegionName: text(),
+    locationDistrictId: text(),
+    locationDistrictName: text(),
+    locationAddressLine: text(),
     // "TXYZ kadastr pasporti davlat reyestridan o‘tkazilganligi to‘g‘risida ma’lumotlar" - the
     // second sheet of the passport, filled in by the same customer.
     stateRegistryCertNumber: text(),
@@ -174,10 +183,22 @@ export const cadastreDataSchema = z
     bankMfo: text().regex(BANK_MFO_PATTERN, invalid),
     phoneNumber: text().regex(USER_PATTERNS.phone),
   })
-  .transform(({ belongingName, belongingType, ...rest }) => ({
-    ...rest,
-    organizationalBelonging: `${belongingName.trim()} ${belongingType}`,
-  }))
+  .transform(
+    ({
+      belongingName,
+      belongingType,
+      locationRegionId: _locationRegionId,
+      locationDistrictId: _locationDistrictId,
+      locationRegionName,
+      locationDistrictName,
+      locationAddressLine,
+      ...rest
+    }) => ({
+      ...rest,
+      organizationalBelonging: `${belongingName.trim()} ${belongingType}`,
+      addressLine: joinAddress(locationRegionName, locationDistrictName, locationAddressLine),
+    })
+  )
 
 /** The fields sit on whichever form wraps them, under `prefix` */
 interface CadastreDataFieldsProps {
@@ -249,40 +270,172 @@ const BelongingField = ({ prefix }: { prefix: string }) => {
   )
 }
 
-export const CadastreDataFields = ({ prefix = 'cadastreData.' }: CadastreDataFieldsProps) => {
+/** Form keys of one address, the labels of its two lists and how long its last part may be */
+interface AddressConfig {
+  regionId: string
+  regionName: string
+  districtId: string
+  districtName: string
+  line: string
+  regionLabel: string
+  districtLabel: string
+  lineMaxLength: number
+}
+
+/** An object's own address, under the keys its block has always had */
+const OBJECT_ADDRESS: AddressConfig = {
+  regionId: 'regionId',
+  regionName: 'regionName',
+  districtId: 'districtId',
+  districtName: 'districtName',
+  line: 'addressLine',
+  regionLabel: 'Viloyat',
+  districtLabel: 'Tuman',
+  lineMaxLength: 255,
+}
+
+/**
+ * The passport's own location, for the title. Its keys are its own: the
+ * endpoint calls the joined string `addressLine`, which on an object is only
+ * the street. The lists are named for it as well - next to the legal address a
+ * bare «Viloyat» reads as that address's region. The rest of the line is kept
+ * short enough for the joined string to fit a 255-character column.
+ */
+const LOCATION_ADDRESS: AddressConfig = {
+  regionId: 'locationRegionId',
+  regionName: 'locationRegionName',
+  districtId: 'locationDistrictId',
+  districtName: 'locationDistrictName',
+  line: 'locationAddressLine',
+  regionLabel: 'Obyekt joylashgan viloyat',
+  districtLabel: 'Obyekt joylashgan tuman',
+  lineMaxLength: 190,
+}
+
+/**
+ * Viloyat and tuman picked from the lists, the rest typed. The record keeps the
+ * joined string only, so an existing one arrives with the names: the selects
+ * run on ids, and each name is matched back to one as soon as its list is
+ * loaded.
+ */
+const AddressFields = ({ prefix, config }: { prefix: string; config: AddressConfig }) => {
   const { control, setValue } = useFormContext()
 
-  const regionId = useWatch({ control, name: `${prefix}regionId` })
-  const districtId = useWatch({ control, name: `${prefix}districtId` })
+  const regionIdKey = `${prefix}${config.regionId}`
+  const regionNameKey = `${prefix}${config.regionName}`
+  const districtIdKey = `${prefix}${config.districtId}`
+  const districtNameKey = `${prefix}${config.districtName}`
 
-  const regionName = useWatch({ control, name: `${prefix}regionName` })
-  const districtName = useWatch({ control, name: `${prefix}districtName` })
-
-  const latitude = useWatch({ control, name: `${prefix}latitude` })
-  const longitude = useWatch({ control, name: `${prefix}longitude` })
-  const links = mapLinks(String(latitude ?? ''), String(longitude ?? ''))
+  const regionId = useWatch({ control, name: regionIdKey })
+  const districtId = useWatch({ control, name: districtIdKey })
+  const regionName = useWatch({ control, name: regionNameKey })
+  const districtName = useWatch({ control, name: districtNameKey })
 
   const { data: regions } = useRegionSelectQuery()
   const { data: districts } = useDistrictSelectQuery(Number(regionId))
 
-  /**
-   * An existing record arrives with the names only - the address it was saved
-   * as. The selects run on ids, so each name is matched back to one as soon as
-   * its list is loaded.
-   */
   useEffect(() => {
     if (regionId || !regionName) return
 
     const match = idByName(regions, regionName)
-    if (match) setValue(`${prefix}regionId`, match, { shouldValidate: false })
-  }, [regionId, regionName, regions, prefix, setValue])
+    if (match) setValue(regionIdKey, match, { shouldValidate: false })
+  }, [regionId, regionName, regions, regionIdKey, setValue])
 
   useEffect(() => {
     if (!regionId || districtId || !districtName) return
 
     const match = idByName(districts, districtName)
-    if (match) setValue(`${prefix}districtId`, match, { shouldValidate: false })
-  }, [regionId, districtId, districtName, districts, prefix, setValue])
+    if (match) setValue(districtIdKey, match, { shouldValidate: false })
+  }, [regionId, districtId, districtName, districts, districtIdKey, setValue])
+
+  return (
+    <>
+      <FormField
+        control={control}
+        name={regionIdKey}
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel required>{config.regionLabel}</FormLabel>
+            <FormControl>
+              <Select
+                value={field.value || ''}
+                onValueChange={(value) => {
+                  field.onChange(value)
+                  setValue(regionNameKey, nameById(regions, value), { shouldValidate: false })
+                  setValue(districtIdKey, '', { shouldValidate: false })
+                  setValue(districtNameKey, '', { shouldValidate: false })
+                }}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Tanlang" />
+                </SelectTrigger>
+                <SelectContent>
+                  {(regions ?? []).map((region) => (
+                    <SelectItem key={region.id} value={String(region.id)}>
+                      {region.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={control}
+        name={districtIdKey}
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel required>{config.districtLabel}</FormLabel>
+            <FormControl>
+              <Select
+                value={field.value || ''}
+                disabled={!regionId}
+                onValueChange={(value) => {
+                  field.onChange(value)
+                  setValue(districtNameKey, nameById(districts, value), { shouldValidate: false })
+                }}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Tanlang" />
+                </SelectTrigger>
+                <SelectContent>
+                  {(districts ?? []).map((district) => (
+                    <SelectItem key={district.id} value={String(district.id)}>
+                      {district.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+      <FormField
+        control={control}
+        name={`${prefix}${config.line}`}
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel required>Obyektning joylashgan manzili (MFY, ko‘chasi, uy raqami)</FormLabel>
+            <FormControl>
+              <Input placeholder="Kiriting" maxLength={config.lineMaxLength} {...field} value={field.value ?? ''} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+    </>
+  )
+}
+
+export const CadastreDataFields = ({ prefix = 'cadastreData.' }: CadastreDataFieldsProps) => {
+  const { control } = useFormContext()
+
+  const latitude = useWatch({ control, name: `${prefix}latitude` })
+  const longitude = useWatch({ control, name: `${prefix}longitude` })
+  const links = mapLinks(String(latitude ?? ''), String(longitude ?? ''))
 
   return (
     // A container query reads the nearest ancestor container, never the element
@@ -306,82 +459,7 @@ export const CadastreDataFields = ({ prefix = 'cadastreData.' }: CadastreDataFie
           )}
         />
         <BelongingField prefix={prefix} />
-        <FormField
-          control={control}
-          name={`${prefix}regionId`}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel required>Viloyat</FormLabel>
-              <FormControl>
-                <Select
-                  value={field.value || ''}
-                  onValueChange={(value) => {
-                    field.onChange(value)
-                    setValue(`${prefix}regionName`, nameById(regions, value), { shouldValidate: false })
-                    setValue(`${prefix}districtId`, '', { shouldValidate: false })
-                    setValue(`${prefix}districtName`, '', { shouldValidate: false })
-                  }}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Tanlang" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {(regions ?? []).map((region) => (
-                      <SelectItem key={region.id} value={String(region.id)}>
-                        {region.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={control}
-          name={`${prefix}districtId`}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel required>Tuman</FormLabel>
-              <FormControl>
-                <Select
-                  value={field.value || ''}
-                  disabled={!regionId}
-                  onValueChange={(value) => {
-                    field.onChange(value)
-                    setValue(`${prefix}districtName`, nameById(districts, value), { shouldValidate: false })
-                  }}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Tanlang" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {(districts ?? []).map((district) => (
-                      <SelectItem key={district.id} value={String(district.id)}>
-                        {district.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={control}
-          name={`${prefix}addressLine`}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel required>Obyektning joylashgan manzili (MFY, ko‘chasi, uy raqami)</FormLabel>
-              <FormControl>
-                <Input placeholder="Kiriting" maxLength={255} {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <AddressFields prefix={prefix} config={OBJECT_ADDRESS} />
         <FormField
           control={control}
           name={`${prefix}longitude`}
@@ -899,6 +977,7 @@ export const CadastreRegistryFields = ({ prefix = 'cadastreData.' }: CadastreDat
             </FormItem>
           )}
         />
+        <AddressFields prefix={prefix} config={LOCATION_ADDRESS} />
         <FormField
           control={control}
           name={`${prefix}stateRegistryCertNumber`}
