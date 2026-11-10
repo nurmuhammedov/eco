@@ -7,7 +7,6 @@ import { Button } from '@/shared/components/ui/button'
 import DatePicker from '@/shared/components/ui/datepicker'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
 import { Input } from '@/shared/components/ui/input'
-import { InputNumber } from '@/shared/components/ui/input-number'
 import { PhoneInput } from '@/shared/components/ui/phone-input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { Alert, AlertDescription } from '@/shared/components/ui/alert'
@@ -243,12 +242,7 @@ const RegisterIrsForm = ({ onSubmit }: RegisterIrsFormProps) => {
                 <FormItem>
                   <FormLabel required>Aktivligi, Bk</FormLabel>
                   <FormControl>
-                    <InputNumber
-                      className="3xl:w-sm w-full"
-                      placeholder="Aktivligi, Bk"
-                      {...field}
-                      value={field.value?.toString()}
-                    />
+                    <Input className="3xl:w-sm w-full" placeholder="Masalan: 2.68E+09" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

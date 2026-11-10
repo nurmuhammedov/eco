@@ -42,7 +42,7 @@ export const useCreateIrsApplication = () => {
       sphere: '',
       factoryNumber: '',
       serialNumber: '',
-      activity: undefined, // Number
+      activity: '',
       type: '',
       category: undefined, // Enum
       country: '',

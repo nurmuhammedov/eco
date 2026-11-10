@@ -4,6 +4,7 @@ import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 import { checkExpiryDate } from '@/shared/lib/zod-helpers'
 import { format } from 'date-fns'
 import { z } from 'zod'
+import { irsActivitySchema } from './irs-activity'
 
 const __IrsAppealDtoSchema = z.object({
   phoneNumber: z
@@ -33,7 +34,7 @@ const __IrsAppealDtoSchema = z.object({
   sphere: z.string().trim().min(1),
   factoryNumber: z.string().trim().min(1),
   serialNumber: z.string().trim().min(1),
-  activity: z.coerce.number().positive(),
+  activity: irsActivitySchema,
   type: z.string().trim().min(1),
   category: z.nativeEnum(IrsCategory),
   country: z.string().trim().min(1),
