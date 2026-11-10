@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { isRouteVisible, visibleRoutes } from './visible-routes'
+import { routeByRole } from '@/shared/lib/router/route-by-role'
 import { Direction, UserRoles } from '@/shared/types/user'
 
 const viewer = (role: UserRoles, directions: Direction[] = []) => ({ role, directions })
@@ -62,5 +63,16 @@ describe('visibleRoutes', () => {
     const paths = visibleRoutes(viewer(UserRoles.INSPECTOR, Object.values(Direction))).map(({ path }) => path)
 
     expect(new Set(paths).size).toBe(paths.length)
+  })
+
+  // The procurator's menu has no dashboard, yet typing its address opened it (2026-11-10)
+  it('opens the dashboard to exactly the cabinets that start on it', () => {
+    for (const role of Object.values(UserRoles)) {
+      const opensDashboard = visibleRoutes(viewer(role)).some(({ path }) => path === 'dashboard')
+
+      expect(opensDashboard, role).toBe(routeByRole(role) === '/dashboard')
+    }
+
+    expect(routeByRole(UserRoles.PROCURATOR)).toBe('/register')
   })
 })

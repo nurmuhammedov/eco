@@ -1,5 +1,6 @@
 import { lazy, ReactNode } from 'react'
 import { UserRoles } from '@/shared/types/user'
+import { DASHBOARD_ROLES } from '@/shared/lib/router/route-by-role'
 import { withSuspense } from './utils'
 
 const AccidentDetail = lazy(() =>
@@ -511,7 +512,7 @@ export const APP_ROUTES: AppRouteDefinition[] = [
   {
     path: 'dashboard',
     element: withSuspense(DashboardPage),
-    roles: [UserRoles.CHAIRMAN, UserRoles.INSPECTOR, UserRoles.PROCURATOR, UserRoles.REGIONAL],
+    roles: [...DASHBOARD_ROLES],
   },
   {
     id: 'DECLARATION',

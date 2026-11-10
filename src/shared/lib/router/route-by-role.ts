@@ -1,11 +1,16 @@
 import { UserRoles } from '@/shared/types/user'
 
+/**
+ * The cabinets with a dashboard: it is their start page and the first entry of
+ * their menu. The router, the menu and the start page all read this one list;
+ * kept as three copies, the router's still let the procurator in (2026-11-10).
+ */
+export const DASHBOARD_ROLES: readonly UserRoles[] = [UserRoles.REGIONAL, UserRoles.INSPECTOR, UserRoles.CHAIRMAN]
+
 export const routeByRole = (role: UserRoles | undefined | null): string => {
+  if (role && DASHBOARD_ROLES.includes(role)) return '/dashboard'
+
   switch (role) {
-    case UserRoles.REGIONAL:
-    case UserRoles.INSPECTOR:
-    case UserRoles.CHAIRMAN:
-      return '/dashboard'
     case UserRoles.LEGAL:
     case UserRoles.INDIVIDUAL:
       return '/applications'

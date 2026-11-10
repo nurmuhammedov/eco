@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import { LucideHome } from 'lucide-react'
 import { UserRoles } from '@/shared/types/user'
 import { isModuleInMenu } from '@/shared/lib/access/module-access'
+import { DASHBOARD_ROLES } from '@/shared/lib/router/route-by-role'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { usePaginatedData } from '@/shared/hooks'
 import { useKpiAccess } from '@/entities/kpi'
@@ -10,8 +11,6 @@ import { NAVIGATIONS } from './navigations'
 import { Navigation } from './types'
 import allNavigation from './all'
 import legalNavigation from './legal'
-
-const DASHBOARD_ROLES = [UserRoles.REGIONAL, UserRoles.INSPECTOR, UserRoles.CHAIRMAN]
 
 /** Menu entries kept to some roles within a module: regional heads examine but do not write the questions */
 const ROLE_ONLY_ITEMS: Record<string, UserRoles[]> = {
