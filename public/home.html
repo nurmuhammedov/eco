@@ -563,9 +563,10 @@
         border-color: var(--primary-color);
       }
 
+      /* Figures only: the list opens by STIR/JSHSHIR, so a level has nothing left to filter */
       .risk-levels {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(4, 1fr);
         gap: 15px;
         margin-bottom: 20px;
       }
@@ -576,28 +577,9 @@
         align-items: flex-start;
         gap: 2px;
         padding: 18px 20px;
-        border: 2px solid transparent;
         border-radius: 12px;
-        cursor: pointer;
-        text-align: left;
         font-size: 15px;
         font-weight: 600;
-        transition:
-          border-color 0.2s,
-          transform 0.2s;
-      }
-
-      .risk-level:hover {
-        transform: translateY(-2px);
-      }
-
-      .risk-level:focus-visible {
-        outline: 2px solid var(--primary-color);
-        outline-offset: 2px;
-      }
-
-      .risk-level[aria-pressed='true'] {
-        border-color: currentColor;
       }
 
       .risk-level-count {
@@ -621,20 +603,19 @@
         color: #b42318;
       }
 
+      /* Out of the high ones, those that came out high again on the recheck */
+      .risk-level--recheck {
+        background: #f9d7d3;
+        color: #8f1d14;
+      }
+
       .risk-table-wrap {
         position: relative;
-        /* an empty or first load does not collapse the section to one line */
-        min-height: 320px;
+        /* the prompt or a first load does not collapse the section to one line */
+        min-height: 160px;
         overflow-x: auto;
         border: 1px solid #eef2f3;
         border-radius: 10px;
-      }
-
-      /* header (46px) and ten one-line rows (48px): a short last page keeps the same height */
-      @media (min-width: 901px) {
-        .risk-table-wrap {
-          min-height: 528px;
-        }
       }
 
       .risk-table tbody {
@@ -698,6 +679,11 @@
         white-space: nowrap;
       }
 
+      /* the address is the longest cell; on a narrow screen the table scrolls rather than wrap it word by word */
+      .risk-table td.risk-address {
+        min-width: 220px;
+      }
+
       .risk-badge {
         display: inline-block;
         padding: 2px 10px;
@@ -749,7 +735,7 @@
         }
 
         .risk-levels {
-          grid-template-columns: 1fr;
+          grid-template-columns: 1fr 1fr;
         }
 
         .risk-panel {
@@ -759,6 +745,10 @@
 
       @media (max-width: 560px) {
         .risk-toolbar {
+          grid-template-columns: 1fr;
+        }
+
+        .risk-levels {
           grid-template-columns: 1fr;
         }
 
@@ -1457,29 +1447,35 @@
                 </select>
               </label>
               <label class="risk-field">
-                Qidiruv
+                STIR yoki JSHSHIR
                 <input
                   type="search"
                   id="risk-search"
-                  placeholder="Tashkilot nomi, STIR yoki reyestr raqami"
+                  inputmode="numeric"
+                  maxlength="14"
+                  placeholder="Tashkilotning STIR yoki JSHSHIR raqami"
                   autocomplete="off"
                 />
               </label>
             </div>
 
             <div class="risk-levels">
-              <button type="button" class="risk-level risk-level--low" data-level="LOW" aria-pressed="false">
+              <div class="risk-level risk-level--low">
                 <span class="risk-level-count" data-count="LOW">0</span>
                 <span>Xavfi past</span>
-              </button>
-              <button type="button" class="risk-level risk-level--medium" data-level="MEDIUM" aria-pressed="false">
+              </div>
+              <div class="risk-level risk-level--medium">
                 <span class="risk-level-count" data-count="MEDIUM">0</span>
                 <span>Xavfi o&lsquo;rta</span>
-              </button>
-              <button type="button" class="risk-level risk-level--high" data-level="HIGH" aria-pressed="false">
+              </div>
+              <div class="risk-level risk-level--high">
                 <span class="risk-level-count" data-count="HIGH">0</span>
                 <span>Xavfi yuqori</span>
-              </button>
+              </div>
+              <div class="risk-level risk-level--recheck">
+                <span class="risk-level-count" data-count="RECHECK_HIGH">0</span>
+                <span>Qayta tahlilda ham xavfi yuqori</span>
+              </div>
             </div>
 
             <div class="risk-table-wrap">
@@ -1493,6 +1489,7 @@
                     <th scope="col">Tashkilot nomi</th>
                     <th scope="col">STIR</th>
                     <th scope="col">Reyestr raqami</th>
+                    <th scope="col">Manzil</th>
                     <th scope="col">Ball</th>
                     <th scope="col">Xavf darajasi</th>
                     <th scope="col">O&lsquo;tkazilgan sana</th>
@@ -2016,10 +2013,15 @@
         const PAGE_SIZE = 10
         const FIRST_YEAR = 2025
         const LEVELS = {
-          LOW: { label: 'Xavfi past', className: 'risk-level--low', key: 'lowCount' },
-          MEDIUM: { label: 'Xavfi o‘rta', className: 'risk-level--medium', key: 'mediumCount' },
-          HIGH: { label: 'Xavfi yuqori', className: 'risk-level--high', key: 'highCount' },
+          LOW: { label: 'Xavfi past', className: 'risk-level--low' },
+          MEDIUM: { label: 'Xavfi o‘rta', className: 'risk-level--medium' },
+          HIGH: { label: 'Xavfi yuqori', className: 'risk-level--high' },
         }
+        // the cards and the count fields behind them; the last is the part of HIGH that stayed high on the recheck
+        const COUNTS = { LOW: 'lowCount', MEDIUM: 'mediumCount', HIGH: 'highCount', RECHECK_HIGH: 'recheckHighCount' }
+        // the list is open for one organisation at a time: the backend asks for its TIN or PINFL (2026-11-10)
+        const IDENTITY = /^(\d{9}|\d{14})$/
+        const PROMPT = 'Natijani ko‘rish uchun tashkilotning STIR yoki JSHSHIR raqamini kiriting'
 
         const byId = (id) => document.getElementById(id)
         const yearSelect = byId('risk-year')
@@ -2032,7 +2034,6 @@
         const rangeEl = byId('risk-range')
         const prevBtn = byId('risk-prev')
         const nextBtn = byId('risk-next')
-        const levelButtons = section.querySelectorAll('.risk-level')
 
         // the last finished quarter is the newest one with results
         const now = new Date()
@@ -2042,8 +2043,7 @@
           year: currentQuarter === 1 ? currentYear - 1 : currentYear,
           quarter: currentQuarter === 1 ? 4 : currentQuarter - 1,
           regionId: '',
-          search: '',
-          level: '',
+          identity: '',
           page: 1,
         }
         let countsRequest = 0
@@ -2063,14 +2063,10 @@
         }
         syncQuarters()
 
-        // one box for all three: a 9/14-digit number is a TIN/PINFL, anything else with a digit a registry number
+        // the period and the region narrow the figures and the organisation's results alike
         const filterParams = () => {
           const params = new URLSearchParams({ year: String(state.year), quarter: String(state.quarter) })
           if (state.regionId) params.set('regionId', state.regionId)
-          const query = state.search
-          if (/^(\d{9}|\d{14})$/.test(query)) params.set('identity', query)
-          else if (/\d/.test(query)) params.set('registryNumber', query)
-          else if (query.length >= 3) params.set('ownerName', query)
           return params
         }
 
@@ -2109,12 +2105,25 @@
             data = null
           }
           if (id !== countsRequest) return
-          Object.entries(LEVELS).forEach(([level, { key }]) => {
-            section.querySelector(`[data-count="${level}"]`).textContent = formatNumber(data?.[key])
+          Object.entries(COUNTS).forEach(([card, key]) => {
+            section.querySelector(`[data-count="${card}"]`).textContent = formatNumber(data?.[key])
           })
         }
 
+        // nothing to ask for until a whole TIN or PINFL is typed; a request still on its way is dropped
+        const showPrompt = () => {
+          rowsRequest++
+          rowsEl.replaceChildren()
+          rangeEl.textContent = ''
+          prevBtn.disabled = true
+          nextBtn.disabled = true
+          tableWrap.classList.remove('is-loading')
+          tableWrap.removeAttribute('aria-busy')
+          statusEl.textContent = state.identity ? 'Hech qanday ma’lumot topilmadi' : PROMPT
+        }
+
         const loadRows = async () => {
+          if (!IDENTITY.test(state.identity)) return showPrompt()
           const id = ++rowsRequest
           // the old rows stay, dimmed, until the new ones arrive, so the table keeps its height
           tableWrap.classList.add('is-loading')
@@ -2124,7 +2133,7 @@
           nextBtn.disabled = true
 
           const params = filterParams()
-          if (state.level) params.set('level', state.level)
+          params.set('identity', state.identity)
           params.set('page', String(state.page))
           params.set('size', String(PAGE_SIZE))
 
@@ -2153,6 +2162,7 @@
                 cell(item.legalName || '—'),
                 cell(item.legalTin ? String(item.legalTin) : '—', 'risk-nowrap'),
                 cell(item.registryNumber || '—', 'risk-nowrap'),
+                cell(item.address || '—', 'risk-address'),
                 cell(item.score ?? '—'),
                 levelCell,
                 cell(formatDate(item.date), 'risk-nowrap')
@@ -2161,7 +2171,7 @@
             })
             rowsEl.replaceChildren(fragment)
 
-            statusEl.textContent = items.length ? '' : 'Ma’lumot topilmadi'
+            statusEl.textContent = items.length ? '' : 'Tanlangan chorakda bu STIR/JSHSHIR bo‘yicha natija topilmadi'
             rangeEl.textContent = items.length
               ? `${formatNumber(offset + 1)}–${formatNumber(offset + items.length)} / ${formatNumber(total)}`
               : ''
@@ -2214,22 +2224,16 @@
 
         let searchTimer
         searchInput.addEventListener('input', () => {
+          // digits only: a TIN is nine of them, a PINFL fourteen
+          const digits = searchInput.value.replace(/\D/g, '').slice(0, 14)
+          if (digits !== searchInput.value) searchInput.value = digits
           clearTimeout(searchTimer)
           searchTimer = setTimeout(() => {
-            const value = searchInput.value.trim()
-            if (value === state.search) return
-            state.search = value
-            reload()
-          }, 400)
-        })
-
-        levelButtons.forEach((button) => {
-          button.addEventListener('click', () => {
-            state.level = state.level === button.dataset.level ? '' : button.dataset.level
-            levelButtons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.level === state.level)))
+            if (digits === state.identity) return
+            state.identity = digits
             state.page = 1
             loadRows()
-          })
+          }, 400)
         })
 
         prevBtn.addEventListener('click', () => {
