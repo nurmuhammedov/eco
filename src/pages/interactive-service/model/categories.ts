@@ -94,11 +94,18 @@ export interface Period {
 /**
  * Each section reads its period from the same helper the rest of the app uses:
  * risk analysis closes a quarter behind, inspections open on the current one.
+ * The part a section does not use is filled too, so neither is ever empty.
  */
-export const defaultPeriodFor = (id: CategoryId): Period =>
-  id === 'inspection'
-    ? { ...getDefaultYearAndMonthForInspections(), quarter: '' }
-    : { ...getDefaultYearAndQuarterForRiskAnalysis(), month: '' }
+export const defaultPeriodFor = (id: CategoryId): Period => {
+  const inspection = getDefaultYearAndMonthForInspections()
+  const risk = getDefaultYearAndQuarterForRiskAnalysis()
+
+  return {
+    year: id === 'inspection' ? inspection.year : risk.year,
+    month: inspection.month,
+    quarter: risk.quarter,
+  }
+}
 
 export const AVAILABLE_YEARS = (() => {
   const current = new Date().getFullYear()

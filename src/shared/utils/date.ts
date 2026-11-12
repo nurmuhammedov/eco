@@ -49,6 +49,9 @@ export const QUARTERS = [
   { id: '4', name: '4-chorak' },
 ]
 
+/** For checking a quarter from the URL: anything else is a 400 from the backend */
+export const QUARTER_IDS = QUARTERS.map((item) => item.id)
+
 /**
  * Xavf tahlili choraklik (2026-11-12 dan backend oyni emas, chorakni so'raydi):
  * the newest finished quarter, the one before the current.

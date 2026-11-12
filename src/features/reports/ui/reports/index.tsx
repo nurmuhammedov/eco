@@ -4,7 +4,14 @@ import { ChevronRight, FileText } from 'lucide-react'
 import { Card } from '@/shared/components/ui/card'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { cn } from '@/shared/lib/utils'
-import { isReportReady, reportGroupUrl, useReportGroups } from '../../model/reports-catalog'
+import { isReportReady, reportGroupUrl, useReportGroups, type ReportItem } from '../../model/reports-catalog'
+
+// A Record so that a new report type cannot go without a badge
+const REPORT_TYPE_LABELS: Record<NonNullable<ReportItem['reportType']>, string> = {
+  MONTHLY: 'Oylik',
+  QUARTERLY: 'Choraklik',
+  OTHERS: 'Boshqa',
+}
 
 /**
  * One section of the reports, picked in the sidebar under "Hisobotlar". The
@@ -40,6 +47,7 @@ export const ReportsGrid: React.FC = () => {
           <SelectContent>
             <SelectItem value="ALL">Barchasi</SelectItem>
             <SelectItem value="MONTHLY">Oylik hisobotlar</SelectItem>
+            <SelectItem value="QUARTERLY">Choraklik hisobotlar</SelectItem>
             <SelectItem value="OTHERS">Boshqa turdagi hisobotlar</SelectItem>
           </SelectContent>
         </Select>
@@ -73,7 +81,7 @@ export const ReportsGrid: React.FC = () => {
                   </span>
                   <div className="flex flex-wrap items-center gap-1.5">
                     <span className="rounded bg-gray-100 px-1.5 py-0.5 text-[10px] font-medium text-gray-500">
-                      {item.reportType === 'MONTHLY' ? 'Oylik' : 'Boshqa'}
+                      {REPORT_TYPE_LABELS[item.reportType ?? 'OTHERS']}
                     </span>
                     {item.badge && (
                       <span

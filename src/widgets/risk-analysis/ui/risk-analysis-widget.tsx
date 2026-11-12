@@ -39,7 +39,7 @@ const TAB_TO_API_TYPE: Record<string, string> = {
   [RiskAnalysisTab.XRAY]: 'XRAY',
 }
 
-import { getDefaultYearAndQuarterForRiskAnalysis } from '@/shared/utils/date'
+import { QUARTER_IDS, getDefaultYearAndQuarterForRiskAnalysis } from '@/shared/utils/date'
 import { paramOneOf, paramText } from '@/shared/lib/url-params'
 import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 
@@ -118,7 +118,7 @@ const RiskAnalysisWidget = ({ periodType }: RiskAnalysisWidgetProps) => {
 
   const mainTab = paramText(mainTabParam, RiskAnalysisTab.HF)
   const year = paramText(yearParam, defaultYear)
-  const quarter = paramText(quarterParam, defaultQuarter)
+  const quarter = paramOneOf(quarterParam, QUARTER_IDS, defaultQuarter)
   const date = paramText(dateParam, defaultDate)
   const period = riskPeriodParams(periodType, { year, quarter, date })
 

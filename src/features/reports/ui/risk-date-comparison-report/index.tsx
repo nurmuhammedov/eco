@@ -7,9 +7,10 @@ import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
 import { RiskAnalysisTab } from '@/entities/risk-analysis/model/risk-analysis-tabs'
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/shared/lib/utils'
-import { QUARTERS, getDefaultYearAndQuarterForRiskAnalysis } from '@/shared/utils/date'
+import { QUARTERS, QUARTER_IDS, getDefaultYearAndQuarterForRiskAnalysis } from '@/shared/utils/date'
 import { RiskStatisticsCards } from '@/entities/risk-analysis/ui/risk-statistics-cards'
-import { paramText } from '@/shared/lib/url-params'
+import type { RiskAnalysisLevel } from '@/entities/risk-analysis/model/risk-analysis.types'
+import { paramOneOf, paramText } from '@/shared/lib/url-params'
 import { isCountryTotal } from '../../lib/country-total'
 import type { ExtendedColumnDef } from '@/shared/components/common/data-table/model/column-def'
 
@@ -57,6 +58,12 @@ const TAB_TO_API_TYPE: Record<string, string> = {
   [RiskAnalysisTab.LPG_POWERED]: 'LPG_POWERED',
 }
 
+/**
+ * The only levels /reports/risk-analysis/dynamic takes, so a RECHECK_HIGH or ALL
+ * carried over from the Xavf tahlili page falls back instead of being sent.
+ */
+const DYNAMIC_LEVELS: readonly RiskAnalysisLevel[] = ['LOW', 'MEDIUM', 'HIGH']
+
 const RiskDateComparisonReport: React.FC = () => {
   const { t } = useTranslation('common')
 
@@ -66,8 +73,8 @@ const RiskDateComparisonReport: React.FC = () => {
   const { addParams, paramsObject } = useCustomSearchParams()
   const mainTab = paramText(paramsObject.mainTab, RiskAnalysisTab.HF)
   const year = paramText(paramsObject.year, String(defaultYear))
-  const quarter = paramText(paramsObject.quarter, defaultQuarter)
-  const riskLevel = paramText(paramsObject.riskLevel, 'LOW')
+  const quarter = paramOneOf(paramsObject.quarter, QUARTER_IDS, defaultQuarter)
+  const riskLevel = paramOneOf(paramsObject.riskLevel, DYNAMIC_LEVELS, 'LOW')
   const regionName = paramText(paramsObject.regionName, 'all')
 
   const { data: dynamicsData, isLoading: dynamicsLoading } = useData<RegionDynamics[]>(
@@ -340,6 +347,7 @@ const RiskDateComparisonReport: React.FC = () => {
         year={year}
         quarter={quarter}
         showAllCard={false}
+        showRecheckCard={false}
         className="mb-1"
       />
 

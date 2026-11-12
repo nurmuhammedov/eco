@@ -13,6 +13,8 @@ interface RiskStatisticsCardsProps {
   periodType: RiskAnalysisPeriodType
   regionId?: string
   showAllCard?: boolean
+  /** Off where the level goes to an API that knows LOW, MEDIUM and HIGH only */
+  showRecheckCard?: boolean
   className?: string
 }
 
@@ -35,6 +37,7 @@ export const RiskStatisticsCards = ({
   date,
   periodType,
   showAllCard = true,
+  showRecheckCard = true,
   className,
 }: RiskStatisticsCardsProps) => {
   const { data, isLoading } = useData<RiskCountResponse>('/risk-analyses/count', true, {
@@ -107,7 +110,7 @@ export const RiskStatisticsCards = ({
       inactiveIconClass: 'bg-rose-50 text-rose-600 group-hover:bg-rose-500 group-hover:text-white',
     },
     // Rechecks belong to the quarterly analysis; the card stays put and reads 0 until there are any
-    ...(periodType === 'QUARTERLY'
+    ...(periodType === 'QUARTERLY' && showRecheckCard
       ? [
           {
             id: RECHECK_HIGH_LEVEL,

@@ -32,7 +32,7 @@ export interface ReportItem {
   icon?: ElementType
   url: string
   badge?: string
-  reportType?: 'MONTHLY' | 'OTHERS'
+  reportType?: 'MONTHLY' | 'QUARTERLY' | 'OTHERS'
   /** Narrows a single report to these roles within an otherwise visible group */
   roles?: UserRoles[]
 }
@@ -205,7 +205,8 @@ export const REPORTS_GROUPS: ReportGroup[] = [
         title: 'Xavf tahlili natijasi bo‘yicha muddatlar o‘rtasida solishtirish hisoboti',
         icon: LineChart,
         url: '/reports/risk-date-comparison',
-        reportType: 'MONTHLY',
+        // The risk analysis is by quarter since 2026-11-12
+        reportType: 'QUARTERLY',
       },
       {
         id: 'risk-objects',

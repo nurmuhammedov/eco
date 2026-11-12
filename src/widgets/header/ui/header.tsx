@@ -13,9 +13,11 @@ import DatePicker from '@/shared/components/ui/datepicker'
 import {
   MONTHS,
   QUARTERS,
+  QUARTER_IDS,
   getDefaultYearAndMonthForInspections,
   getDefaultYearAndQuarterForRiskAnalysis,
 } from '@/shared/utils/date'
+import { paramOneOf } from '@/shared/lib/url-params'
 
 export function Header() {
   const { pathname = '' } = useLocation()
@@ -40,7 +42,8 @@ export function Header() {
 
   const selectedYear = paramsObject.year?.toString() || defaultYear
   const selectedMonth = paramsObject.month?.toString() || defaultMonth
-  const selectedQuarter = paramsObject.quarter?.toString() || riskAnalysisDefault.quarter
+  // Kept to 1-4 like the widget, so the select shows the quarter actually asked for
+  const selectedQuarter = paramOneOf(paramsObject.quarter, QUARTER_IDS, riskAnalysisDefault.quarter)
   const selectedDateStr = paramsObject.date?.toString() || defaultDate
   const selectedDate = selectedDateStr ? new Date(selectedDateStr) : undefined
 

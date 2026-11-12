@@ -63,7 +63,8 @@ export const useCategoryData = ({ category, regionId, year, month, quarter }: Op
     category === 'attraction'
   )
 
-  const risk = useRiskAnalysisStats({ year, quarter, regionId, enabled: category === 'risk' })
+  // QUARTERLY without a year and a quarter is a 400, and a red toast, per request
+  const risk = useRiskAnalysisStats({ year, quarter, regionId, enabled: category === 'risk' && !!year && !!quarter })
 
   /**
    * The inspection endpoints reject a request without `belongType`, so the

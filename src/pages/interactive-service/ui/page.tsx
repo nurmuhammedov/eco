@@ -44,19 +44,19 @@ export const InteractiveServicePage = () => {
     return () => clearInterval(id)
   }, [queryClient])
 
-  // Risk analysis closes a quarter behind and inspections open on the current
-  // one, so the period follows the section rather than carrying across it.
-  useEffect(() => {
-    setShowRegions(false)
-    setRegionId(null)
-    setPeriod(defaultPeriodFor(category))
-  }, [category])
-
-  const selectCategory = useCallback((id: CategoryId) => {
-    setCategory(id)
-    setRegionId(null)
-    setShowRegions(false)
-  }, [])
+  const selectCategory = useCallback(
+    (id: CategoryId) => {
+      // Risk analysis closes a quarter behind and inspections open on the current
+      // one, so the period follows the section rather than carrying across it.
+      // Set in the same update as the section: a render of risk analysis with the
+      // inspections' period would ask for a quarter it does not have.
+      if (id !== category) setPeriod(defaultPeriodFor(id))
+      setCategory(id)
+      setRegionId(null)
+      setShowRegions(false)
+    },
+    [category]
+  )
 
   const hasPins = meta.locationEndpoint !== undefined
   const onPins = hasPins && !showRegions
