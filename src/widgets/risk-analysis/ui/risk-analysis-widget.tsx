@@ -12,7 +12,9 @@ import {
   RECHECK_HIGH_LEVEL,
   RECHECK_LEVEL_FILTERS,
   riskLevelParams,
+  riskPeriodParams,
   type RiskAnalysisItem,
+  type RiskAnalysisPeriodType,
   type RiskLevelCount,
   type RiskRegionCount,
 } from '@/entities/risk-analysis/model/risk-analysis.types'
@@ -37,12 +39,12 @@ const TAB_TO_API_TYPE: Record<string, string> = {
   [RiskAnalysisTab.XRAY]: 'XRAY',
 }
 
-import { getDefaultYearAndMonthForRiskAnalysis } from '@/shared/utils/date'
+import { getDefaultYearAndQuarterForRiskAnalysis } from '@/shared/utils/date'
 import { paramOneOf, paramText } from '@/shared/lib/url-params'
 import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
 
 interface RiskAnalysisWidgetProps {
-  periodType: 'DAILY' | 'MONTHLY'
+  periodType: RiskAnalysisPeriodType
 }
 
 /** The recheck list and its summary share the space below the cards, one at a time. */
@@ -85,9 +87,7 @@ const RiskAnalysisWidget = ({ periodType }: RiskAnalysisWidgetProps) => {
     runDaily()
   }
 
-  const defaultDateValues = getDefaultYearAndMonthForRiskAnalysis()
-  const defaultYear = defaultDateValues.year
-  const defaultMonth = defaultDateValues.month
+  const { year: defaultYear, quarter: defaultQuarter } = getDefaultYearAndQuarterForRiskAnalysis()
 
   const previousDayDate = subDays(new Date(), 1)
   const defaultDate = format(previousDayDate, 'yyyy-MM-dd')
@@ -98,7 +98,7 @@ const RiskAnalysisWidget = ({ periodType }: RiskAnalysisWidgetProps) => {
       mainTab: mainTabParam,
       riskLevel = 'ALL',
       year: yearParam,
-      month: monthParam,
+      quarter: quarterParam,
       date: dateParam,
       size = 10,
       page = 1,
@@ -117,9 +117,10 @@ const RiskAnalysisWidget = ({ periodType }: RiskAnalysisWidgetProps) => {
   } = useCustomSearchParams()
 
   const mainTab = paramText(mainTabParam, RiskAnalysisTab.HF)
-  const year = paramText(yearParam, String(defaultYear))
-  const month = paramText(monthParam, defaultMonth)
+  const year = paramText(yearParam, defaultYear)
+  const quarter = paramText(quarterParam, defaultQuarter)
   const date = paramText(dateParam, defaultDate)
+  const period = riskPeriodParams(periodType, { year, quarter, date })
 
   const isRestrictedRole = user?.role === UserRoles.INSPECTOR || user?.role === UserRoles.REGIONAL
   const isSupervisorOrController = user?.isSupervisor || user?.isController
@@ -131,7 +132,7 @@ const RiskAnalysisWidget = ({ periodType }: RiskAnalysisWidgetProps) => {
 
   // The chairman's breakdown of the recheck; the backend counts XICHO only
   const hasRecheckSummary = (level: string) =>
-    isChairman && periodType === 'MONTHLY' && level === RECHECK_HIGH_LEVEL && currentApiType === 'HF'
+    isChairman && periodType === 'QUARTERLY' && level === RECHECK_HIGH_LEVEL && currentApiType === 'HF'
   const showRecheckSummary = hasRecheckSummary(String(riskLevel))
   const recheckView = paramOneOf(recheckViewParam, RECHECK_VIEWS, 'list')
 
@@ -147,11 +148,8 @@ const RiskAnalysisWidget = ({ periodType }: RiskAnalysisWidgetProps) => {
 
   const apiParams = {
     type: currentApiType,
-    periodType,
+    ...period,
     ...riskLevelParams(String(riskLevel)),
-    year: periodType === 'MONTHLY' ? year : undefined,
-    month: periodType === 'MONTHLY' ? month : undefined,
-    date: periodType === 'DAILY' ? date : undefined,
     size,
     page,
     regionId: activeRegion,
@@ -171,12 +169,7 @@ const RiskAnalysisWidget = ({ periodType }: RiskAnalysisWidgetProps) => {
     showRecheckSummary ? recheckView === 'list' : shouldShowRegions ? !!activeRegion : true
   )
 
-  const countsApiParams = {
-    periodType,
-    year: periodType === 'MONTHLY' ? year : undefined,
-    month: periodType === 'MONTHLY' ? month : undefined,
-    date: periodType === 'DAILY' ? date : undefined,
-  }
+  const countsApiParams = period
 
   const { data: hfRiskCounts } = useData<RiskLevelCount>('/risk-analyses/count', true, {
     type: 'HF',
@@ -208,11 +201,8 @@ const RiskAnalysisWidget = ({ periodType }: RiskAnalysisWidgetProps) => {
 
   const { data: regionCounts = [] } = useData<RiskRegionCount[]>('/risk-analyses/count/by-region', showRegionStrip, {
     type: currentApiType,
-    periodType,
+    ...period,
     ...riskLevelParams(String(riskLevel)),
-    year: periodType === 'MONTHLY' ? year : undefined,
-    month: periodType === 'MONTHLY' ? month : undefined,
-    date: periodType === 'DAILY' ? date : undefined,
     name,
     registryNumber,
     ownerName,
@@ -250,7 +240,7 @@ const RiskAnalysisWidget = ({ periodType }: RiskAnalysisWidgetProps) => {
   }
 
   // LOW and MEDIUM results are never rechecked, so the figure would only ever read 0 there
-  const showRecheckCount = periodType === 'MONTHLY' && RECHECK_LEVEL_FILTERS.includes(String(riskLevel))
+  const showRecheckCount = periodType === 'QUARTERLY' && RECHECK_LEVEL_FILTERS.includes(String(riskLevel))
 
   const regionTabs = useMemo(() => {
     return (
@@ -321,7 +311,7 @@ const RiskAnalysisWidget = ({ periodType }: RiskAnalysisWidgetProps) => {
         onTabChange={handleCardTabChange}
         periodType={periodType}
         year={year}
-        month={month}
+        quarter={quarter}
         date={date}
         regionId={activeRegion}
       />
@@ -365,7 +355,7 @@ const RiskAnalysisWidget = ({ periodType }: RiskAnalysisWidgetProps) => {
         <RecheckRegionSummary
           className={TABLE_MIN_HEIGHT}
           year={year}
-          month={month}
+          quarter={quarter}
           regions={regions}
           onRegionSelect={handleRecheckRegionSelect}
         />

@@ -1,16 +1,16 @@
 import { useData } from '@/shared/hooks'
 import { ShieldCheck, AlertTriangle, Flame, Layers, RefreshCw } from 'lucide-react'
 import { cn } from '@/shared/lib/utils'
-import { RECHECK_HIGH_LEVEL } from '../model/risk-analysis.types'
+import { RECHECK_HIGH_LEVEL, riskPeriodParams, type RiskAnalysisPeriodType } from '../model/risk-analysis.types'
 
 interface RiskStatisticsCardsProps {
   type: string
   activeRiskLevel: string
   onTabChange: (level: string) => void
   year?: number | string
-  month?: string
+  quarter?: number | string
   date?: string
-  periodType: 'DAILY' | 'MONTHLY'
+  periodType: RiskAnalysisPeriodType
   regionId?: string
   showAllCard?: boolean
   className?: string
@@ -31,7 +31,7 @@ export const RiskStatisticsCards = ({
   activeRiskLevel,
   onTabChange,
   year,
-  month,
+  quarter,
   date,
   periodType,
   showAllCard = true,
@@ -39,10 +39,7 @@ export const RiskStatisticsCards = ({
 }: RiskStatisticsCardsProps) => {
   const { data, isLoading } = useData<RiskCountResponse>('/risk-analyses/count', true, {
     type,
-    periodType,
-    year: periodType === 'MONTHLY' ? year : undefined,
-    month: periodType === 'MONTHLY' ? month : undefined,
-    date: periodType === 'DAILY' ? date : undefined,
+    ...riskPeriodParams(periodType, { year, quarter, date }),
   })
 
   const lowCount = data?.lowCount || 0
@@ -110,7 +107,7 @@ export const RiskStatisticsCards = ({
       inactiveIconClass: 'bg-rose-50 text-rose-600 group-hover:bg-rose-500 group-hover:text-white',
     },
     // Rechecks belong to the quarterly analysis; the card stays put and reads 0 until there are any
-    ...(periodType === 'MONTHLY'
+    ...(periodType === 'QUARTERLY'
       ? [
           {
             id: RECHECK_HIGH_LEVEL,

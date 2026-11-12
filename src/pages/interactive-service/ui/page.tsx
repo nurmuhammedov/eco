@@ -4,7 +4,7 @@ import { MapPin, Shapes } from 'lucide-react'
 import { cn } from '@/shared/lib/utils'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { PointsMap } from '@/features/dashboard/ui/points-map'
-import { AVAILABLE_YEARS, CategoryId, MONTHS, categoryOf, defaultPeriodFor } from '../model/categories'
+import { AVAILABLE_YEARS, CategoryId, MONTHS, QUARTERS, categoryOf, defaultPeriodFor } from '../model/categories'
 import { REGIONS_SORTED as REGIONS, regionNameById } from '../model/regions'
 import { useCategoryData } from '../model/use-category-data'
 import { CategoryRail } from './category-rail'
@@ -35,6 +35,7 @@ export const InteractiveServicePage = () => {
     regionId: regionId === null ? undefined : String(regionId),
     year: period.year,
     month: period.month,
+    quarter: period.quarter,
   })
 
   useEffect(() => {
@@ -120,21 +121,40 @@ export const InteractiveServicePage = () => {
                     </SelectContent>
                   </Select>
 
-                  <Select
-                    value={period.month}
-                    onValueChange={(value) => setPeriod((current) => ({ ...current, month: value }))}
-                  >
-                    <SelectTrigger className="h-8 w-[106px] border-slate-200 bg-white !text-xs lg:h-9 lg:!text-sm">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {MONTHS.map((item) => (
-                        <SelectItem key={item.id} value={item.id}>
-                          {item.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  {/* The risk analysis is by quarter, inspections by month */}
+                  {category === 'risk' ? (
+                    <Select
+                      value={period.quarter}
+                      onValueChange={(value) => setPeriod((current) => ({ ...current, quarter: value }))}
+                    >
+                      <SelectTrigger className="h-8 w-[106px] border-slate-200 bg-white !text-xs lg:h-9 lg:!text-sm">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {QUARTERS.map((item) => (
+                          <SelectItem key={item.id} value={item.id}>
+                            {item.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  ) : (
+                    <Select
+                      value={period.month}
+                      onValueChange={(value) => setPeriod((current) => ({ ...current, month: value }))}
+                    >
+                      <SelectTrigger className="h-8 w-[106px] border-slate-200 bg-white !text-xs lg:h-9 lg:!text-sm">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {MONTHS.map((item) => (
+                          <SelectItem key={item.id} value={item.id}>
+                            {item.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
                 </>
               )}
 

@@ -1,4 +1,5 @@
 import { useData } from '@/shared/hooks/api'
+import { riskPeriodParams } from '@/entities/risk-analysis/model/risk-analysis.types'
 import { DASHBOARD_STALE_TIME } from './use-dashboard-stats'
 
 interface RiskCountResponse {
@@ -8,8 +9,8 @@ interface RiskCountResponse {
 }
 
 interface UseRiskAnalysisStatsProps {
-  year: number
-  month: string
+  year: string
+  quarter: string
   regionId?: string | null
   enabled?: boolean
 }
@@ -25,11 +26,9 @@ const OBJECT_LABELS: Record<string, string> = {
   LPG_POWERED: 'Yiliga 100 ming va undan ortiq kubometr tabiiy gazdan foydalanuvchi qurilma',
 }
 
-export const useRiskAnalysisStats = ({ year, month, regionId, enabled = true }: UseRiskAnalysisStatsProps) => {
+export const useRiskAnalysisStats = ({ year, quarter, regionId, enabled = true }: UseRiskAnalysisStatsProps) => {
   const commonParams = {
-    year,
-    month,
-    periodType: 'MONTHLY',
+    ...riskPeriodParams('QUARTERLY', { year, quarter }),
     regionId: regionId?.toString(),
   }
 

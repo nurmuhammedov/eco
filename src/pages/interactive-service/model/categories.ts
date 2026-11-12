@@ -12,8 +12,9 @@ import {
 } from 'lucide-react'
 import {
   MONTHS,
+  QUARTERS,
   getDefaultYearAndMonthForInspections,
-  getDefaultYearAndMonthForRiskAnalysis,
+  getDefaultYearAndQuarterForRiskAnalysis,
 } from '@/shared/utils/date'
 
 export type CategoryId =
@@ -79,16 +80,25 @@ export const CATEGORIES: Category[] = [
   { id: 'inquiry', label: 'Murojaatlar', subtitle: 'Kelib tushgan murojaatlar', icon: MessageSquare },
 ]
 
-export { MONTHS }
+export { MONTHS, QUARTERS }
 
 export const categoryOf = (id: CategoryId) => CATEGORIES.find((item) => item.id === id) ?? CATEGORIES[0]
+
+/** Inspections are counted by month, the risk analysis by quarter */
+export interface Period {
+  year: string
+  month: string
+  quarter: string
+}
 
 /**
  * Each section reads its period from the same helper the rest of the app uses:
  * risk analysis closes a quarter behind, inspections open on the current one.
  */
-export const defaultPeriodFor = (id: CategoryId) =>
-  id === 'inspection' ? getDefaultYearAndMonthForInspections() : getDefaultYearAndMonthForRiskAnalysis()
+export const defaultPeriodFor = (id: CategoryId): Period =>
+  id === 'inspection'
+    ? { ...getDefaultYearAndMonthForInspections(), quarter: '' }
+    : { ...getDefaultYearAndQuarterForRiskAnalysis(), month: '' }
 
 export const AVAILABLE_YEARS = (() => {
   const current = new Date().getFullYear()

@@ -48,7 +48,7 @@ const zero = (regionId: number, region: string): RecheckHighCountByRegion => ({
 
 interface Props {
   year: string
-  month: string
+  quarter: string
   regions: { id: number; name: string | null }[]
   /** Opens the list for a region, or for all of them on the total row */
   onRegionSelect: (regionId: number | null) => void
@@ -63,10 +63,10 @@ interface Props {
  * Its rows also open the list narrowed to a region: a region with nothing to
  * list is not offered.
  */
-export const RecheckRegionSummary = ({ year, month, regions, onRegionSelect, className }: Props) => {
+export const RecheckRegionSummary = ({ year, quarter, regions, onRegionSelect, className }: Props) => {
   const { data = [], isLoading } = useData<RecheckHighCountByRegion[]>('/risk-analyses/recheck/count/by-region', true, {
     year,
-    month,
+    quarter,
   })
 
   const rows = useMemo(() => {

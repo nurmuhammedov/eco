@@ -7,7 +7,7 @@ import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
 import { RiskAnalysisTab } from '@/entities/risk-analysis/model/risk-analysis-tabs'
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/shared/lib/utils'
-import { getDefaultYearAndMonthForRiskAnalysis } from '@/shared/utils/date'
+import { QUARTERS, getDefaultYearAndQuarterForRiskAnalysis } from '@/shared/utils/date'
 import { RiskStatisticsCards } from '@/entities/risk-analysis/ui/risk-statistics-cards'
 import { paramText } from '@/shared/lib/url-params'
 import { isCountryTotal } from '../../lib/country-total'
@@ -46,21 +46,6 @@ interface Row {
   months: Record<string, DateCounts>
 }
 
-const MONTHS = [
-  { id: 'JANUARY', name: 'Yanvar' },
-  { id: 'FEBRUARY', name: 'Fevral' },
-  { id: 'MARCH', name: 'Mart' },
-  { id: 'APRIL', name: 'Aprel' },
-  { id: 'MAY', name: 'May' },
-  { id: 'JUNE', name: 'Iyun' },
-  { id: 'JULY', name: 'Iyul' },
-  { id: 'AUGUST', name: 'Avgust' },
-  { id: 'SEPTEMBER', name: 'Sentabr' },
-  { id: 'OCTOBER', name: 'Oktabr' },
-  { id: 'NOVEMBER', name: 'Noyabr' },
-  { id: 'DECEMBER', name: 'Dekabr' },
-]
-
 const currentYear = new Date().getFullYear()
 
 const TAB_TO_API_TYPE: Record<string, string> = {
@@ -75,13 +60,13 @@ const TAB_TO_API_TYPE: Record<string, string> = {
 const RiskDateComparisonReport: React.FC = () => {
   const { t } = useTranslation('common')
 
-  // Same period the Xavf tahlili page opens on: the last month of the previous quarter.
-  const { year: defaultYear, month: defaultMonth } = getDefaultYearAndMonthForRiskAnalysis()
+  // Same period the Xavf tahlili page opens on: the previous quarter.
+  const { year: defaultYear, quarter: defaultQuarter } = getDefaultYearAndQuarterForRiskAnalysis()
 
   const { addParams, paramsObject } = useCustomSearchParams()
   const mainTab = paramText(paramsObject.mainTab, RiskAnalysisTab.HF)
   const year = paramText(paramsObject.year, String(defaultYear))
-  const month = paramText(paramsObject.month, defaultMonth)
+  const quarter = paramText(paramsObject.quarter, defaultQuarter)
   const riskLevel = paramText(paramsObject.riskLevel, 'LOW')
   const regionName = paramText(paramsObject.regionName, 'all')
 
@@ -90,8 +75,8 @@ const RiskDateComparisonReport: React.FC = () => {
     true,
     {
       year: Number(year),
-      month: month,
-      periodType: 'MONTHLY',
+      // RiskAnalysisDynamicsDto: year, quarter, type, level - there is no period type to send
+      quarter: Number(quarter),
       level: riskLevel,
       type: TAB_TO_API_TYPE[mainTab] || 'HF',
     }
@@ -213,8 +198,7 @@ const RiskDateComparisonReport: React.FC = () => {
       {
         header: () => (
           <div className="text-center whitespace-nowrap">
-            {year}-yil {MONTHS.find((m) => m.id === month)?.name || month} oyi yakunidagi <br /> xavf tahlili natijasi
-            bo‘yicha soni
+            {year}-yil {quarter}-chorak yakunidagi <br /> xavf tahlili natijasi bo‘yicha soni
           </div>
         ),
         accessorKey: 'totalCapacity',
@@ -274,7 +258,7 @@ const RiskDateComparisonReport: React.FC = () => {
     ]
 
     return { tableData: mapped, columns: groupedCols }
-  }, [rawList, regionName, riskLevel, year, month])
+  }, [rawList, regionName, riskLevel, year, quarter])
 
   const regionOptions = useMemo(() => {
     const names = rawList.map((item) => item.regionName).filter(Boolean)
@@ -321,14 +305,14 @@ const RiskDateComparisonReport: React.FC = () => {
             </SelectContent>
           </Select>
 
-          <Select value={month} onValueChange={(val) => addParams({ month: val })}>
+          <Select value={quarter} onValueChange={(val) => addParams({ quarter: val })}>
             <SelectTrigger className="h-10 w-[140px] bg-white">
-              <SelectValue placeholder="Oy" />
+              <SelectValue placeholder="Chorak" />
             </SelectTrigger>
             <SelectContent>
-              {MONTHS.map((m) => (
-                <SelectItem key={m.id} value={m.id}>
-                  {m.name}
+              {QUARTERS.map((q) => (
+                <SelectItem key={q.id} value={q.id}>
+                  {q.name}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -352,9 +336,9 @@ const RiskDateComparisonReport: React.FC = () => {
         type={TAB_TO_API_TYPE[mainTab] || 'HF'}
         activeRiskLevel={riskLevel}
         onTabChange={handleRiskLevelChange}
-        periodType="MONTHLY"
+        periodType="QUARTERLY"
         year={year}
-        month={month}
+        quarter={quarter}
         showAllCard={false}
         className="mb-1"
       />

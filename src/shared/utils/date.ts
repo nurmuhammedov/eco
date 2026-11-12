@@ -42,24 +42,23 @@ export const MONTHS = [
   { id: 'DECEMBER', name: 'Dekabr' },
 ]
 
-export const getDefaultYearAndMonthForRiskAnalysis = () => {
-  // Joriy chorakdan bitta oldingi chorakning uchinchi oyi
-  const date = new Date()
+export const QUARTERS = [
+  { id: '1', name: '1-chorak' },
+  { id: '2', name: '2-chorak' },
+  { id: '3', name: '3-chorak' },
+  { id: '4', name: '4-chorak' },
+]
+
+/**
+ * Xavf tahlili choraklik (2026-11-12 dan backend oyni emas, chorakni so'raydi):
+ * the newest finished quarter, the one before the current.
+ */
+export const getDefaultYearAndQuarterForRiskAnalysis = (date = new Date()) => {
   const currentQuarter = Math.floor(date.getMonth() / 3) + 1
-  let targetYear = date.getFullYear()
-  let previousQuarter = currentQuarter - 1
 
-  if (previousQuarter === 0) {
-    previousQuarter = 4
-    targetYear -= 1
-  }
-
-  const targetMonthIndex = previousQuarter * 3 - 1 // 3rd month of that quarter
-
-  return {
-    year: targetYear.toString(),
-    month: MONTHS[targetMonthIndex].id,
-  }
+  return currentQuarter === 1
+    ? { year: String(date.getFullYear() - 1), quarter: '4' }
+    : { year: String(date.getFullYear()), quarter: String(currentQuarter - 1) }
 }
 
 export const getDefaultYearAndMonthForInspections = () => {

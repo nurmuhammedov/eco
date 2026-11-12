@@ -38,6 +38,7 @@ interface Options {
   regionId?: string
   year: string
   month: string
+  quarter: string
 }
 
 const asArray = <T>(value: T[] | undefined): T[] => (Array.isArray(value) ? value : [])
@@ -50,7 +51,7 @@ const countBy = (points: MapPoint[]) =>
     return totals
   }, {})
 
-export const useCategoryData = ({ category, regionId, year, month }: Options): CategoryData => {
+export const useCategoryData = ({ category, regionId, year, month, quarter }: Options): CategoryData => {
   const base = regionId ? { regionId } : {}
 
   const stats = useDashboardStats(regionId, category)
@@ -62,7 +63,7 @@ export const useCategoryData = ({ category, regionId, year, month }: Options): C
     category === 'attraction'
   )
 
-  const risk = useRiskAnalysisStats({ year: Number(year), month, regionId, enabled: category === 'risk' })
+  const risk = useRiskAnalysisStats({ year, quarter, regionId, enabled: category === 'risk' })
 
   /**
    * The inspection endpoints reject a request without `belongType`, so the

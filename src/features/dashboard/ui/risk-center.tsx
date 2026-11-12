@@ -1,8 +1,8 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Search } from 'lucide-react'
-import { getMonth, subMonths } from 'date-fns'
 import { cn } from '@/shared/lib/utils'
+import { QUARTERS, getDefaultYearAndQuarterForRiskAnalysis } from '@/shared/utils/date'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { useRiskAnalysisStats } from '../model/use-risk-analysis-stats'
 import { StatValue } from './stat-value'
@@ -27,21 +27,6 @@ interface RiskSectionProps {
   isLoading?: boolean
   buildHref: (item: RiskItem) => string
 }
-
-const MONTHS = [
-  { id: 'JANUARY', name: 'Yanvar' },
-  { id: 'FEBRUARY', name: 'Fevral' },
-  { id: 'MARCH', name: 'Mart' },
-  { id: 'APRIL', name: 'Aprel' },
-  { id: 'MAY', name: 'May' },
-  { id: 'JUNE', name: 'Iyun' },
-  { id: 'JULY', name: 'Iyul' },
-  { id: 'AUGUST', name: 'Avgust' },
-  { id: 'SEPTEMBER', name: 'Sentabr' },
-  { id: 'OCTOBER', name: 'Oktabr' },
-  { id: 'NOVEMBER', name: 'Noyabr' },
-  { id: 'DECEMBER', name: 'Dekabr' },
-]
 
 /** Risk analysis data starts here; offering earlier years would return nothing. */
 const FIRST_ANALYSIS_YEAR = 2025
@@ -83,9 +68,9 @@ const RiskSection = ({ title, count, items, headerClass, dotClass, isLoading, bu
 )
 
 export const RiskCenter = ({ regionId }: RiskCenterProps) => {
-  const previousMonthDate = subMonths(new Date(), 1)
-  const [year, setYear] = useState(previousMonthDate.getFullYear().toString())
-  const [month, setMonth] = useState(MONTHS[getMonth(previousMonthDate)].id)
+  // The analysis is by quarter; it opens on the newest finished one, as the Xavf tahlili page does
+  const [year, setYear] = useState(() => getDefaultYearAndQuarterForRiskAnalysis().year)
+  const [quarter, setQuarter] = useState(() => getDefaultYearAndQuarterForRiskAnalysis().quarter)
 
   const years = useMemo(() => {
     const current = new Date().getFullYear()
@@ -94,7 +79,7 @@ export const RiskCenter = ({ regionId }: RiskCenterProps) => {
     return Array.from({ length: span }, (_, index) => FIRST_ANALYSIS_YEAR + index)
   }, [])
 
-  const stats = useRiskAnalysisStats({ year: parseInt(year), month, regionId })
+  const stats = useRiskAnalysisStats({ year, quarter, regionId })
 
   const buildRiskUrl = (level?: string, item?: RiskItem) => {
     const params = new URLSearchParams()
@@ -102,7 +87,7 @@ export const RiskCenter = ({ regionId }: RiskCenterProps) => {
     if (item?.key) params.set('mainTab', item.key)
     if (level) params.set('riskLevel', level)
     params.set('year', year)
-    params.set('month', month)
+    params.set('quarter', quarter)
     if (regionId) params.set('regionId', regionId)
 
     return `/risk-analysis?${params.toString()}`
@@ -154,12 +139,12 @@ export const RiskCenter = ({ regionId }: RiskCenterProps) => {
             </SelectContent>
           </Select>
 
-          <Select value={month} onValueChange={setMonth}>
-            <SelectTrigger aria-label="Oy" className="w-36">
-              <SelectValue placeholder="Oy" />
+          <Select value={quarter} onValueChange={setQuarter}>
+            <SelectTrigger aria-label="Chorak" className="w-36">
+              <SelectValue placeholder="Chorak" />
             </SelectTrigger>
             <SelectContent align="end">
-              {MONTHS.map((option) => (
+              {QUARTERS.map((option) => (
                 <SelectItem key={option.id} value={option.id}>
                   {option.name}
                 </SelectItem>

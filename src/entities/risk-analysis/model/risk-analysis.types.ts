@@ -30,6 +30,20 @@ export const riskLevelParams = (riskLevel: string) =>
 /** Levels a recheck applies to: only HIGH results are rechecked */
 export const RECHECK_LEVEL_FILTERS = ['ALL', 'HIGH', RECHECK_HIGH_LEVEL]
 
+/** RiskAnalysisPeriodType. MONTHLY went on 2026-11-12: the backend refuses it and analyses by quarter */
+export type RiskAnalysisPeriodType = 'DAILY' | 'QUARTERLY'
+
+/** What the page has picked; only the part its period type needs is sent */
+export interface RiskPeriodValues {
+  year?: string | number
+  quarter?: string | number
+  date?: string
+}
+
+/** The period part of a risk analysis query: a day for DAILY, a year and a quarter for QUARTERLY */
+export const riskPeriodParams = (periodType: RiskAnalysisPeriodType, { year, quarter, date }: RiskPeriodValues) =>
+  periodType === 'DAILY' ? { periodType, date } : { periodType, year, quarter }
+
 export type RiskAnalysisStatus = 'NEW' | 'ASSIGNED' | 'IN_PROCESS' | 'COMPLETED'
 
 /** RiskAnalysisRes (`GET /risk-analyses/belongings`): one analysis period of an object */

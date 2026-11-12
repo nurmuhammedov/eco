@@ -12,33 +12,35 @@ import DatePicker from '@/shared/components/ui/datepicker'
 
 import {
   MONTHS,
+  QUARTERS,
   getDefaultYearAndMonthForInspections,
-  getDefaultYearAndMonthForRiskAnalysis,
+  getDefaultYearAndQuarterForRiskAnalysis,
 } from '@/shared/utils/date'
 
 export function Header() {
   const { pathname = '' } = useLocation()
   const { paramsObject, addParams } = useCustomSearchParams()
 
-  const isRiskAnalysisMonthly = pathname.startsWith('/risk-analysis/monthly') || pathname === '/risk-analysis'
+  // The route is still /risk-analysis/monthly; the analysis there is by quarter
+  const isRiskAnalysisQuarterly = pathname.startsWith('/risk-analysis/monthly') || pathname === '/risk-analysis'
   const isRiskAnalysisDaily = pathname.startsWith('/risk-analysis/daily')
 
   const dateBasisQuarter = subQuarters(new Date(), 1)
   const defaultQuarter = getQuarter(dateBasisQuarter).toString()
 
+  const riskAnalysisDefault = getDefaultYearAndQuarterForRiskAnalysis()
   const defaultYear = pathname?.startsWith('/inspections')
     ? getDefaultYearAndMonthForInspections().year
-    : getDefaultYearAndMonthForRiskAnalysis().year
+    : riskAnalysisDefault.year
 
-  const defaultMonth = pathname?.startsWith('/inspections')
-    ? getDefaultYearAndMonthForInspections().month
-    : getDefaultYearAndMonthForRiskAnalysis().month
+  const defaultMonth = getDefaultYearAndMonthForInspections().month
 
   const dateBasisDay = subDays(new Date(), 1)
   const defaultDate = format(dateBasisDay, 'yyyy-MM-dd')
 
   const selectedYear = paramsObject.year?.toString() || defaultYear
   const selectedMonth = paramsObject.month?.toString() || defaultMonth
+  const selectedQuarter = paramsObject.quarter?.toString() || riskAnalysisDefault.quarter
   const selectedDateStr = paramsObject.date?.toString() || defaultDate
   const selectedDate = selectedDateStr ? new Date(selectedDateStr) : undefined
 
@@ -54,7 +56,8 @@ export function Header() {
     addParams(
       {
         year,
-        quarter: isPrevention ? undefined : defaultQuarter,
+        // the risk analysis keeps the quarter it shows; elsewhere a new year starts on the default one
+        quarter: isRiskAnalysisQuarterly ? selectedQuarter : isPrevention ? undefined : defaultQuarter,
       },
       'page'
     )
@@ -64,6 +67,10 @@ export function Header() {
     addParams({ month }, 'page')
   }
 
+  const handleQuarterChange = (quarter: string) => {
+    addParams({ quarter }, 'page')
+  }
+
   const handleDateChange = (date: Date | undefined) => {
     if (date) {
       addParams({ date: format(date, 'yyyy-MM-dd') }, 'page')
@@ -71,8 +78,9 @@ export function Header() {
   }
 
   const showYearFilter =
-    ['/inspections/risk-based', '/inspections/other', '/preventions'].includes(pathname) || isRiskAnalysisMonthly
-  const showMonthFilter = isRiskAnalysisMonthly || ['/inspections/risk-based', '/inspections/other'].includes(pathname)
+    ['/inspections/risk-based', '/inspections/other', '/preventions'].includes(pathname) || isRiskAnalysisQuarterly
+  const showMonthFilter = ['/inspections/risk-based', '/inspections/other'].includes(pathname)
+  const showQuarterFilter = isRiskAnalysisQuarterly
   const showDailyCalendar = isRiskAnalysisDaily
 
   const title = useMemo(() => {
@@ -186,6 +194,21 @@ export function Header() {
                   {MONTHS.map((m) => (
                     <SelectItem key={m.id} value={m.id}>
                       {m.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
+
+            {showQuarterFilter && (
+              <Select value={selectedQuarter} onValueChange={handleQuarterChange}>
+                <SelectTrigger className="w-[130px]">
+                  <SelectValue placeholder="Chorak" />
+                </SelectTrigger>
+                <SelectContent>
+                  {QUARTERS.map((q) => (
+                    <SelectItem key={q.id} value={q.id}>
+                      {q.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
