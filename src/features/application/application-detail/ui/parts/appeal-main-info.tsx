@@ -15,7 +15,8 @@ import { HF_HAZARDOUS_SIGN_LABELS, HF_LEGAL_TYPE_LABELS } from '@/shared/constan
 import { EmptyValue } from '@/shared/components/common/empty-value'
 import FileLink from '@/shared/components/common/file-link'
 import type { AppealInfoData } from '@/entities/application'
-import { TrainedEmployeesRows } from './trained-employees-rows'
+import { TrainedEmployeesCountRows, TrainedEmployeesRows } from './trained-employees-rows'
+import type { TrainedEmployees } from '@/entities/organizations'
 
 interface Props {
   address?: string | null
@@ -28,8 +29,10 @@ interface Props {
   isRegister?: boolean
   /** Staff headcount lives on the registry record, not on the appeal. */
   showStaffCounts?: boolean
-  /** Organization whose staff trained at the partner training centre is shown */
+  /** Organization whose staff trained at the partner training centre is shown, asked of the centre live */
   trainedEmployeesTin?: string | number | null
+  /** The same counts when the record already carries them; then nothing is asked live */
+  trainedCounts?: TrainedEmployees | null
   /** Which object the rows describe: HF, CRANE, IRS, XRAY... */
   type?: string | null
 }
@@ -527,6 +530,7 @@ const AppealMainInfo: FC<Props> = ({
   isRegister = false,
   showStaffCounts = false,
   trainedEmployeesTin,
+  trainedCounts,
 }) => {
   const { t } = useTranslation()
 
@@ -733,7 +737,11 @@ const AppealMainInfo: FC<Props> = ({
         </>
       )}
 
-      {trainedEmployeesTin && <TrainedEmployeesRows tinNumber={trainedEmployeesTin} />}
+      {trainedCounts ? (
+        <TrainedEmployeesCountRows counts={trainedCounts} />
+      ) : (
+        trainedEmployeesTin && <TrainedEmployeesRows tinNumber={trainedEmployeesTin} />
+      )}
     </div>
   )
 }

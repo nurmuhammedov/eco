@@ -1,5 +1,13 @@
 import Icon from '@/shared/components/common/icon'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/shared/components/ui/table'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/shared/components/ui/table'
 import { useCustomSearchParams } from '@/shared/hooks'
 import { cn } from '@/shared/lib/utils'
 import { ResponseData } from '@/shared/types/api'
@@ -43,6 +51,11 @@ interface DataTableProps<TData, TValue> {
   onPageSizeChange?: (size: number) => void
   showNumeration?: boolean
   showFilters?: boolean
+  /**
+   * A totals row from the columns' `footer`, kept in view at the bottom while
+   * the rows scroll under it. It is not numbered.
+   */
+  showFooter?: boolean
   pageCount?: number
   isHeaderSticky?: boolean
   initialState?: InitialTableState
@@ -63,6 +76,7 @@ export function DataTable<TData, TValue>({
   pageSizeOptions,
   showNumeration = true,
   showFilters = false,
+  showFooter = false,
   pageCount: propPageCount,
   // A header that scrolls away is never what a table wants; the filter row sits
   // inside the same thead, so it stays put along with it.
@@ -300,6 +314,26 @@ export function DataTable<TData, TValue>({
               </TableRow>
             )}
           </TableBody>
+          {showFooter && hasRows && (
+            <TableFooter className="sticky bottom-0 z-20 bg-neutral-100 font-semibold">
+              {/* The leaf level: grouped headers come back reversed as footer groups */}
+              <TableRow disableZebra className="[&>td:first-child]:rounded-tl-none [&>td:last-child]:rounded-tr-none">
+                {showNumeration && <TableCell className="w-[1%]" />}
+                {table.getFooterGroups()[0]?.headers.map((header) => {
+                  const columnDef = header.column.columnDef as ExtendedColumnDef<TData, TValue>
+                  return (
+                    <TableCell
+                      key={header.id}
+                      className={cn(header.column.getIsPinned() && 'bg-neutral-100!', columnDef.className)}
+                      style={getCommonPinningStyles({ column: header.column })}
+                    >
+                      {header.isPlaceholder ? null : flexRender(header.column.columnDef.footer, header.getContext())}
+                    </TableCell>
+                  )
+                })}
+              </TableRow>
+            </TableFooter>
+          )}
         </Table>
       </div>
 

@@ -179,7 +179,12 @@ const HfDetail = () => {
         </DetailCardAccordion.Item>
         <DetailCardAccordion.Item value="object_info" title="Obyekt yoki qurilma to‘g‘risida ma’lumot">
           <AppealMainInfo
-            trainedEmployeesTin={data?.legalTin}
+            // GET /hf/{id} carries the KTNU counts itself (synced nightly), so the centre is not asked live
+            trainedCounts={
+              data
+                ? { managerCount: data.trainedManagerCount ?? null, engineerCount: data.trainedEngineerCount ?? null }
+                : null
+            }
             data={data}
             type={'HF'}
             address={data?.address}

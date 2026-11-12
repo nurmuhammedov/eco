@@ -13,10 +13,11 @@ export interface TrainedEmployees {
 }
 
 /**
- * Each lookup is a call the backend forwards to the training centre, and a
- * report asks for a hundred organizations at once. Letting them all go out
- * together would queue a hundred calls on that service, so only a few run at a
- * time and the rest wait their turn.
+ * Each lookup is a call the backend forwards to the training centre live, so
+ * only a few run at a time and the rest wait their turn. Since 2026-11-12 the
+ * XICHO record and the Top-100 report carry the counts themselves (synced
+ * nightly); this is left for the records that do not yet, and the backend
+ * means to retire the endpoint.
  */
 const MAX_IN_FLIGHT = 4
 let inFlight = 0

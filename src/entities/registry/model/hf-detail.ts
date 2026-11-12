@@ -36,6 +36,12 @@ export interface HfDetail {
   managerCount: number | null
   engineerCount: number | null
   workerCount: number | null
+  /**
+   * KTNU'da o'qigan, sertifikati amalda xodimlar - the organisation's (STIR), not
+   * this facility's. Synced nightly; null until the first sync, which is not 0.
+   */
+  trainedManagerCount?: number | null
+  trainedEngineerCount?: number | null
   deregisterBasisPath: string | null
   regionName: string | null
   districtName: string | null

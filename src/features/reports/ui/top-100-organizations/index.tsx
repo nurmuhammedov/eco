@@ -2,57 +2,14 @@ import React, { useMemo } from 'react'
 import { DataTable } from '@/shared/components/common/data-table'
 import { useData } from '@/shared/hooks'
 import { ExportExcelButton, GoBack } from '@/shared/components/common'
-import { Skeleton } from '@/shared/components/ui/skeleton'
-import { useTrainedEmployeesQuery, type TrainedEmployees } from '@/entities/organizations'
 import { cn } from '@/shared/lib/utils'
 import type { ExtendedColumnDef } from '@/shared/components/common/data-table/model/column-def'
+import { type CountKey, type OrganizationEmployees, sumCounts, trainedTotal } from './totals'
 
-/** ReportByTop100OrganizationByEmployeeCount */
-interface OrganizationEmployees {
-  legalName: string
-  regionName: string
-  legalTin: number | null
-  managerCount: number
-  engineerCount: number
-  workerCount: number
-  total: number
-}
+type Row = OrganizationEmployees & { isSummary: boolean }
 
-type Row = OrganizationEmployees & {
-  isSummary: boolean
-  /** Whether the training centre is asked about this organization at all */
-  withTrained: boolean
-}
-
-/**
- * Every organization is a separate call to the training centre, and asking for
- * all hundred made the report crawl. Only the biggest ones are looked up.
- */
-const TRAINED_LOOKUP_LIMIT = 50
-
-/** Which of the training centre's counts a cell shows */
-const trainedPicks = {
-  manager: (data: TrainedEmployees) => data.managerCount,
-  engineer: (data: TrainedEmployees) => data.engineerCount,
-  total: (data: TrainedEmployees) =>
-    data.managerCount === null && data.engineerCount === null
-      ? null
-      : (data.managerCount ?? 0) + (data.engineerCount ?? 0),
-}
-
-/**
- * The training centre is asked per organization, so these cells fill in on
- * their own after the report is already on screen instead of holding it back.
- */
-const TrainedCount = ({ tin, pick }: { tin: number | null; pick: keyof typeof trainedPicks }) => {
-  const { data, isLoading } = useTrainedEmployeesQuery(tin)
-
-  if (isLoading) return <Skeleton className="mx-auto h-5 w-8" />
-
-  const value = data ? trainedPicks[pick](data) : null
-
-  return <span className="font-medium text-emerald-700">{value ?? '-'}</span>
-}
+/** The KTNU columns keep their tint, so they read as one band next to the headcounts */
+const TRAINED_CELL = 'text-center bg-emerald-50/40'
 
 const Top100OrganizationsReport: React.FC = () => {
   const { data: reportData, isLoading } = useData<OrganizationEmployees[]>('/reports/top-100-organizations', true)
@@ -60,36 +17,31 @@ const Top100OrganizationsReport: React.FC = () => {
   const tableData = useMemo(() => {
     if (!reportData) return []
 
-    let organizations = 0
-
     // An organization with no staff on record has nothing to report.
     return reportData
       .filter((item) => item.total)
-      .map((item): Row => {
-        const isSummary = item.legalName === 'Boshqa tashkilotlar' || !item.legalTin
-
-        return {
-          ...item,
-          isSummary,
-          // The summary rows lump many organizations together and have no TIN to ask about.
-          withTrained: !isSummary && organizations++ < TRAINED_LOOKUP_LIMIT,
-        }
-      })
+      .map((item): Row => ({ ...item, isSummary: item.legalName === 'Boshqa tashkilotlar' || !item.legalTin }))
   }, [reportData])
 
-  const countCell = (key: 'managerCount' | 'engineerCount' | 'workerCount' | 'total'): ExtendedColumnDef<Row> => ({
+  const totals = useMemo(() => sumCounts(reportData ?? []), [reportData])
+
+  const countCell = (key: CountKey, header: string): ExtendedColumnDef<Row> => ({
     id: key,
-    header: 'Umumiy',
+    header,
     accessorKey: key,
     className: 'text-center',
     cell: ({ row }) => <span className={row.original.isSummary ? 'font-bold' : ''}>{row.original[key] || 0}</span>,
+    footer: () => totals[key],
   })
 
-  const trainedCell = (id: string, header: string, pick: keyof typeof trainedPicks): ExtendedColumnDef<Row> => ({
-    id,
-    header,
-    className: 'text-center bg-emerald-50/40',
-    cell: ({ row }) => (row.original.withTrained ? <TrainedCount tin={row.original.legalTin} pick={pick} /> : '-'),
+  // Since 2026-11-12 the counts come with the report, synced nightly; a null is no data, not 0
+  const trainedCell = (key: 'trainedManagerCount' | 'trainedEngineerCount'): ExtendedColumnDef<Row> => ({
+    id: key,
+    header: 'KTNUda o‘qigan',
+    accessorKey: key,
+    className: TRAINED_CELL,
+    cell: ({ row }) => <span className="font-medium text-emerald-700">{row.original[key] ?? '-'}</span>,
+    footer: () => totals[key],
   })
 
   const columns: ExtendedColumnDef<Row>[] = [
@@ -101,6 +53,7 @@ const Top100OrganizationsReport: React.FC = () => {
       cell: ({ row }) => (
         <span className={cn(row.original.isSummary ? 'font-bold' : '')}>{row.original.legalName}</span>
       ),
+      footer: () => 'Jami',
     },
     {
       id: 'legalTin',
@@ -114,18 +67,27 @@ const Top100OrganizationsReport: React.FC = () => {
     {
       id: 'manager',
       header: 'Rahbar xodimlar soni',
-      columns: [countCell('managerCount'), trainedCell('managerTrained', 'Ta’lim platformada o‘qigan', 'manager')],
+      columns: [countCell('managerCount', 'Umumiy'), trainedCell('trainedManagerCount')],
     },
     {
       id: 'engineer',
       header: 'Muhandis-texnik xodimlar soni',
-      columns: [countCell('engineerCount'), trainedCell('engineerTrained', 'Ta’lim platformada o‘qigan', 'engineer')],
+      columns: [countCell('engineerCount', 'Umumiy'), trainedCell('trainedEngineerCount')],
     },
-    { ...countCell('workerCount'), header: 'Oddiy ishchi xodimlar soni' },
+    countCell('workerCount', 'Oddiy ishchi xodimlar soni'),
     {
       id: 'totalGroup',
       header: 'Jami',
-      columns: [countCell('total'), trainedCell('totalTrained', 'O‘qiganlar', 'total')],
+      columns: [
+        countCell('total', 'Umumiy'),
+        {
+          id: 'trainedTotal',
+          header: 'KTNUda o‘qiganlar',
+          className: TRAINED_CELL,
+          cell: ({ row }) => <span className="font-medium text-emerald-700">{trainedTotal(row.original) ?? '-'}</span>,
+          footer: () => totals.trainedManagerCount + totals.trainedEngineerCount,
+        },
+      ],
     },
   ]
 
@@ -147,6 +109,7 @@ const Top100OrganizationsReport: React.FC = () => {
           isLoading={isLoading}
           isPaginated={false}
           showNumeration={true}
+          showFooter={true}
           headerCenter={true}
           isHeaderSticky={true}
           className="h-full"
