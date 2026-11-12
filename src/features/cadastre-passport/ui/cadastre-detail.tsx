@@ -72,10 +72,6 @@ export default function CadastreDetail() {
   const data = passport.cadastreData
   const workflows = passport.workflows ?? []
   const myWorkflow = passport.status === 'IN_REVIEW' ? workflows.find((workflow) => workflow.myTurn) : undefined
-  // The backend keeps no registry date: the number is issued when the committee approves, so that review's date is it.
-  const registryDate = passport.registryNumber
-    ? passport.reviews?.find((review) => review.party === 'COMMITTEE' && review.signAction === 'APPROVED')?.createdAt
-    : null
 
   const canEdit = passport.status === 'NEW' && isPreparer(user, passport, representation?.tin)
   const canResubmit = passport.status === 'REJECTED' && isPreparer(user, passport, representation?.tin)
@@ -159,7 +155,10 @@ export default function CadastreDetail() {
           />
           {/* Both are issued at the very end, on the committee's approval */}
           <DetailRow title="Obyektning TXYZ kadastr pasporti reyestr raqami" value={passport.registryNumber || '-'} />
-          <DetailRow title="Obyektning TXYZ kadastr pasporti reyestr sanasi" value={getDate(registryDate) || '-'} />
+          <DetailRow
+            title="Obyektning TXYZ kadastr pasporti reyestr sanasi"
+            value={getDate(passport.registrationDate) || '-'}
+          />
         </DetailCardAccordion.Item>
 
         <DetailCardAccordion.Item value="workflows" title="Tashkilotlar tomonidan ko‘rib chiqish">

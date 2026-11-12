@@ -71,6 +71,8 @@ export interface CadastrePassport {
   customerTin: number
   /** Ariza sanasi, `YYYY-MM-DD` */
   requestDate?: string | null
+  /** Reyestr sanasi, `YYYY-MM-DD`: set with the registry number when the committee approves */
+  registrationDate?: string | null
   /** Atribut sahifasi - pasport tasdiqlanganda serverda generatsiya qilinadi. */
   dataPagePath: string | null
   passportFilePath: string | null
