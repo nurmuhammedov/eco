@@ -11,7 +11,7 @@ import { Button } from '@/shared/components/ui/button'
 import React, { useState } from 'react'
 import { useAdd } from '@/shared/hooks/api'
 import { useQueryClient } from '@tanstack/react-query'
-import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
+import { invalidateChangeDecision } from '@/features/register/register-change-detail/model/invalidate-change-decision'
 
 interface Props {
   changeId: string
@@ -30,7 +30,7 @@ const ConfirmProcessModal: React.FC<Props> = ({ changeId, title, buttonText }) =
       {
         onSuccess: () => {
           setIsOpen(false)
-          invalidateEndpoint(queryClient, '/changes/by-belong')
+          invalidateChangeDecision(queryClient)
         },
       }
     )

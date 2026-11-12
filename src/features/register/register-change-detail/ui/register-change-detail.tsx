@@ -1,5 +1,5 @@
 import { SafeHtml } from '@/shared/components/common/safe-html'
-import type { RegistryChange } from '@/entities/registry'
+import { isRestoreChange, type RegistryChange } from '@/entities/registry'
 import { FC } from 'react'
 import { ArrowUpRight } from 'lucide-react'
 import { Link, useParams } from 'react-router-dom'
@@ -20,9 +20,13 @@ import ConfirmProcessModal from '@/features/register/register-change-detail/moda
 import ApplicationLogsModal from '@/features/application/application-detail/ui/modals/application-logs-modal'
 import { Badge } from '@/shared/components/ui/badge'
 import { cn } from '@/shared/lib/utils'
+import { RestoreModal } from '@/features/register/common/ui/restore-modal'
 
 /** The register sections this page knows how to read a change request for. */
 const SECTIONS = ['hf', 'equipments', 'irs', 'xrays', 'xray', 'radiation-profiles']
+
+/** A restore request goes straight to the committee: no NEW or IN_AGREEMENT stage */
+const RESTORE_STEPS = [ApplicationStatus.IN_APPROVAL, ApplicationStatus.COMPLETED]
 
 const RegisterChangeDetail: FC = () => {
   const params = useParams<{ id: string; type: string }>()
@@ -47,33 +51,50 @@ const RegisterChangeDetail: FC = () => {
   const isStatusChange =
     changeDetail?.belongType?.startsWith('CHANGE_EQP_STATUS') ||
     changeDetail?.belongType?.startsWith('CHANGE_HF_STATUS')
+  const isRestore = isRestoreChange(changeDetail?.belongType)
 
   const isHfType = type === 'equipments' || type === 'hf'
   const isIrsType = type === 'radiation-profiles' || type === 'irs' || type === 'xrays' || type === 'xray'
 
   const canAssign =
+    !isRestore &&
     status === ApplicationStatus.NEW &&
     ((isHfType && (user?.role === UserRoles.REGIONAL || user?.isSupervisor)) ||
       (isIrsType && user?.role === UserRoles.HEAD))
 
   const canDescribe =
+    !isRestore &&
     status === ApplicationStatus.IN_PROCESS &&
     ((isHfType && (user?.role === UserRoles.INSPECTOR || user?.isController)) ||
       (isIrsType && user?.role === UserRoles.MANAGER))
 
+  // A restore request skips the regional agreement: only MANAGER confirms or returns it, at IN_APPROVAL
   const canAgree =
-    (status === ApplicationStatus.IN_AGREEMENT &&
+    (!isRestore &&
+      status === ApplicationStatus.IN_AGREEMENT &&
       isHfType &&
       (user?.role === UserRoles.REGIONAL || user?.isSupervisor)) ||
     (status === ApplicationStatus.IN_APPROVAL &&
-      ((isIrsType && user?.role === UserRoles.HEAD) || (isHfType && user?.role === UserRoles.MANAGER)))
+      ((isIrsType && !isRestore && user?.role === UserRoles.HEAD) || (isHfType && user?.role === UserRoles.MANAGER)))
 
   const canReturn =
-    (status === ApplicationStatus.IN_AGREEMENT &&
+    (!isRestore &&
+      status === ApplicationStatus.IN_AGREEMENT &&
       isHfType &&
       (user?.role === UserRoles.REGIONAL || user?.isSupervisor)) ||
     (status === ApplicationStatus.IN_APPROVAL &&
-      ((isIrsType && user?.role === UserRoles.HEAD) || (isHfType && user?.role === UserRoles.MANAGER)))
+      ((isIrsType && !isRestore && user?.role === UserRoles.HEAD) || (isHfType && user?.role === UserRoles.MANAGER)))
+
+  // A returned restore request is fixed and sent again by its sender (a supervisor is a REGIONAL here).
+  // The backend refuses a REGIONAL another region's object; a supervisor's scope is left to the backend.
+  const canResend =
+    isRestore &&
+    isHfType &&
+    status === ApplicationStatus.IN_PROCESS &&
+    user?.role === UserRoles.REGIONAL &&
+    (!!user?.isSupervisor || Number(changeDetail?.regionId) === user?.regionId)
+  const isRestoreAwaitingManager =
+    isRestore && status === ApplicationStatus.IN_APPROVAL && user?.role === UserRoles.REGIONAL
 
   if (isLoading) return <DetailPageSkeleton />
 
@@ -89,7 +110,9 @@ const RegisterChangeDetail: FC = () => {
               ? 'Reyestrdan chiqarish uchun so‘rov'
               : isStatusChange
                 ? 'Holatini o‘zgartirish uchun so‘rov'
-                : 'Ma’lumotlarni o‘zgartirish uchun so‘rov'
+                : isRestore
+                  ? 'Reyestrga qaytarish uchun so‘rov'
+                  : 'Ma’lumotlarni o‘zgartirish uchun so‘rov'
           }
         />
         <div className="flex gap-2">
@@ -115,6 +138,12 @@ const RegisterChangeDetail: FC = () => {
                   />
                 </>
               )}
+              {canResend && <RestoreModal endpoint={`/${type}/${id}/restore`} buttonText="Qayta yuborish" isResubmit />}
+              {isRestoreAwaitingManager && (
+                <Badge variant="info" className="py-2">
+                  Tasdiqlashda
+                </Badge>
+              )}
             </>
           )}
           <ApplicationLogsModal id={changeId} type="change" />
@@ -136,7 +165,22 @@ const RegisterChangeDetail: FC = () => {
                 </Link>
               }
             />
-            <ApplicationStatusRow status={changeDetail?.status} title="So‘rov holati:" />
+            {isRestore && status === ApplicationStatus.IN_PROCESS ? (
+              <DetailRow
+                title="So‘rov holati:"
+                value={
+                  <Badge variant="warning" className="py-1">
+                    Qaytarilgan (tuzatish uchun)
+                  </Badge>
+                }
+              />
+            ) : (
+              <ApplicationStatusRow
+                status={changeDetail?.status}
+                title="So‘rov holati:"
+                steps={isRestore ? RESTORE_STEPS : undefined}
+              />
+            )}
             <DetailRow title="So‘rov sanasi:" value={formatDate(changeDetail?.createdAt)} />
             <DetailRow
               title="So‘rov turi:"
@@ -148,6 +192,10 @@ const RegisterChangeDetail: FC = () => {
                 ) : isStatusChange ? (
                   <Badge variant="warning" className="py-1">
                     Holatini o‘zgartirish
+                  </Badge>
+                ) : isRestore ? (
+                  <Badge variant="success" className="py-1">
+                    Reyestrga qaytarish
                   </Badge>
                 ) : (
                   <Badge variant="info" className="py-1">
@@ -164,7 +212,9 @@ const RegisterChangeDetail: FC = () => {
                   'grid grid-cols-1 gap-1 rounded-md px-2 py-1 odd:bg-neutral-50 md:grid-cols-2 md:items-center md:gap-4'
                 )}
               >
-                <span className={cn('text-sm font-medium text-gray-500')}>Qaytarish sababi:</span>
+                <span className={cn('text-sm font-medium text-gray-500')}>
+                  {isRestore ? 'Qo‘mita izohi (qaytarish sababi):' : 'Qaytarish sababi:'}
+                </span>
 
                 <SafeHtml
                   html={changeDetail?.description}

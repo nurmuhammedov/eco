@@ -4,7 +4,7 @@ import { usePaginatedData, useCustomSearchParams } from '@/shared/hooks'
 import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
 import { formatDate } from '@/shared/utils/date'
 import FileLink from '@/shared/components/common/file-link'
-import type { ChangeLogEntry } from '@/entities/registry'
+import { isFileLog, type ChangeLogEntry } from '@/entities/registry'
 
 interface Props {
   changeId?: string
@@ -30,7 +30,7 @@ const ChangeLogTable: FC<Props> = ({ changeId }) => {
       header: 'Eski qiymat',
       accessorKey: 'oldValue',
       cell: ({ row }) =>
-        row?.original?.isFile ? (
+        isFileLog(row.original) ? (
           row.original?.oldValue ? (
             <FileLink url={row.original?.oldValue} />
           ) : null
@@ -42,7 +42,7 @@ const ChangeLogTable: FC<Props> = ({ changeId }) => {
       header: 'Yangi qiymat',
       accessorKey: 'newValue',
       cell: ({ row }) =>
-        row?.original?.isFile ? (
+        isFileLog(row.original) ? (
           row.original?.newValue ? (
             <FileLink url={row.original?.newValue} />
           ) : null

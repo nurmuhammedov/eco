@@ -83,3 +83,74 @@ describe('buildRegisterQuery for the tanker tab', () => {
     expect(params.numberPlate).toBe('01A123BC')
   })
 })
+
+const archiveParams = (tab: RegisterActiveTab, paramsObject: Record<string, string>) =>
+  buildRegisterQuery({ tab, paramsObject, defaultRegionId: 'ALL', isArchive: true }).params
+
+describe('buildRegisterQuery for the archive restore requests', () => {
+  it('asks for deregistered facilities with a pending change in the picked status', () => {
+    const params = archiveParams(RegisterActiveTab.HF, { active: 'CHANGED', status: 'IN_PROCESS' })
+
+    expect(params.active).toBe(false)
+    expect(params.changed).toBe(true)
+    expect(params.changeStatus).toBe('IN_PROCESS')
+    expect(params.status).toBe('')
+  })
+
+  it('starts the facilities on the requests awaiting approval', () => {
+    expect(archiveParams(RegisterActiveTab.HF, { active: 'CHANGED' }).changeStatus).toBe('IN_APPROVAL')
+    expect(archiveParams(RegisterActiveTab.HF, { active: 'CHANGED', status: 'ALL' }).changeStatus).toBe('IN_APPROVAL')
+    expect(archiveParams(RegisterActiveTab.HF, { active: 'CHANGED', status: 'NEW' }).changeStatus).toBe('IN_APPROVAL')
+  })
+
+  it('asks for deregistered equipment only, so active elevators stay out', () => {
+    const params = archiveParams(RegisterActiveTab.EQUIPMENTS, {
+      type: 'ELEVATOR',
+      status: 'CHANGED',
+      changeStatus: 'IN_APPROVAL',
+    })
+
+    expect(params.type).toBe('ELEVATOR')
+    expect(params.active).toBe(false)
+    expect(params.changed).toBe(true)
+    expect(params.changeStatus).toBe('IN_APPROVAL')
+    expect(params.status).toBe('INACTIVE')
+  })
+
+  it('starts the equipment on the requests awaiting approval', () => {
+    expect(archiveParams(RegisterActiveTab.EQUIPMENTS, { status: 'CHANGED' }).changeStatus).toBe('IN_APPROVAL')
+    expect(
+      archiveParams(RegisterActiveTab.EQUIPMENTS, { status: 'CHANGED', changeStatus: 'IN_PROCESS' }).changeStatus
+    ).toBe('IN_PROCESS')
+  })
+
+  it('leaves the plain archive lists as they were', () => {
+    const hf = archiveParams(RegisterActiveTab.HF, {})
+    expect(hf.active).toBe(false)
+    expect(hf.changed).toBe('')
+    expect(hf.changeStatus).toBe('')
+
+    const equipments = archiveParams(RegisterActiveTab.EQUIPMENTS, {})
+    expect(equipments.active).toBe(false)
+    expect(equipments.changed).toBe('')
+    expect(equipments.changeStatus).toBe('')
+    expect(equipments.status).toBe('')
+  })
+
+  it('leaves the registry change tabs as they were', () => {
+    const hf = buildRegisterQuery({
+      tab: RegisterActiveTab.HF,
+      paramsObject: { active: 'CHANGED', status: 'ALL' },
+      defaultRegionId: 'ALL',
+    }).params
+    expect(hf.active).toBe(true)
+    expect(hf.changed).toBe(true)
+    expect(hf.changeStatus).toBe('')
+
+    const equipments = equipmentsParams({ status: 'CHANGED', changeStatus: 'NEW' })
+    expect(equipments.active).toBe('true')
+    expect(equipments.changed).toBe(true)
+    expect(equipments.changeStatus).toBe('NEW')
+    expect(equipments.status).toBe('')
+  })
+})

@@ -3,6 +3,13 @@ import { toast } from 'sonner'
 import { cleanParams } from '@/shared/lib/api'
 import { goToGuestLanding } from '@/shared/config/navigation'
 
+declare module 'axios' {
+  interface AxiosRequestConfig {
+    /** Error statuses the caller expects and handles itself (e.g. a 404 meaning "none yet"), so no toast for them */
+    silentErrorStatuses?: number[]
+  }
+}
+
 /**
  * Both backends answer the same way, so they get the same instance: the same
  * parameter cleaning, the same error toasts and the same sign-out on 401. Only
@@ -38,6 +45,7 @@ export const createAxiosInstance = (baseURL: string) => {
 
       const errorMessage = error.response?.data?.message
       const validationErrors = error.response?.data?.errors
+      const isSilentError = !!error?.config?.silentErrorStatuses?.includes(status)
 
       if (status === 401 && requestUrl === '/api/v1/auth/login') {
         toast.error('Login yoki parol noto‘g‘ri. Iltimos, ma’lumotlarni tekshirib, qayta urinib ko‘ring.', {
@@ -49,7 +57,7 @@ export const createAxiosInstance = (baseURL: string) => {
             richColors: true,
           })
         }
-      } else if (status >= 400 && status < 600) {
+      } else if (status >= 400 && status < 600 && !isSilentError) {
         if (validationErrors && Object.keys(validationErrors).length > 0) {
           Object.values(validationErrors as Record<string, unknown>).forEach((errMessage) => {
             const message = Array.isArray(errMessage) ? errMessage.join(', ') : String(errMessage)

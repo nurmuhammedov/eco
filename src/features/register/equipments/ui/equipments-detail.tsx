@@ -21,7 +21,11 @@ import { UserRoles } from '@/shared/types/user'
 import { Logs } from '@/features/register/hf/ui/parts/logs'
 import { DeregisterModal } from '../../common/ui/deregister-modal'
 import { ChangeStatusModal } from '../../common/ui/change-status-modal'
+import { RestoreModal } from '../../common/ui/restore-modal'
+import { useLastChange } from '../../common/model/use-last-change'
 import { Badge } from '@/shared/components/ui/badge'
+import { Alert, AlertDescription, AlertTitle } from '@/shared/components/ui/alert'
+import { SafeHtml } from '@/shared/components/common/safe-html'
 import { EmptyValue } from '@/shared/components/common/empty-value'
 const EquipmentsDetail = () => {
   const renderStatus = (status: string | null | undefined) => {
@@ -58,6 +62,20 @@ const EquipmentsDetail = () => {
   const isRegistryActive = data?.isActive ?? searchParams.get('active') === 'true'
   const canAction = user?.role === UserRoles.INSPECTOR && isRegistryActive
 
+  const [isRestoreModalOpen, setIsRestoreModalOpen] = useState(false)
+  const isDeregistered = data?.isActive === false && data?.status === 'INACTIVE'
+  // SUPERVISOR is folded into REGIONAL on sign-in, so this covers both senders
+  const isRegional = user?.role === UserRoles.REGIONAL
+  const isManager = user?.role === UserRoles.MANAGER
+  const { lastChange, isResolved, restoreInApproval, restoreReturned, hasOpenChange } = useLastChange(
+    equipmentUuid,
+    isDeregistered && (isRegional || isManager)
+  )
+  // The backend refuses a REGIONAL another region's object; a supervisor's scope is the inspection, left to the backend
+  const isInOwnScope = !!user?.isSupervisor || Number(data?.regionId) === user?.regionId
+  const canRestore = isRegional && isInOwnScope && isDeregistered && isResolved && !hasOpenChange
+  const canResubmit = isRegional && isInOwnScope && isDeregistered && restoreReturned
+
   useEffect(() => {
     const canvas = document.getElementById('pdf-qr-canvas') as HTMLCanvasElement
     if (canvas) {
@@ -92,6 +110,26 @@ const EquipmentsDetail = () => {
               </Button>
             </>
           )}
+          {canRestore && (
+            <Button variant="success" onClick={() => setIsRestoreModalOpen(true)}>
+              Reyestrga qaytarish
+            </Button>
+          )}
+          {canResubmit && (
+            <Button variant="success" onClick={() => setIsRestoreModalOpen(true)}>
+              Qayta yuborish
+            </Button>
+          )}
+          {isRegional && isDeregistered && restoreInApproval && (
+            <Badge variant="info" className="py-2">
+              Reyestrga qaytarish so‘rovi tasdiqlashda
+            </Badge>
+          )}
+          {(isRegional || isManager) && isDeregistered && restoreInApproval && (
+            <Button asChild variant={isManager ? 'info' : 'outline'}>
+              <Link to={`/register/change/equipments/${equipmentUuid}`}>So‘rovni ko‘rish</Link>
+            </Button>
+          )}
           {user?.role === UserRoles.CHAIRMAN && (
             <Button onClick={() => navigate(`/register/equipments/${equipmentUuid}/appeals`)}>Murojaatlar</Button>
           )}
@@ -111,6 +149,21 @@ const EquipmentsDetail = () => {
         onSuccess={refetch}
         targetStatus={currentStatus === 'INVALID' ? 'VALID' : 'INVALID'}
       />
+      <RestoreModal
+        isOpen={isRestoreModalOpen}
+        onClose={() => setIsRestoreModalOpen(false)}
+        endpoint={`/equipments/${equipmentUuid}/restore`}
+        onSuccess={refetch}
+        isResubmit={restoreReturned}
+      />
+      {canResubmit && (
+        <Alert variant="destructive" className="mb-4">
+          <AlertTitle>Reyestrga qaytarish so‘rovi qaytarildi</AlertTitle>
+          <AlertDescription>
+            <SafeHtml html={lastChange?.description} fallback="-" className="break-words" />
+          </AlertDescription>
+        </Alert>
+      )}
       <DetailCardAccordion
         defaultValue={['registry_info', 'object_info', 'object_location', 'object_qr', 'object_files']}
       >

@@ -12,6 +12,11 @@ import { ApplicationStatus } from '@/entities/application'
 import { useMemo } from 'react'
 import { buildRegisterQuery } from '@/features/register/model/build-register-query'
 import { RESET_KEYS } from '@/features/register/model/report-drill-down'
+import {
+  RESTORE_REQUEST_TABS,
+  actionableRestoreStatus,
+  restoreRequestStatus,
+} from '@/features/register/model/restore-requests'
 import { canUpdateRegistryType } from '@/features/register/model/can-update-registry'
 import { TruncatedCell } from '@/shared/components/common/truncated-cell'
 import { HazardousFacilityRow } from '@/features/register/model/types'
@@ -72,6 +77,23 @@ export const HfList = ({ isArchive }: HfListProps) => {
   })
 
   const { data, isLoading } = usePaginatedData<HazardousFacilityRow>(endpoint, { page, size, ...params })
+
+  // The archive splits off restore requests for the roles that send (REGIONAL, supervisors) and confirm (MANAGER) them
+  const canSeeRestoreRequests = !!isArchive && (user?.role === UserRoles.MANAGER || user?.role === UserRoles.REGIONAL)
+  const restoreStatus = restoreRequestStatus(currentStatus)
+  const actionableStatus = actionableRestoreStatus(user?.role)
+
+  const restoreCountQuery = buildRegisterQuery({
+    tab: RegisterActiveTab.HF,
+    paramsObject: { ...paramsObject, active: 'CHANGED', status: actionableStatus },
+    isArchive,
+    defaultRegionId,
+  })
+  const { data: restoreCountData } = usePaginatedData<HazardousFacilityRow>(
+    restoreCountQuery.endpoint,
+    { ...restoreCountQuery.params, page: 1, size: 1 },
+    canSeeRestoreRequests
+  )
 
   const applicationStatusList = useTranslatedObject(ApplicationStatus, 'application_status', false)
   const applicationStatus = useMemo(() => {
@@ -216,6 +238,40 @@ export const HfList = ({ isArchive }: HfListProps) => {
               addParams({ active: type, status: '' }, ...RESET_KEYS)
             }
           }}
+        />
+      )}
+      {canSeeRestoreRequests && (
+        <TabsLayout
+          activeTab={currentActive === 'CHANGED' ? 'CHANGED' : 'false'}
+          tabs={[
+            {
+              id: 'false',
+              name: 'Reyestrdan chiqarilganlar',
+              count: currentActive !== 'CHANGED' ? data?.page?.totalElements || undefined : undefined,
+            },
+            {
+              id: 'CHANGED',
+              name: 'Reyestrga qaytarish so‘rovlari',
+              count: restoreCountData?.page?.totalElements || undefined,
+            },
+          ]}
+          onTabChange={(type) => {
+            if (type === 'CHANGED') {
+              addParams({ active: type, status: actionableStatus }, ...RESET_KEYS)
+            } else {
+              addParams({ active: type, status: '' }, ...RESET_KEYS)
+            }
+          }}
+        />
+      )}
+      {canSeeRestoreRequests && !fromReport && currentActive === 'CHANGED' && (
+        <TabsLayout
+          activeTab={restoreStatus}
+          tabs={RESTORE_REQUEST_TABS.map((s) => ({
+            ...s,
+            count: s.id === restoreStatus ? (data?.page?.totalElements ?? 0) : undefined,
+          }))}
+          onTabChange={(s) => addParams({ status: s }, ...RESET_KEYS)}
         />
       )}
       {!isArchive && !fromReport && currentActive === 'CHANGED' && (

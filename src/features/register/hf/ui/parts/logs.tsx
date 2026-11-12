@@ -3,7 +3,7 @@ import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks'
 import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
 import { useParams } from 'react-router-dom'
 import { format } from 'date-fns'
-import type { ChangeLogEntry } from '@/entities/registry'
+import { isFileLog, type ChangeLogEntry } from '@/entities/registry'
 import FileLink from '@/shared/components/common/file-link'
 import ApplicationLogsModal from '@/features/application/application-detail/ui/modals/application-logs-modal'
 import { Eye } from 'lucide-react'
@@ -32,7 +32,7 @@ export const Logs = ({ url = 'hf' }: { url?: string }) => {
       header: 'Eski qiymat',
       accessorKey: 'oldValue',
       cell: ({ row }) =>
-        row?.original?.isFile ? (
+        isFileLog(row.original) ? (
           row.original?.oldValue ? (
             <FileLink url={row.original?.oldValue} />
           ) : null
@@ -44,7 +44,7 @@ export const Logs = ({ url = 'hf' }: { url?: string }) => {
       header: 'Yangi qiymat',
       accessorKey: 'newValue',
       cell: ({ row }) =>
-        row?.original?.isFile ? (
+        isFileLog(row.original) ? (
           row.original?.newValue ? (
             <FileLink url={row.original?.newValue} />
           ) : null

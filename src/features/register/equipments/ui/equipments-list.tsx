@@ -26,6 +26,11 @@ import {
 } from '@/features/register/model/build-register-query'
 import { REPORT_KEYS, RESET_KEYS } from '@/features/register/model/report-drill-down'
 import { RegisterActiveTab } from '@/features/register/model/register-tabs'
+import {
+  RESTORE_REQUEST_TABS,
+  actionableRestoreStatus,
+  restoreRequestStatus,
+} from '@/features/register/model/restore-requests'
 import { paramText } from '@/shared/lib/url-params'
 
 interface EquipmentsListProps {
@@ -111,6 +116,26 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
       size: 1,
     },
     !isArchive
+  )
+
+  // The archive splits off restore requests for the roles that send (REGIONAL, supervisors) and confirm (MANAGER) them
+  const canSeeRestoreRequests =
+    !!isArchive && !hideTabs && (user?.role === UserRoles.MANAGER || user?.role === UserRoles.REGIONAL)
+  const restoreStatus = restoreRequestStatus(changeStatus)
+  const actionableStatus = actionableRestoreStatus(user?.role)
+  const isRestoreRequestsTab = canSeeRestoreRequests && currentStatus === 'CHANGED'
+
+  const restoreCountQuery = buildRegisterQuery({
+    tab: RegisterActiveTab.EQUIPMENTS,
+    paramsObject: { ...paramsObject, status: 'CHANGED', changeStatus: actionableStatus },
+    isArchive,
+    defaultRegionId,
+    hfId,
+  })
+  const { data: restoreCountData } = usePaginatedData<EquipmentRow>(
+    restoreCountQuery.endpoint,
+    { ...restoreCountQuery.params, page: 1, size: 1 },
+    canSeeRestoreRequests
   )
 
   const { data: dataForNewCount } = useData<number>(`/equipments/count`, !isPinnedCrane, {
@@ -333,7 +358,8 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
               { type: type },
               'page',
               'childEquipmentId',
-              'status',
+              // On the restore requests the type only narrows them; dropping the status would leave that tab
+              ...(isRestoreRequestsTab ? [] : ['status']),
               'activityType',
               'numberPlate',
               ...REPORT_KEYS
@@ -396,7 +422,41 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
           }}
         />
       )}
-      {!hideTabs && !fromReport && currentStatus === 'CHANGED' && (
+      {canSeeRestoreRequests && (
+        <TabsLayout
+          activeTab={currentStatus === 'CHANGED' ? 'CHANGED' : 'INACTIVE'}
+          tabs={[
+            {
+              id: 'INACTIVE',
+              name: 'Reyestrdan chiqarilganlar',
+              count: currentStatus !== 'CHANGED' ? totalElements : undefined,
+            },
+            {
+              id: 'CHANGED',
+              name: 'Reyestrga qaytarish so‘rovlari',
+              count: restoreCountData?.page?.totalElements || undefined,
+            },
+          ]}
+          onTabChange={(type) => {
+            if (type === 'CHANGED') {
+              addParams({ status: type, changeStatus: actionableStatus }, ...RESET_KEYS)
+            } else {
+              addParams({ status: type, changeStatus: '' }, ...RESET_KEYS)
+            }
+          }}
+        />
+      )}
+      {canSeeRestoreRequests && !fromReport && currentStatus === 'CHANGED' && (
+        <TabsLayout
+          activeTab={restoreStatus}
+          tabs={RESTORE_REQUEST_TABS.map((s) => ({
+            ...s,
+            count: s.id === restoreStatus ? data?.page?.totalElements || undefined : undefined,
+          }))}
+          onTabChange={(s) => addParams({ changeStatus: s }, ...RESET_KEYS)}
+        />
+      )}
+      {!hideTabs && !isArchive && !fromReport && currentStatus === 'CHANGED' && (
         <TabsLayout
           activeTab={changeStatus?.toString()}
           tabs={[

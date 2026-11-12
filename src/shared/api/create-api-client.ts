@@ -1,4 +1,4 @@
-import type { AxiosError, AxiosInstance, AxiosProgressEvent } from 'axios'
+import type { AxiosError, AxiosInstance, AxiosProgressEvent, AxiosRequestConfig } from 'axios'
 import type { ApiResponse, ResponseData } from '@/shared/types/api'
 
 type HttpMethod = 'get' | 'post' | 'put' | 'patch' | 'delete'
@@ -8,6 +8,9 @@ export type RequestParams = Record<string, string | number | boolean | null | un
 export type RequestHeaders = Record<string, string>
 
 export type ProgressCallback = (progressEvent: AxiosProgressEvent) => void
+
+/** Per-request switches the interceptors read (see create-axios-instance.ts) */
+export type RequestOptions = Pick<AxiosRequestConfig, 'silentErrorStatuses'>
 
 /**
  * `paginated` unwraps the envelope the list endpoints add on top of the usual
@@ -27,7 +30,8 @@ export const createApiClient = (instance: AxiosInstance) => {
     payload?: RequestParams | object,
     headers?: RequestHeaders,
     onProgress?: ProgressCallback,
-    shape: ResponseShape = 'plain'
+    shape: ResponseShape = 'plain',
+    options?: RequestOptions
   ): Promise<ApiResponse<TResult>> {
     try {
       const config = {
@@ -38,6 +42,7 @@ export const createApiClient = (instance: AxiosInstance) => {
         ...(method === 'get' || method === 'delete'
           ? { params: payload as RequestParams }
           : { data: payload as object }),
+        ...options,
       }
 
       if (shape === 'paginated') {
@@ -67,8 +72,13 @@ export const createApiClient = (instance: AxiosInstance) => {
   }
 
   return {
-    get: <T>(url: string, params?: RequestParams, headers?: RequestHeaders, onProgress?: ProgressCallback) =>
-      request<T>('get', url, params, headers, onProgress),
+    get: <T>(
+      url: string,
+      params?: RequestParams,
+      headers?: RequestHeaders,
+      onProgress?: ProgressCallback,
+      options?: RequestOptions
+    ) => request<T>('get', url, params, headers, onProgress, 'plain', options),
 
     getWithPagination: <T>(
       url: string,

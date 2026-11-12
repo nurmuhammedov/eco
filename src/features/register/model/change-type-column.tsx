@@ -1,5 +1,6 @@
 import { Badge } from '@/shared/components/ui/badge'
 import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
+import { isRestoreChange } from '@/entities/registry'
 import { RegistryRow } from './types'
 
 /**
@@ -15,6 +16,7 @@ const REQUEST_BADGES = [
     variant: 'warning',
     label: 'Holatini o‘zgartirish',
   },
+  { match: (type: string) => isRestoreChange(type), variant: 'success', label: 'Reyestrga qaytarish' },
 ] as const
 
 export const changeTypeColumn = <TRow extends RegistryRow>(): ExtendedColumnDef<TRow, unknown> => ({

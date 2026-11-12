@@ -1,4 +1,5 @@
 import { RegisterActiveTab } from '@/features/register/model/register-tabs'
+import { restoreRequestStatus } from '@/features/register/model/restore-requests'
 import type { ISearchParams, UrlParams, UrlParamValue } from '@/shared/types'
 
 export interface BuildRegisterQueryInput {
@@ -103,6 +104,8 @@ function buildHfQuery({ paramsObject, isArchive, defaultRegionId }: BuildRegiste
   const currentActive = String(active)
   const currentStatus = String(status)
   const report = readReportChangeFilters(paramsObject)
+  // In the archive the change tab lists restore requests, one sub-tab status at a time
+  const isRestoreRequests = !!isArchive && currentActive === 'CHANGED'
 
   if (report) {
     return {
@@ -140,7 +143,11 @@ function buildHfQuery({ paramsObject, isArchive, defaultRegionId }: BuildRegiste
       active:
         currentActive === 'INVALID' || currentActive === 'VALID' ? true : isArchive ? false : currentActive !== 'false',
       changed: currentActive === 'CHANGED' ? true : '',
-      changeStatus: currentActive === 'CHANGED' && currentStatus !== 'ALL' ? currentStatus : '',
+      changeStatus: isRestoreRequests
+        ? restoreRequestStatus(currentStatus)
+        : currentActive === 'CHANGED' && currentStatus !== 'ALL'
+          ? currentStatus
+          : '',
       regionId: normalizeRegionId(regionId),
       districtId,
       hfTypeId,
@@ -179,6 +186,12 @@ function buildEquipmentsQuery({
   } = paramsObject
 
   const currentStatus = String(status)
+  /**
+   * The archive's restore requests. changed=true is what makes the backend apply
+   * changeStatus, and status=INACTIVE keeps out the active elevators that
+   * active=false lets through regardless.
+   */
+  const isRestoreRequests = !!isArchive && currentStatus === 'CHANGED'
 
   const report = readReportChangeFilters(paramsObject)
 
@@ -220,7 +233,11 @@ function buildEquipmentsQuery({
       numberPlate: String(numberPlate).replace(/\s+/g, '').toUpperCase(),
       startDate,
       endDate,
-      status: ['VALID', 'INVALID', 'EXPIRED', 'NO_DATE'].includes(currentStatus) ? currentStatus : '',
+      status: isRestoreRequests
+        ? 'INACTIVE'
+        : ['VALID', 'INVALID', 'EXPIRED', 'NO_DATE'].includes(currentStatus)
+          ? currentStatus
+          : '',
       active: isArchive
         ? false
         : currentStatus === 'ACTIVE'
@@ -230,8 +247,12 @@ function buildEquipmentsQuery({
             : currentStatus === 'CHANGED'
               ? 'true'
               : true,
-      changed: isArchive ? '' : currentStatus === 'CHANGED' ? true : '',
-      changeStatus: currentStatus === 'CHANGED' && changeStatus !== 'ALL' ? changeStatus : '',
+      changed: isRestoreRequests ? true : isArchive ? '' : currentStatus === 'CHANGED' ? true : '',
+      changeStatus: isRestoreRequests
+        ? restoreRequestStatus(changeStatus)
+        : currentStatus === 'CHANGED' && changeStatus !== 'ALL'
+          ? changeStatus
+          : '',
       hasUsageRightsFile:
         !isArchive && currentStatus === NO_USAGE_RIGHTS_STATUS && hasNoUsageRightsTab(type) ? false : '',
     },
