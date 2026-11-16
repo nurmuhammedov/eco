@@ -69,8 +69,13 @@ export interface CadastrePassport {
   customerProfileId: string
   customerName?: string | null
   customerTin: number
-  /** Ariza sanasi, `YYYY-MM-DD` */
+  /** Ariza yaratilgan sana, `YYYY-MM-DD` */
   requestDate?: string | null
+  /**
+   * Ariza sanasi, `YYYY-MM-DD`: the day the customer approved the passport and
+   * sent it into review - the clock the reviewers' time runs from. Empty until then.
+   */
+  reviewedDate?: string | null
   /** Reyestr sanasi, `YYYY-MM-DD`: set with the registry number when the committee approves */
   registrationDate?: string | null
   /** Atribut sahifasi - pasport tasdiqlanganda serverda generatsiya qilinadi. */
@@ -105,6 +110,6 @@ export interface CadastrePassportRow {
   myTurn: boolean
   /** Who filed it: the organisation itself or one of its representatives */
   createdByName?: string | null
-  /** Ariza sanasi, `YYYY-MM-DD` */
-  requestDate?: string | null
+  /** Ariza sanasi, `YYYY-MM-DD`: the customer's approval, as on the passport; empty until then */
+  reviewedDate?: string | null
 }

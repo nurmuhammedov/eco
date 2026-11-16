@@ -11,6 +11,7 @@ import useDelete from '@/shared/hooks/api/use-delete'
 import { UserRoles } from '@/shared/types/user'
 import { CadastrePassportRow } from '../model/types'
 import { isPreparer } from '../model/permissions'
+import { CADASTRE_PAGE_SIZE } from '../model/constants'
 import { useCadastreRepresentation } from '../model/use-representation'
 import { STATUS_OPTIONS, StatusBadge } from './components/status-badge'
 import { MyTasksTable } from './components/my-tasks-table'
@@ -26,6 +27,18 @@ const ALL_VIEW = 'all'
 
 const STATUS_IDS = STATUS_OPTIONS.map((option) => option.id)
 
+/**
+ * An FVV or SES employee's tabs, in the reviewers' own words: a passport reaches
+ * them only once the customer has sent it, so there is no «Yangi»; «Kelishilgan»
+ * is one both reviewers have agreed, now with the committee.
+ */
+const EMPLOYEE_STATUS_TABS = [
+  { value: 'IN_REVIEW', label: 'Jarayonda' },
+  { value: 'IN_COMMITTEE', label: 'Kelishilgan' },
+  { value: 'REJECTED', label: 'Rad etilgan' },
+  { value: 'APPROVED', label: 'Tayyor bo‘lgan' },
+]
+
 interface CadastreListProps {
   customerTin?: string | number | null
   isShortView?: boolean
@@ -36,7 +49,7 @@ export default function CadastreList({ customerTin, isShortView }: CadastreListP
   const { user } = useAuth()
 
   const {
-    paramsObject: { page = 1, size = 10, view: viewParam, ...rest },
+    paramsObject: { page = 1, size = CADASTRE_PAGE_SIZE, view: viewParam, ...rest },
     addParams,
   } = useCustomSearchParams()
 
@@ -61,11 +74,7 @@ export default function CadastreList({ customerTin, isShortView }: CadastreListP
    */
   const tabs = [
     ...(showTasks ? [{ value: TASKS_VIEW, label: 'Mening ishlarim' }] : []),
-    ...(isEmployee
-      ? STATUS_OPTIONS.map((option) => ({ value: option.id, label: option.name }))
-      : showTasks
-        ? [{ value: ALL_VIEW, label: 'TXYZ kadastr pasportlari' }]
-        : []),
+    ...(isEmployee ? EMPLOYEE_STATUS_TABS : showTasks ? [{ value: ALL_VIEW, label: 'TXYZ kadastr pasportlari' }] : []),
   ]
 
   const view = paramText(viewParam)
@@ -123,10 +132,11 @@ export default function CadastreList({ customerTin, isShortView }: CadastreListP
         </div>
       ),
     },
+    // The customer's approval rather than the day the preparer filed it: the reviewers' time runs from it
     {
-      accessorKey: 'requestDate',
+      accessorKey: 'reviewedDate',
       header: 'Ariza sanasi',
-      cell: ({ row }) => getDate(row.original.requestDate) || '-',
+      cell: ({ row }) => getDate(row.original.reviewedDate) || '-',
     },
     {
       accessorKey: 'registryNumber',
@@ -196,7 +206,7 @@ export default function CadastreList({ customerTin, isShortView }: CadastreListP
           {canCreate && (
             <Button onClick={() => navigate('/cadastre-passports/add')}>
               <Plus className="mr-2 h-4 w-4" />
-              TXYZ kadastr pasporti qo‘shish
+              TXYZ kadastr pasporti uchun ariza shakllantirish
             </Button>
           )}
         </div>
@@ -212,6 +222,7 @@ export default function CadastreList({ customerTin, isShortView }: CadastreListP
           columns={columns}
           isLoading={isLoading}
           pageCount={totalPages}
+          defaultPageSize={CADASTRE_PAGE_SIZE}
           className="flex-1"
         />
       )}

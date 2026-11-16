@@ -84,6 +84,32 @@ const EXPLOITATION_YEARS = Array.from({ length: new Date().getFullYear() - 1900 
 /** A whole count of things - people, extinguishers, floors. */
 const whole = () => numeric().int(invalid)
 
+/** What the damage-area input lets through: digits, a decimal mark and the dash of a range. */
+const DAMAGE_AREA_CHARS = /[^\d\s.,\-–—]/g
+
+/** One area or a range of two, e.g. «10000» or «10000 – 50000». */
+const DAMAGE_AREA_PATTERN = /^\d+([.,]\d+)?(\s*[-–—]\s*\d+([.,]\d+)?)?$/
+
+export const DAMAGE_AREA_SAMPLE = '10000 – 50000'
+
+/**
+ * Zararlanish maydoni: the sheet gives it as a single area or as a range, so the
+ * backend keeps it as text since 2026-11-16. However the dash was typed, the
+ * range leaves with the spaced en dash the passport prints.
+ */
+const damageArea = () =>
+  text()
+    .regex(DAMAGE_AREA_PATTERN, invalid)
+    .transform((value) => value.replace(/\s*[-–—]\s*/, ' – '))
+
+/** Optional text: a blank leaves as nothing rather than as an empty string. */
+const optionalText = () =>
+  z
+    .string()
+    .trim()
+    .optional()
+    .transform((value) => value || undefined)
+
 /**
  * The order follows "ТХЮЗ маълумоти", the sheet this form is filled in from.
  * Four of its rows have no column on the endpoint yet - the legal address (3),
@@ -107,6 +133,13 @@ const cadastreObjectSchema = z
     addressLine: text(),
     longitude: coordinate(),
     latitude: coordinate(),
+    /**
+     * Each object has a licence of its own since 2026-11-16 - one organisation
+     * can run several filling stations, each licensed separately. Optional:
+     * some objects have none.
+     */
+    licenseNumber: optionalText(),
+    licenseDate: day().optional(),
     cadastreRegistrationNumber: text(),
     cadastreRegistrationDate: day(),
     landCadastreNumber: text().regex(LAND_CADASTRE_NUMBER_PATTERN, invalid),
@@ -121,7 +154,7 @@ const cadastreObjectSchema = z
     fireEquipmentCount: whole().min(0, invalid),
     distanceToFireDepartment: numeric(),
     dominantHazardType: text(),
-    damageArea: numeric(),
+    damageArea: damageArea(),
     healthRiskFactor: text(),
     distanceToNearestObject: numeric(),
     protectionDistance: text(),
@@ -172,13 +205,6 @@ export const cadastreDataSchema = z
     // second sheet of the passport, filled in by the same customer.
     stateRegistryCertNumber: text(),
     stateRegistryCertDate: day(),
-    // ixtiyoriy: litsenziyasi yo'q obyektlar ham bor
-    licenseNumber: z
-      .string()
-      .trim()
-      .optional()
-      .transform((value) => value || undefined),
-    licenseDate: day().optional(),
     okpo: text().regex(OKPO_PATTERN, invalid),
     bankMfo: text().regex(BANK_MFO_PATTERN, invalid),
     phoneNumber: text().regex(USER_PATTERNS.phone),
@@ -282,6 +308,14 @@ interface AddressConfig {
   lineMaxLength: number
 }
 
+/**
+ * The committee's wording for the two lists, the same on the title and on every
+ * object: «hudud» covers Tashkent city and Karakalpakstan as well as the
+ * viloyats, and the second list holds cities as well as tumans.
+ */
+const REGION_LABEL = 'Obyekt joylashgan hudud'
+const DISTRICT_LABEL = 'Obyekt joylashgan tuman va shahar'
+
 /** An object's own address, under the keys its block has always had */
 const OBJECT_ADDRESS: AddressConfig = {
   regionId: 'regionId',
@@ -289,17 +323,16 @@ const OBJECT_ADDRESS: AddressConfig = {
   districtId: 'districtId',
   districtName: 'districtName',
   line: 'addressLine',
-  regionLabel: 'Viloyat',
-  districtLabel: 'Tuman',
+  regionLabel: REGION_LABEL,
+  districtLabel: DISTRICT_LABEL,
   lineMaxLength: 255,
 }
 
 /**
  * The passport's own location, for the title. Its keys are its own: the
  * endpoint calls the joined string `addressLine`, which on an object is only
- * the street. The lists are named for it as well - next to the legal address a
- * bare «Viloyat» reads as that address's region. The rest of the line is kept
- * short enough for the joined string to fit a 255-character column.
+ * the street. The rest of the line is kept short enough for the joined string
+ * to fit a 255-character column.
  */
 const LOCATION_ADDRESS: AddressConfig = {
   regionId: 'locationRegionId',
@@ -307,8 +340,8 @@ const LOCATION_ADDRESS: AddressConfig = {
   districtId: 'locationDistrictId',
   districtName: 'locationDistrictName',
   line: 'locationAddressLine',
-  regionLabel: 'Obyekt joylashgan viloyat',
-  districtLabel: 'Obyekt joylashgan tuman',
+  regionLabel: REGION_LABEL,
+  districtLabel: DISTRICT_LABEL,
   lineMaxLength: 190,
 }
 
@@ -528,6 +561,38 @@ export const CadastreDataFields = ({ prefix = 'cadastreData.' }: CadastreDataFie
               <FormMessage />
             </FormItem>
           )}
+        />
+        <FormField
+          control={control}
+          name={`${prefix}licenseNumber`}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Obyektning litsenziya raqami</FormLabel>
+              <FormControl>
+                <Input placeholder={LICENSE_NUMBER_SAMPLE} maxLength={50} {...field} value={field.value ?? ''} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={control}
+          name={`${prefix}licenseDate`}
+          render={({ field }) => {
+            const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
+            return (
+              <FormItem>
+                <FormLabel>Obyektning litsenziya sanasi</FormLabel>
+                <DatePicker
+                  value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
+                  onChange={field.onChange}
+                  placeholder="Sanani tanlang"
+                  disableStrategy="after"
+                />
+                <FormMessage />
+              </FormItem>
+            )
+          }}
         />
         <FormField
           control={control}
@@ -773,14 +838,12 @@ export const CadastreDataFields = ({ prefix = 'cadastreData.' }: CadastreDataFie
             <FormItem>
               <FormLabel required>Obyektda texnogen xavf sodir bo‘lganda zararlanish maydoni (m²)</FormLabel>
               <FormControl>
-                <InputNumber
-                  control={control}
-                  name={field.name}
-                  min={0}
-                  allowNegative={false}
-                  allowDecimals
-                  decimalPlaces={2}
-                  placeholder="Kiriting"
+                <Input
+                  placeholder={DAMAGE_AREA_SAMPLE}
+                  maxLength={50}
+                  {...field}
+                  value={field.value ?? ''}
+                  onChange={(event) => field.onChange(event.target.value.replace(DAMAGE_AREA_CHARS, ''))}
                 />
               </FormControl>
               <FormMessage />
@@ -862,7 +925,7 @@ export const CadastreDataFields = ({ prefix = 'cadastreData.' }: CadastreDataFie
           name={`${prefix}estimatedValue`}
           render={({ field }) => (
             <FormItem>
-              <FormLabel required>Obyektning sug‘urtalangan miqdori bahosi (mln so‘m)</FormLabel>
+              <FormLabel required>Obyektning sug‘urtalangan miqdori bahosi (so‘m)</FormLabel>
               <FormControl>
                 <InputNumber
                   control={control}
@@ -953,9 +1016,10 @@ export const CadastreObjectsFields = ({ prefix = 'cadastreData.' }: CadastreData
 }
 
 /**
- * The passport's second sheet - what the state registry and the licence say
- * about the organisation. It is part of the same `preparerData` object, so it
- * shares the prefix; only the accordion it sits in is separate.
+ * The passport's second sheet - what the state registry says about the
+ * organisation; the licences are each object's own. It is part of the same
+ * `preparerData` object, so it shares the prefix; only the accordion it sits in
+ * is separate.
  */
 export const CadastreRegistryFields = ({ prefix = 'cadastreData.' }: CadastreDataFieldsProps) => {
   const { control } = useFormContext()
@@ -964,6 +1028,7 @@ export const CadastreRegistryFields = ({ prefix = 'cadastreData.' }: CadastreDat
     <div className="@container">
       <div className="grid grid-cols-1 items-end gap-x-4 gap-y-5 @2xl:grid-cols-2 @5xl:grid-cols-3">
         <BelongingField prefix={prefix} />
+        {/* Typed by hand: the committee asked (2026-11-16) for the tax registry's address not to be filled in on its own */}
         <FormField
           control={control}
           name={`${prefix}address`}
@@ -1008,38 +1073,6 @@ export const CadastreRegistryFields = ({ prefix = 'cadastreData.' }: CadastreDat
                 <FormLabel required>
                   Obyektning davlat ro‘yxatidan o‘tkazilganligi to‘g‘risidagi guvohnoma sanasi
                 </FormLabel>
-                <DatePicker
-                  value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
-                  onChange={field.onChange}
-                  placeholder="Sanani tanlang"
-                  disableStrategy="after"
-                />
-                <FormMessage />
-              </FormItem>
-            )
-          }}
-        />
-        <FormField
-          control={control}
-          name={`${prefix}licenseNumber`}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Obyektning litsenziya raqami</FormLabel>
-              <FormControl>
-                <Input placeholder={LICENSE_NUMBER_SAMPLE} maxLength={50} {...field} value={field.value ?? ''} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={control}
-          name={`${prefix}licenseDate`}
-          render={({ field }) => {
-            const dateValue = typeof field.value === 'string' ? parseISO(field.value) : field.value
-            return (
-              <FormItem>
-                <FormLabel>Obyektning litsenziya sanasi</FormLabel>
                 <DatePicker
                   value={dateValue instanceof Date && !isNaN(dateValue.valueOf()) ? dateValue : undefined}
                   onChange={field.onChange}

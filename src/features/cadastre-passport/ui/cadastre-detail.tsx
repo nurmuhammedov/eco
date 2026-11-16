@@ -112,7 +112,8 @@ export default function CadastreDetail() {
         <DetailCardAccordion.Item value="txyuz" title="TXYZ kadastr pasporti ma’lumotlari">
           <DetailRow title="Obyektning holati" value={<StatusBadge status={passport.status} />} />
           <DetailRow title="Ariza raqami" value={passport.requestNumber || '-'} />
-          <DetailRow title="Ariza sanasi" value={getDate(passport.requestDate) || '-'} />
+          {/* As in the list: the customer's approval, which the reviewers' time runs from */}
+          <DetailRow title="Ariza sanasi" value={getDate(passport.reviewedDate) || '-'} />
           {passport.parentCadastrePassportId && (
             <DetailRow
               title="Oldin yuborilgan pasport"

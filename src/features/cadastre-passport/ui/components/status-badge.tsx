@@ -9,9 +9,11 @@ const STATUSES: Record<string, { label: string; className: string }> = {
   // The last gate before approval, and the one state that asks the committee to
   // act - solid rather than another pastel, so it carries weight in a column of
   // them. Amber read as a warning and sat too close to the blue of NEW.
+  // Named in full (2026-11-16): the SES is a «qo‘mita» too, so a bare «Qo‘mitada»
+  // left readers unsure which one. Long enough to wrap in a narrow column.
   IN_COMMITTEE: {
-    label: 'Qo‘mitada',
-    className: 'border-transparent bg-indigo-600 text-white shadow-sm hover:bg-indigo-700',
+    label: 'Sanoat, radiatsiya va yadro xavfsizligi qo‘mitasida',
+    className: 'border-transparent bg-indigo-600 text-white shadow-sm hover:bg-indigo-700 whitespace-normal',
   },
   APPROVED: { label: 'Tasdiqlangan', className: 'bg-green-100 text-green-800 hover:bg-green-200 border-transparent' },
   REJECTED: { label: 'Rad etildi', className: 'bg-red-100 text-red-800 hover:bg-red-200 border-transparent' },

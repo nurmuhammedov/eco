@@ -26,7 +26,7 @@ const object = {
   fireEquipmentCount: 4,
   distanceToFireDepartment: 3,
   dominantHazardType: 'Yong‘in',
-  damageArea: 100,
+  damageArea: '100',
   healthRiskFactor: 'Havodan zaharlanish',
   distanceToNearestObject: 50,
   protectionDistance: '100',
@@ -81,5 +81,43 @@ describe('cadastreDataSchema', () => {
     expect(result.error?.issues.map((issue) => issue.path.join('.'))).toEqual(
       expect.arrayContaining(['locationRegionId', 'locationDistrictId', 'locationAddressLine'])
     )
+  })
+
+  // Since 2026-11-16 the backend keeps the damage area as text, so a range can be given.
+  it('sends the damage area as text, a range with the spaced en dash the passport prints', () => {
+    const range = (damageArea: string) =>
+      cadastreDataSchema.safeParse({ ...passport, objects: [{ ...object, damageArea }] }).data?.objects[0].damageArea
+
+    expect(range('100')).toBe('100')
+    expect(range('10000-50000')).toBe('10000 – 50000')
+    expect(range('10000 – 50000')).toBe('10000 – 50000')
+    expect(range('12,5 — 40.75')).toBe('12,5 – 40.75')
+  })
+
+  it('will not take a damage area that is neither an area nor a range', () => {
+    for (const damageArea of ['', 'ko‘p', '100 –', '– 100', '1-2-3']) {
+      const result = cadastreDataSchema.safeParse({ ...passport, objects: [{ ...object, damageArea }] })
+
+      expect(result.success, damageArea).toBe(false)
+    }
+  })
+
+  // Since 2026-11-16 every object carries its own licence and preparerData has none.
+  it('sends each object’s licence with the object and none on the passport', () => {
+    const result = cadastreDataSchema.safeParse({
+      ...passport,
+      licenseNumber: 'AB 000001',
+      objects: [
+        { ...object, licenseNumber: ' AB 001234 ', licenseDate: new Date(2023, 11, 29) },
+        { ...object, licenseNumber: '', licenseDate: undefined },
+      ],
+    })
+
+    expect(result.success).toBe(true)
+    expect(result.data?.objects[0]).toMatchObject({ licenseNumber: 'AB 001234', licenseDate: '2023-12-29' })
+    expect(result.data?.objects[1].licenseNumber).toBeUndefined()
+    expect(result.data?.objects[1].licenseDate).toBeUndefined()
+    expect(result.data).not.toHaveProperty('licenseNumber')
+    expect(result.data).not.toHaveProperty('licenseDate')
   })
 })

@@ -2,11 +2,15 @@ import { ReviewParty, SignAction, WorkflowAction, WorkflowStatus } from './types
 
 type BadgeVariant = 'default' | 'info' | 'success' | 'error' | 'warning' | 'secondary'
 
+/**
+ * The reviewers by their full names, as the title page signs them (asked 2026-11-16):
+ * «FVV», «SES» and a bare «Qo‘mita» left readers unsure who had signed.
+ */
 export const PARTY_LABELS: Record<ReviewParty, string> = {
   CUSTOMER: 'Buyurtmachi',
-  FVV: 'FVV',
-  SES: 'SES',
-  COMMITTEE: 'Qo‘mita',
+  FVV: 'O‘zbekiston Respublikasi Favqulodda vaziyatlar vazirligi',
+  SES: 'O‘zbekiston Respublikasi Sog‘liqni saqlash vazirligi huzuridagi Sanitariya – epidemiologik osoyishtalik va jamoat salomatligi qo‘mitasi',
+  COMMITTEE: 'O‘zbekiston Respublikasi Vazirlar Mahkamasi huzuridagi Sanoat, radiatsiya va yadro xavfsizligi qo‘mitasi',
 }
 
 export const SIGN_ACTION: Record<SignAction, { label: string; variant: BadgeVariant }> = {

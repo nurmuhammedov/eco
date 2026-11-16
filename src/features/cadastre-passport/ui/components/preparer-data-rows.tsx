@@ -30,6 +30,9 @@ export const PreparerDataRows = ({ data }: { data: CadastreSection | null | unde
       <DetailRow title="Obyektning joylashgan manzili" value={text(values.address)} />
       <DetailRow title="Obyektning X koordinatasi" value={text(values.longitude)} />
       <DetailRow title="Obyektning Y koordinatasi" value={text(values.latitude)} />
+      {/* Each object carries its own licence since 2026-11-16 */}
+      <DetailRow title="Obyektning litsenziya raqami" value={text(values.licenseNumber)} />
+      <DetailRow title="Obyektning litsenziya sanasi" value={day(values.licenseDate)} />
       <DetailRow
         title="Obyektning yer uchastkasini kadastr ro‘yxatidan o‘tkazilgan guvohnoma raqami"
         value={text(values.cadastreRegistrationNumber)}
@@ -86,8 +89,9 @@ export const PreparerDataRows = ({ data }: { data: CadastreSection | null | unde
         value={unit(values.distanceToResidence, 'km')}
       />
       <DetailRow
-        title="Obyektning sug‘urtalangan miqdori bahosi (mln so‘m)"
-        value={unit(values.estimatedValue, 'mln so‘m')}
+        // In so‘m, as the passport prints it since 2026-11-16, no longer in millions
+        title="Obyektning sug‘urtalangan miqdori bahosi (so‘m)"
+        value={unit(values.estimatedValue, 'so‘m')}
       />
       <DetailRow
         title="Obyektning hozirgi kundagi holati"
@@ -97,7 +101,7 @@ export const PreparerDataRows = ({ data }: { data: CadastreSection | null | unde
   )
 }
 
-/** Pasportning ikkinchi varag'i - davlat reestri va litsenziya ma'lumotlari. */
+/** Pasportning ikkinchi varag'i - davlat reestri ma'lumotlari; litsenziyalar har bir obyektda. */
 export const RegistryDataRows = ({ data }: { data: CadastreSection | null | undefined }) => {
   const values = data ?? {}
 
@@ -114,8 +118,6 @@ export const RegistryDataRows = ({ data }: { data: CadastreSection | null | unde
         title="Obyektning davlat ro‘yxatidan o‘tkazilganligi to‘g‘risidagi guvohnoma sanasi"
         value={day(values.stateRegistryCertDate)}
       />
-      <DetailRow title="Obyektning litsenziya raqami" value={text(values.licenseNumber)} />
-      <DetailRow title="Obyektning litsenziya sanasi" value={day(values.licenseDate)} />
       <DetailRow title="Korxona va tashkilotning umumdavlat tasnifi raqami (KTUT, OKPO)" value={text(values.okpo)} />
       <DetailRow title="Filiallararo aylanma pul muomalalarining xos raqami (YBK, MFO)" value={text(values.bankMfo)} />
       <DetailRow title="Telefon raqami" value={text(values.phoneNumber)} />

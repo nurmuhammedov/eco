@@ -29,6 +29,14 @@ const toObjectFormValues = (object: CadastreSection) => {
 
   if (object.cadastreRegistrationDate) values.cadastreRegistrationDate = new Date(object.cadastreRegistrationDate)
 
+  // The licence is optional, and the record keeps its blank as null, which the optional fields would refuse
+  if (object.licenseDate) values.licenseDate = new Date(object.licenseDate)
+  else delete values.licenseDate
+  if (object.licenseNumber === null) delete values.licenseNumber
+
+  // The damage area was a number until it became text on 2026-11-16; the input works on text
+  values.damageArea = object.damageArea === null || object.damageArea === undefined ? '' : String(object.damageArea)
+
   // The date became a year; an object saved before that still carries the old date
   const legacyDate = object.exploitationDate ? new Date(object.exploitationDate) : null
   values.exploitationYear = object.exploitationYear
@@ -67,7 +75,7 @@ export const CadastreEditModal = ({ isOpen, onClose, cadastreId, defaultValues }
   useEffect(() => {
     if (defaultValues && isOpen) {
       const { objects, ...registry } = defaultValues
-      // The record keeps a blank as null, which the optional licence fields would refuse as invalid.
+      // The record keeps a blank as null, which a form field would refuse as invalid.
       const formattedValues: Record<string, unknown> = Object.fromEntries(
         Object.entries(registry).filter(([, value]) => value !== null)
       )
@@ -84,9 +92,8 @@ export const CadastreEditModal = ({ isOpen, onClose, cadastreId, defaultValues }
       delete formattedValues.addressLine
 
       // The record keeps dates as 'yyyy-MM-dd'; the picker works on Date.
-      for (const key of ['stateRegistryCertDate', 'licenseDate'] as const) {
-        const value = registry[key]
-        if (value) formattedValues[key] = new Date(value)
+      if (registry.stateRegistryCertDate) {
+        formattedValues.stateRegistryCertDate = new Date(registry.stateRegistryCertDate)
       }
 
       formattedValues.objects = (objects?.length ? objects : [{}]).map(toObjectFormValues)

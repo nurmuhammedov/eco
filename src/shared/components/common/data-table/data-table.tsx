@@ -45,6 +45,8 @@ interface DataTableProps<TData, TValue> {
   sizeQuery?: string
   headerCenter?: boolean
   pageSizeOptions?: number[]
+  /** The page size while the URL names none; it has to match what the list asked its endpoint for. */
+  defaultPageSize?: number
   columns: ExtendedColumnDef<TData, TValue>[]
   data: TData[] | ResponseData<TData>
   onPageChange?: (page: number) => void
@@ -74,6 +76,7 @@ export function DataTable<TData, TValue>({
   headerCenter = false,
   isPaginated,
   pageSizeOptions,
+  defaultPageSize = 10,
   showNumeration = true,
   showFilters = false,
   showFooter = false,
@@ -86,7 +89,7 @@ export function DataTable<TData, TValue>({
   onColumnPinningChange,
 }: DataTableProps<TData, TValue>) {
   const {
-    paramsObject: { page = 1, size = 10 },
+    paramsObject: { page = 1, size = defaultPageSize },
     addParams,
   } = useCustomSearchParams()
   const isContentData = data && typeof data === 'object' && 'content' in data
@@ -277,7 +280,9 @@ export function DataTable<TData, TValue>({
                 <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'} className="group/row">
                   {showNumeration && (
                     <TableCell className="w-[1%] whitespace-nowrap">
-                      {Number(page || 1) > 1 ? (Number(page || 1) - 1) * Number(size || 10) + idx + 1 : idx + 1}
+                      {Number(page || 1) > 1
+                        ? (Number(page || 1) - 1) * Number(size || defaultPageSize) + idx + 1
+                        : idx + 1}
                     </TableCell>
                   )}
                   {row.getVisibleCells().map((cell) => {

@@ -110,13 +110,6 @@ export default function CadastreAdd() {
     },
   })
 
-  /** The organisation's legal address comes from the integration; it can still be corrected by hand. */
-  useEffect(() => {
-    if (legalInfo?.legalAddress && !form.getValues('cadastreData.address')) {
-      form.setValue('cadastreData.address', legalInfo.legalAddress)
-    }
-  }, [legalInfo, form])
-
   const handleSearch = ({ stir }: SearchValues) => setSearchedStir(stir)
 
   const handleClearSearch = () => {
@@ -163,7 +156,11 @@ export default function CadastreAdd() {
   return (
     <div className="space-y-4 pb-4">
       <GoBack
-        title={resubmitRequestNumber ? 'TXYZ kadastr pasportini qayta yuborish' : 'TXYZ kadastr pasporti qo‘shish'}
+        title={
+          resubmitRequestNumber
+            ? 'TXYZ kadastr pasportini qayta yuborish'
+            : 'TXYZ kadastr pasporti uchun ariza shakllantirish'
+        }
       />
 
       {representation && (
