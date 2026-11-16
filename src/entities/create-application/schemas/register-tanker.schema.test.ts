@@ -4,7 +4,7 @@ import {
   RegisterIllegalTankerSchema,
   TankerAppealDtoSchema,
   UpdateTankerSchema,
-  isTankerFileRequired,
+  isTankerFileApplicable,
   TANKER_FILES,
 } from './register-tanker.schema'
 
@@ -60,22 +60,37 @@ describe('TankerAppealDtoSchema', () => {
     expect(result.data?.expertisePath).toBeNull()
   })
 
-  it('asks a pressure tanker for both checks and their dates', () => {
+  it('asks a pressure tanker for the dates of both checks, not for their files', () => {
     const result = TankerAppealDtoSchema.safeParse(common)
 
-    expect(errorPaths(result)).toEqual(['fullCheckDate', 'fullCheckPath', 'partialCheckDate', 'partialCheckPath'])
+    expect(errorPaths(result)).toEqual(['fullCheckDate', 'partialCheckDate'])
   })
 
-  it('asks an oil tanker for the non-destructive check and the cleaning act only', () => {
+  it('asks an oil tanker for the date of the non-destructive check only', () => {
     const result = TankerAppealDtoSchema.safeParse({ ...common, childType: 'TANKER_OIL' })
 
-    expect(errorPaths(result)).toEqual(['cleaningActPath', 'nonDestructiveCheckDate', 'nonDestructiveCheckPath'])
+    expect(errorPaths(result)).toEqual(['nonDestructiveCheckDate'])
   })
 
-  it('asks a radioactive tanker for its three documents only', () => {
-    const result = TankerAppealDtoSchema.safeParse({ ...common, childType: 'TANKER_RADIOACTIVE' })
+  it('takes a radioactive tanker without its documents', () => {
+    expect(TankerAppealDtoSchema.safeParse({ ...common, childType: 'TANKER_RADIOACTIVE' }).success).toBe(true)
+  })
 
-    expect(errorPaths(result)).toEqual(['driverRadiationCertPath', 'safetyDecreePath', 'testingActPath'])
+  // Since 2026-11-16 no file is required: the tankers moved over from the old register come without them
+  it('takes a tanker without a single file', () => {
+    const files = Object.fromEntries(TANKER_FILES.map((file) => [file.path, undefined]))
+    const result = TankerAppealDtoSchema.safeParse({
+      ...common,
+      ...pressure,
+      ...files,
+      fitnessConclusionExpiryDate: undefined,
+      driverPermitExpiryDate: undefined,
+      nextPartialCheckDate: undefined,
+      nextFullCheckDate: undefined,
+    })
+
+    expect(result.success).toBe(true)
+    expect(TANKER_FILES.map((file) => result.data?.[file.path])).toEqual(TANKER_FILES.map(() => null))
   })
 
   it('wants the expiry date of any file with one that is attached', () => {
@@ -89,10 +104,10 @@ describe('TankerAppealDtoSchema', () => {
     expect(errorPaths(result)).toEqual(['fitnessConclusionExpiryDate', 'testingActExpiryDate'])
   })
 
-  it('wants the expertise conclusion once the service period is over', () => {
+  it('takes an expired service period without the expertise conclusion, and with it', () => {
     const expired = { ...common, ...pressure, servicePeriod: subDays(new Date(), 1) }
 
-    expect(errorPaths(TankerAppealDtoSchema.safeParse(expired))).toEqual(['expertisePath'])
+    expect(TankerAppealDtoSchema.safeParse(expired).success).toBe(true)
     expect(
       TankerAppealDtoSchema.safeParse({
         ...expired,
@@ -106,7 +121,7 @@ describe('TankerAppealDtoSchema', () => {
     const result = TankerAppealDtoSchema.safeParse({ ...common, numberPlate: '', servicePeriod: undefined })
 
     expect(errorPaths(result)).toEqual(
-      expect.arrayContaining(['numberPlate', 'servicePeriod', 'partialCheckPath', 'fullCheckDate'])
+      expect.arrayContaining(['numberPlate', 'servicePeriod', 'partialCheckDate', 'fullCheckDate'])
     )
   })
 })
@@ -127,21 +142,21 @@ describe('the unofficial and the update schemas', () => {
       childType: 'TANKER_OIL',
     })
 
-    expect(errorPaths(result)).toEqual(['cleaningActPath', 'nonDestructiveCheckDate', 'nonDestructiveCheckPath'])
+    expect(errorPaths(result)).toEqual(['nonDestructiveCheckDate'])
   })
 })
 
-describe('isTankerFileRequired', () => {
+describe('isTankerFileApplicable', () => {
   const file = (path: string) => TANKER_FILES.find((item) => item.path === path)!
 
-  it('always wants the documents every tanker carries', () => {
-    expect(isTankerFileRequired(file('driverPermitPath'), null)).toBe(true)
-    expect(isTankerFileRequired(file('labelPath'), 'TANKER_OIL')).toBe(true)
+  it('always shows the documents every tanker has', () => {
+    expect(isTankerFileApplicable(file('driverPermitPath'), null)).toBe(true)
+    expect(isTankerFileApplicable(file('labelPath'), 'TANKER_OIL')).toBe(true)
   })
 
-  it('wants a kind document for that kind only', () => {
-    expect(isTankerFileRequired(file('testingActPath'), 'TANKER_RADIOACTIVE')).toBe(true)
-    expect(isTankerFileRequired(file('testingActPath'), 'TANKER_LPG')).toBe(false)
-    expect(isTankerFileRequired(file('fullCheckPath'), 'TANKER_CRYOGENIC')).toBe(true)
+  it('shows a kind document for that kind only', () => {
+    expect(isTankerFileApplicable(file('testingActPath'), 'TANKER_RADIOACTIVE')).toBe(true)
+    expect(isTankerFileApplicable(file('testingActPath'), 'TANKER_LPG')).toBe(false)
+    expect(isTankerFileApplicable(file('fullCheckPath'), 'TANKER_CRYOGENIC')).toBe(true)
   })
 })

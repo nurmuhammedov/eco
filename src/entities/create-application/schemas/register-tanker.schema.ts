@@ -35,7 +35,7 @@ export type TankerConditionalField =
   | 'safetyDecreePath'
   | 'driverRadiationCertPath'
 
-/** What a tanker of this kind must carry on top of what every tanker does; the backend checks the same */
+/** What a tanker of this kind carries on top of what every tanker does; its dates are required, its files are not */
 export const tankerRequires = (childType?: string | null): Record<TankerConditionalField, boolean> => {
   const isPressure = PRESSURE_TYPES.includes(childType ?? '')
   const isOil = childType === 'TANKER_OIL'
@@ -90,7 +90,7 @@ export interface TankerFile {
   /** The date the document runs out on; once the file is attached the date is required too */
   expiry?: TankerFileExpiry
   expiryLabel?: string
-  /** Every tanker carries it, whatever its kind */
+  /** Every tanker has it, whatever its kind - so its field is always shown */
   always?: boolean
   /** The photo of the plate may be a picture */
   image?: boolean
@@ -167,8 +167,12 @@ export const isExpertiseRequired = (servicePeriod?: string | Date | null) => {
   return value < today()
 }
 
-/** Whether the file must be attached for a tanker of this kind and service period */
-export const isTankerFileRequired = (
+/**
+ * Whether the file belongs to a tanker of this kind and service period, and so
+ * has its field on the form. None of them is required since 2026-11-16: the
+ * tankers moved over from the old register mostly come without their papers.
+ */
+export const isTankerFileApplicable = (
   file: TankerFile,
   childType?: string | null,
   servicePeriod?: string | Date | null
@@ -235,12 +239,9 @@ export const refineTanker = (data: TankerValues, ctx: z.RefinementCtx) => {
     if (requires[field] && !data[field]) required(ctx, field)
   }
 
+  // Every file is optional; one that is attached still needs the date it runs out on
   for (const file of TANKER_FILES) {
-    if (data[file.path]) {
-      if (file.expiry && !data[file.expiry]) required(ctx, file.expiry)
-    } else if (isTankerFileRequired(file, data.childType, data.servicePeriod)) {
-      required(ctx, file.path)
-    }
+    if (data[file.path] && file.expiry && !data[file.expiry]) required(ctx, file.expiry)
   }
 }
 

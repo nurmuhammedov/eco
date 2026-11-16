@@ -3,7 +3,7 @@ import { parseISO } from 'date-fns'
 import type { Path, UseFormReturn } from 'react-hook-form'
 import {
   CardForm,
-  isTankerFileRequired,
+  isTankerFileApplicable,
   TANKER_FILES,
   TankerAppealDtoSchema,
   tankerRequires,
@@ -109,7 +109,7 @@ export const TankerFields = <T extends TankerFieldsShape, TSubmitted>({
     (file) =>
       file.always ||
       file.path === 'expertisePath' ||
-      isShown(file.path, isTankerFileRequired(file, childType, values.servicePeriod)) ||
+      isShown(file.path, isTankerFileApplicable(file, childType, values.servicePeriod)) ||
       (!!file.expiry && !!values[file.expiry])
   )
 
@@ -294,12 +294,8 @@ export const TankerFields = <T extends TankerFieldsShape, TSubmitted>({
                 render={({ field }) => (
                   <FormItem className="mb-2">
                     <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
-                      <FormLabel
-                        required={isTankerFileRequired(file, childType, values.servicePeriod)}
-                        className="w-full sm:max-w-1/2 2xl:max-w-3/7"
-                      >
-                        {file.label}
-                      </FormLabel>
+                      {/* Optional, every one of them (2026-11-16) */}
+                      <FormLabel className="w-full sm:max-w-1/2 2xl:max-w-3/7">{file.label}</FormLabel>
                       <FormControl>
                         <InputFile
                           form={tanker}
