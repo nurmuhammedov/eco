@@ -39,6 +39,7 @@ const AttractionTypePage = lazy(() => import('@/pages/admin/attraction-type/page
 const CadastreAdd = lazy(() => import('@/features/cadastre-passport/ui/cadastre-add'))
 const CadastreDetail = lazy(() => import('@/features/cadastre-passport/ui/cadastre-detail'))
 const CadastrePassportReport = lazy(() => import('@/features/reports/ui/cadastre-passport-report'))
+const CraneReport = lazy(() => import('@/features/reports/ui/crane-report'))
 const CadastreList = lazy(() => import('@/features/cadastre-passport/ui/cadastre-list'))
 const CategoryTypeViewPage = lazy(() => import('@/pages/admin/inspection/category-type-view-page'))
 const ConclusionDetail = lazy(() => import('@/pages/expertise/conclusion-detail-page'))
@@ -1010,6 +1011,12 @@ export const APP_ROUTES: AppRouteDefinition[] = [
     id: 'REPORT',
     path: 'reports/cadastre-passport',
     element: withSuspense(CadastrePassportReport),
+    roles: [UserRoles.CHAIRMAN, UserRoles.HEAD, UserRoles.REGIONAL],
+  },
+  {
+    id: 'REPORT',
+    path: 'reports/crane',
+    element: withSuspense(CraneReport),
     roles: [UserRoles.CHAIRMAN, UserRoles.HEAD, UserRoles.REGIONAL],
   },
   {

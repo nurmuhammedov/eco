@@ -6,6 +6,7 @@ import {
   CalendarClock,
   ClipboardCheck,
   Clock,
+  Construction,
   FileSearch,
   Factory,
   FileText,
@@ -102,6 +103,15 @@ export const REPORTS_GROUPS: ReportGroup[] = [
         icon: Users,
         url: '/reports/hf-employee-stats',
         reportType: 'OTHERS',
+      },
+      {
+        id: 'rep-crane',
+        title: 'Kran qurilmalari',
+        icon: Construction,
+        url: '/reports/crane',
+        reportType: 'OTHERS',
+        // The backend opens it to the chairman, regional heads (supervisors sign in as REGIONAL) and department heads
+        roles: [UserRoles.CHAIRMAN, UserRoles.REGIONAL, UserRoles.HEAD],
       },
     ],
   },
