@@ -1,7 +1,7 @@
 import { ZoomStartLink } from '@/entities/attestation/ui/zoom-start-link'
 import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { Award, Eye, Mail, Plus, Send, Undo2, Video } from 'lucide-react'
+import { Award, Eye, FileWarning, Mail, Plus, Send, Undo2, Video } from 'lucide-react'
 import { DataTable, ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
 import { Button, buttonVariants } from '@/shared/components/ui/button'
 import { Badge } from '@/shared/components/ui/badge'
@@ -13,10 +13,13 @@ import { APPLICATION_STATUS, CALENDAR_STATUS, DIRECTION, EMPLOYEE_TYPE } from '@
 import type { AttestationApplication } from '@/entities/attestation/model/types'
 import { formatExamTime } from '@/entities/attestation/lib/exam-time'
 import { DocumentButton } from '@/entities/attestation/ui/document-button'
+import { AttemptBadge } from '@/entities/attestation/ui/attempt-badge'
+import { hasPresentation } from '@/entities/attestation/lib/attempts'
 import { useDetachApplication } from '@/features/attestation/exams/model/use-exams'
 import { useCalendar } from '../model/use-applicants'
 import { AddApplicationsDialog } from './add-applications-dialog'
 import { ExamVideo } from './exam-video'
+import { ProtocolConfirmation } from './protocol-confirmation'
 
 export const ApplicantsList = () => {
   const { examId: calendarId = '' } = useParams()
@@ -40,7 +43,10 @@ export const ApplicantsList = () => {
       filterType: 'search',
       cell: ({ row }) => (
         <div>
-          <p className="font-medium">{row.original.employee_name}</p>
+          <div className="flex flex-wrap items-center gap-1.5">
+            <p className="font-medium">{row.original.employee_name}</p>
+            <AttemptBadge attempt={row.original.attempt} />
+          </div>
           <p className="text-muted-foreground text-xs">{row.original.employee_pin}</p>
         </div>
       ),
@@ -116,6 +122,17 @@ export const ApplicantsList = () => {
             />
           )}
 
+          {/* Item 44: a second failure; the organization has to consider moving the employee */}
+          {hasPresentation(row.original, calendar?.protocol_number) && (
+            <DocumentButton
+              url={SERVICES_API_ENDPOINTS.APPLICATION_PRESENTATION(row.original.id)}
+              fileName={`taqdimnoma-${row.original.employee_pin}.pdf`}
+              label="Tashkilotga taqdimnoma (ikkinchi marta o‘tmadi)"
+              icon={<FileWarning className="h-4 w-4" />}
+              iconOnly
+            />
+          )}
+
           {row.original.certificate_number && (
             <DocumentButton
               url={SERVICES_API_ENDPOINTS.APPLICATION_CERTIFICATE(row.original.id)}
@@ -166,10 +183,12 @@ export const ApplicantsList = () => {
             {calendar.protocol_number && (
               <DocumentButton
                 url={SERVICES_API_ENDPOINTS.CALENDAR_DOCUMENT(calendar.id, 'protocol')}
-                fileName={`bayonnoma-${calendar.protocol_number}.pdf`}
+                fileName={calendar.protocol_file_name ?? `bayonnoma-${calendar.protocol_number}.pdf`}
                 label={`${calendar.protocol_number}-son bayonnoma`}
               />
             )}
+
+            <ProtocolConfirmation calendar={calendar} />
 
             {calendar.zoom_start_url && (
               <ZoomStartLink exam={calendar} className={buttonVariants({ variant: 'outline' })}>

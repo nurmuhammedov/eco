@@ -125,6 +125,9 @@ export const SERVICES_API_ENDPOINTS = {
   CALENDAR_APPLICATION: (id: string, applicationId: string) =>
     `/attestation/calendars/${id}/applications/${applicationId}`,
   CALENDAR_VIDEO: (id: string) => `/attestation/calendars/${id}/video`,
+  // The protocol is confirmed by the chairman's E-IMZO signature or a scan of the signed paper
+  CALENDAR_PROTOCOL_SIGN: (id: string) => `/attestation/calendars/${id}/protocol/sign`,
+  CALENDAR_PROTOCOL_UPLOAD: (id: string) => `/attestation/calendars/${id}/protocol/upload`,
   CALENDAR_DOCUMENT: (id: string, type: CalendarDocument) => `/attestation/calendars/${id}/documents/${type}`,
   MY_CALENDAR_DOCUMENT: (id: string, type: CalendarDocument) => `/attestation/my-calendars/${id}/documents/${type}`,
   // Requests (Arizalar): one organization, one direction, one employee type
@@ -146,6 +149,9 @@ export const SERVICES_API_ENDPOINTS = {
   APPLICATION_RESULT: (id: string) => `/attestation/applications/${id}/result`,
   APPLICATION_CERTIFICATE: (id: string) => `/attestation/applications/${id}/certificate`,
   MY_APPLICATION_CERTIFICATE: (id: string) => `/attestation/my-applications/${id}/certificate`,
+  // After a second failure (item 44)
+  APPLICATION_PRESENTATION: (id: string) => `/attestation/applications/${id}/presentation`,
+  MY_APPLICATION_PRESENTATION: (id: string) => `/attestation/my-applications/${id}/presentation`,
   // Exams (Imtihon savollari)
   EXAM_GENERATE: (applicationId: string) => `/attestation/exams/generate/${applicationId}`,
   EXAM_BY_APPLICATION: (applicationId: string) => `/attestation/exams/${applicationId}`,

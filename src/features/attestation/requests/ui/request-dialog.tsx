@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import { format, isBefore, parseISO, startOfToday } from 'date-fns'
-import { AlertTriangle, Award, Loader2, Video } from 'lucide-react'
+import { AlertTriangle, Award, FileWarning, Loader2, Video } from 'lucide-react'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog'
 import { Button } from '@/shared/components/ui/button'
 import { Badge } from '@/shared/components/ui/badge'
@@ -18,6 +18,8 @@ import type { AttestationCalendar, AttestationRequest } from '@/entities/attesta
 import { formatExamTime } from '@/entities/attestation/lib/exam-time'
 import { attestationDocumentRoutes, type DocumentAudience } from '@/entities/attestation/lib/open-document'
 import { DocumentButton } from '@/entities/attestation/ui/document-button'
+import { AttemptBadge } from '@/entities/attestation/ui/attempt-badge'
+import { hasPresentation } from '@/entities/attestation/lib/attempts'
 import { useCommission } from '@/features/attestation/commission/model/use-commission'
 import { useAcceptRequest, useRejectRequest, useRequest } from '../model/use-requests'
 
@@ -186,7 +188,10 @@ export function RequestDialog({ request, audience, onClose }: Props) {
                     return (
                       <TableRow key={application.id}>
                         <TableCell>
-                          <p className="font-medium">{application.employee_name}</p>
+                          <div className="flex flex-wrap items-center gap-1.5">
+                            <p className="font-medium">{application.employee_name}</p>
+                            <AttemptBadge attempt={application.attempt} />
+                          </div>
                           <p className="text-muted-foreground text-xs">{application.employee_pin}</p>
                         </TableCell>
                         <TableCell>{application.employee_position || '-'}</TableCell>
@@ -217,6 +222,15 @@ export function RequestDialog({ request, audience, onClose }: Props) {
                                   <Video className="h-4 w-4" />
                                 </a>
                               </Button>
+                            )}
+                            {hasPresentation(application) && (
+                              <DocumentButton
+                                url={routes.presentation(application.id)}
+                                fileName={`taqdimnoma-${application.employee_pin}.pdf`}
+                                label="Taqdimnoma (ikkinchi marta o‘tmadi)"
+                                icon={<FileWarning className="h-4 w-4" />}
+                                iconOnly
+                              />
                             )}
                             {application.certificate_number && (
                               <DocumentButton

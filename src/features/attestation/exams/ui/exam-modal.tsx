@@ -2,8 +2,8 @@ import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { addDays, differenceInBusinessDays, format, isToday, parseISO, startOfToday } from 'date-fns'
-import { Loader2, TriangleAlert, Users } from 'lucide-react'
+import { format, isToday, parseISO } from 'date-fns'
+import { Info, Loader2, Users } from 'lucide-react'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
 import { Input } from '@/shared/components/ui/input'
@@ -11,6 +11,7 @@ import { Button } from '@/shared/components/ui/button'
 import { Badge } from '@/shared/components/ui/badge'
 import DatePicker from '@/shared/components/ui/datepicker'
 import { EMPLOYEE_TYPE } from '@/entities/attestation/model/labels'
+import { earliestExamDate, isAllowedExamDate, NOTICE_WORKING_DAYS } from '@/entities/attestation/lib/attempts'
 import type { AttestationApplication, AttestationCalendar } from '@/entities/attestation/model/types'
 import { useCommission } from '@/features/attestation/commission/model/use-commission'
 import { useCreateExam, useUpdateExam } from '../model/use-exams'
@@ -49,11 +50,8 @@ type Props = {
 
 const DEFAULT_TIMES = { start_time: '10:00', end_time: '12:00' }
 
-/** Item 27: the organization is told the place and time at least fifteen working days ahead */
-const NOTICE_WORKING_DAYS = 15
-
-// Tomorrow, so the form does not open already invalid in the afternoon
-const defaultValues = (location = ''): FormValues => ({ date: addDays(startOfToday(), 1), ...DEFAULT_TIMES, location })
+// The first day the notice period allows (item 27), so the form opens valid
+const defaultValues = (location = ''): FormValues => ({ date: earliestExamDate(), ...DEFAULT_TIMES, location })
 
 // The API takes full timestamps, the form collects a date and two times.
 const toIso = (date: Date, time: string) => `${format(date, 'yyyy-MM-dd')} ${time}:00`
@@ -91,13 +89,21 @@ export function ExamModal({ isOpen, onClose, editData, applications, onCreated }
     }
   }, [isOpen, editData, form, defaultLocation])
 
-  const pickedDate = form.watch('date')
-  const isShortNotice = !!pickedDate && differenceInBusinessDays(pickedDate, startOfToday()) < NOTICE_WORKING_DAYS
+  // An exam set before the notice rule may keep its day, it only cannot be moved closer
+  const currentDate = editData ? parseISO(editData.start_date) : null
+  const earliest = earliestExamDate()
 
   // The picked applications share one type; the queue refuses a mixed selection
   const employeeType = applications?.[0]?.employee_type ?? editData?.employee_type
 
   const onSubmit = (values: FormValues) => {
+    if (!isAllowedExamDate(values.date, new Date(), currentDate)) {
+      form.setError('date', {
+        message: `Kamida ${NOTICE_WORKING_DAYS} ish kuni keyingi sana tanlanadi: ${format(earliest, 'dd.MM.yyyy')} yoki undan keyin`,
+      })
+      return
+    }
+
     const dates = {
       start_date: toIso(values.date, values.start_time),
       end_date: toIso(values.date, values.end_time),
@@ -144,7 +150,12 @@ export function ExamModal({ isOpen, onClose, editData, applications, onCreated }
               render={({ field }) => (
                 <FormItem className="flex flex-col">
                   <FormLabel required>Sana</FormLabel>
-                  <DatePicker value={field.value} onChange={field.onChange} disableStrategy="before" />
+                  <DatePicker
+                    value={field.value}
+                    onChange={field.onChange}
+                    disableStrategy="custom"
+                    customDisabledFn={(date) => !isAllowedExamDate(date, new Date(), currentDate)}
+                  />
                   <FormMessage />
                 </FormItem>
               )}
@@ -194,15 +205,14 @@ export function ExamModal({ isOpen, onClose, editData, applications, onCreated }
               )}
             />
 
-            {isShortNotice && (
-              <div className="flex items-start gap-2 rounded-md border border-amber-200 bg-amber-50 p-2.5 text-xs text-amber-800">
-                <TriangleAlert className="mt-0.5 h-4 w-4 shrink-0" />
-                <p>
-                  26-son Nizomning 27-bandiga ko‘ra tashkilot attestatsiya joyi va vaqti haqida kamida{' '}
-                  {NOTICE_WORKING_DAYS} ish kuni oldin yozma xabardor qilinishi kerak.
-                </p>
-              </div>
-            )}
+            <div className="flex items-start gap-2 rounded-md border border-blue-200 bg-blue-50 p-2.5 text-xs text-blue-800">
+              <Info className="mt-0.5 h-4 w-4 shrink-0" />
+              <p>
+                26-son Nizomning 27-bandiga ko‘ra tashkilot attestatsiya joyi va vaqti haqida kamida{' '}
+                {NOTICE_WORKING_DAYS} ish kuni oldin yozma xabardor qilinadi, shuning uchun imtihonning eng erta sanasi
+                — {format(earliest, 'dd.MM.yyyy')}.
+              </p>
+            </div>
 
             <p className="text-muted-foreground text-xs">
               {isEditing

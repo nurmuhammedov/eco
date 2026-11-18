@@ -2,6 +2,8 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
+import { Lock, Video } from 'lucide-react'
+import { Badge } from '@/shared/components/ui/badge'
 import { InputFile } from '@/shared/components/common/file-upload'
 import { FileTypes } from '@/shared/components/common/file-upload/model/file-types'
 import {
@@ -57,6 +59,31 @@ export const ExamVideo = ({ calendar }: { calendar: AttestationCalendar }) => {
   const handleDelete = () => {
     isDeleting.current = true
     deleteVideo.mutate(calendar.id, { onError: restore })
+  }
+
+  // Evidence for an appeal: once the exam is over and the recording is in, it stays for three years
+  if (calendar.video_locked && savedUrl) {
+    return (
+      <div className="flex w-80 items-center gap-2 rounded border border-gray-200 bg-white px-2.5 py-1.5 text-sm">
+        <Video className="h-4 w-4 shrink-0 text-blue-400" />
+        <a
+          href={savedUrl}
+          target="_blank"
+          rel="noreferrer"
+          className="truncate text-blue-500 hover:underline"
+          title={calendar.video_name ?? undefined}
+        >
+          {calendar.video_name || 'Suhbat videosi'}
+        </a>
+        <Badge
+          variant="secondary"
+          className="ml-auto shrink-0 gap-1"
+          title="Imtihon yakunlangan: video apellyatsiya uchun saqlanadi, uni almashtirib yoki o‘chirib bo‘lmaydi"
+        >
+          <Lock className="h-3 w-3" />3 yil saqlanadi
+        </Badge>
+      </div>
+    )
   }
 
   return (

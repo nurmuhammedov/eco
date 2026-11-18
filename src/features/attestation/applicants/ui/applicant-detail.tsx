@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom'
 import { format, parseISO } from 'date-fns'
-import { CheckCircle2, ListChecks, Loader2, XCircle } from 'lucide-react'
+import { AlertTriangle, CheckCircle2, ListChecks, Loader2, XCircle } from 'lucide-react'
 import { Card, CardContent } from '@/shared/components/ui/card'
 import { Button } from '@/shared/components/ui/button'
 import { Badge } from '@/shared/components/ui/badge'
@@ -11,6 +11,8 @@ import { APPLICATION_STATUS, DIRECTION, EMPLOYEE_TYPE } from '@/entities/attesta
 import { formatExamTime } from '@/entities/attestation/lib/exam-time'
 import { SERVICES_API_ENDPOINTS } from '@/shared/api/endpoints'
 import { DocumentButton } from '@/entities/attestation/ui/document-button'
+import { AttemptBadge } from '@/entities/attestation/ui/attempt-badge'
+import { hasPresentation, isRepeatAttempt } from '@/entities/attestation/lib/attempts'
 import { useApplication, useExamQuestions, useGenerateExam, useSetResult } from '../model/use-applicants'
 
 const InfoItem = ({ label, value }: { label: string; value: React.ReactNode }) => (
@@ -64,7 +66,19 @@ export const ApplicantDetail = () => {
               {EMPLOYEE_TYPE[application.employee_type].label}
             </Badge>
             {statusCfg && <Badge variant={statusCfg.variant}>{statusCfg.label}</Badge>}
+            <AttemptBadge attempt={application.attempt} />
           </div>
+
+          {/* Items 43–44: the examiner should know what a second failure means before deciding */}
+          {isRepeatAttempt(application) && !isFinished && (
+            <div className="mt-3 flex items-start gap-2 rounded-md border border-amber-200 bg-amber-50 p-2.5 text-sm text-amber-800">
+              <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
+              <p>
+                Takroriy attestatsiya: xodim bu yo‘nalishda avval o‘tmagan. Bu safar ham o‘tmasa, 26-son Nizomning
+                44-bandiga ko‘ra tashkilotga taqdimnoma yuboriladi va xodim boshqa ariza bera olmaydi.
+              </p>
+            </div>
+          )}
 
           <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <InfoItem label="JSHSHIR" value={application.employee_pin} />
@@ -85,6 +99,19 @@ export const ApplicantDetail = () => {
                 />
                 <InfoItem label="Baholagan xodim" value={application.examined_by_name} />
               </>
+            )}
+
+            {hasPresentation(application) && (
+              <InfoItem
+                label="Ikkinchi marta o‘tmadi"
+                value={
+                  <DocumentButton
+                    url={SERVICES_API_ENDPOINTS.APPLICATION_PRESENTATION(application.id)}
+                    fileName={`taqdimnoma-${application.employee_pin}.pdf`}
+                    label="Tashkilotga taqdimnoma"
+                  />
+                }
+              />
             )}
 
             {application.certificate_number && (

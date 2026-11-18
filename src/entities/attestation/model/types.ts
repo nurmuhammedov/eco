@@ -5,6 +5,12 @@ export type Direction = 'INDUSTRIAL_SAFETY' | 'RADIATION_SAFETY' | 'NUCLEAR_SAFE
 
 export type CalendarStatus = 'OPEN' | 'IN_PROGRESS' | 'CLOSED'
 
+/**
+ * DRAFT until it is confirmed: the commission chairman signs it with E-IMZO
+ * (SIGNED), or a scan of the copy he signed on paper is uploaded (UPLOADED)
+ */
+export type ProtocolStatus = 'DRAFT' | 'UPLOADED' | 'SIGNED'
+
 export interface AttestationQuestion {
   id: string
   direction: Direction
@@ -37,9 +43,19 @@ export interface AttestationCalendar {
   /** Formed once everyone in the exam has a result */
   protocol_number: number | null
   protocol_date: string | null
+  protocol_status: ProtocolStatus | null
+  protocol_file_name: string | null
+  protocol_uploaded_at: string | null
+  protocol_uploaded_by_name: string | null
+  protocol_signer_name: string | null
+  protocol_signed_at: string | null
+  /** What the chairman signs; sent only on the exam's own page while the protocol waits */
+  protocol_hash?: string
   has_video: boolean
   video_name: string | null
   video_url: string | null
+  /** A finished exam's recording is kept three years for an appeal: no replacing, no removing */
+  video_locked: boolean
   applications_count?: number
   created_by_pin?: number
   created_at?: string
@@ -85,6 +101,8 @@ export interface AttestationApplication {
   certificate_number: number | null
   certificate_issued_at: string | null
   certificate_expires_at: string | null
+  /** 2 for a repeat after a failure (resolution No. 26, items 43–44); failing it ends the tries */
+  attempt: number
   created_at?: string
 }
 
@@ -127,6 +145,12 @@ export interface AttestationEmployee {
   employee_type: EmployeeType | null
   has_active_application: boolean
   is_certificate_expired: boolean
+  /** Failures in this direction since the employee last passed in it */
+  failed_attempts: number
+  /** Failed twice in a row: no further request (item 44) */
+  attempts_exhausted: boolean
+  /** Two months after a failure (item 43); null when a request may be sent now */
+  retry_from: string | null
 }
 
 export interface SubmitRequestPayload {

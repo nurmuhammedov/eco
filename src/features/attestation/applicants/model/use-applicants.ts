@@ -79,6 +79,25 @@ export const useSetResult = () =>
     'Natija belgilandi'
   )
 
+/** The commission chairman's attached E-IMZO signature over the protocol's hash */
+export const useSignProtocol = () =>
+  useApplicantMutation<{ calendarId: string; sign: string }>(
+    ({ calendarId, sign }) =>
+      servicesApiClient.post(SERVICES_API_ENDPOINTS.CALENDAR_PROTOCOL_SIGN(calendarId), { sign }),
+    'Bayonnoma elektron imzolandi'
+  )
+
+/** A scan of the protocol the chairman signed on paper; replaces an earlier scan */
+export const useUploadProtocol = () =>
+  useApplicantMutation<{ calendarId: string; file: File }>(({ calendarId, file }) => {
+    const formData = new FormData()
+    formData.append('file', file)
+
+    return servicesApiClient.post(SERVICES_API_ENDPOINTS.CALENDAR_PROTOCOL_UPLOAD(calendarId), formData, {
+      'Content-Type': 'multipart/form-data',
+    })
+  }, 'Imzolangan bayonnoma yuklandi')
+
 /** The upload itself goes through the shared file field; only removal is ours */
 export const useDeleteSessionVideo = () =>
   useApplicantMutation<string>(

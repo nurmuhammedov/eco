@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
+import { format, parseISO } from 'date-fns'
 import { AlertCircle, Info, Loader2, Search } from 'lucide-react'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog'
 import { Button } from '@/shared/components/ui/button'
@@ -72,6 +73,13 @@ export function SubmitRequestModal({ isOpen, onClose }: Props) {
 
     if (!own) return 'Sertifikat raqamidan yo‘nalish va xodim turi aniqlanmadi'
     if (employee.has_active_application) return 'Bu yo‘nalishda tugallanmagan arizasi bor'
+    // Items 43–44 of resolution No. 26
+    if (employee.attempts_exhausted) {
+      return 'Ikki marta attestatsiyadan o‘tmagan — qayta ariza berib bo‘lmaydi (26-son Nizomning 44-bandi)'
+    }
+    if (employee.retry_from) {
+      return `Attestatsiyadan o‘tmagan — takroriy ariza ${format(parseISO(employee.retry_from), 'dd.MM.yyyy')} dan keyin beriladi (43-band)`
+    }
     if (group && (group.direction !== own.direction || group.employeeType !== own.employeeType)) {
       return 'Boshqa yo‘nalish yoki turdagi xodim — alohida ariza bering'
     }
@@ -216,6 +224,11 @@ export function SubmitRequestModal({ isOpen, onClose }: Props) {
                           )}
                           {employee.is_certificate_expired && (
                             <Badge variant="warning">Sertifikat muddati o‘tgan</Badge>
+                          )}
+                          {employee.failed_attempts === 1 && !employee.retry_from && (
+                            <Badge variant="warning" title="Bu safar ham o‘tmasa, boshqa ariza berib bo‘lmaydi">
+                              Takroriy ariza · 2-urinish
+                            </Badge>
                           )}
                         </div>
 

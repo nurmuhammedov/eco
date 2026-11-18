@@ -9,6 +9,7 @@ import { useServicesPaginatedData, useCustomSearchParams } from '@/shared/hooks/
 import { SERVICES_API_ENDPOINTS } from '@/shared/api/endpoints'
 import { DIRECTION, DIRECTION_OPTIONS, EMPLOYEE_TYPE } from '@/entities/attestation/model/labels'
 import type { AttestationApplication } from '@/entities/attestation/model/types'
+import { AttemptBadge } from '@/entities/attestation/ui/attempt-badge'
 import { ExamModal } from '@/features/attestation/exams/ui/exam-modal'
 
 /**
@@ -73,7 +74,10 @@ export const QueueList = () => {
       filterType: 'search',
       cell: ({ row }) => (
         <div>
-          <p className="font-medium">{row.original.employee_name}</p>
+          <div className="flex flex-wrap items-center gap-1.5">
+            <p className="font-medium">{row.original.employee_name}</p>
+            <AttemptBadge attempt={row.original.attempt} />
+          </div>
           <p className="text-muted-foreground text-xs">{row.original.employee_pin}</p>
         </div>
       ),
