@@ -152,6 +152,10 @@ export interface ApplicationDetail {
   phoneNumber: string | null
   basisPath: string | null
   sourceType?: string | null
+  /** The appeal's region: only that region's head acts on it. Not sent by older backends */
+  regionId?: number | null
+  /** The inspector it is assigned to: only they execute it. Not sent by older backends */
+  executorId?: string | null
 }
 
 /** An appeal as its screen shows it: the payload's attachments listed under their labels */

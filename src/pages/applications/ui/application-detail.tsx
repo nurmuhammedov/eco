@@ -2,6 +2,7 @@ import { UserRoles } from '@/shared/types/user'
 import { getAppealPermissions } from '@/features/application/application-detail/model/appeal-permissions'
 import { ApplicationDetail as ApplicationDetailFeature } from '@/features/application/application-detail'
 import { useApplicationDetail } from '@/features/application/application-detail/hooks/use-application-detail'
+import { useIsOwnAppeal } from '@/features/application/application-detail/hooks/use-is-own-appeal'
 import ReferenceCreateModal from '@/features/application/application-detail/ui/modals/reference-create-modal'
 import RejectApplicationModal from '@/features/application/application-detail/ui/modals/reject-application-modal'
 import { GoBack } from '@/shared/components/common'
@@ -14,11 +15,13 @@ import { AppealDetailSkeleton } from '@/features/application/application-detail/
 const ApplicationDetailPage = ({ showAttestationActions }: { showAttestationActions?: boolean }) => {
   const { data, isLoading } = useApplicationDetail()
   const { user } = useAuth()
+  const isOwn = useIsOwnAppeal()
 
   const { isAccreditation, canAssign, canReject, canExecute } = getAppealPermissions(
     user?.role,
     data?.appealType,
-    data?.status
+    data?.status,
+    isOwn
   )
 
   if (isLoading) return <AppealDetailSkeleton />

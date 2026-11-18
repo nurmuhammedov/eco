@@ -1,6 +1,6 @@
-import { ApplicationStatus } from '@/entities/application'
+import { ApplicationStatus, type ApplicationDetail } from '@/entities/application'
 import { ApplicationTypeEnum } from '@/entities/create-application'
-import { UserRoles } from '@/shared/types/user'
+import { UserRoles, type UserState } from '@/shared/types/user'
 
 export enum AppealDomain {
   HF_EQUIPMENT = 'HF_EQUIPMENT',
@@ -71,18 +71,23 @@ function getDomainActors(domain: AppealDomain) {
   }
 }
 
+/**
+ * `isOwn` is false when a regional head or an inspector opened an appeal that is
+ * not theirs to act on (see `isOwnAppeal`): they may read it, not act on it.
+ */
 export function getAppealPermissions(
   role: UserRoles | undefined,
   appealType?: string | null,
-  status?: ApplicationStatus | null
+  status?: ApplicationStatus | null,
+  isOwn = true
 ): AppealPermissions {
   const domain = getAppealDomain(appealType)
   const actors = getDomainActors(domain)
   const isAccreditation = domain === AppealDomain.ACCREDITATION
 
-  const isAssigner = !!role && role === actors.assigner
-  const isExecutor = !!role && role === actors.executor
-  const isAgreer = !!role && role === actors.agreer
+  const isAssigner = isOwn && !!role && role === actors.assigner
+  const isExecutor = isOwn && !!role && role === actors.executor
+  const isAgreer = isOwn && !!role && role === actors.agreer
 
   return {
     domain,
@@ -92,4 +97,32 @@ export function getAppealPermissions(
     canExecute: !isAccreditation && isExecutor && status === ApplicationStatus.IN_PROCESS,
     canAgree: !isAccreditation && isAgreer,
   }
+}
+
+type AppealActor = Pick<UserState, 'role' | 'id' | 'regionId' | 'isSupervisor'>
+type AppealScope = Pick<ApplicationDetail, 'regionId' | 'executorId'>
+
+/**
+ * The registries are republic-wide, so a regional head or an inspector can open
+ * another region's appeal, or one assigned to someone else, while the backend
+ * lets them act only on their own (`findByIdAndStatusAndOfficeId`,
+ * `findByIdAndStatusAndExecutorId`). A supervisor's reach goes by regulator and
+ * is left to the backend, as are the roles that are not scoped at all.
+ *
+ * An appeal that comes without its region or executor - the backend before it
+ * sends them - holds nothing back, so the buttons stay as the role allows.
+ */
+export function isOwnAppeal(user?: AppealActor | null, appeal?: AppealScope | null): boolean {
+  if (!user || !appeal) return true
+
+  if (user.role === UserRoles.REGIONAL && !user.isSupervisor) {
+    return appeal.regionId === undefined || appeal.regionId === null || Number(appeal.regionId) === user.regionId
+  }
+
+  if (user.role === UserRoles.INSPECTOR) {
+    // Sent but empty: the appeal is not assigned to anyone yet, so not to this inspector either
+    return appeal.executorId === undefined || appeal.executorId === user.id
+  }
+
+  return true
 }

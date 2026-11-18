@@ -17,6 +17,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/shar
 import React, { useState } from 'react'
 import ConfirmWithRegistryModal from '../modals/confirm-with-registry-modal'
 import { getAppealPermissions } from '@/features/application/application-detail/model/appeal-permissions'
+import { useIsOwnAppeal } from '@/features/application/application-detail/hooks/use-is-own-appeal'
 
 const APPROVE_STATUSES: Record<string, { label: string; pill: string; dot: string }> = {
   AGREED: { label: 'Kelishildi', pill: 'border-sky-200 bg-sky-50 text-sky-700', dot: 'bg-sky-500' },
@@ -50,6 +51,7 @@ const AppealResponseDocs: React.FC<Props> = ({ appeal_type }) => {
   const [signers, setSigners] = useState<DocumentSigner[]>([])
   const { data, isLoading } = useResponseDocs()
   const { user } = useAuth()
+  const isOwn = useIsOwnAppeal()
 
   const columns: ColumnDef<ApplicationDocument>[] = [
     {
@@ -106,7 +108,7 @@ const AppealResponseDocs: React.FC<Props> = ({ appeal_type }) => {
         const message = cell.row.original?.description
         const documentId = cell.row.original?.documentId
 
-        const { canAgree } = getAppealPermissions(user?.role, appeal_type, undefined)
+        const { canAgree } = getAppealPermissions(user?.role, appeal_type, undefined, isOwn)
 
         if (canAgree && !isAgreed && documentId) {
           return (
