@@ -114,9 +114,17 @@ interface Props {
   acknowledgementPath?: string | null
   additionalFilePath?: string | null
   disabled?: boolean
+  /** A request to close the inspection is open: the answers may be kept, but no act drawn up */
+  isActLocked?: boolean
 }
 
-const InspectionChecklistForm = ({ categories = [], resultId, acknowledgementPath, additionalFilePath }: Props) => {
+const InspectionChecklistForm = ({
+  categories = [],
+  resultId,
+  acknowledgementPath,
+  additionalFilePath,
+  isActLocked = false,
+}: Props) => {
   const qc = useQueryClient()
   const { mutateAsync: postChecklists, isPending: isLoading } = useAdd('/inspection-checklists')
   const { mutateAsync: postChecklists2, isPending: isLoading2 } = useAdd('/inspection-checklists')
@@ -445,7 +453,12 @@ const InspectionChecklistForm = ({ categories = [], resultId, acknowledgementPat
           )}
         />
 
-        <div className="sticky bottom-4 z-10 flex justify-end gap-2">
+        <div className="sticky bottom-4 z-10 flex items-center justify-end gap-2">
+          {isActLocked && (
+            <span className="rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-800">
+              Tekshiruvni yakunlash so‘rovi ko‘rib chiqilmoqda: dalolatnoma tuzib bo‘lmaydi
+            </span>
+          )}
           <Button
             type="button"
             className="cursor-pointer"
@@ -458,7 +471,7 @@ const InspectionChecklistForm = ({ categories = [], resultId, acknowledgementPat
           <Button
             type="button"
             variant="success"
-            disabled={disabled}
+            disabled={disabled || isActLocked}
             loading={isLoading2}
             onClick={form.handleSubmit(onSubmit, onInvalid)}
           >

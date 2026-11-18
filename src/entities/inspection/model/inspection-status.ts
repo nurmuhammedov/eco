@@ -10,12 +10,17 @@ export enum InspectionStatus {
   ASSIGNED = 'ASSIGNED',
   NOT_SIGNED = 'NOT_SIGNED',
   TEN_DAYS = 'TEN_DAYS',
+  /** Closed by the committee without being conducted */
+  CLOSED = 'CLOSED',
+  /** A tab, not a status: the open requests to close an inspection, split by their status */
+  CLOSE_REQUESTS = 'CLOSE_REQUESTS',
 }
 
 export enum InspectionSubMenuStatus {
   CONDUCTED = 'CONDUCTED',
   ASSIGNED = 'ASSIGNED',
   COMPLETED = 'COMPLETED',
+  CLOSED = 'CLOSED',
 }
 
 export enum OtherInspectionTabStatus {
@@ -32,6 +37,7 @@ export interface CountDto {
   notSignedCount: number
   conductedCount: number
   codeAttachedCount: number
+  closedCount: number
 }
 
 export const defaultCountDto: CountDto = {
@@ -41,4 +47,5 @@ export const defaultCountDto: CountDto = {
   assignedCount: 0,
   conductedCount: 0,
   codeAttachedCount: 0,
+  closedCount: 0,
 }

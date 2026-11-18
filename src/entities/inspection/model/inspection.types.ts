@@ -43,6 +43,11 @@ export interface InspectionDetail {
   inspectors: InspectorShortInfo[] | null
   notificationLetterId: string | null
   notificationLetterStatus: PostalMailStatus | null
+  /** The three below are filled only once the inspection is CLOSED */
+  closeBasisPath?: string | null
+  closeComment?: string | null
+  /** The day the MANAGER confirmed the closing, `yyyy-MM-dd` */
+  closedDate?: string | null
 }
 
 /** InspectionResultStatus */

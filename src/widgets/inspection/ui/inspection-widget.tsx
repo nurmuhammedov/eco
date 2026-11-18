@@ -26,6 +26,8 @@ import { getRegionLabel } from '@/widgets/prevention/ui/prevention-widget'
 import { useTranslation } from 'react-i18next'
 import { RiskAnalysisTab } from '@/entities/risk-analysis/model/risk-analysis-tabs'
 import { getDefaultYearAndMonthForInspections } from '@/shared/utils/date'
+import { CLOSE_REQUEST_SUB_TABS, closeRequestStatusOfTab } from '@/features/inspections/model/close-request'
+import { ApplicationStatus } from '@/entities/application'
 
 interface RegionCountDto {
   count: number
@@ -156,6 +158,7 @@ export const InspectionWidget = ({ type }: { type?: 'RISK_BASED' | 'OTHER' }) =>
   const isInspector = user?.role === UserRoles.INSPECTOR
   const isLegal = user?.role === UserRoles.LEGAL
   const isRegional = user?.role === UserRoles.REGIONAL
+  const isManager = user?.role === UserRoles.MANAGER
   const isChairman = user?.role === UserRoles.CHAIRMAN
   const isChairmanOrHead = user?.role === UserRoles.HEAD
 
@@ -224,6 +227,45 @@ export const InspectionWidget = ({ type }: { type?: 'RISK_BASED' | 'OTHER' }) =>
     },
     inspectionType === 'RISK_BASED' && !isInspector && !isLegal
   )
+
+  // The region that sends requests to close and the MANAGER who decides them follow them in a tab of their own
+  const canSeeCloseRequests = inspectionType === 'RISK_BASED' && (isRegional || isManager)
+  const activeCloseStatus = closeRequestStatusOfTab(
+    InspectionStatus.CLOSE_REQUESTS,
+    paramText(paramsObject.closeStatus)
+  )
+
+  // Requests to close an inspection have no count of their own in CountDto
+  const { totalElements: inApprovalCloseCount } = usePaginatedData<Inspection>(
+    '/inspections',
+    {
+      ...queryParams,
+      type: inspectionType,
+      belongType,
+      closeRequestStatus: ApplicationStatus.IN_APPROVAL,
+      page: 1,
+      size: 1,
+    },
+    canSeeCloseRequests
+  )
+
+  const { totalElements: returnedCloseCount } = usePaginatedData<Inspection>(
+    '/inspections',
+    {
+      ...queryParams,
+      type: inspectionType,
+      belongType,
+      closeRequestStatus: ApplicationStatus.IN_PROCESS,
+      page: 1,
+      size: 1,
+    },
+    canSeeCloseRequests
+  )
+
+  const closeCounts: Record<string, number> = {
+    [ApplicationStatus.IN_APPROVAL]: Number(inApprovalCloseCount || 0),
+    [ApplicationStatus.IN_PROCESS]: Number(returnedCloseCount || 0),
+  }
 
   const handleMainTabChange = (value: string) => {
     addParams({ belongType: value, status: undefined, subStatus: undefined, noticeType: undefined, page: 1 })
@@ -360,12 +402,21 @@ export const InspectionWidget = ({ type }: { type?: 'RISK_BASED' | 'OTHER' }) =>
                     {countObject.conductedCount || 0}
                   </Badge>
                 </TabsTrigger>
+                <TabsTrigger value={InspectionSubMenuStatus.CLOSED}>
+                  O‘tkazilmasdan yakunlangan
+                  <Badge variant="destructive" className="ml-2">
+                    {countObject.closedCount || 0}
+                  </Badge>
+                </TabsTrigger>
               </TabsList>
             </div>
             <TabsContent value={InspectionSubMenuStatus.CONDUCTED} className="mt-2 flex-1 overflow-hidden">
               {renderContent()}
             </TabsContent>
             <TabsContent value={InspectionSubMenuStatus.ASSIGNED} className="mt-2 flex-1 overflow-hidden">
+              {renderContent()}
+            </TabsContent>
+            <TabsContent value={InspectionSubMenuStatus.CLOSED} className="mt-2 flex-1 overflow-hidden">
               {renderContent()}
             </TabsContent>
           </Tabs>
@@ -401,12 +452,48 @@ export const InspectionWidget = ({ type }: { type?: 'RISK_BASED' | 'OTHER' }) =>
                     {(countObject.assignedCount || 0) + (countObject.conductedCount || 0)}
                   </Badge>
                 </TabsTrigger>
+                <TabsTrigger value={InspectionStatus.CLOSED}>
+                  O‘tkazilmasdan yakunlanganlar
+                  <Badge variant="destructive" className="ml-2">
+                    {countObject.closedCount || 0}
+                  </Badge>
+                </TabsTrigger>
+                {canSeeCloseRequests && (
+                  <TabsTrigger value={InspectionStatus.CLOSE_REQUESTS}>
+                    Yakunlash so‘rovlari
+                    <Badge variant="destructive" className="ml-2">
+                      {closeCounts[ApplicationStatus.IN_APPROVAL] + closeCounts[ApplicationStatus.IN_PROCESS]}
+                    </Badge>
+                  </TabsTrigger>
+                )}
                 {isChairmanOrHead && (
                   <TabsTrigger value={InspectionStatus.TEN_DAYS}>Imzolash kerak bo‘lgan hujjatlar</TabsTrigger>
                 )}
               </TabsList>
             </div>
             <TabsContent value={InspectionStatus.ALL} className="mt-2 flex-1 overflow-hidden">
+              {renderContent()}
+            </TabsContent>
+            <TabsContent value={InspectionStatus.CLOSED} className="mt-2 flex-1 overflow-hidden">
+              {renderContent()}
+            </TabsContent>
+            <TabsContent value={InspectionStatus.CLOSE_REQUESTS} className="mt-2 flex flex-1 flex-col overflow-hidden">
+              <div className="mb-3">
+                <Tabs value={activeCloseStatus} onValueChange={(value) => addParams({ closeStatus: value, page: 1 })}>
+                  <div className={cn('scrollbar-hidden flex justify-between overflow-x-auto overflow-y-hidden')}>
+                    <TabsList>
+                      {CLOSE_REQUEST_SUB_TABS.map((tab) => (
+                        <TabsTrigger key={tab.id} value={tab.id}>
+                          {tab.name}
+                          <Badge variant="destructive" className="ml-2">
+                            {closeCounts[tab.id]}
+                          </Badge>
+                        </TabsTrigger>
+                      ))}
+                    </TabsList>
+                  </div>
+                </Tabs>
+              </div>
               {renderContent()}
             </TabsContent>
             <TabsContent value={InspectionStatus.NEW} className="mt-2 flex flex-1 flex-col overflow-hidden">

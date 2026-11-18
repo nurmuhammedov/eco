@@ -20,6 +20,11 @@ import AppealMainInfo from '@/features/application/application-detail/ui/parts/a
 import { Skeleton } from '@/shared/components/ui/skeleton'
 import { useEffect, useState } from 'react'
 import { paramText } from '@/shared/lib/url-params'
+import { Badge } from '@/shared/components/ui/badge'
+import { useCloseRequest } from '@/features/inspections/hooks/use-close-request'
+import { isClosableStatus } from '@/features/inspections/model/close-request'
+import { CloseInspectionModal } from '@/features/inspections/ui/parts/close-inspection-modal'
+import { CloseRequestHeader, ClosedInspectionInfo } from '@/features/inspections/ui/parts/close-request-panel'
 import type { AppealInfoData } from '@/entities/application'
 import type { ApiResponse } from '@/shared/types/api'
 import type {
@@ -44,6 +49,22 @@ const InspectionDetail = () => {
   const isOther = inspectionType === 'other'
 
   const { data: inspectionData, isLoading: isInspectionLoading } = useInspectionDetail()
+
+  // Closing without conducting is a step of the risk-based inspections
+  const {
+    closeRequest,
+    isResolved: isCloseRequestResolved,
+    isActive: isCloseRequested,
+  } = useCloseRequest(inspectionId, !isOther && !!inspectionId)
+  const isClosed = inspectionData?.status === InspectionStatus.CLOSED
+  // The backend refuses the inspection's next steps while a request is open, and for good once it is closed
+  const isCloseLocked = isClosed || isCloseRequested
+  const canRequestClose =
+    !isOther &&
+    user?.role === UserRoles.REGIONAL &&
+    isCloseRequestResolved &&
+    !isCloseRequested &&
+    isClosableStatus(inspectionData?.status)
 
   const { data: otherDetail, isLoading: isOtherDetailLoading } = useData<OtherInspectionDetail>(
     `/inspections/other/${inspectionId}`,
@@ -79,6 +100,7 @@ const InspectionDetail = () => {
   const typesList = OBJECT_TYPE_ORDER.flatMap((type) => data?.[type] ?? [])
 
   const [openSections, setOpenSections] = useState<string[]>([
+    'close_request',
     'org_info',
     'belong_info',
     'risk_analysis_info',
@@ -119,11 +141,26 @@ const InspectionDetail = () => {
 
   return (
     <div className="scrollbar-hidden flex min-h-[calc(100vh-100px)] flex-col gap-4 overflow-y-auto pb-0">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-2">
         <GoBack title={`Tashkilot: ${name} (${currentTin})`} />
+        <div className="ml-auto flex flex-wrap items-center justify-end gap-2">
+          {isClosed && (
+            <Badge variant="secondary" className="py-2">
+              O‘tkazilmasdan yakunlangan
+            </Badge>
+          )}
+          {canRequestClose && <CloseInspectionModal inspectionId={inspectionId} />}
+          {!isOther && <CloseRequestHeader inspectionId={inspectionId} closeRequest={closeRequest} />}
+        </div>
       </div>
 
       <DetailCardAccordion value={openSections} onValueChange={setOpenSections}>
+        {!isOther && isClosed && (
+          <DetailCardAccordion.Item value="close_request" title="Tekshiruv o‘tkazilmasdan yakunlangan">
+            <ClosedInspectionInfo inspection={inspectionData} />
+          </DetailCardAccordion.Item>
+        )}
+
         <DetailCardAccordion.Item value="org_info" title="Tashkilot to‘g‘risida ma’lumot">
           <LegalApplicantInfo tinNumber={currentTin} />
         </DetailCardAccordion.Item>
@@ -143,7 +180,7 @@ const InspectionDetail = () => {
           </DetailCardAccordion.Item>
         ) : (
           <DetailCardAccordion.Item value="risk_analysis_info" title="Xavfni tahlil qilish bo‘yicha ma’lumotlar">
-            {canManageInspection && (
+            {canManageInspection && !isCloseLocked && (
               <div className="flex justify-end py-2">
                 {inspectionData?.status === InspectionStatus.NEW && (
                   <NotifyInspectionModal inspectionId={inspectionId} />
@@ -186,6 +223,8 @@ const InspectionDetail = () => {
                 familiarizationReportPath={item?.familiarizationReportPath}
                 act={item?.act}
                 resultId={item?.id}
+                isInspectionClosed={isClosed}
+                isActLocked={isCloseRequested}
               />
             </DetailCardAccordion.Item>
           ))

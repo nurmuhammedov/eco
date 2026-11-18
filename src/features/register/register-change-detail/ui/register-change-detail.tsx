@@ -3,7 +3,7 @@ import { isRestoreChange, type RegistryChange } from '@/entities/registry'
 import { FC } from 'react'
 import { ArrowUpRight } from 'lucide-react'
 import { Link, useParams } from 'react-router-dom'
-import { useDetail } from '@/shared/hooks'
+import { useDetail, usePaginatedData } from '@/shared/hooks'
 import DetailRow from '@/shared/components/common/detail-row'
 import { formatDate } from '@/shared/utils/date'
 import ChangeLogTable from '@/features/register/register-change-detail/ui/change-log-table'
@@ -21,9 +21,22 @@ import ApplicationLogsModal from '@/features/application/application-detail/ui/m
 import { Badge } from '@/shared/components/ui/badge'
 import { cn } from '@/shared/lib/utils'
 import { RestoreModal } from '@/features/register/common/ui/restore-modal'
+import { useQueryClient } from '@tanstack/react-query'
+import { useLegalOrganizationQuery } from '@/shared/api/dictionaries'
+import type { ChangeLogEntry } from '@/entities/registry'
+import {
+  CLOSE_INSPECTION,
+  invalidateCloseRequest,
+  latestCloseSending,
+} from '@/features/inspections/model/close-request'
+import { CloseInspectionModal } from '@/features/inspections/ui/parts/close-inspection-modal'
 
-/** The register sections this page knows how to read a change request for. */
-const SECTIONS = ['hf', 'equipments', 'irs', 'xrays', 'xray', 'radiation-profiles']
+/**
+ * The sections this page knows how to read a change request for: the registers,
+ * and the inspections, whose requests to close without conducting are kept the
+ * same way.
+ */
+const SECTIONS = ['hf', 'equipments', 'irs', 'xrays', 'xray', 'radiation-profiles', 'inspections']
 
 /** A restore request goes straight to the committee: no NEW or IN_AGREEMENT stage */
 const RESTORE_STEPS = [ApplicationStatus.IN_APPROVAL, ApplicationStatus.COMPLETED]
@@ -96,29 +109,71 @@ const RegisterChangeDetail: FC = () => {
   const isRestoreAwaitingManager =
     isRestore && status === ApplicationStatus.IN_APPROVAL && user?.role === UserRoles.REGIONAL
 
+  /**
+   * A request to close an inspection without conducting it. Like a restore
+   * request it goes from the region straight to the committee's MANAGER, who
+   * confirms or returns it; the region fixes a returned one and sends it again.
+   */
+  const isCloseInspection = type === 'inspections' || changeDetail?.belongType === CLOSE_INSPECTION
+  const canDecideClose =
+    isCloseInspection && status === ApplicationStatus.IN_APPROVAL && user?.role === UserRoles.MANAGER
+  const canResendClose =
+    isCloseInspection &&
+    status === ApplicationStatus.IN_PROCESS &&
+    user?.role === UserRoles.REGIONAL &&
+    (!!user?.isSupervisor || Number(changeDetail?.regionId) === user?.regionId)
+  const isCloseAwaitingManager =
+    isCloseInspection && status === ApplicationStatus.IN_APPROVAL && user?.role === UserRoles.REGIONAL
+
+  const queryClient = useQueryClient()
+  const refreshInspection = () => invalidateCloseRequest(queryClient)
+  // The inspection's page is titled by its organization, which the request knows only by its TIN
+  const { data: organization } = useLegalOrganizationQuery(isCloseInspection ? changeDetail?.ownerIdentity : undefined)
+  // A resending starts from the comment it was last sent with; the change list below reads the same log
+  const { data: closeLogs } = usePaginatedData<ChangeLogEntry>(
+    `/change-logs/by-change/${changeId}`,
+    { page: 1, size: 100 },
+    !!changeId && canResendClose
+  )
+
   if (isLoading) return <DetailPageSkeleton />
 
   const isControllerOrSupervisor = user?.isController || user?.isSupervisor
-  const cannotExecute = isControllerOrSupervisor && !isHfType
+  const cannotExecute = isControllerOrSupervisor && !isHfType && !isCloseInspection
+
+  const inspectionLink = `/inspections/info?${new URLSearchParams({
+    inspectionId: String(id ?? ''),
+    tin: String(changeDetail?.ownerIdentity ?? ''),
+    name: organization?.name ?? '',
+  }).toString()}`
 
   return (
     <div className="flex flex-1 flex-col gap-2">
       <div className="flex items-center justify-between">
         <GoBack
           title={
-            isDeregister
-              ? 'Reyestrdan chiqarish uchun so‘rov'
-              : isStatusChange
-                ? 'Holatini o‘zgartirish uchun so‘rov'
-                : isRestore
-                  ? 'Reyestrga qaytarish uchun so‘rov'
-                  : 'Ma’lumotlarni o‘zgartirish uchun so‘rov'
+            isCloseInspection
+              ? 'Tekshiruvni o‘tkazmasdan yakunlash uchun so‘rov'
+              : isDeregister
+                ? 'Reyestrdan chiqarish uchun so‘rov'
+                : isStatusChange
+                  ? 'Holatini o‘zgartirish uchun so‘rov'
+                  : isRestore
+                    ? 'Reyestrga qaytarish uchun so‘rov'
+                    : 'Ma’lumotlarni o‘zgartirish uchun so‘rov'
           }
         />
         <div className="flex gap-2">
           {!cannotExecute && changeId && (
             <>
-              {canReturn && <ReturnChangeModal changeId={changeId} />}
+              {(canReturn || canDecideClose) && (
+                <ReturnChangeModal
+                  changeId={changeId}
+                  {...(isCloseInspection
+                    ? { title: 'Yakunlash so‘rovini qaytarmoqchimisiz?', onSuccess: refreshInspection }
+                    : {})}
+                />
+              )}
               {canAssign && (
                 <>
                   <AssignExecutorModal changeId={changeId} />
@@ -129,17 +184,26 @@ const RegisterChangeDetail: FC = () => {
                   <ConfirmProcessModal changeId={changeId} title="Tasdiqlansinmi" buttonText="Tasdiqlash" />
                 </>
               )}
-              {canAgree && (
+              {(canAgree || canDecideClose) && (
                 <>
                   <ConfirmProcessModal
                     changeId={changeId}
                     title={status === ApplicationStatus.IN_APPROVAL ? 'Tasdiqlansinmi' : 'Kelishilsinmi'}
                     buttonText={status === ApplicationStatus.IN_APPROVAL ? 'Tasdiqlash' : 'Kelishish'}
+                    {...(isCloseInspection
+                      ? {
+                          description: 'Tekshiruv o‘tkazilmasdan yopiladi. Davom etasizmi?',
+                          onSuccess: refreshInspection,
+                        }
+                      : {})}
                   />
                 </>
               )}
               {canResend && <RestoreModal endpoint={`/${type}/${id}/restore`} buttonText="Qayta yuborish" isResubmit />}
-              {isRestoreAwaitingManager && (
+              {canResendClose && id && (
+                <CloseInspectionModal inspectionId={id} isResubmit previous={latestCloseSending(closeLogs?.content)} />
+              )}
+              {(isRestoreAwaitingManager || isCloseAwaitingManager) && (
                 <Badge variant="info" className="py-2">
                   Tasdiqlashda
                 </Badge>
@@ -154,11 +218,17 @@ const RegisterChangeDetail: FC = () => {
         <DetailCardAccordion.Item value="general" title="So‘rov va ijro to‘g‘risida ma’lumot">
           <div className="flex flex-col py-1">
             <DetailRow
-              title="Reyestr ma’lumotlari:"
+              title={isCloseInspection ? 'Tekshiruv ma’lumotlari:' : 'Reyestr ma’lumotlari:'}
               value={
                 <Link
                   className="inline-flex items-center gap-1 text-sm font-medium text-[#0271FF] hover:underline"
-                  to={type === 'radiation-profiles' ? `/register/radiation-profiles/${id}` : `/register/${type}/${id}`}
+                  to={
+                    isCloseInspection
+                      ? inspectionLink
+                      : type === 'radiation-profiles'
+                        ? `/register/radiation-profiles/${id}`
+                        : `/register/${type}/${id}`
+                  }
                 >
                   Ko‘rish
                   <ArrowUpRight className="size-4" />
@@ -185,7 +255,11 @@ const RegisterChangeDetail: FC = () => {
             <DetailRow
               title="So‘rov turi:"
               value={
-                isDeregister ? (
+                isCloseInspection ? (
+                  <Badge variant="warning" className="py-1">
+                    Tekshiruvni o‘tkazmasdan yakunlash
+                  </Badge>
+                ) : isDeregister ? (
                   <Badge variant="error" className="py-1">
                     Reyestrdan chiqarish uchun
                   </Badge>
@@ -213,7 +287,7 @@ const RegisterChangeDetail: FC = () => {
                 )}
               >
                 <span className={cn('text-sm font-medium text-gray-500')}>
-                  {isRestore ? 'Qo‘mita izohi (qaytarish sababi):' : 'Qaytarish sababi:'}
+                  {isRestore || isCloseInspection ? 'Qo‘mita izohi (qaytarish sababi):' : 'Qaytarish sababi:'}
                 </span>
 
                 <SafeHtml

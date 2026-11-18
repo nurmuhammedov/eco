@@ -17,9 +17,13 @@ interface Props {
   changeId: string
   title: string
   buttonText: string
+  /** What confirming leads to, when the plain question is not enough */
+  description?: string
+  /** For a request that changes more than the change-request pages show */
+  onSuccess?: () => void
 }
 
-const ConfirmProcessModal: React.FC<Props> = ({ changeId, title, buttonText }) => {
+const ConfirmProcessModal: React.FC<Props> = ({ changeId, title, buttonText, description, onSuccess }) => {
   const [isOpen, setIsOpen] = useState(false)
   const queryClient = useQueryClient()
   const { mutate: confirmChange, isPending } = useAdd(`/changes/${changeId}/confirm`)
@@ -31,6 +35,7 @@ const ConfirmProcessModal: React.FC<Props> = ({ changeId, title, buttonText }) =
         onSuccess: () => {
           setIsOpen(false)
           invalidateChangeDecision(queryClient)
+          onSuccess?.()
         },
       }
     )
@@ -46,7 +51,9 @@ const ConfirmProcessModal: React.FC<Props> = ({ changeId, title, buttonText }) =
           <DialogTitle>{title}?</DialogTitle>
         </DialogHeader>
         <div className="py-4">
-          <p className="text-muted-foreground text-sm">Haqiqatan ham ushbu so‘rovni tasdiqlaysizmi?</p>
+          <p className="text-muted-foreground text-sm">
+            {description ?? 'Haqiqatan ham ushbu so‘rovni tasdiqlaysizmi?'}
+          </p>
         </div>
         <DialogFooter className="gap-2 sm:gap-0">
           <DialogClose asChild>

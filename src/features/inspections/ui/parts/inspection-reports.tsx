@@ -46,6 +46,10 @@ interface InspectionReportsProps {
   reportPath?: string | null
   familiarizationReportPath?: string | null
   act?: SignedDocument | null
+  /** Closed without being conducted: the checklist is only read */
+  isInspectionClosed?: boolean
+  /** A request to close the inspection is open: no act can be drawn up meanwhile */
+  isActLocked?: boolean
 }
 
 const InspectionReports = ({
@@ -59,6 +63,8 @@ const InspectionReports = ({
   act,
   resultId,
   specialCode,
+  isInspectionClosed = false,
+  isActLocked = false,
 }: InspectionReportsProps) => {
   const { t } = useTranslation()
   const { user } = useAuth()
@@ -255,12 +261,14 @@ const InspectionReports = ({
           <>
             {currentTab == 'questions' &&
             (user?.role == UserRoles.INSPECTOR || user?.role == UserRoles.MANAGER) &&
-            status == InspectionStatus.ASSIGNED ? (
+            status == InspectionStatus.ASSIGNED &&
+            !isInspectionClosed ? (
               <InspectionChecklistForm
                 categories={categories}
                 resultId={resultId}
                 acknowledgementPath={acknowledgementPath}
                 additionalFilePath={additionalFilePath}
+                isActLocked={isActLocked}
               />
             ) : (
               <>

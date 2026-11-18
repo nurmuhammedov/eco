@@ -24,9 +24,13 @@ const schema = z.object({
 
 interface Props {
   changeId: string
+  /** The dialog's question, for a request that is not a change of registry data */
+  title?: string
+  /** For a request that changes more than the change-request pages show */
+  onSuccess?: () => void
 }
 
-const ReturnChangeModal = ({ changeId }: Props) => {
+const ReturnChangeModal = ({ changeId, title, onSuccess }: Props) => {
   const [isShow, setIsShow] = useState(false)
   const queryClient = useQueryClient()
   const { mutateAsync, isPending } = useAdd(`/changes/${changeId}/return`)
@@ -43,6 +47,7 @@ const ReturnChangeModal = ({ changeId }: Props) => {
       setIsShow(false)
       form.reset()
       invalidateChangeDecision(queryClient)
+      onSuccess?.()
     })
   }
 
@@ -59,7 +64,7 @@ const ReturnChangeModal = ({ changeId }: Props) => {
       </DialogTrigger>
       <DialogContent size="lg">
         <DialogHeader>
-          <DialogTitle>O‘zgartirishga so‘rovni qaytarmoqchimisiz?</DialogTitle>
+          <DialogTitle>{title ?? 'O‘zgartirishga so‘rovni qaytarmoqchimisiz?'}</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">

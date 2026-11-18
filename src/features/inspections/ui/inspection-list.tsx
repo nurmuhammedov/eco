@@ -14,6 +14,7 @@ import { getDate } from '@/shared/utils/date'
 import { getDefaultYearAndMonthForInspections } from '@/shared/utils/date'
 import { ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
 import { paramText } from '@/shared/lib/url-params'
+import { closeRequestPath, closeRequestStatusOfTab } from '@/features/inspections/model/close-request'
 
 export const InspectionList: React.FC = () => {
   const navigate = useNavigate()
@@ -30,6 +31,7 @@ export const InspectionList: React.FC = () => {
       month = getDefaultYearAndMonthForInspections().month,
       belongType = 'HF',
       type = 'RISK_BASED',
+      closeStatus,
       ...rest
     },
   } = useCustomSearchParams()
@@ -38,6 +40,12 @@ export const InspectionList: React.FC = () => {
   const { data: districts } = useDistrictSelectQuery(
     isInspector || isRegional ? undefined : regionId == 'ALL' ? '' : regionId
   )
+
+  // The close-request tab filters by the request's status, whatever the inspection's own
+  const closeRequestStatus =
+    user?.role === UserRoles.LEGAL || user?.role === UserRoles.INSPECTOR
+      ? undefined
+      : closeRequestStatusOfTab(paramText(status), paramText(closeStatus))
 
   const {
     data: inspections,
@@ -52,19 +60,27 @@ export const InspectionList: React.FC = () => {
       month,
       regionId: regionId == 'ALL' ? '' : regionId,
       year,
-      status:
-        user?.role === UserRoles.LEGAL || user?.role === UserRoles.INSPECTOR
+      status: closeRequestStatus
+        ? undefined
+        : user?.role === UserRoles.LEGAL || user?.role === UserRoles.INSPECTOR
           ? subStatus
           : status === InspectionStatus.ALL
             ? undefined
             : status == InspectionStatus.ASSIGNED
               ? subStatus
               : status,
+      closeRequestStatus,
     },
     status !== InspectionStatus.TEN_DAYS
   )
 
   const handleView = (row: Inspection) => {
+    // A request to close opens like the registry's change requests; its page links back to the inspection
+    if (closeRequestStatus) {
+      navigate(closeRequestPath(String(row.id)))
+      return
+    }
+
     const params = new URLSearchParams({
       inspectionId: String(row.id ?? ''),
       tin: String(row.tin ?? ''),

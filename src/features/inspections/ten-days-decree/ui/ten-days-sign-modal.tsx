@@ -12,6 +12,7 @@ import { SignatureModal } from '@/shared/components/common/signature/ui/signatur
 import useAdd from '@/shared/hooks/api/use-add'
 import { useQueryClient } from '@tanstack/react-query'
 import { invalidateEndpoint } from '@/shared/lib/query/endpoint-key'
+import { useCloseRequest } from '@/features/inspections/hooks/use-close-request'
 
 interface TenDaysSignModalProps {
   open: boolean
@@ -28,6 +29,8 @@ export const TenDaysSignModal = ({ open, onOpenChange, data }: TenDaysSignModalP
     '/inspections/decree/ten-days/sign',
     'Hujjat muvaffaqiyatli imzolandi'
   )
+  // The region may have asked to close the inspection meanwhile: the backend refuses the signature then
+  const { isActive: isCloseRequested } = useCloseRequest(data?.inspectionId, open && !!data?.inspectionId)
 
   const handleSubmit = (sign: string) => {
     if (!data) return
@@ -66,10 +69,15 @@ export const TenDaysSignModal = ({ open, onOpenChange, data }: TenDaysSignModalP
         </div>
 
         <DialogFooter className="flex-shrink-0 border-t bg-white p-6 pt-4">
+          {isCloseRequested && (
+            <p className="mr-auto self-center text-sm text-amber-700">
+              Tekshiruvni o‘tkazmasdan yakunlash so‘rovi ko‘rib chiqilmoqda: buyruqni imzolab bo‘lmaydi
+            </p>
+          )}
           <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isPending}>
             Bekor qilish
           </Button>
-          {data?.filePath && (
+          {data?.filePath && !isCloseRequested && (
             <SignatureModal
               isLoading={isPending}
               documentUrl={data.filePath}
