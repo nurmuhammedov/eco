@@ -1,6 +1,13 @@
 import { describe, expect, it } from 'vitest'
 import { RegisterActiveTab } from './register-tabs'
-import { buildRegisterQuery, pinnedChildIds } from './build-register-query'
+import {
+  MINING_HF_CATEGORY_ID,
+  MINING_HF_TAB,
+  buildRegisterExportQuery,
+  buildRegisterQuery,
+  hfCategoryScope,
+  pinnedChildIds,
+} from './build-register-query'
 
 const equipmentsParams = (paramsObject: Record<string, string>) =>
   buildRegisterQuery({ tab: RegisterActiveTab.EQUIPMENTS, paramsObject, defaultRegionId: 'ALL' }).params
@@ -152,5 +159,54 @@ describe('buildRegisterQuery for the archive restore requests', () => {
     expect(equipments.changed).toBe(true)
     expect(equipments.changeStatus).toBe('NEW')
     expect(equipments.status).toBe('')
+  })
+})
+
+describe('the mining and geology XICHO sub-tab', () => {
+  const hfParams = (paramsObject: Record<string, string> = {}, isArchive = false) =>
+    buildRegisterQuery({ tab: RegisterActiveTab.HF, paramsObject, isArchive, defaultRegionId: 'ALL' }).params
+
+  it('lists only the registered XICHOs of category 15', () => {
+    const params = hfParams({ active: MINING_HF_TAB, status: '' })
+
+    expect(params).toMatchObject({ categoryIds: MINING_HF_CATEGORY_ID, active: true, status: '', changed: '' })
+    expect(params.excludeCategoryIds).toBeUndefined()
+  })
+
+  it('leaves them out of the registry, active and inactive lists, the way the crane tab leaves out its split-off types', () => {
+    for (const active of ['true', 'VALID', 'INVALID']) {
+      const params = hfParams({ active })
+
+      expect(params.excludeCategoryIds).toBe(MINING_HF_CATEGORY_ID)
+      expect(params.categoryIds).toBeUndefined()
+    }
+    expect(hfParams().excludeCategoryIds).toBe(MINING_HF_CATEGORY_ID)
+  })
+
+  it('keeps the change requests, the archive and the report links whole', () => {
+    for (const params of [
+      hfParams({ active: 'CHANGED', status: 'NEW' }),
+      hfParams({}, true),
+      hfParams({ active: 'CHANGED', status: 'IN_APPROVAL' }, true),
+      hfParams({ reportChangeBelongType: 'DEREGISTER_HF' }),
+    ]) {
+      expect(params.categoryIds).toBeUndefined()
+      expect(params.excludeCategoryIds).toBeUndefined()
+    }
+  })
+
+  it('exports each sub-tab with its own split', () => {
+    const exported = (active: string) =>
+      buildRegisterExportQuery({ tab: RegisterActiveTab.HF, paramsObject: { active }, defaultRegionId: 'ALL' })?.params
+
+    expect(exported(MINING_HF_TAB)).toMatchObject({ categoryIds: '15' })
+    expect(exported('true')).toMatchObject({ excludeCategoryIds: '15' })
+  })
+
+  it('answers the category filter of each sub-tab', () => {
+    expect(hfCategoryScope(MINING_HF_TAB)).toEqual({ categoryIds: '15' })
+    expect(hfCategoryScope('true')).toEqual({ excludeCategoryIds: '15' })
+    expect(hfCategoryScope('CHANGED')).toEqual({})
+    expect(hfCategoryScope('false', true)).toEqual({})
   })
 })

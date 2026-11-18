@@ -32,6 +32,27 @@ export const CRANE_TAB_CHILD_ID: Record<string, string | undefined> = {
 export const CRANE_EXCLUDED_CHILD_IDS = Object.values(CRANE_TAB_CHILD_ID).join(',')
 
 /**
+ * XICHOs of the "Tog‘-kon sanoati va geologiya obyekti" category (hf_category 15)
+ * are listed under a XICHO sub-tab of their own, the way the crane tabs split
+ * cranes: the registry, active and inactive XICHO lists leave them out. The
+ * sub-tab rides in `active` like its siblings.
+ */
+export const MINING_HF_CATEGORY_ID = '15'
+export const MINING_HF_TAB = 'MINING'
+
+/**
+ * Which XICHOs a sub-tab lists, as the backend's category filter. Change
+ * requests and the archive stay whole, so every request still reaches whoever
+ * handles it.
+ */
+export const hfCategoryScope = (active: string, isArchive?: boolean): ISearchParams => {
+  if (active === MINING_HF_TAB) return { categoryIds: MINING_HF_CATEGORY_ID }
+  if (isArchive || active === 'CHANGED') return {}
+
+  return { excludeCategoryIds: MINING_HF_CATEGORY_ID }
+}
+
+/**
  * Registered equipment without a usage-rights file. The permit carries no expiry
  * date, so having the file at all is what is checked.
  */
@@ -154,6 +175,7 @@ function buildHfQuery({ paramsObject, isArchive, defaultRegionId }: BuildRegiste
       categoryId,
       startDate,
       endDate,
+      ...hfCategoryScope(currentActive, isArchive),
     },
   }
 }

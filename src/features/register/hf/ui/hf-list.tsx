@@ -10,7 +10,7 @@ import { useAuth } from '@/shared/hooks/use-auth'
 import { TabsLayout } from '@/shared/layouts'
 import { ApplicationStatus } from '@/entities/application'
 import { useMemo } from 'react'
-import { buildRegisterQuery } from '@/features/register/model/build-register-query'
+import { MINING_HF_TAB, buildRegisterQuery, hfCategoryScope } from '@/features/register/model/build-register-query'
 import { RESET_KEYS } from '@/features/register/model/report-drill-down'
 import {
   RESTORE_REQUEST_TABS,
@@ -76,6 +76,20 @@ export const HfList = ({ isArchive }: HfListProps) => {
     regionId: regionId === 'ALL' ? '' : regionId,
   })
 
+  // Shown on its tab at all times, like the change requests: the category is apart from the rest
+  const isMiningTab = currentActive === MINING_HF_TAB
+  const { data: miningCountData } = usePaginatedData<HazardousFacilityRow>(
+    `/hf`,
+    {
+      page: 1,
+      size: 1,
+      active: true,
+      regionId: regionId === 'ALL' ? '' : regionId,
+      ...hfCategoryScope(MINING_HF_TAB),
+    },
+    !isArchive && !isMiningTab
+  )
+
   const { data, isLoading } = usePaginatedData<HazardousFacilityRow>(endpoint, { page, size, ...params })
 
   // The archive splits off restore requests for the roles that send (REGIONAL, supervisors) and confirm (MANAGER) them
@@ -106,7 +120,7 @@ export const HfList = ({ isArchive }: HfListProps) => {
     if (currentActive === 'CHANGED') {
       navigate(`/register/change/hf/${id}`)
     } else {
-      navigate(`hf/${id}${['true', 'VALID', 'INVALID'].includes(currentActive) ? '?active=true' : ''}`)
+      navigate(`hf/${id}${['true', MINING_HF_TAB, 'VALID', 'INVALID'].includes(currentActive) ? '?active=true' : ''}`)
     }
   }
 
@@ -183,7 +197,7 @@ export const HfList = ({ isArchive }: HfListProps) => {
           showEdit={
             !isArchive &&
             canUpdateRegistryType('HF', user?.role) &&
-            currentActive === 'true' &&
+            (currentActive === 'true' || isMiningTab) &&
             ((user?.role === UserRoles.INSPECTOR &&
               (Number(row.original.regionId) === user?.regionId || user?.isController)) ||
               user?.role === UserRoles.LEGAL ||
@@ -199,13 +213,18 @@ export const HfList = ({ isArchive }: HfListProps) => {
 
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-2">
-      {!isArchive && user?.role !== UserRoles.PROCURATOR && (
+      {!isArchive && (
         <TabsLayout
           activeTab={currentActive}
           tabs={[
             {
               id: 'true',
               name: 'Reyestrdagi XICHOlar',
+            },
+            {
+              id: MINING_HF_TAB,
+              name: 'Tog‘-kon va geologiya obyektlari',
+              count: isMiningTab ? (data?.page?.totalElements ?? 0) : (miningCountData?.page?.totalElements ?? 0),
             },
             {
               id: 'VALID',
@@ -222,15 +241,18 @@ export const HfList = ({ isArchive }: HfListProps) => {
                 ? data?.page?.totalElements || undefined
                 : changedCountData?.page?.totalElements || undefined,
             },
-          ]?.map((i) => ({
-            ...i,
-            count:
-              i.id === 'CHANGED'
-                ? i.count
-                : i?.id == currentActive
-                  ? data?.page?.totalElements || undefined
-                  : undefined,
-          }))}
+          ]
+            // A prosecutor reads the registry alone, its mining part included
+            .filter((i) => user?.role !== UserRoles.PROCURATOR || ['true', MINING_HF_TAB].includes(i.id))
+            .map((i) => ({
+              ...i,
+              count:
+                i.id === 'CHANGED' || i.id === MINING_HF_TAB
+                  ? i.count
+                  : i?.id == currentActive
+                    ? data?.page?.totalElements || undefined
+                    : undefined,
+            }))}
           onTabChange={(type) => {
             if (type === 'CHANGED') {
               addParams({ active: type, status: 'ALL' }, ...RESET_KEYS)
