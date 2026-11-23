@@ -33,7 +33,7 @@ const STATUS_IDS = STATUS_OPTIONS.map((option) => option.id)
  * is one both reviewers have agreed, now with the committee.
  */
 const EMPLOYEE_STATUS_TABS = [
-  { value: 'IN_REVIEW', label: 'Jarayonda' },
+  { value: 'IN_REVIEW', label: 'Kelishishda' },
   { value: 'IN_COMMITTEE', label: 'Kelishilgan' },
   { value: 'REJECTED', label: 'Rad etilgan' },
   { value: 'APPROVED', label: 'Tayyor bo‘lgan' },
@@ -73,7 +73,8 @@ export default function CadastreList({ customerTin, isShortView }: CadastreListP
    * keeps a single list.
    */
   const tabs = [
-    ...(showTasks ? [{ value: TASKS_VIEW, label: 'Mening ishlarim' }] : []),
+    // Named for what the queue holds, the passports waiting on this reviewer (2026-11-23)
+    ...(showTasks ? [{ value: TASKS_VIEW, label: 'Jarayonda' }] : []),
     ...(isEmployee ? EMPLOYEE_STATUS_TABS : showTasks ? [{ value: ALL_VIEW, label: 'TXYZ kadastr pasportlari' }] : []),
   ]
 
