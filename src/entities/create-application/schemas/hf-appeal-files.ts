@@ -19,7 +19,7 @@ export interface HfAppealFileField {
 }
 
 export const HF_APPEAL_FILE_FIELDS = [
-  { name: 'identificationCardPath', label: 'Identifikatsiya varag‘i', required: true },
+  { name: 'identificationCardPath', label: 'Identifikatsiya ekspertiza xulosasi varag‘i', required: true },
   { name: 'receiptPath', label: 'XICHOni ro‘yxatga olish uchun to‘lov kvitansiyasi', required: true },
   { name: 'insurancePolicyPath', label: 'Sug‘urta polisi', expiry: 'insurancePolicyExpiryDate' },
   { name: 'cadastralPassportPath', label: 'XICHO kadastr pasporti' },
