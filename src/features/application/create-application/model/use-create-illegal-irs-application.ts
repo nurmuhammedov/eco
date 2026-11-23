@@ -21,25 +21,9 @@ import { useRadiationProfileCheck } from '@/shared/api/radiation-profile/use-rad
 import { type OwnerData, useOwnerLookup } from './use-owner-lookup'
 import type { IrsDetail } from '@/entities/registry'
 import { asUpdatePayload, KEPT_OWNER_BIRTH_DATE, latinOrEmpty, withoutBlanks } from './edit-values'
-import {
-  fillFromProfile,
-  hasIncompleteIrsFiles,
-  requireProfileFiles,
-  withProfileFiles,
-} from './radiation-profile-files'
+import { fillFromProfile, withProfileFiles } from './radiation-profile-files'
 
 type IrsDraft = FormDraft<typeof RegisterIllegalIrsSchema>
-
-/** The legal entity form asks for the same files (use-create-irs-application) */
-const PROFILE_FILE_FIELDS = [
-  'file17Path',
-  'file2Path',
-  'file2ExpiryDate',
-  'file5Path',
-  'file5ExpiryDate',
-  'file15Path',
-  'file15ExpiryDate',
-] as const
 
 export const useRegisterIllegalIrs = (
   externalSubmit?: (data: RegisterIllegalIrsDTO & { legalTin?: string }) => void
@@ -66,7 +50,6 @@ export const useRegisterIllegalIrs = (
   )
 
   const isDataNull = !profileData
-  const hasIncompleteOrgFiles = !isUpdate && hasIncompleteIrsFiles(profileData?.files)
 
   const formSchema = isUpdate
     ? RegisterIllegalIrsBaseSchema.extend({
@@ -79,9 +62,8 @@ export const useRegisterIllegalIrs = (
           .nullable()
           .transform((date) => (date ? format(date, 'yyyy-MM-dd') : null)),
       }).superRefine(requireCitizenBirthDate)
-    : isDataNull
-      ? requireProfileFiles(RegisterIllegalIrsSchema, PROFILE_FILE_FIELDS)
-      : RegisterIllegalIrsSchema
+    : // The organisation's files are optional (service letter 26XX-00003 of 2026-11-20)
+      RegisterIllegalIrsSchema
   const resolveForm = zodFormResolver<IrsDraft, RegisterIllegalIrsDTO>(formSchema)
 
   const form = useForm<IrsDraft, unknown, RegisterIllegalIrsDTO>({
@@ -274,7 +256,6 @@ export const useRegisterIllegalIrs = (
     profileData,
     isProfileLoading,
     isDataNull,
-    hasIncompleteOrgFiles,
     detail,
     isLoading: isDetailLoading || isOwnerLoading,
     isSearchLoading: ownerLookup.isSearching,

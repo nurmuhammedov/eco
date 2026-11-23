@@ -7,24 +7,16 @@ import { useAuth } from '@/shared/hooks/use-auth'
 import { type FormDraft, zodFormResolver } from '@/shared/lib/zod-form-resolver'
 import { useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
-import { fillFromProfile, hasIncompleteIrsFiles, requireProfileFiles } from './radiation-profile-files'
-
-const PROFILE_FILE_FIELDS = [
-  'file17Path',
-  'file2Path',
-  'file2ExpiryDate',
-  'file5Path',
-  'file5ExpiryDate',
-  'file15Path',
-  'file15ExpiryDate',
-] as const
+import { fillFromProfile } from './radiation-profile-files'
 
 export const useCreateIrsApplication = () => {
   const { user } = useAuth()
   const userTin = user?.tinOrPin?.toString()
   const { data: profileData, isLoading: isProfileLoading } = useRadiationProfileCheck(userTin, 'IRS')
 
-  const formSchema = profileData ? IrsAppealDtoSchema : requireProfileFiles(IrsAppealDtoSchema, PROFILE_FILE_FIELDS)
+  // The organisation's files are optional (the committee's service letter 26XX-00003 of 2026-11-20);
+  // a file given still needs its expiry date, which the schema checks
+  const formSchema = IrsAppealDtoSchema
 
   const form = useForm<FormDraft<typeof IrsAppealDtoSchema>, unknown, CreateIrsApplicationDTO>({
     resolver: zodFormResolver<FormDraft<typeof IrsAppealDtoSchema>, CreateIrsApplicationDTO>(formSchema),
@@ -128,6 +120,5 @@ export const useCreateIrsApplication = () => {
     irsStatusOptions,
     isProfileLoading,
     profileData,
-    hasIncompleteOrgFiles: hasIncompleteIrsFiles(profileData?.files),
   }
 }

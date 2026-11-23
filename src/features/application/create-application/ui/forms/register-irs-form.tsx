@@ -9,11 +9,9 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/shared/components/ui/input'
 import { PhoneInput } from '@/shared/components/ui/phone-input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
-import { Alert, AlertDescription } from '@/shared/components/ui/alert'
 import { FileLink } from '@/shared/components/common/file-link'
 import { getDate } from '@/shared/utils/date'
 import { parseISO } from 'date-fns'
-import { TriangleAlert } from 'lucide-react'
 import { Skeleton } from '@/shared/components/ui/skeleton'
 import { EmptyValue } from '@/shared/components/common/empty-value'
 import {
@@ -35,7 +33,6 @@ const RegisterIrsForm = ({ onSubmit }: RegisterIrsFormProps) => {
     irsUsageTypeOptions,
     irsStatusOptions,
     profileData,
-    hasIncompleteOrgFiles,
     isProfileLoading,
   } = useCreateIrsApplication()
   const isDataNull = !profileData
@@ -462,15 +459,6 @@ const RegisterIrsForm = ({ onSubmit }: RegisterIrsFormProps) => {
           </div>
         </CardForm>
         <div className="mt-4 mb-2 text-base font-semibold text-slate-800">INM tashkilotiga tegishli fayllar</div>
-        {!isDataNull && hasIncompleteOrgFiles && (
-          <Alert className="mb-4 border-amber-200 bg-amber-50 text-amber-800">
-            <TriangleAlert className="h-4 w-4 text-amber-600" />
-            <AlertDescription>
-              Tashkilotning ayrim hujjatlari mavjud emas. Reyestrlar bo‘limidan tashkilot ma’lumotlarini yangilash
-              imkoniyati mavjud. Arizani tashkilot hujjatlari to‘liq mavjud bo‘lganda yuborish mumkin!
-            </AlertDescription>
-          </Alert>
-        )}
         {isProfileLoading ? (
           <CardForm className="mb-5 grid grid-cols-1 gap-x-8 gap-y-4 md:grid-cols-2 2xl:grid-cols-3">
             {[1, 2, 3, 4].map((i) => (
@@ -491,7 +479,7 @@ const RegisterIrsForm = ({ onSubmit }: RegisterIrsFormProps) => {
                 render={({ field }) => (
                   <FormItem className="mb-2">
                     <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
-                      <FormLabel required>Mutaxassislar mavjudligi</FormLabel>
+                      <FormLabel>Mutaxassislar mavjudligi</FormLabel>
                       <FormControl>
                         <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                       </FormControl>
@@ -507,7 +495,7 @@ const RegisterIrsForm = ({ onSubmit }: RegisterIrsFormProps) => {
                 render={({ field }) => (
                   <FormItem className="mb-2">
                     <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
-                      <FormLabel required>Sanitariya-epidemiologik xulosasi</FormLabel>
+                      <FormLabel>Sanitariya-epidemiologik xulosasi</FormLabel>
                       <FormControl>
                         <InputFile
                           form={form}
@@ -551,7 +539,7 @@ const RegisterIrsForm = ({ onSubmit }: RegisterIrsFormProps) => {
                 render={({ field }) => (
                   <FormItem className="mb-2">
                     <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
-                      <FormLabel required>Radiatsiyaviy xavfsizlik bo‘yicha o‘qiganlik yuzasidan sertifikat</FormLabel>
+                      <FormLabel>Radiatsiyaviy xavfsizlik bo‘yicha o‘qiganlik yuzasidan sertifikat</FormLabel>
                       <FormControl>
                         <InputFile
                           form={form}
@@ -595,7 +583,7 @@ const RegisterIrsForm = ({ onSubmit }: RegisterIrsFormProps) => {
                 render={({ field }) => (
                   <FormItem className="mb-2">
                     <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
-                      <FormLabel required>Tibbiy ko‘rikdan o‘tkazilganligi</FormLabel>
+                      <FormLabel>Tibbiy ko‘rikdan o‘tkazilganligi</FormLabel>
                       <FormControl>
                         <InputFile
                           form={form}
@@ -664,7 +652,7 @@ const RegisterIrsForm = ({ onSubmit }: RegisterIrsFormProps) => {
             </div>
           </CardForm>
         )}
-        <Button type="submit" className="mt-0" disabled={!isDataNull && hasIncompleteOrgFiles}>
+        <Button type="submit" className="mt-0">
           Ariza yaratish
         </Button>
       </form>

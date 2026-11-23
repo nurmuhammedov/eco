@@ -20,10 +20,8 @@ import {
 import { Input } from '@/shared/components/ui/input'
 import { PhoneInput } from '@/shared/components/ui/phone-input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
-import { Alert, AlertDescription } from '@/shared/components/ui/alert'
 import { FileLink } from '@/shared/components/common/file-link'
 import { getDate } from '@/shared/utils/date'
-import { TriangleAlert } from 'lucide-react'
 import { Skeleton } from '@/shared/components/ui/skeleton'
 
 import { useRegisterIllegalIrs } from '@/features/application/create-application/model/use-create-illegal-irs-application'
@@ -49,7 +47,6 @@ const RegisterIllegalIrsForm = ({ onSubmit, isPending = false }: RegisterIllegal
     profileData,
     isProfileLoading,
     isDataNull,
-    hasIncompleteOrgFiles,
     detail,
     isLoading,
     isSearchLoading,
@@ -597,18 +594,6 @@ const RegisterIllegalIrsForm = ({ onSubmit, isPending = false }: RegisterIllegal
         </CardForm>
 
         <div className="mt-4 mb-2 text-base font-semibold text-slate-800">INM tashkilotiga tegishli fayllar</div>
-        {hasIncompleteOrgFiles && (
-          <Alert className="mb-4 border-amber-200 bg-amber-50 text-amber-800">
-            <TriangleAlert className="h-4 w-4 text-amber-600" />
-            <AlertDescription>
-              Tashkilotning ayrim hujjatlari to‘liq kiritilmagan. Reyestrlar bo‘limidan tashkilot ma’lumotlarini
-              yangilash imkoniyati mavjud.{' '}
-              {isUpdate
-                ? 'Tashkilot hujjatlari to‘liq mavjud bo‘lganda tahrirlash mumkin!'
-                : ' Tashkilot hujjatlari to‘liq mavjud bo‘lganda ro‘yxatga olish mumkin!'}
-            </AlertDescription>
-          </Alert>
-        )}
 
         {isProfileLoading ? (
           <CardForm className="mb-5 grid grid-cols-1 gap-x-8 gap-y-4 md:grid-cols-2 2xl:grid-cols-3">
@@ -630,7 +615,7 @@ const RegisterIllegalIrsForm = ({ onSubmit, isPending = false }: RegisterIllegal
                 render={({ field }) => (
                   <FormItem className="mb-2">
                     <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
-                      <FormLabel required>Mutaxassislar mavjudligi</FormLabel>
+                      <FormLabel>Mutaxassislar mavjudligi</FormLabel>
                       <FormControl>
                         <InputFile form={form} name={field.name} accept={[FileTypes.PDF]} />
                       </FormControl>
@@ -647,7 +632,7 @@ const RegisterIllegalIrsForm = ({ onSubmit, isPending = false }: RegisterIllegal
                 render={({ field }) => (
                   <FormItem className="mb-2">
                     <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
-                      <FormLabel required>Sanitariya-epidemiologik xulosasi</FormLabel>
+                      <FormLabel>Sanitariya-epidemiologik xulosasi</FormLabel>
                       <FormControl>
                         <InputFile
                           form={form}
@@ -692,7 +677,7 @@ const RegisterIllegalIrsForm = ({ onSubmit, isPending = false }: RegisterIllegal
                 render={({ field }) => (
                   <FormItem className="mb-2">
                     <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
-                      <FormLabel required>Radiatsiyaviy xavfsizlik bo‘yicha o‘qiganlik yuzasidan sertifikat</FormLabel>
+                      <FormLabel>Radiatsiyaviy xavfsizlik bo‘yicha o‘qiganlik yuzasidan sertifikat</FormLabel>
                       <FormControl>
                         <InputFile
                           form={form}
@@ -737,7 +722,7 @@ const RegisterIllegalIrsForm = ({ onSubmit, isPending = false }: RegisterIllegal
                 render={({ field }) => (
                   <FormItem className="mb-2">
                     <div className="flex flex-col justify-between gap-1 sm:flex-row sm:items-center">
-                      <FormLabel required>Tibbiy ko‘rikdan o‘tkazilganligi</FormLabel>
+                      <FormLabel>Tibbiy ko‘rikdan o‘tkazilganligi</FormLabel>
                       <FormControl>
                         <InputFile
                           form={form}
@@ -807,7 +792,7 @@ const RegisterIllegalIrsForm = ({ onSubmit, isPending = false }: RegisterIllegal
           </CardForm>
         )}
 
-        <Button type="submit" loading={isPending || isSubmitPending} disabled={hasIncompleteOrgFiles}>
+        <Button type="submit" loading={isPending || isSubmitPending}>
           {isUpdate ? 'Saqlash' : 'Ro‘yxatga olish'}
         </Button>
       </form>
