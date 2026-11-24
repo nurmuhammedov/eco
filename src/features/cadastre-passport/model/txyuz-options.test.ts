@@ -3,7 +3,9 @@ import {
   CERTIFICATE_NUMBER_PATTERN,
   CERTIFICATE_NUMBER_SAMPLE,
   formatCertificateNumber,
+  TXYUZ_PURPOSES,
   joinAddress,
+  purposeAbbreviationOf,
   splitAddress,
 } from './txyuz-options'
 
@@ -64,5 +66,18 @@ describe('CERTIFICATE_NUMBER_PATTERN', () => {
     expect(CERTIFICATE_NUMBER_PATTERN.test('Q 123456')).toBe(false)
     expect(CERTIFICATE_NUMBER_PATTERN.test('qv 123456')).toBe(false)
     expect(CERTIFICATE_NUMBER_PATTERN.test('QV 12345')).toBe(false)
+  })
+})
+
+describe('purposeAbbreviationOf', () => {
+  it('reads the abbreviation every listed purpose carries', () => {
+    expect(TXYUZ_PURPOSES.map(purposeAbbreviationOf)).toEqual(['AGTKSH', 'AGQSH', 'AYQSH', 'KAYQSH', 'GTSH', 'GTP'])
+  })
+
+  it('leaves a purpose typed in, or bracketed with something else, to the reader', () => {
+    expect(purposeAbbreviationOf('Gaz ombori')).toBeUndefined()
+    expect(purposeAbbreviationOf('Gaz ombori (GO)')).toBeUndefined()
+    expect(purposeAbbreviationOf('')).toBeUndefined()
+    expect(purposeAbbreviationOf(null)).toBeUndefined()
   })
 })

@@ -38,6 +38,8 @@ import {
   TXYUZ_FIREFIGHTING_EQUIPMENT,
   TXYUZ_PROTECTION_DISTANCES,
   TXYUZ_PURPOSES,
+  TXYUZ_PURPOSE_ABBREVIATIONS,
+  purposeAbbreviationOf,
   TXYUZ_SUBSTANCES,
   formatCoordinate,
   formatLandCadastreNumber,
@@ -146,6 +148,7 @@ const cadastreObjectSchema = z
     landArea: numeric(),
     exploitationYear: year(),
     purpose: text(),
+    purposeAbbreviation: text(),
     substance: text(),
     hazardLevel: text(),
     employeeCount: whole(),
@@ -464,7 +467,7 @@ const AddressFields = ({ prefix, config }: { prefix: string; config: AddressConf
 }
 
 export const CadastreDataFields = ({ prefix = 'cadastreData.' }: CadastreDataFieldsProps) => {
-  const { control } = useFormContext()
+  const { control, setValue } = useFormContext()
 
   const latitude = useWatch({ control, name: `${prefix}latitude` })
   const longitude = useWatch({ control, name: `${prefix}longitude` })
@@ -697,7 +700,29 @@ export const CadastreDataFields = ({ prefix = 'cadastreData.' }: CadastreDataFie
             <FormItem>
               <FormLabel required>Obyektning vazifasi</FormLabel>
               <FormControl>
-                <SelectOrInput options={TXYUZ_PURPOSES} value={field.value} onChange={field.onChange} />
+                <SelectOrInput
+                  options={TXYUZ_PURPOSES}
+                  value={field.value}
+                  onChange={(value) => {
+                    field.onChange(value)
+                    // A listed purpose names its abbreviation; one typed in leaves the choice to the reader
+                    const abbreviation = purposeAbbreviationOf(value)
+                    if (abbreviation) setValue(`${prefix}purposeAbbreviation`, abbreviation, { shouldValidate: true })
+                  }}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={control}
+          name={`${prefix}purposeAbbreviation`}
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel required>Obyekt vazifasining qisqartma nomi</FormLabel>
+              <FormControl>
+                <SelectOrInput options={TXYUZ_PURPOSE_ABBREVIATIONS} value={field.value} onChange={field.onChange} />
               </FormControl>
               <FormMessage />
             </FormItem>

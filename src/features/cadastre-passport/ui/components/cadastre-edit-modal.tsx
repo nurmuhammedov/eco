@@ -2,7 +2,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '
 import { Form } from '@/shared/components/ui/form'
 import { Button } from '@/shared/components/ui/button'
 import { CadastreObjectsFields, CadastreRegistryFields, cadastreDataSchema } from './cadastre-data-fields'
-import { splitAddress, splitBelonging } from '../../model/txyuz-options'
+import { purposeAbbreviationOf, splitAddress, splitBelonging } from '../../model/txyuz-options'
 import { useForm } from 'react-hook-form'
 import { zodFormResolver } from '@/shared/lib/zod-form-resolver'
 import type { z } from 'zod'
@@ -36,6 +36,9 @@ const toObjectFormValues = (object: CadastreSection) => {
 
   // The damage area was a number until it became text on 2026-11-16; the input works on text
   values.damageArea = object.damageArea === null || object.damageArea === undefined ? '' : String(object.damageArea)
+
+  // Required since 2026-11-23: an object saved before then takes it from its purpose when that names one
+  values.purposeAbbreviation = object.purposeAbbreviation || purposeAbbreviationOf(object.purpose) || ''
 
   // The date became a year; an object saved before that still carries the old date
   const legacyDate = object.exploitationDate ? new Date(object.exploitationDate) : null

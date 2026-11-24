@@ -14,6 +14,23 @@ export const TXYUZ_PURPOSES = [
   'Gaz to‘ldirish punkti (GTP)',
 ] as const
 
+/**
+ * Obyekt vazifasining qisqartma nomi - the bracketed part of each purpose above.
+ * The backend keeps it as a field of its own (`purposeAbbreviation`, required
+ * since 2026-11-23) for the passport's documents.
+ */
+export const TXYUZ_PURPOSE_ABBREVIATIONS = ['AGTKSH', 'AGQSH', 'AYQSH', 'KAYQSH', 'GTSH', 'GTP'] as const
+
+/** The abbreviation a listed purpose carries in its brackets; nothing for a purpose typed in */
+export const purposeAbbreviationOf = (purpose?: string | number | null) => {
+  const match = /\(([^()]+)\)\s*$/.exec(String(purpose ?? ''))
+  const abbreviation = match?.[1].trim()
+
+  return abbreviation && (TXYUZ_PURPOSE_ABBREVIATIONS as readonly string[]).includes(abbreviation)
+    ? abbreviation
+    : undefined
+}
+
 /** Ishlab chiqarish, qayta ishlash, saqlash va foydalanish moddasining nomi. */
 export const TXYUZ_SUBSTANCES = [
   'Siqilgan tabiiy gaz (metan)',

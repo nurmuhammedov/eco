@@ -49,6 +49,7 @@ export const PreparerDataRows = ({ data }: { data: CadastreSection | null | unde
         value={values.exploitationYear ? text(values.exploitationYear) : day(values.exploitationDate)}
       />
       <DetailRow title="Obyektning vazifasi" value={text(values.purpose)} />
+      <DetailRow title="Obyekt vazifasining qisqartma nomi" value={text(values.purposeAbbreviation)} />
       <DetailRow
         title="Obyektda ishlab chiqarish, qayta ishlash, saqlash va foydalanish moddasining nomi"
         value={text(values.substance)}

@@ -18,6 +18,7 @@ const object = {
   landArea: 0.5,
   exploitationYear: '2015',
   purpose: 'Gaz to‘ldirish punkti (GTP)',
+  purposeAbbreviation: 'GTP',
   substance: 'Siqilgan tabiiy gaz (metan)',
   hazardLevel: 'II – tip',
   employeeCount: 10,
