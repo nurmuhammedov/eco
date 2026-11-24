@@ -20,6 +20,7 @@ import { CommitteeActions } from './components/committee-actions'
 import { CustomerActions } from './components/customer-actions'
 import { ObjectsDataRows, RegistryDataRows } from './components/preparer-data-rows'
 import { PassportFileDialog } from './components/passport-file-dialog'
+import { PdfPreviewButton } from './components/pdf-preview-dialog'
 import { ReviewsList } from './components/reviews-list'
 import { SectionRows } from './components/section-rows'
 import { StatusBadge } from './components/status-badge'
@@ -90,6 +91,8 @@ export default function CadastreDetail() {
       <div className="flex flex-wrap items-start justify-between gap-4">
         <GoBack title={`Hujjat tafsiloti ${passport.registryNumber ? `(${passport.registryNumber})` : ''}`} />
         <div className="flex flex-wrap items-center justify-end gap-2">
+          {/* Every role, until the signed documents take its place */}
+          {passport.status !== 'APPROVED' && <PdfPreviewButton passportId={passport.id} />}
           {canResubmit && (
             <Button variant="outline" onClick={resubmit}>
               <RotateCcw className="mr-2 size-4" />
