@@ -40,6 +40,7 @@ export const CommitteeActions = ({ passportId }: { passportId: string }) => {
         title={isReject ? 'Rad etish' : 'Yakunlash'}
         submitLabel={isReject ? 'Rad etish' : 'Yakunlash'}
         destructive={isReject}
+        filesOptional
         // A refusal has to be written out; only the approval has a usual wording.
         defaultText={isReject ? '' : DEFAULT_POSITIVE_CONCLUSION}
         onSubmit={(values) => {

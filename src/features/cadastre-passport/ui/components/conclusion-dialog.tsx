@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -12,17 +12,21 @@ import { OBSERVATION_LETTER_LABEL, REFERENCE_FILES_LABEL } from '../../model/lab
 /** The backend refuses more than this, so the picker stops before the request does. */
 const MAX_FILES = 10
 
-const schema = z.object({
-  conclusion: z.string().trim().min(1),
-  conclusionFilePaths: z.array(z.string()).min(1).max(MAX_FILES),
-  // Optional, so an empty picker leaves the key out of the payload instead of sending ''.
-  observationLetterPath: z
-    .string()
-    .optional()
-    .transform((path) => path || undefined),
-})
+export const buildConclusionSchema = (filesOptional: boolean) =>
+  z.object({
+    conclusion: z.string().trim().min(1),
+    conclusionFilePaths: z
+      .array(z.string())
+      .min(filesOptional ? 0 : 1)
+      .max(MAX_FILES),
+    // Optional, so an empty picker leaves the key out of the payload instead of sending ''.
+    observationLetterPath: z
+      .string()
+      .optional()
+      .transform((path) => path || undefined),
+  })
 
-export type ConclusionValues = z.infer<typeof schema>
+export type ConclusionValues = z.infer<ReturnType<typeof buildConclusionSchema>>
 
 interface ConclusionDialogProps {
   open: boolean
@@ -39,6 +43,8 @@ interface ConclusionDialogProps {
    * its conclusion.
    */
   withObservationLetter?: boolean
+  /** The committee's conclusion may go without a file (the backend requires one only of FVV and SES) */
+  filesOptional?: boolean
   onSubmit: (values: ConclusionValues) => void
 }
 
@@ -51,8 +57,10 @@ export const ConclusionDialog = ({
   isPending,
   defaultText = '',
   withObservationLetter,
+  filesOptional = false,
   onSubmit,
 }: ConclusionDialogProps) => {
+  const schema = useMemo(() => buildConclusionSchema(filesOptional), [filesOptional])
   const form = useForm<ConclusionValues>({
     resolver: zodResolver(schema),
     defaultValues: { conclusion: defaultText, conclusionFilePaths: [], observationLetterPath: '' },
@@ -102,7 +110,9 @@ export const ConclusionDialog = ({
               name="conclusionFilePaths"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel required>{withObservationLetter ? REFERENCE_FILES_LABEL : 'Xulosa'}</FormLabel>
+                  <FormLabel required={!filesOptional}>
+                    {withObservationLetter ? REFERENCE_FILES_LABEL : 'Xulosa'}
+                  </FormLabel>
                   <FormControl>
                     {/* InputFile prints the field's own error, so a FormMessage
                         here only repeats it. */}
