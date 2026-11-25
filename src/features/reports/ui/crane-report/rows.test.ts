@@ -11,6 +11,12 @@ const counts = (childEquipmentId: number, totalCount: number): CraneTypeCount =>
   registeredCount: 0,
   permitAddedCount: 0,
   permitChangedCount: 0,
+  partialCheckActiveCount: 0,
+  partialCheckNoDateCount: 0,
+  partialCheckExpiredCount: 0,
+  fullCheckActiveCount: 0,
+  fullCheckNoDateCount: 0,
+  fullCheckExpiredCount: 0,
 })
 
 const row = (regionId: number | null, regionName: string, types: CraneTypeCount[] = []): CraneReportRow => ({

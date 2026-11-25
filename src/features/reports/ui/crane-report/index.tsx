@@ -8,6 +8,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { useData } from '@/shared/hooks'
 import useCustomSearchParams from '@/shared/hooks/api/use-search-params'
 import { getErrorMessage } from '@/shared/lib/error-message'
+import { useChildEquipmentTypes } from '@/shared/api/dictionaries'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { paramText } from '@/shared/lib/url-params'
 import { cn } from '@/shared/lib/utils'
 import { findTypeCounts, formatCount, orderCraneRows } from './rows'
@@ -15,7 +17,7 @@ import type { CraneCountKey, CraneReportRow } from './types'
 
 const API_DATE = 'yyyy-MM-dd'
 
-/** Every crane type gets these six columns, under two headings */
+/** Every crane type gets these columns, under four headings */
 const COLUMN_GROUPS: { title: string; columns: { key: CraneCountKey; title: string }[] }[] = [
   {
     title: 'Hozirgi kun holati',
@@ -23,6 +25,23 @@ const COLUMN_GROUPS: { title: string; columns: { key: CraneCountKey; title: stri
       { key: 'totalCount', title: 'Jami' },
       { key: 'withPermitCount', title: 'Ruxsatnomasi mavjudlar' },
       { key: 'withoutPermitCount', title: 'Ruxsatnomasi yo‘qlar' },
+    ],
+  },
+  // The technical checks, in the committee's wording (task 209, 2026-11-19)
+  {
+    title: 'Keyingi qisman texnik ko‘rik sanasi',
+    columns: [
+      { key: 'partialCheckActiveCount', title: 'Aktivlar' },
+      { key: 'partialCheckNoDateCount', title: 'Kiritilmagan' },
+      { key: 'partialCheckExpiredCount', title: 'Muddati o‘tgan' },
+    ],
+  },
+  {
+    title: 'Keyingi to‘liq texnik ko‘rik sanasi',
+    columns: [
+      { key: 'fullCheckActiveCount', title: 'Aktivlar' },
+      { key: 'fullCheckNoDateCount', title: 'Kiritilmagan' },
+      { key: 'fullCheckExpiredCount', title: 'Muddati o‘tgan' },
     ],
   },
   {
@@ -37,6 +56,9 @@ const COLUMN_GROUPS: { title: string; columns: { key: CraneCountKey; title: stri
 
 const TYPE_COLUMNS = COLUMN_GROUPS.flatMap((group) => group.columns)
 
+/** The type filter's "all" entry; a Select item cannot carry an empty value */
+const ALL_TYPES = 'ALL'
+
 /** The regions column stays in view while the crane types scroll past it */
 const PINNED = 'sticky left-0 border-r shadow-[1px_0_0_0_rgba(0,0,0,0.1)]'
 
@@ -44,17 +66,18 @@ const PINNED = 'sticky left-0 border-r shadow-[1px_0_0_0_rgba(0,0,0,0.1)]'
 const INNER_HEAD = 'border-b border-neutral-200 text-center first:border-l'
 
 const CraneReport: React.FC = () => {
-  const { paramsObject, addParams } = useCustomSearchParams()
+  const { paramsObject, addParams, removeParams } = useCustomSearchParams()
 
   // Today's work unless the user picks a period, as the backend assumes without dates
   const today = format(new Date(), API_DATE)
   const startDate = paramText(paramsObject.startDate, today)
   const endDate = paramText(paramsObject.endDate, today)
+  // Each type spreads over many columns; one picked narrows the report to it
+  const childEquipmentId = paramText(paramsObject.childEquipmentId)
+  const params = { startDate, endDate, ...(childEquipmentId ? { childEquipmentId } : {}) }
 
-  const { data, isLoading, isError, error } = useData<CraneReportRow[]>('/reports/registry/crane', true, {
-    startDate,
-    endDate,
-  })
+  const { data, isLoading, isError, error } = useData<CraneReportRow[]>('/reports/registry/crane', true, params)
+  const { data: craneTypeOptions } = useChildEquipmentTypes('CRANE')
 
   const rows = useMemo(() => orderCraneRows(data), [data])
 
@@ -173,17 +196,35 @@ const CraneReport: React.FC = () => {
             className="h-10 w-[150px] bg-white"
             isForm={false}
           />
+          <Select
+            value={childEquipmentId || ALL_TYPES}
+            onValueChange={(value) =>
+              value === ALL_TYPES ? removeParams('childEquipmentId') : addParams({ childEquipmentId: value })
+            }
+          >
+            <SelectTrigger className="h-10 w-[200px] bg-white">
+              <SelectValue placeholder="Kran turi" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value={ALL_TYPES}>Barcha turlar</SelectItem>
+              {(craneTypeOptions ?? []).map((option) => (
+                <SelectItem key={option.id} value={String(option.id)}>
+                  {option.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
           <ExportExcelButton
             endpoint="/reports/registry/crane/export-excel"
-            params={{ startDate, endDate }}
+            params={params}
             fileName="Kran qurilmalari"
           />
         </div>
       </div>
 
       <p className="text-muted-foreground text-xs">
-        «Hozirgi kun holati» ustunlari joriy holatni ko‘rsatadi va sanaga bog‘liq emas; tanlangan davr faqat «Bajarilgan
-        ishlar» ustunlariga ta’sir qiladi.
+        «Hozirgi kun holati» va texnik ko‘rik ustunlari joriy holatni ko‘rsatadi va sanaga bog‘liq emas; tanlangan davr
+        faqat «Bajarilgan ishlar» ustunlariga ta’sir qiladi.
       </p>
 
       <div className="flex-1 overflow-hidden rounded-md border bg-white shadow-sm">{renderTable()}</div>

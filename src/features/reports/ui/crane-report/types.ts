@@ -8,6 +8,14 @@ export interface CraneTypeCount {
   registeredCount: number
   permitAddedCount: number
   permitChangedCount: number
+  /** Navbatdagi qisman texnik ko'rik sanasi: still ahead, not entered, passed (2026-11-25) */
+  partialCheckActiveCount: number
+  partialCheckNoDateCount: number
+  partialCheckExpiredCount: number
+  /** Navbatdagi to'liq texnik ko'rik sanasi, the same three */
+  fullCheckActiveCount: number
+  fullCheckNoDateCount: number
+  fullCheckExpiredCount: number
 }
 
 /** ReportByCrane: a region, or the country total when `regionId` is null */
