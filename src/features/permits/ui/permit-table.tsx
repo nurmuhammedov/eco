@@ -13,6 +13,7 @@ import { useAuth } from '@/shared/hooks/use-auth'
 import { Badge } from '@/shared/components/ui/badge'
 import { paramText } from '@/shared/lib/url-params'
 import type { PermitRow } from '@/features/permits/model/types'
+import { UploadLegalPermitsExcel } from '@/features/permits/ui/upload-legal-permits-excel'
 
 interface PermitTableProps {
   setIsModalOpen: Dispatch<SetStateAction<boolean>>
@@ -186,9 +187,12 @@ export const PermitTable = ({ setIsModalOpen }: PermitTableProps) => {
           {user?.role !== UserRoles.CHAIRMAN &&
             user?.role !== UserRoles.INDIVIDUAL &&
             user?.role !== UserRoles.LEGAL && (
-              <Button type="button" onClick={() => setIsModalOpen((p: boolean) => !p)} className="w-full sm:w-auto">
-                Qo‘shish
-              </Button>
+              <>
+                <UploadLegalPermitsExcel />
+                <Button type="button" onClick={() => setIsModalOpen((p: boolean) => !p)} className="w-full sm:w-auto">
+                  Qo‘shish
+                </Button>
+              </>
             )}
         </div>
       </div>

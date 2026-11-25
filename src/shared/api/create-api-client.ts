@@ -94,8 +94,9 @@ export const createApiClient = (instance: AxiosInstance) => {
       url: string,
       body?: B,
       headers?: RequestHeaders,
-      onProgress?: ProgressCallback
-    ) => request<T>('post', url, body, headers, onProgress),
+      onProgress?: ProgressCallback,
+      options?: RequestOptions
+    ) => request<T>('post', url, body, headers, onProgress, 'plain', options),
 
     put: <T, B extends object = object>(
       url: string,
