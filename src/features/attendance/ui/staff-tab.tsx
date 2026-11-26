@@ -1,8 +1,8 @@
 import { useMemo, useState } from 'react'
-import { CalendarClock, Search } from 'lucide-react'
+import { CalendarClock } from 'lucide-react'
+import SearchInput from '@/shared/components/common/search-input/ui/search-input'
 import { Badge } from '@/shared/components/ui/badge'
 import { Button } from '@/shared/components/ui/button'
-import { Input } from '@/shared/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { cn } from '@/shared/lib/utils'
 import type { AttendanceStaffRow } from '../api/attendance.api'
@@ -45,14 +45,8 @@ export const StaffTab = ({ division }: { division: string }) => {
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-3">
       <div className="flex flex-wrap items-center gap-2">
-        <div className="relative w-full sm:w-72">
-          <Search className="text-muted-foreground absolute top-1/2 left-2.5 size-4 -translate-y-1/2" />
-          <Input
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="F.I.Sh. yoki JSHSHIR"
-            className="pl-8"
-          />
+        <div className="w-full sm:w-72">
+          <SearchInput placeholder="F.I.Sh. yoki JSHSHIR" onChange={setSearch} />
         </div>
         <Select value={tracked} onValueChange={setTracked}>
           <SelectTrigger className="w-[200px]">

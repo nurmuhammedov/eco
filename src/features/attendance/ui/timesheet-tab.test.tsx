@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { render, screen, within } from '@testing-library/react'
+import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
 import type { Timesheet } from '../api/attendance.api'
@@ -139,7 +139,8 @@ describe('TimesheetTab', () => {
     expect(cells.at(-1)).toHaveTextContent('2')
   })
 
-  it('paints the late days and tells the details on hover', () => {
+  it('paints the late days and opens their card on hover at once', async () => {
+    const user = userEvent.setup()
     renderTab()
 
     const row = screen.getByRole('link', { name: 'Abdullayev B.U.' }).closest('tr') as HTMLElement
@@ -147,9 +148,20 @@ describe('TimesheetTab', () => {
 
     expect(late).toHaveTextContent('8')
     expect(late.className).toContain('bg-amber-200')
-    expect(late).toHaveAttribute('title', expect.stringContaining('Kechikish: 30 daqiqa'))
     expect(within(row).getAllByRole('cell')[5].className).toContain('bg-red-200')
     expect(within(row).getAllByRole('cell')[6]).toHaveTextContent('?')
+
+    await user.hover(late)
+
+    const card = screen.getByRole('tooltip')
+    expect(card).toHaveTextContent('02.11.2026, Dushanba')
+    expect(card).toHaveTextContent('Abdullayev Botir Umarovich')
+    expect(card).toHaveTextContent('Kech qolgan')
+    expect(card).toHaveTextContent('09:30')
+    expect(card).toHaveTextContent('30 daqiqa')
+
+    await user.unhover(late)
+    expect(screen.queryByRole('tooltip')).not.toBeInTheDocument()
   })
 
   it('marks a part rate', () => {
@@ -179,12 +191,17 @@ describe('TimesheetTab', () => {
 
     expect(screen.getByText('Kun holatini tuzatish')).toBeInTheDocument()
     expect(screen.getByLabelText('Kelgan vaqti')).toHaveValue('09:02')
-    expect(screen.getByRole('button', { name: 'Saqlash' })).toBeDisabled()
+
+    // Without a reason nothing is sent
+    await user.click(screen.getByRole('button', { name: 'Saqlash' }))
+    await waitFor(() => expect(screen.getByLabelText('Sababi')).toHaveAttribute('aria-invalid', 'true'))
+    expect(mocks.saved).toEqual([])
 
     await user.type(screen.getByLabelText('Ketgan vaqti'), '18:10')
-    await user.type(screen.getByLabelText('Sababi *'), 'Chiqishda qurilma ishlamagan')
+    await user.type(screen.getByLabelText('Sababi'), 'Chiqishda qurilma ishlamagan')
     await user.click(screen.getByRole('button', { name: 'Saqlash' }))
 
+    await waitFor(() => expect(mocks.saved).toHaveLength(1))
     expect(mocks.saved).toEqual([
       {
         user_id: 'u-1',

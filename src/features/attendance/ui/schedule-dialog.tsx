@@ -1,30 +1,50 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { format } from 'date-fns'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
 import { Button } from '@/shared/components/ui/button'
+import DatePicker from '@/shared/components/ui/datepicker'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/components/ui/form'
 import { Input } from '@/shared/components/ui/input'
-import { Label } from '@/shared/components/ui/label'
+import { InputNumber } from '@/shared/components/ui/input-number'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
 import { Switch } from '@/shared/components/ui/switch'
+import { FORM_ERROR_MESSAGES } from '@/shared/validation'
 import type { AttendanceStaffRow } from '../api/attendance.api'
 import { useSaveSchedule } from '../model/use-attendance'
 
 const RATES = ['1', '0.75', '0.5', '0.25']
 
-interface FormState {
-  rate: string
-  daily_hours: string
-  work_start: string
-  work_end: string
-  lunch_minutes: string
-  is_tracked: boolean
-  valid_from: string
-  note: string
-}
+const schema = z
+  .object({
+    rate: z.string().min(1, FORM_ERROR_MESSAGES.required),
+    daily_hours: z
+      .string()
+      .min(1, FORM_ERROR_MESSAGES.required)
+      .refine((value) => Number(value) >= 1 && Number(value) <= 12, '1 dan 12 gacha'),
+    work_start: z.string().optional(),
+    work_end: z.string().optional(),
+    lunch_minutes: z
+      .string()
+      .optional()
+      .refine((value) => !value || (Number(value) >= 0 && Number(value) <= 180), '0 dan 180 gacha'),
+    is_tracked: z.boolean(),
+    valid_from: z.date({ message: FORM_ERROR_MESSAGES.required }),
+    note: z.string().max(500).optional(),
+  })
+  .refine((value) => !value.work_start || !value.work_end || value.work_end > value.work_start, {
+    path: ['work_end'],
+    message: 'Ish tugashi boshlanishidan keyin bo‘lishi kerak',
+  })
+
+type FormValues = z.infer<typeof schema>
 
 const firstOfMonth = () => {
   const now = new Date()
 
-  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-01`
+  return new Date(now.getFullYear(), now.getMonth(), 1)
 }
 
 /**
@@ -33,14 +53,25 @@ const firstOfMonth = () => {
  */
 export const ScheduleDialog = ({ employee, onClose }: { employee: AttendanceStaffRow | null; onClose: () => void }) => {
   const saveMutation = useSaveSchedule()
-  const [form, setForm] = useState<FormState | null>(null)
+  const form = useForm<FormValues>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      rate: '1',
+      daily_hours: '8',
+      work_start: '',
+      work_end: '',
+      lunch_minutes: '',
+      is_tracked: true,
+      note: '',
+    },
+  })
 
   useEffect(() => {
     if (!employee) return
 
     const { schedule } = employee
 
-    setForm({
+    form.reset({
       rate: String(schedule.rate),
       daily_hours: String(schedule.daily_hours),
       work_start: schedule.is_default ? '' : schedule.work_start,
@@ -50,35 +81,23 @@ export const ScheduleDialog = ({ employee, onClose }: { employee: AttendanceStaf
       valid_from: firstOfMonth(),
       note: schedule.note ?? '',
     })
-  }, [employee])
+  }, [employee, form])
 
-  const set = <K extends keyof FormState>(key: K, value: FormState[K]) =>
-    setForm((current) => (current ? { ...current, [key]: value } : current))
-
-  // A rate brings its usual norm; HR may still put another one
-  const changeRate = (rate: string) =>
-    setForm((current) =>
-      current ? { ...current, rate, daily_hours: String(Math.max(1, Math.round(Number(rate) * 8))) } : current
-    )
-
-  const timesInvalid = !!form?.work_start && !!form?.work_end && form.work_end <= form.work_start
-  const canSave = !!form && !!form.rate && !!form.valid_from && !timesInvalid
-
-  const handleSave = () => {
-    if (!employee || !form || !canSave) return
+  const onSubmit = (values: FormValues) => {
+    if (!employee) return
 
     saveMutation.mutate(
       {
         userId: employee.id,
         data: {
-          rate: Number(form.rate),
-          daily_hours: form.daily_hours ? Number(form.daily_hours) : null,
-          work_start: form.work_start || null,
-          work_end: form.work_end || null,
-          lunch_minutes: form.lunch_minutes === '' ? null : Number(form.lunch_minutes),
-          is_tracked: form.is_tracked,
-          valid_from: form.valid_from,
-          note: form.note.trim() || null,
+          rate: Number(values.rate),
+          daily_hours: Number(values.daily_hours),
+          work_start: values.work_start || null,
+          work_end: values.work_end || null,
+          lunch_minutes: values.lunch_minutes ? Number(values.lunch_minutes) : null,
+          is_tracked: values.is_tracked,
+          valid_from: format(values.valid_from, 'yyyy-MM-dd'),
+          note: values.note?.trim() || null,
         },
       },
       { onSuccess: onClose }
@@ -92,132 +111,175 @@ export const ScheduleDialog = ({ employee, onClose }: { employee: AttendanceStaf
           <DialogTitle>Ish grafigi va stavka</DialogTitle>
         </DialogHeader>
 
-        {employee && form && (
-          <div className="space-y-4">
-            <div className="bg-muted/50 rounded-md border p-3 text-sm">
-              <p className="font-medium">{employee.name}</p>
-              <p className="text-muted-foreground">
-                {employee.division_name}
-                {employee.position ? ` · ${employee.position}` : ''}
-              </p>
-            </div>
+        {employee && (
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <div className="bg-muted/50 rounded-md border p-3 text-sm">
+                <p className="font-medium">{employee.name}</p>
+                <p className="text-muted-foreground">
+                  {employee.division_name}
+                  {employee.position ? ` · ${employee.position}` : ''}
+                </p>
+              </div>
 
-            <div className="flex items-center justify-between gap-3 rounded-md border p-3 text-sm">
-              <span>
-                <span className="font-medium">Davomatga kiradi</span>
-                <span className="text-muted-foreground block text-xs">
-                  O‘chirilsa xodim tabel va hisobotlarda ko‘rsatilmaydi
-                </span>
-              </span>
-              <Switch
-                aria-label="Davomatga kiradi"
-                checked={form.is_tracked}
-                onChange={(event) => set('is_tracked', event.target.checked)}
+              <FormField
+                control={form.control}
+                name="is_tracked"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-center justify-between gap-3 space-y-0 rounded-md border p-3">
+                    <div>
+                      <FormLabel>Davomatga kiradi</FormLabel>
+                      <p className="text-muted-foreground text-xs">
+                        O‘chirilsa xodim tabel va hisobotlarda ko‘rsatilmaydi
+                      </p>
+                    </div>
+                    <FormControl>
+                      <Switch checked={field.value} onChange={(event) => field.onChange(event.target.checked)} />
+                    </FormControl>
+                  </FormItem>
+                )}
               />
-            </div>
 
-            <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-2">
-                <Label>Stavka *</Label>
-                <Select value={form.rate} onValueChange={changeRate}>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {RATES.map((rate) => (
-                      <SelectItem key={rate} value={rate}>
-                        {rate}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="schedule-hours">Kunlik norma (soat)</Label>
-                <Input
-                  id="schedule-hours"
-                  type="number"
-                  min={1}
-                  max={12}
-                  value={form.daily_hours}
-                  onChange={(e) => set('daily_hours', e.target.value)}
+              <div className="grid grid-cols-2 gap-3">
+                <FormField
+                  control={form.control}
+                  name="rate"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel required>Stavka</FormLabel>
+                      <Select
+                        value={field.value}
+                        onValueChange={(rate) => {
+                          field.onChange(rate)
+                          // A rate brings its usual norm; HR may still put another one
+                          form.setValue('daily_hours', String(Math.max(1, Math.round(Number(rate) * 8))))
+                        }}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {RATES.map((rate) => (
+                            <SelectItem key={rate} value={rate}>
+                              {rate}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="daily_hours"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel required>Kunlik norma (soat)</FormLabel>
+                      <FormControl>
+                        <InputNumber allowDecimals={false} allowNegative={false} min={1} max={12} {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
               </div>
-            </div>
 
-            <div className="grid grid-cols-3 gap-3">
-              <div className="space-y-2">
-                <Label htmlFor="schedule-start">Ish boshlanishi</Label>
-                <Input
-                  id="schedule-start"
-                  type="time"
-                  value={form.work_start}
-                  onChange={(e) => set('work_start', e.target.value)}
+              <div className="grid grid-cols-3 gap-3">
+                <FormField
+                  control={form.control}
+                  name="work_start"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Ish boshlanishi</FormLabel>
+                      <FormControl>
+                        <Input type="time" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="work_end"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Ish tugashi</FormLabel>
+                      <FormControl>
+                        <Input type="time" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="lunch_minutes"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Tushlik (daq.)</FormLabel>
+                      <FormControl>
+                        <InputNumber
+                          allowDecimals={false}
+                          allowNegative={false}
+                          min={0}
+                          max={180}
+                          placeholder="60"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="schedule-end">Ish tugashi</Label>
-                <Input
-                  id="schedule-end"
-                  type="time"
-                  value={form.work_end}
-                  onChange={(e) => set('work_end', e.target.value)}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="schedule-lunch">Tushlik (daq.)</Label>
-                <Input
-                  id="schedule-lunch"
-                  type="number"
-                  min={0}
-                  max={180}
-                  value={form.lunch_minutes}
-                  onChange={(e) => set('lunch_minutes', e.target.value)}
-                  placeholder="60"
-                />
-              </div>
-            </div>
-            <p className={timesInvalid ? 'text-xs text-red-600' : 'text-muted-foreground text-xs'}>
-              {timesInvalid
-                ? 'Ish tugashi boshlanishidan keyin bo‘lishi kerak.'
-                : 'Bo‘sh qolsa umumiy tartib: 09:00–18:00, tushlik 13:00–14:00.'}
-            </p>
+              <p className="text-muted-foreground text-xs">
+                Bo‘sh qolsa umumiy tartib: 09:00–18:00, tushlik 13:00–14:00.
+              </p>
 
-            <div className="grid grid-cols-2 gap-3">
-              <div className="space-y-2">
-                <Label htmlFor="schedule-from">Amal qilish sanasi *</Label>
-                <Input
-                  id="schedule-from"
-                  type="date"
-                  value={form.valid_from}
-                  onChange={(e) => set('valid_from', e.target.value)}
+              <div className="grid grid-cols-2 gap-3">
+                <FormField
+                  control={form.control}
+                  name="valid_from"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel required>Amal qilish sanasi</FormLabel>
+                      <DatePicker value={field.value} onChange={field.onChange} />
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="note"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Izoh</FormLabel>
+                      <FormControl>
+                        <Input maxLength={500} placeholder="Masalan: buyruq raqami" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="schedule-note">Izoh</Label>
-                <Input
-                  id="schedule-note"
-                  maxLength={500}
-                  value={form.note}
-                  onChange={(e) => set('note', e.target.value)}
-                  placeholder="Masalan: buyruq raqami"
-                />
-              </div>
-            </div>
-            <p className="text-muted-foreground text-xs">
-              O‘zgarish shu sanadan boshlab amal qiladi; oldingi oylar hisobi o‘zgarmaydi.
-            </p>
-          </div>
+              <p className="text-muted-foreground text-xs">
+                O‘zgarish shu sanadan boshlab amal qiladi; oldingi oylar hisobi o‘zgarmaydi.
+              </p>
+
+              <DialogFooter>
+                <Button type="button" variant="outline" onClick={onClose} disabled={saveMutation.isPending}>
+                  Bekor qilish
+                </Button>
+                <Button type="submit" loading={saveMutation.isPending}>
+                  Saqlash
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
         )}
-
-        <DialogFooter>
-          <Button variant="outline" onClick={onClose} disabled={saveMutation.isPending}>
-            Bekor qilish
-          </Button>
-          <Button onClick={handleSave} disabled={!canSave} loading={saveMutation.isPending}>
-            Saqlash
-          </Button>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   )

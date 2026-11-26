@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
-import { MONTHS } from '../model/attendance-labels'
+import { MONTHS } from '@/shared/constants/months'
 import { useAttendanceAccess, useAttendanceDivisions } from '../model/use-attendance'
 
 /** Every division at once */
@@ -56,9 +56,9 @@ export const PeriodToolbar = ({
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            {MONTHS.map((label, index) => (
-              <SelectItem key={label} value={String(index + 1)}>
-                {label}
+            {MONTHS.map((item, index) => (
+              <SelectItem key={item.value} value={String(index + 1)}>
+                {item.label}
               </SelectItem>
             ))}
           </SelectContent>

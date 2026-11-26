@@ -1,7 +1,9 @@
 import { useState } from 'react'
+import { format } from 'date-fns'
 import { Plus, Trash2 } from 'lucide-react'
 import DeleteConfirmationDialog from '@/shared/components/common/delete-confirm-dialog'
 import { Button } from '@/shared/components/ui/button'
+import DatePicker from '@/shared/components/ui/datepicker'
 import { Input } from '@/shared/components/ui/input'
 import { Label } from '@/shared/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/components/ui/select'
@@ -24,7 +26,7 @@ export const HolidaysTab = ({ year }: { year: number }) => {
   const { data, isLoading } = useAttendanceHolidays(year)
   const createMutation = useCreateHoliday()
   const deleteMutation = useDeleteHoliday()
-  const [date, setDate] = useState('')
+  const [date, setDate] = useState<Date | undefined>()
   const [type, setType] = useState<HolidayType>('HOLIDAY')
   const [name, setName] = useState('')
 
@@ -32,10 +34,10 @@ export const HolidaysTab = ({ year }: { year: number }) => {
     if (!date || !name.trim()) return
 
     createMutation.mutate(
-      { date, type, name: name.trim() },
+      { date: format(date, 'yyyy-MM-dd'), type, name: name.trim() },
       {
         onSuccess: () => {
-          setDate('')
+          setDate(undefined)
           setName('')
         },
       }
@@ -46,14 +48,8 @@ export const HolidaysTab = ({ year }: { year: number }) => {
     <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-auto">
       <div className="flex flex-wrap items-end gap-3 rounded-md border bg-white p-3">
         <div className="space-y-1">
-          <Label htmlFor="holiday-date">Sana</Label>
-          <Input
-            id="holiday-date"
-            type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-            className="w-[170px]"
-          />
+          <Label>Sana</Label>
+          <DatePicker value={date} onChange={setDate} isForm={false} className="w-[170px]" />
         </div>
         <div className="space-y-1">
           <Label>Turi</Label>

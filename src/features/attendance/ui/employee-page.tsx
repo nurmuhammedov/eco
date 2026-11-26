@@ -85,7 +85,7 @@ export default function AttendanceEmployeePage() {
               <p className="text-muted-foreground">
                 {employee.tracked_since
                   ? `FaceID orqali ${formatDate(employee.tracked_since)} dan qayd etilmoqda`
-                  : 'FaceID orqali hali qayd etilmagan (qurilmadagi raqami bog‘lanmagan bo‘lishi mumkin)'}
+                  : 'FaceID orqali hali qayd etilmagan'}
               </p>
             </div>
             <Stat label="Ish kunlari" value={data.totals.days} />

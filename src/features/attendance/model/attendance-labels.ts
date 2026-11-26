@@ -6,21 +6,6 @@ import type {
   CorrectionStatus,
 } from '../api/attendance.api'
 
-export const MONTHS = [
-  'Yanvar',
-  'Fevral',
-  'Mart',
-  'Aprel',
-  'May',
-  'Iyun',
-  'Iyul',
-  'Avgust',
-  'Sentyabr',
-  'Oktyabr',
-  'Noyabr',
-  'Dekabr',
-]
-
 export const STATUS_LABELS: Record<AttendanceStatus, string> = {
   PRESENT: 'Ishda',
   BUSINESS_TRIP: 'Xizmat safari',

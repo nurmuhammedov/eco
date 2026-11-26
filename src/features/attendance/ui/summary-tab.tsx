@@ -2,7 +2,8 @@ import { ExportExcelButton } from '@/shared/components/common'
 import { servicesApiClient } from '@/shared/api/services-api-client'
 import { cn } from '@/shared/lib/utils'
 import { ATTENDANCE_EXPORT_ENDPOINT, type AttendanceFilters, type SummaryRow } from '../api/attendance.api'
-import { DISCIPLINE_CLASS, formatHours, MONTHS } from '../model/attendance-labels'
+import { MONTHS } from '@/shared/constants/months'
+import { DISCIPLINE_CLASS, formatHours } from '../model/attendance-labels'
 import { useAttendanceSummary } from '../model/use-attendance'
 
 const COLUMNS = [
@@ -70,7 +71,7 @@ export const SummaryTab = ({
           <ExportExcelButton
             client={servicesApiClient}
             endpoint={ATTENDANCE_EXPORT_ENDPOINT}
-            fileName={`Davomat ${MONTHS[filters.month - 1]} ${filters.year}`}
+            fileName={`Davomat ${MONTHS[filters.month - 1]?.label ?? ''} ${filters.year}`}
             params={{ year: filters.year, month: filters.month, division: filters.division || undefined }}
           />
         </div>

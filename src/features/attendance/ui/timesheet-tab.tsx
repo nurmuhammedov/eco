@@ -1,9 +1,9 @@
-import { Fragment, useMemo, useState } from 'react'
+import { Fragment, useMemo, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Search } from 'lucide-react'
 import { ExportExcelButton } from '@/shared/components/common'
-import { Input } from '@/shared/components/ui/input'
+import SearchInput from '@/shared/components/common/search-input/ui/search-input'
 import { servicesApiClient } from '@/shared/api/services-api-client'
+import { MONTHS } from '@/shared/constants/months'
 import { cn } from '@/shared/lib/utils'
 import {
   ATTENDANCE_EXPORT_ENDPOINT,
@@ -12,8 +12,9 @@ import {
   type AttendanceFilters,
   type TimesheetEmployee,
 } from '../api/attendance.api'
-import { cellClassName, describeDay, formatHours, MONTHS, todayIso } from '../model/attendance-labels'
+import { cellClassName, describeDay, formatHours, todayIso } from '../model/attendance-labels'
 import { useAttendanceAccess, useAttendanceSettings, useTimesheet } from '../model/use-attendance'
+import { CellTooltip, type CellTooltipHandle } from './cell-tooltip'
 import { CorrectionDialog, type CorrectionTarget } from './correction-dialog'
 
 /**
@@ -42,6 +43,11 @@ const LEGEND = [
   { label: 'Dam olish / bayram', className: 'bg-neutral-100' },
 ]
 
+/** Header and footer cells paint their own background: the rows scroll under them */
+const HEAD = 'border bg-neutral-50'
+const HEAD_OFF = 'border bg-neutral-100 text-red-600'
+const FOOT = 'border bg-neutral-100'
+
 const Stat = ({ label, value }: { label: string; value: string | number }) => (
   <div className="rounded-md border bg-white px-3 py-1.5 text-sm">
     <span className="text-muted-foreground">{label}: </span>
@@ -49,12 +55,26 @@ const Stat = ({ label, value }: { label: string; value: string | number }) => (
   </div>
 )
 
-const DayCell = ({ cell, day, onCorrect }: { cell: AttendanceCell; day: AttendanceDay; onCorrect?: () => void }) => {
+const DayCell = ({
+  cell,
+  day,
+  employeeId,
+  index,
+  onCorrect,
+}: {
+  cell: AttendanceCell
+  day: AttendanceDay
+  employeeId: string
+  index: number
+  onCorrect?: () => void
+}) => {
   const text = cell.status === 'PRESENT' ? formatHours(cell.hours) : cell.code
 
   return (
     <td
-      title={describeDay(day.date, day.weekday, cell, day.holiday)}
+      data-employee={employeeId}
+      data-index={index}
+      aria-label={describeDay(day.date, day.weekday, cell, day.holiday)}
       onClick={onCorrect}
       className={cn(
         'h-8 min-w-[30px] border border-neutral-200 px-0.5 text-center tabular-nums',
@@ -79,6 +99,8 @@ export const TimesheetTab = ({ filters }: { filters: AttendanceFilters }) => {
   const { data, isLoading, isFetching } = useTimesheet(filters)
   const [search, setSearch] = useState('')
   const [correcting, setCorrecting] = useState<CorrectionTarget | null>(null)
+  const tooltip = useRef<CellTooltipHandle>(null)
+  const hoveredKey = useRef('')
   const today = todayIso()
 
   // Searching a name is done here: the month is already loaded
@@ -94,12 +116,21 @@ export const TimesheetTab = ({ filters }: { filters: AttendanceFilters }) => {
       .filter((division) => division.employees.length)
   }, [data, search])
 
+  const employees = useMemo(
+    () => new Map(divisions.flatMap((division) => division.employees.map((employee) => [employee.user_id, employee]))),
+    [divisions]
+  )
+
   const days = data?.days ?? []
   const columnCount = days.length + 6
 
-  const correct = (employee: TimesheetEmployee, cell: AttendanceCell, day: AttendanceDay) =>
+  const canCorrect = (cell: AttendanceCell, day: AttendanceDay) =>
     canManage && CORRECTABLE.has(cell.status) && day.date <= today
-      ? () =>
+
+  const correct = (employee: TimesheetEmployee, cell: AttendanceCell, day: AttendanceDay) =>
+    canCorrect(cell, day)
+      ? () => {
+          hideTooltip()
           setCorrecting({
             userId: employee.user_id,
             name: employee.name,
@@ -108,21 +139,45 @@ export const TimesheetTab = ({ filters }: { filters: AttendanceFilters }) => {
             checkIn: cell.check_in,
             checkOut: cell.check_out,
           })
+        }
       : undefined
+
+  const hideTooltip = () => {
+    hoveredKey.current = ''
+    tooltip.current?.hide()
+  }
+
+  // One card for every cell: the cell under the pointer (or in focus) is found from its data attributes
+  const hover = (event: { target: EventTarget }) => {
+    const target = (event.target as HTMLElement).closest<HTMLElement>('td[data-index]')
+    const employee = target ? employees.get(target.dataset.employee ?? '') : undefined
+
+    if (!target || !employee) {
+      hideTooltip()
+      return
+    }
+
+    const key = `${employee.user_id}|${target.dataset.index}`
+    if (key === hoveredKey.current) return
+
+    const index = Number(target.dataset.index)
+    hoveredKey.current = key
+    tooltip.current?.show({
+      employee,
+      cell: employee.cells[index],
+      day: days[index],
+      rect: target.getBoundingClientRect(),
+      canCorrect: canCorrect(employee.cells[index], days[index]),
+    })
+  }
 
   let number = 0
 
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-3">
       <div className="flex flex-wrap items-center gap-2">
-        <div className="relative w-full sm:w-72">
-          <Search className="text-muted-foreground absolute top-1/2 left-2.5 size-4 -translate-y-1/2" />
-          <Input
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Xodim F.I.Sh."
-            className="pl-8"
-          />
+        <div className="w-full sm:w-72">
+          <SearchInput placeholder="Xodim F.I.Sh." onChange={setSearch} />
         </div>
         {data && (
           <>
@@ -137,7 +192,7 @@ export const TimesheetTab = ({ filters }: { filters: AttendanceFilters }) => {
           <ExportExcelButton
             client={servicesApiClient}
             endpoint={ATTENDANCE_EXPORT_ENDPOINT}
-            fileName={`Davomat ${MONTHS[filters.month - 1]} ${filters.year}`}
+            fileName={`Davomat ${MONTHS[filters.month - 1]?.label ?? ''} ${filters.year}`}
             params={{ year: filters.year, month: filters.month, division: filters.division || undefined }}
           />
         </div>
@@ -156,58 +211,57 @@ export const TimesheetTab = ({ filters }: { filters: AttendanceFilters }) => {
             {settings.lunch_minutes} daq.)
           </span>
         )}
-        {canManage && <span className="text-muted-foreground">Kunni tuzatish uchun katakni bosing</span>}
       </div>
 
-      <div className={cn('min-h-0 flex-1 overflow-auto rounded-md border bg-white', isFetching && 'opacity-70')}>
+      <div
+        onScroll={hideTooltip}
+        className={cn('min-h-0 flex-1 overflow-auto rounded-md border bg-white', isFetching && 'opacity-70')}
+      >
         {isLoading ? (
           <div className="text-muted-foreground p-6 text-sm">Yuklanmoqda…</div>
         ) : !divisions.length ? (
           <div className="text-muted-foreground p-6 text-sm">Ma’lumot topilmadi</div>
         ) : (
           <table className="w-max min-w-full border-collapse text-xs">
-            <thead className="sticky top-0 z-20 bg-neutral-50">
+            <thead className="sticky top-0 z-20">
               <tr>
-                <th rowSpan={2} className="sticky left-0 z-30 w-9 border bg-neutral-50 px-1">
+                <th rowSpan={2} className={cn(HEAD, 'sticky left-0 z-30 w-9 px-1')}>
                   №
                 </th>
-                <th rowSpan={2} className="sticky left-9 z-30 min-w-[210px] border bg-neutral-50 px-2 text-left">
+                <th rowSpan={2} className={cn(HEAD, 'sticky left-9 z-30 min-w-[210px] px-2 text-left')}>
                   Xodim
                 </th>
-                <th rowSpan={2} className="border px-1">
+                <th rowSpan={2} className={cn(HEAD, 'px-1')}>
                   Stavka
                 </th>
                 {days.map((day) => (
                   <th
                     key={day.date}
                     title={day.holiday ?? undefined}
-                    className={cn('border px-0.5', !day.is_workday && 'bg-neutral-100 text-red-600')}
+                    className={cn(day.is_workday ? HEAD : HEAD_OFF, 'px-0.5')}
                   >
                     {day.day}
                   </th>
                 ))}
-                <th rowSpan={2} className="border px-1">
+                <th rowSpan={2} className={cn(HEAD, 'px-1')}>
                   Kun
                 </th>
-                <th rowSpan={2} className="border px-1">
+                <th rowSpan={2} className={cn(HEAD, 'px-1')}>
                   Soat
                 </th>
-                <th rowSpan={2} className="border px-1">
+                <th rowSpan={2} className={cn(HEAD, 'px-1')}>
                   Kech
                 </th>
               </tr>
               <tr>
                 {days.map((day) => (
-                  <th
-                    key={day.date}
-                    className={cn('border px-0.5 font-normal', !day.is_workday && 'bg-neutral-100 text-red-600')}
-                  >
+                  <th key={day.date} className={cn(day.is_workday ? HEAD : HEAD_OFF, 'px-0.5 font-normal')}>
                     {day.weekday}
                   </th>
                 ))}
               </tr>
             </thead>
-            <tbody>
+            <tbody onMouseOver={hover} onFocus={hover} onMouseLeave={hideTooltip} onBlur={hideTooltip}>
               {divisions.map((division) => (
                 <Fragment key={division.code}>
                   <tr>
@@ -250,6 +304,8 @@ export const TimesheetTab = ({ filters }: { filters: AttendanceFilters }) => {
                             key={cell.day}
                             cell={cell}
                             day={days[index]}
+                            employeeId={employee.user_id}
+                            index={index}
                             onCorrect={correct(employee, cell, days[index])}
                           />
                         ))}
@@ -272,19 +328,19 @@ export const TimesheetTab = ({ filters }: { filters: AttendanceFilters }) => {
               ))}
             </tbody>
             {data && !search && (
-              <tfoot className="sticky bottom-0 z-20 bg-neutral-100 font-semibold">
+              <tfoot className="sticky bottom-0 z-20 font-semibold">
                 <tr>
-                  <td colSpan={3} className="sticky left-0 z-30 border bg-neutral-100 px-2 py-1.5">
+                  <td colSpan={3} className={cn(FOOT, 'sticky left-0 z-30 px-2 py-1.5')}>
                     Jami
                   </td>
                   {data.day_totals.map((item) => (
-                    <td key={item.day} className="border px-0.5 text-center tabular-nums">
+                    <td key={item.day} className={cn(FOOT, 'px-0.5 text-center tabular-nums')}>
                       {item.hours ? formatHours(item.hours) : ''}
                     </td>
                   ))}
-                  <td className="border px-1 text-center">{data.totals.days}</td>
-                  <td className="border px-1 text-center">{formatHours(data.totals.hours)}</td>
-                  <td className="border px-1 text-center">{data.totals.lates}</td>
+                  <td className={cn(FOOT, 'px-1 text-center')}>{data.totals.days}</td>
+                  <td className={cn(FOOT, 'px-1 text-center')}>{formatHours(data.totals.hours)}</td>
+                  <td className={cn(FOOT, 'px-1 text-center')}>{data.totals.lates}</td>
                 </tr>
               </tfoot>
             )}
@@ -292,6 +348,7 @@ export const TimesheetTab = ({ filters }: { filters: AttendanceFilters }) => {
         )}
       </div>
 
+      <CellTooltip ref={tooltip} />
       <CorrectionDialog target={correcting} onClose={() => setCorrecting(null)} />
     </div>
   )
