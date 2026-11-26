@@ -2,7 +2,6 @@ import { useMemo, useState } from 'react'
 import { Link2, Loader2 } from 'lucide-react'
 import { DataTable, ExtendedColumnDef } from '@/shared/components/common/data-table/data-table'
 import { Button } from '@/shared/components/ui/button'
-import { Card, CardContent } from '@/shared/components/ui/card'
 import { Combobox } from '@/shared/components/ui/combobox'
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog'
 import { Label } from '@/shared/components/ui/label'
@@ -134,13 +133,6 @@ export const SkudUnmatchedTab = () => {
 
   return (
     <div className="flex h-full min-h-0 flex-1 flex-col gap-3 overflow-auto">
-      <Card>
-        <CardContent className="text-muted-foreground p-4 text-sm">
-          Qurilmada xodimning <b>Employee No.</b> maydoniga JSHSHIR yozilgan bo‘lsa, hodisa xodimga avtomatik
-          bog‘lanadi. Boshqa raqam yozilgan bo‘lsa, u shu ro‘yxatga tushadi va bu yerda bir marta qo‘lda bog‘lanadi.
-        </CardContent>
-      </Card>
-
       <DataTable columns={columns} data={data} isLoading={isLoading} className="flex-1" />
 
       <LinkDialog row={linking} onClose={() => setLinking(null)} />
