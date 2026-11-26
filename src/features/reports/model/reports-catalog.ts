@@ -27,6 +27,9 @@ import { useAuth } from '@/shared/hooks/use-auth'
 import { useCurrentRole } from '@/shared/hooks/use-current-role'
 import { UserRoles } from '@/shared/types/user'
 
+/** Who the staff reports are for */
+const STAFF_REPORT_ROLES: UserRoles[] = [UserRoles.CHAIRMAN, UserRoles.ADMIN]
+
 export interface ReportItem {
   id: string
   title: string
@@ -340,6 +343,7 @@ export const REPORTS_GROUPS: ReportGroup[] = [
         icon: Users,
         url: '/reports/top-100-organizations',
         reportType: 'OTHERS',
+        roles: STAFF_REPORT_ROLES,
       },
       {
         id: 'emp-turniket',
@@ -347,6 +351,16 @@ export const REPORTS_GROUPS: ReportGroup[] = [
         icon: Users,
         url: '/reports/turniket-logs',
         reportType: 'MONTHLY',
+        roles: STAFF_REPORT_ROLES,
+      },
+      {
+        // The FaceID attendance of the services, beside the old turnstile report: a regional head gets their own division only
+        id: 'emp-attendance',
+        title: 'Davomat: tabel va yig‘ma hisobot (FaceID)',
+        icon: Users,
+        url: '/attendance',
+        reportType: 'MONTHLY',
+        roles: [...STAFF_REPORT_ROLES, UserRoles.REGIONAL],
       },
       {
         id: 'emp-device-login',
@@ -354,6 +368,7 @@ export const REPORTS_GROUPS: ReportGroup[] = [
         icon: FileText,
         url: '/reports/employee-device-login',
         reportType: 'OTHERS',
+        roles: STAFF_REPORT_ROLES,
       },
       {
         id: 'emp-activity-dashboard',
@@ -362,6 +377,7 @@ export const REPORTS_GROUPS: ReportGroup[] = [
         url: '/reports/employees-dashboard',
         badge: 'Jarayonda',
         reportType: 'OTHERS',
+        roles: STAFF_REPORT_ROLES,
       },
     ],
   },
@@ -380,7 +396,10 @@ export const isReportReady = (item: ReportItem) => item.url !== '#'
 export const filterReportGroups = (role: UserRoles, isSupervisor: boolean): ReportGroup[] => {
   let groups = REPORTS_GROUPS
 
-  if (role !== UserRoles.CHAIRMAN && role !== UserRoles.ADMIN) {
+  // The staff reports are the chairman's; a regional head also finds the attendance of their division there
+  const seesStaffReports = STAFF_REPORT_ROLES.includes(role) || (role === UserRoles.REGIONAL && !isSupervisor)
+
+  if (!seesStaffReports) {
     groups = groups.filter((group) => group.id !== 'employees')
   }
 

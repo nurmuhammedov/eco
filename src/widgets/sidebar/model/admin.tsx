@@ -17,6 +17,7 @@ import {
   RefreshCw,
   ScanFace,
   Inbox,
+  CalendarClock,
 } from 'lucide-react'
 
 export default [
@@ -89,6 +90,11 @@ export default [
     url: '/skud',
     title: 'SKUD (FaceID)',
     icon: <ScanFace />,
+  },
+  {
+    url: '/attendance',
+    title: 'Davomat tabeli (FaceID)',
+    icon: <CalendarClock />,
   },
   {
     url: '/mygov-tasks',

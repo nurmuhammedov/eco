@@ -66,6 +66,8 @@ const HazardousFacilitiesPage = lazy(() => import('@/pages/admin/hazardous-facil
 const HybridMailPage = lazy(() => import('@/features/admin/hybrid-mail/ui/hybrid-mail-page'))
 const RiskRecheckPage = lazy(() => import('@/features/admin/risk-recheck/ui/risk-recheck-page'))
 const SkudPage = lazy(() => import('@/features/admin/skud/ui/skud-page'))
+const AttendancePage = lazy(() => import('@/features/attendance/ui/attendance-page'))
+const AttendanceEmployeePage = lazy(() => import('@/features/attendance/ui/employee-page'))
 const MygovTasksPage = lazy(() => import('@/features/admin/mygov-tasks/ui/mygov-tasks-page'))
 const InquiriesStatusReport = lazy(() => import('@/features/reports/ui/inquiries-status'))
 const InquiryAddPage = lazy(() => import('@/pages/inquiries/ui/inquiry-add'))
@@ -588,6 +590,18 @@ export const APP_ROUTES: AppRouteDefinition[] = [
   { path: 'hybrid-mail', element: withSuspense(HybridMailPage), roles: [UserRoles.ADMIN] },
   { path: 'risk-recheck', element: withSuspense(RiskRecheckPage), roles: [UserRoles.ADMIN] },
   { path: 'skud', element: withSuspense(SkudPage), roles: [UserRoles.ADMIN] },
+  {
+    id: 'ATTENDANCE',
+    path: 'attendance',
+    element: withSuspense(AttendancePage),
+    roles: [UserRoles.ADMIN, UserRoles.HR, UserRoles.CHAIRMAN, UserRoles.REGIONAL],
+  },
+  {
+    id: 'ATTENDANCE',
+    path: 'attendance/employees/:userId',
+    element: withSuspense(AttendanceEmployeePage),
+    roles: [UserRoles.ADMIN, UserRoles.HR, UserRoles.CHAIRMAN, UserRoles.REGIONAL],
+  },
   { path: 'mygov-tasks', element: withSuspense(MygovTasksPage), roles: [UserRoles.ADMIN, UserRoles.CHAIRMAN] },
   {
     id: 'INQUIRY',

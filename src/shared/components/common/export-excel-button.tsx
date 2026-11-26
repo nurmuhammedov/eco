@@ -16,6 +16,8 @@ interface ExportExcelButtonProps {
   params?: Record<string, string | number | boolean | null | undefined | object>
   disabled?: boolean
   className?: string
+  /** The backend that serves the file; the main one unless said otherwise (e.g. `servicesApiClient`) */
+  client?: Pick<typeof apiClient, 'downloadFile'>
 }
 
 /**
@@ -29,6 +31,7 @@ export const ExportExcelButton = ({
   params,
   disabled = false,
   className,
+  client = apiClient,
 }: ExportExcelButtonProps) => {
   const [isExporting, setIsExporting] = useState(false)
 
@@ -36,7 +39,7 @@ export const ExportExcelButton = ({
     setIsExporting(true)
 
     try {
-      const response = await apiClient.downloadFile<Blob>(endpoint, params)
+      const response = await client.downloadFile<Blob>(endpoint, params)
       saveBlob(response.data, `${fileName} (${format(new Date(), 'dd.MM.yyyy')}).xlsx`)
     } catch (error) {
       toast.error(getErrorMessage(error, 'Faylni yuklab olishda xatolik'), { richColors: true })

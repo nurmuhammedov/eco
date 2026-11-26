@@ -11,6 +11,8 @@ const ROLES_WITHOUT_DIRECTIONS: UserRoles[] = [UserRoles.ADMIN, UserRoles.HR]
 /** Guarded by role on the backend rather than by a direction of its own. */
 const ROLE_ONLY_MODULES: Record<string, UserRoles[]> = {
   ORGANIZATIONS: [UserRoles.HEAD, UserRoles.REGIONAL, UserRoles.CHAIRMAN],
+  // Davomat (FaceID) on the services: the chairman sees the republic, a regional head their own division
+  ATTENDANCE: [UserRoles.ADMIN, UserRoles.HR, UserRoles.CHAIRMAN, UserRoles.REGIONAL],
   // Temporary: until the law allows the committee to register by application, what its
   // staff register is kept apart from the applicants' appeals. Supervisors and controllers
   // sign in as REGIONAL and INSPECTOR.

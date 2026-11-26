@@ -18,4 +18,10 @@ export default [
     url: `/reports/turniket-logs?year=${currentYear}&month=${currentMonth}`,
     icon: MODULE_ICONS.TURNIKET_LOGS,
   },
+  {
+    id: 'ATTENDANCE',
+    title: 'Davomat tabeli (FaceID)',
+    url: '/attendance',
+    icon: MODULE_ICONS.TURNIKET_LOGS,
+  },
 ] as Navigation
