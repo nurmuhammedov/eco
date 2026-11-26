@@ -126,6 +126,8 @@ export default defineConfig({
           /^\/home/,
           /^\/robots\.txt$/,
           /^\/sitemap\.xml$/,
+          // One-click entry to AANP: nginx hands it over, the SPA shell must not answer it
+          /^\/aanp-login/,
         ],
       },
       manifest: {

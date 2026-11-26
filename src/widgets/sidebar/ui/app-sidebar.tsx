@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { ArrowLeft, Book } from 'lucide-react'
+import { ArrowLeft, Book, LogIn } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import {
   Sidebar,
@@ -21,9 +21,17 @@ import { useUserNavigation } from '@/widgets/sidebar/model/use-user-navigation'
 import type { NavigationItem } from '@/widgets/sidebar/model/types'
 import { NavMain } from '@/widgets/sidebar/ui/nav-main'
 import { useAuth } from '@/shared/hooks/use-auth'
+import { UserRoles } from '@/shared/types/user'
 import { AppLogo } from './app-logo'
 
 const REPORTS_URL = '/reports'
+
+/**
+ * One-click entry to AANP with the employee's own PINFL (EKOTIZIM-KIRISH.md).
+ * nginx hands this address of ours to AANP together with the session cookie,
+ * so it has to stay a plain link: the browser must follow the redirects itself.
+ */
+const AANP_ENTRY = '/aanp-login'
 
 const basePath = (url: string) => url.split('?')[0]
 
@@ -162,6 +170,16 @@ export function AppSidebar() {
 
       <SidebarFooter>
         <SidebarMenu>
+          {user.role === UserRoles.CHAIRMAN && (
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild tooltip="AANP">
+                <a href={AANP_ENTRY} target="_blank" rel="noopener noreferrer">
+                  <LogIn />
+                  <span>AANP</span>
+                </a>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          )}
           <SidebarMenuItem>
             <SidebarMenuButton asChild tooltip="Kutubxona">
               <a href="https://edu.ktnu.uz/library" target="_blank" rel="noopener noreferrer">
