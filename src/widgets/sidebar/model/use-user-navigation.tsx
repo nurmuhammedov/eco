@@ -12,9 +12,12 @@ import { Navigation } from './types'
 import allNavigation from './all'
 import legalNavigation from './legal'
 
-/** Menu entries kept to some roles within a module: regional heads examine but do not write the questions */
+/**
+ * Menu entries kept to some roles within a module: the central department (HEAD, and a
+ * MANAGER at the same level) writes the questions, regional heads only examine
+ */
 const ROLE_ONLY_ITEMS: Record<string, UserRoles[]> = {
-  '/attestation/questions': [UserRoles.HEAD],
+  '/attestation/questions': [UserRoles.HEAD, UserRoles.MANAGER],
 }
 
 /** What the two designated approvers see under KPI instead of their own scorecard. */
