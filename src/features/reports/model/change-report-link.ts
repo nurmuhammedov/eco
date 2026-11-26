@@ -14,6 +14,7 @@ export const REPORT_CHANGE_STATUS = {
   NEW: 'NEW',
   IN_PROCESS: 'IN_PROCESS',
   COMPLETED: 'COMPLETED',
+  AUTO_CANCELLED: 'AUTO_CANCELLED',
 } as const
 
 export type ReportChangeBelongType = (typeof REPORT_CHANGE_BELONG_TYPE)[keyof typeof REPORT_CHANGE_BELONG_TYPE]

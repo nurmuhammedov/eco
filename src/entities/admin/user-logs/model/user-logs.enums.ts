@@ -11,4 +11,6 @@ export enum UserLogsTypeEnum {
   COMPLETED = 'COMPLETED',
   CANCELED = 'CANCELED',
   REJECTED = 'REJECTED',
+  /** Only in a change request's history: the system closed it after 30 days IN_PROCESS */
+  AUTO_CANCELLED = 'AUTO_CANCELLED',
 }

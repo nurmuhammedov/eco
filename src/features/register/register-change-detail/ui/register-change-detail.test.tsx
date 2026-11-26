@@ -143,3 +143,41 @@ describe('RegisterChangeDetail for a request to close an inspection', () => {
     expect(screen.queryByRole('button', { name: /Qayta yuborish/ })).not.toBeInTheDocument()
   })
 })
+
+describe('RegisterChangeDetail for a request the system cancelled', () => {
+  const autoCancelled = (belongType: string) => ({
+    ...closeRequest('AUTO_CANCELLED'),
+    belongId: 'hf-1',
+    belongType,
+  })
+
+  it('says why it was closed and offers nothing to do with it', () => {
+    mocks.role = 'REGIONAL'
+    mocks.change = autoCancelled('UPDATE_EQP')
+    renderPage('/register/change/equipments/eq-1')
+
+    expect(screen.getByText('So‘rov avtomatik bekor qilingan')).toBeInTheDocument()
+    expect(screen.getByText(/30 kundan ortiq ijroda turgani sababli/)).toBeInTheDocument()
+    expect(screen.getByText('Avtomatik bekor qilingan')).toBeInTheDocument()
+    for (const name of [/Tasdiqlash/, /Qaytarish/, /Kelishish/, /Ijrochi/, /Qayta yuborish/]) {
+      expect(screen.queryByRole('button', { name })).not.toBeInTheDocument()
+    }
+    expect(screen.getByText('Log c1')).toBeInTheDocument()
+  })
+
+  it('leaves a MANAGER nothing to confirm on a cancelled request either', () => {
+    mocks.change = autoCancelled('UPDATE_HF')
+    renderPage('/register/change/hf/hf-1')
+
+    expect(screen.queryByRole('button', { name: /Tasdiqlash/ })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /Qaytarish/ })).not.toBeInTheDocument()
+  })
+
+  it('leads to the record by the request’s own type, whatever section the link named', () => {
+    mocks.change = autoCancelled('UPDATE_HF')
+    renderPage('/register/change/equipments/hf-1')
+
+    expect(screen.getByText('Reyestr ma’lumotlari:')).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: /Ko‘rish/ })).toHaveAttribute('href', '/register/hf/hf-1')
+  })
+})

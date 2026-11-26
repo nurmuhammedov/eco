@@ -14,6 +14,8 @@ interface UpdateCounts {
   newCount: number
   inProcessCount: number
   completedCount: number
+  /** Closed by the system after 30 days in process; part of allCount, of neither inProcess nor completed */
+  autoCancelledCount: number
 }
 
 /** ReportByChangeUpdateDto */
@@ -32,6 +34,7 @@ interface GroupCounts {
   not_completed: number
   in_process: number
   completed: number
+  auto_cancelled: number
 }
 
 type GroupKey = 'x' | 'q'
@@ -58,6 +61,7 @@ const RegistryChangesReport: React.FC = () => {
           not_completed: hf.newCount || 0,
           in_process: hf.inProcessCount || 0,
           completed: hf.completedCount || 0,
+          auto_cancelled: hf.autoCancelledCount || 0,
         },
         q: {
           total: equipment.allCount || 0,
@@ -66,6 +70,7 @@ const RegistryChangesReport: React.FC = () => {
           not_completed: equipment.newCount || 0,
           in_process: equipment.inProcessCount || 0,
           completed: equipment.completedCount || 0,
+          auto_cancelled: equipment.autoCancelledCount || 0,
         },
       }
     })
@@ -119,6 +124,13 @@ const RegistryChangesReport: React.FC = () => {
         cell: ({ row, getValue }) => (
           <span className={row.original.isSummary ? 'font-bold decoration-emerald-500/30' : ''}>{getValue()}</span>
         ),
+      },
+      {
+        id: `${prefix}_auto_cancelled`,
+        header: 'Avtomatik bekor qilingan',
+        accessorFn: (row) => row[prefix]?.auto_cancelled || 0,
+        className: 'text-center',
+        cell: ({ row, getValue }) => <span className={row.original.isSummary ? 'font-bold' : ''}>{getValue()}</span>,
       },
     ],
   })

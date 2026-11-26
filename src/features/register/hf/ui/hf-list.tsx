@@ -1,3 +1,4 @@
+import { CHANGE_AUTO_CANCELLED } from '@/entities/registry'
 import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table'
 import { useCustomSearchParams, usePaginatedData, useTranslatedObject } from '@/shared/hooks'
 import { getDate } from '@/shared/utils/date'
@@ -111,9 +112,13 @@ export const HfList = ({ isArchive }: HfListProps) => {
 
   const applicationStatusList = useTranslatedObject(ApplicationStatus, 'application_status', false)
   const applicationStatus = useMemo(() => {
-    return applicationStatusList.filter((s: { id: string; name: string }) =>
-      ['ALL', 'NEW', 'IN_PROCESS', 'IN_AGREEMENT', 'IN_APPROVAL'].includes(s.id)
-    )
+    return [
+      ...applicationStatusList.filter((s: { id: string; name: string }) =>
+        ['ALL', 'NEW', 'IN_PROCESS', 'IN_AGREEMENT', 'IN_APPROVAL'].includes(s.id)
+      ),
+      // Not an appeal status, so not in the enum the others come from
+      { id: CHANGE_AUTO_CANCELLED, name: 'Avtomatik bekor qilingan' },
+    ]
   }, [applicationStatusList])
 
   const handleViewApplication = (id: string) => {

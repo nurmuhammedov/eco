@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import { apiClient } from '@/shared/api/api-client'
 import type { ApiResponse } from '@/shared/types'
 import { ApplicationStatus } from '@/entities/application'
-import { isRestoreChange, type RegistryChange } from '@/entities/registry'
+import { isActiveChange, isRestoreChange, type RegistryChange } from '@/entities/registry'
 import { useAuth } from '@/shared/hooks/use-auth'
 import { endpointKey } from '@/shared/lib/query/endpoint-key'
 import { DEFAULT_STALE_TIME } from '@/shared/lib/query/stale-time'
@@ -50,7 +50,7 @@ export const useLastChange = (belongId: string | undefined, enabled: boolean) =>
     isResolved: query.isSuccess,
     restoreInApproval: isRestore && lastChange?.status === ApplicationStatus.IN_APPROVAL,
     restoreReturned: isRestore && lastChange?.status === ApplicationStatus.IN_PROCESS,
-    /** Any unfinished request blocks a new restore on the backend */
-    hasOpenChange: !!lastChange && lastChange.status !== ApplicationStatus.COMPLETED,
+    /** Any unfinished request blocks a new restore on the backend; a confirmed or auto-cancelled one does not */
+    hasOpenChange: isActiveChange(lastChange),
   }
 }

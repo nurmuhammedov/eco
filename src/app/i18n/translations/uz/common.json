@@ -236,7 +236,8 @@
     "IN_APPROVAL": "Tasdiqlashda",
     "COMPLETED": "Yakunlangan",
     "REJECTED": "Rad etilgan",
-    "CANCELED": "Qaytarilgan"
+    "CANCELED": "Qaytarilgan",
+    "AUTO_CANCELLED": "Avtomatik bekor qilingan"
   },
   "inquiry_status": {
     "NEW": "Yangi",
@@ -1174,7 +1175,8 @@
       "COMPLETED": "So‘rovni yakunladi",
       "CANCELED": "So‘rovni qaytardi",
       "REJECTED": " So‘rovni rad etdi",
-      "EDITED": "O‘zgartirish kiritdi"
+      "EDITED": "O‘zgartirish kiritdi",
+      "AUTO_CANCELLED": "Avtomatik bekor qildi"
     }
   },
   "parks": "Park va maskanlar",

@@ -77,6 +77,16 @@ describe('useLastChange', () => {
     expect(result.current.restoreInApproval).toBe(false)
   })
 
+  it('does not count a change the system cancelled after 30 days as open', async () => {
+    answer({ id: 'c1', belongType: 'RESTORE_HF', status: 'AUTO_CANCELLED' })
+    const { result } = renderHook(() => useLastChange('hf-1', true), { wrapper })
+
+    await waitFor(() => expect(result.current.isResolved).toBe(true))
+    expect(result.current.hasOpenChange).toBe(false)
+    expect(result.current.restoreReturned).toBe(false)
+    expect(result.current.restoreInApproval).toBe(false)
+  })
+
   it('asks nothing until enabled', () => {
     renderHook(() => useLastChange('hf-1', false), { wrapper })
 

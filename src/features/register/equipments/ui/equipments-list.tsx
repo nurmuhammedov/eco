@@ -1,3 +1,4 @@
+import { CHANGE_AUTO_CANCELLED } from '@/entities/registry'
 import { ApplicationCategory, APPLICATIONS_DATA, MainApplicationCategory } from '@/entities/create-application'
 import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table'
 import { useCustomSearchParams, usePaginatedData } from '@/shared/hooks'
@@ -465,6 +466,7 @@ export const EquipmentsList = ({ isArchive, hfId, hideTabs, isShortView }: Equip
             { id: 'IN_PROCESS', name: 'Jarayonda' },
             { id: 'IN_AGREEMENT', name: 'Kelishuvda' },
             { id: 'IN_APPROVAL', name: 'Tasdiqlashda' },
+            { id: CHANGE_AUTO_CANCELLED, name: 'Avtomatik bekor qilingan' },
           ].map((s) => ({
             ...s,
             count: s.id === changeStatus?.toString() ? data?.page?.totalElements || undefined : undefined,

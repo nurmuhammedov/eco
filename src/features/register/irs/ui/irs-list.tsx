@@ -1,3 +1,4 @@
+import { CHANGE_AUTO_CANCELLED } from '@/entities/registry'
 import { IrsCategory, IrsUsageType } from '@/entities/create-application'
 import { DataTable, DataTableRowActions } from '@/shared/components/common/data-table'
 import { canUpdateRegistryType } from '@/features/register/model/can-update-registry'
@@ -316,6 +317,7 @@ export const IrsList = ({ isArchive, radiationProfileId, hideTabs }: IrsListProp
               { id: 'IN_PROCESS', name: 'Jarayonda' },
               { id: 'IN_AGREEMENT', name: 'Kelishuvda' },
               { id: 'IN_APPROVAL', name: 'Tasdiqlashda' },
+              { id: CHANGE_AUTO_CANCELLED, name: 'Avtomatik bekor qilingan' },
             ].map((s) => (
               <TabsTrigger key={s.id} value={s.id}>
                 {s.name}

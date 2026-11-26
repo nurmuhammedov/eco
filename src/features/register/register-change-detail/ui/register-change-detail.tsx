@@ -1,7 +1,7 @@
 import { SafeHtml } from '@/shared/components/common/safe-html'
-import { isRestoreChange, type RegistryChange } from '@/entities/registry'
+import { CHANGE_AUTO_CANCELLED, changeSectionOf, isRestoreChange, type RegistryChange } from '@/entities/registry'
 import { FC } from 'react'
-import { ArrowUpRight } from 'lucide-react'
+import { ArrowUpRight, Ban } from 'lucide-react'
 import { Link, useParams } from 'react-router-dom'
 import { useDetail, usePaginatedData } from '@/shared/hooks'
 import DetailRow from '@/shared/components/common/detail-row'
@@ -30,6 +30,7 @@ import {
   latestCloseSending,
 } from '@/features/inspections/model/close-request'
 import { CloseInspectionModal } from '@/features/inspections/ui/parts/close-inspection-modal'
+import { Alert, AlertDescription, AlertTitle } from '@/shared/components/ui/alert'
 
 /**
  * The sections this page knows how to read a change request for: the registers,
@@ -51,15 +52,19 @@ const RegisterChangeDetail: FC = () => {
    */
   const swapped = !!params.type && !SECTIONS.includes(params.type) && SECTIONS.includes(params.id ?? '')
   const id = swapped ? params.type : params.id
-  const type = swapped ? params.id : params.type
 
   const { user } = useAuth()
 
   const { detail: changeDetail, isLoading = true } = useDetail<RegistryChange>('/changes/by-belong', id, !!id)
 
+  // The request's own type names its section; the address may not (the auto-cancel notification says `equipments` for all)
+  const type = changeSectionOf(changeDetail?.belongType) ?? (swapped ? params.id : params.type)
+
   const changeId = changeDetail?.id
   const isLegal = changeDetail?.ownerIdentity?.toString()?.length === 9
   const status = changeDetail?.status
+  // Closed by the system after 30 days in process: every action below is tied to an open status, so none shows
+  const isAutoCancelled = status === CHANGE_AUTO_CANCELLED
   const isDeregister = changeDetail?.belongType?.startsWith('DEREGISTER')
   const isStatusChange =
     changeDetail?.belongType?.startsWith('CHANGE_EQP_STATUS') ||
@@ -214,6 +219,17 @@ const RegisterChangeDetail: FC = () => {
         </div>
       </div>
 
+      {isAutoCancelled && (
+        <Alert className="border-slate-300 bg-slate-50 text-slate-800">
+          <Ban />
+          <AlertTitle>So‘rov avtomatik bekor qilingan</AlertTitle>
+          <AlertDescription className="text-slate-700">
+            So‘rov 30 kundan ortiq ijroda turgani sababli tizim tomonidan avtomatik bekor qilingan. O‘zgarishlar
+            obyektga qo‘llanmagan.
+          </AlertDescription>
+        </Alert>
+      )}
+
       <DetailCardAccordion defaultValue={['general', 'applicant', 'logs']}>
         <DetailCardAccordion.Item value="general" title="So‘rov va ijro to‘g‘risida ma’lumot">
           <div className="flex flex-col py-1">
@@ -235,7 +251,16 @@ const RegisterChangeDetail: FC = () => {
                 </Link>
               }
             />
-            {isRestore && status === ApplicationStatus.IN_PROCESS ? (
+            {status === CHANGE_AUTO_CANCELLED ? (
+              <DetailRow
+                title="So‘rov holati:"
+                value={
+                  <Badge variant="secondary" className="py-1">
+                    Avtomatik bekor qilingan
+                  </Badge>
+                }
+              />
+            ) : isRestore && status === ApplicationStatus.IN_PROCESS ? (
               <DetailRow
                 title="So‘rov holati:"
                 value={
@@ -246,7 +271,7 @@ const RegisterChangeDetail: FC = () => {
               />
             ) : (
               <ApplicationStatusRow
-                status={changeDetail?.status}
+                status={status}
                 title="So‘rov holati:"
                 steps={isRestore ? RESTORE_STEPS : undefined}
               />

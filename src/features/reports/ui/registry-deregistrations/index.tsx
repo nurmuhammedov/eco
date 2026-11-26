@@ -21,6 +21,8 @@ interface DeregisterCounts {
   newCount: number
   inProcessCount: number
   completedCount: number
+  /** Closed by the system after 30 days in process; part of allCount, of neither inProcess nor completed */
+  autoCancelledCount: number
 }
 
 /** ReportByChangeDeregisterDto */
@@ -38,6 +40,7 @@ interface GroupCounts {
   not_completed: number
   in_process: number
   completed: number
+  auto_cancelled: number
 }
 
 type GroupKey = 'x' | 'q' | 'irs' | 'xray'
@@ -49,6 +52,7 @@ const toGroup = (counts: DeregisterCounts | null): GroupCounts => ({
   not_completed: counts?.newCount || 0,
   in_process: counts?.inProcessCount || 0,
   completed: counts?.completedCount || 0,
+  auto_cancelled: counts?.autoCancelledCount || 0,
 })
 
 const BELONG_TYPE_BY_PREFIX: Record<GroupKey, ReportChangeBelongType> = {
@@ -127,6 +131,7 @@ const RegistryDeregistrationsReport: React.FC = () => {
         ['not_completed', 'Yangi', REPORT_CHANGE_STATUS.NEW],
         ['in_process', 'Jarayonda', REPORT_CHANGE_STATUS.IN_PROCESS],
         ['completed', 'Yakunlandi', REPORT_CHANGE_STATUS.COMPLETED],
+        ['auto_cancelled', 'Avtomatik bekor qilingan', REPORT_CHANGE_STATUS.AUTO_CANCELLED],
       ] as const
     ).map(
       ([key, label, status]): ExtendedColumnDef<Row, number> => ({
