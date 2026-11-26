@@ -52,6 +52,8 @@ export interface PermitRow {
   expiryDate: string | null
   status: string | null
   licenseStatus: 'ACTIVE' | 'EXPIRED' | 'CANCELED' | null
+  /** The permit's activity types; may be empty */
+  activityTypeNames?: string[] | null
 }
 
 /** PermitCountView (`GET /permits/count`) */

@@ -14,6 +14,7 @@ import { Badge } from '@/shared/components/ui/badge'
 import { paramText } from '@/shared/lib/url-params'
 import type { PermitRow } from '@/features/permits/model/types'
 import { UploadLegalPermitsExcel } from '@/features/permits/ui/upload-legal-permits-excel'
+import { ActivityTypesCell } from '@/features/permits/ui/activity-types-cell'
 
 interface PermitTableProps {
   setIsModalOpen: Dispatch<SetStateAction<boolean>>
@@ -33,6 +34,7 @@ export const PermitTable = ({ setIsModalOpen }: PermitTableProps) => {
       tin = '',
       name = '',
       documentName = '',
+      activityTypeName = '',
     },
   } = useCustomSearchParams()
   const currentTab = paramText(currentTabParam, 'ALL')
@@ -40,6 +42,8 @@ export const PermitTable = ({ setIsModalOpen }: PermitTableProps) => {
   const { data: names } = useData<string[]>('/permits/document-names', true, {
     type: tab === 'ALL' ? undefined : tab,
   })
+  // Every activity type the permits carry, for the filter; the list hardly changes
+  const { data: activityTypeNames } = useData<string[]>('/permits/activity-type-names')
   const { data, isLoading } = usePaginatedData<PermitRow>('/permits', {
     page: page,
     size: size,
@@ -47,6 +51,7 @@ export const PermitTable = ({ setIsModalOpen }: PermitTableProps) => {
     name: name,
     registerNumber: registerNumber,
     documentName: documentName,
+    activityTypeName: activityTypeName || undefined,
     type: tab == 'ALL' ? null : tab,
     status: currentTab == 'ALL' ? null : currentTab,
   })
@@ -80,6 +85,18 @@ export const PermitTable = ({ setIsModalOpen }: PermitTableProps) => {
       filterKey: 'documentName',
       filterType: 'select',
       filterOptions: names?.map((name) => ({ id: name, name })),
+    },
+    {
+      id: 'activityTypeNames',
+      header: 'Faoliyat turlari',
+      minSize: 300,
+      headerClassName: 'max-w-[360px]',
+      className: 'max-w-[360px]',
+      filterKey: 'activityTypeName',
+      filterType: 'select',
+      // Sent back exactly as listed: the server matches the name as it is stored
+      filterOptions: activityTypeNames?.map((name) => ({ id: name, name })),
+      cell: ({ row }) => <ActivityTypesCell names={row.original.activityTypeNames} />,
     },
     {
       accessorKey: 'registerNumber',
@@ -180,6 +197,7 @@ export const PermitTable = ({ setIsModalOpen }: PermitTableProps) => {
               name: name || undefined,
               registerNumber: registerNumber || undefined,
               documentName: documentName || undefined,
+              activityTypeName: activityTypeName || undefined,
               type: tab === 'ALL' ? undefined : tab,
               status: currentTab === 'ALL' ? undefined : currentTab,
             }}
